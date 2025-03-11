@@ -36,6 +36,7 @@ TrinaColumn(
 ```
 
 The number column type validates:
+
 - Values are numeric
 - Negative numbers (can be disabled)
 - Format pattern compliance
@@ -78,6 +79,7 @@ TrinaColumn(
 ```
 
 The date column type validates:
+
 - Date format compliance
 - Date range (if startDate/endDate specified)
 - Valid date values
@@ -256,6 +258,7 @@ TrinaCell(
 When validation fails, you can provide feedback to users through:
 
 1. The `onValidationFailed` callback:
+
 ```dart
 onValidationFailed: (event) {
   showSnackBar(
@@ -267,6 +270,7 @@ onValidationFailed: (event) {
 ```
 
 2. Custom cell rendering:
+
 ```dart
 TrinaColumn(
   title: 'Email',

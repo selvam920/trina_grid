@@ -433,4 +433,4 @@ TrinaColumn(
 - [Cell Editing](cell-editing.md) - For more details on cell editing behavior
 - [Cell Validation](cell-validation.md) - For validating cell input
 - [Column Filtering](column-filtering.md) - For filtering data based on column values
-- [Column Sorting](column-sorting.md) - For sorting data based on column values 
+- [Column Sorting](column-sorting.md) - For sorting data based on column values

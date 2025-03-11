@@ -191,6 +191,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   final GlobalKey gridKey;
 
   /// Callback triggered when cell validation fails
+  @override
   final TrinaOnValidationFailedCallback? onValidationFailed;
 
   void _initialize() {
