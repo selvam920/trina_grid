@@ -8,6 +8,11 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 - [Basic Usage](getting-started/basic-usage.md)
 - [Configuration](getting-started/configuration.md)
 
+## Migration
+
+- [Migrating from PlutoGrid](migration/pluto-to-trina.md)
+- [Migration Tool Reference](migration/migration-tool.md)
+
 ## Features
 
 ### Column Features
