@@ -8,8 +8,8 @@ BUILD_DIR="$DEMO_DIR/build/web"
 
 echo "🚀 Building Flutter Web Demo..."
 
-git checkout master
-git pull origin master
+git checkout main
+git pull origin main
 
 cd $DEMO_DIR
 flutter pub get
@@ -36,7 +36,7 @@ git add .
 git commit -m "🚀 Deploy updated Flutter Web Demo"
 git push origin $BRANCH
 
-git checkout master
+git checkout main
 
 flutter pub get
 cd demo
