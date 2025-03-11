@@ -117,6 +117,7 @@ void runMigration(List<String> args) {
     'PlutoBaseCell': 'TrinaBaseCell',
     'PlutoBaseColumn': 'TrinaBaseColumn',
     'PlutoBaseRow': 'TrinaBaseRow',
+    'PlutoFilterColumnWidgetDelegate': 'TrinaFilterColumnWidgetDelegate',
 
     // Additional components
     'PlutoAutoSizeMode': 'TrinaAutoSizeMode',
