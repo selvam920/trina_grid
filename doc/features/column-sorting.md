@@ -85,6 +85,7 @@ TrinaGrid(
 ```
 
 The `TrinaGridOnSortedEvent` provides:
+
 - `column`: The column that was sorted
 - `oldSort`: The previous sort state before the change
 

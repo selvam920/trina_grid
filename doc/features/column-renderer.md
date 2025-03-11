@@ -358,4 +358,4 @@ TrinaColumn(
 - [Cell Renderers](cell-renderer.md) - For customizing individual cells
 - [Column Types](column-types.md) - For type-specific behavior
 - [Custom Styling](custom-styling.md) - For global styling options
-- [Themes](themes.md) - For applying consistent themes across the grid 
+- [Themes](themes.md) - For applying consistent themes across the grid

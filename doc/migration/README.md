@@ -17,4 +17,4 @@ If you encounter any issues during migration:
 
 - Check the detailed migration guides in this directory
 - Open an issue on the [TrinaGrid GitHub repository](https://github.com/doonfrs/trina_grid/issues)
-- Reach out to the maintainer [Feras Abdulrahman](https://github.com/doonfrs) 
+- Reach out to the maintainer [Feras Abdulrahman](https://github.com/doonfrs)
