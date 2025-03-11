@@ -3,11 +3,11 @@ import 'package:trina_grid/trina_grid.dart';
 
 typedef TrinaColumnValueFormatter = String Function(dynamic value);
 
-typedef TrinaColumnRenderer = Widget Function(
-    TrinaColumnRendererContext rendererContext);
+typedef TrinaColumnRenderer =
+    Widget Function(TrinaColumnRendererContext rendererContext);
 
-typedef TrinaColumnFooterRenderer = Widget Function(
-    TrinaColumnFooterRendererContext context);
+typedef TrinaColumnFooterRenderer =
+    Widget Function(TrinaColumnFooterRendererContext context);
 
 /// It dynamically determines whether the cells of the column are in the edit state.
 ///
@@ -15,10 +15,7 @@ typedef TrinaColumnFooterRenderer = Widget Function(
 /// whether the cell is editable cannot be changed during runtime,
 /// but if this callback is implemented,
 /// it can be determined whether the cell can be edited or not according to the state of the cell.
-typedef TrinaColumnCheckReadOnly = bool Function(
-  TrinaRow row,
-  TrinaCell cell,
-);
+typedef TrinaColumnCheckReadOnly = bool Function(TrinaRow row, TrinaCell cell);
 
 class TrinaColumn {
   /// A title to be displayed on the screen.
@@ -203,6 +200,11 @@ class TrinaColumn {
   /// The widget of the filter column, this can be customized with the multiple constructors, defaults to a [TrinaFilterColumnWidgetDelegate.initial()]
   TrinaFilterColumnWidgetDelegate? filterWidgetDelegate;
 
+  /// Optional validator function that returns an error message string if validation fails,
+  /// or null if validation passes. This is called before the cell value is updated.
+  final String? Function(dynamic value, TrinaValidationContext context)?
+  validator;
+
   TrinaColumn({
     required this.title,
     required this.field,
@@ -242,8 +244,9 @@ class TrinaColumn {
     this.filterWidgetDelegate =
         const TrinaFilterColumnWidgetDelegate.textField(),
     this.disableRowCheckboxWhen,
-  })  : _key = UniqueKey(),
-        _checkReadOnly = checkReadOnly;
+    this.validator,
+  }) : _key = UniqueKey(),
+       _checkReadOnly = checkReadOnly;
 
   final Key _key;
 
@@ -276,9 +279,7 @@ class TrinaColumn {
       return title;
     }
 
-    List<String> titleList = [
-      title,
-    ];
+    List<String> titleList = [title];
 
     if (group!.expandedColumn != true) {
       titleList.add(group!.title);
@@ -330,12 +331,12 @@ class TrinaColumn {
   String formattedValueForDisplayInEditing(dynamic value) {
     if (type is TrinaColumnTypeWithNumberFormat) {
       return value.toString().replaceFirst(
-            '.',
-            (type as TrinaColumnTypeWithNumberFormat)
-                .numberFormat
-                .symbols
-                .DECIMAL_SEP,
-          );
+        '.',
+        (type as TrinaColumnTypeWithNumberFormat)
+            .numberFormat
+            .symbols
+            .DECIMAL_SEP,
+      );
     }
 
     if (formatter != null) {
@@ -363,14 +364,13 @@ class TrinaFilterColumnWidgetDelegate {
   }) : filterWidgetBuilder = null;
 
   /// If you don't want a custom widget
-  const TrinaFilterColumnWidgetDelegate.builder({
-    this.filterWidgetBuilder,
-  })  : filterSuffixIcon = null,
-        onFilterSuffixTap = null,
-        filterHintText = null,
-        filterHintTextColor = null,
-        clearIcon = const Icon(Icons.clear),
-        onClear = null;
+  const TrinaFilterColumnWidgetDelegate.builder({this.filterWidgetBuilder})
+    : filterSuffixIcon = null,
+      onFilterSuffixTap = null,
+      filterHintText = null,
+      filterHintTextColor = null,
+      clearIcon = const Icon(Icons.clear),
+      onClear = null;
 
   ///Set hint text for filter field
   final String? filterHintText;
@@ -394,7 +394,8 @@ class TrinaFilterColumnWidgetDelegate {
     bool enabled,
     void Function(String changed) handleOnChanged,
     TrinaGridStateManager stateManager,
-  )? onFilterSuffixTap;
+  )?
+  onFilterSuffixTap;
 
   final Widget Function(
     FocusNode focusNode,
@@ -402,7 +403,8 @@ class TrinaFilterColumnWidgetDelegate {
     bool enabled,
     void Function(String changed) handleOnChanged,
     TrinaGridStateManager stateManager,
-  )? filterWidgetBuilder;
+  )?
+  filterWidgetBuilder;
 }
 
 class TrinaColumnRendererContext {
@@ -522,4 +524,30 @@ enum TrinaColumnSort {
   bool get isDescending {
     return this == TrinaColumnSort.descending;
   }
+}
+
+/// Context object passed to column validators containing information about the validation
+class TrinaValidationContext {
+  /// The column being validated
+  final TrinaColumn column;
+
+  /// The row containing the cell being validated
+  final TrinaRow row;
+
+  /// The row index
+  final int rowIdx;
+
+  /// The previous value before the change
+  final dynamic oldValue;
+
+  /// The state manager instance
+  final TrinaGridStateManager stateManager;
+
+  const TrinaValidationContext({
+    required this.column,
+    required this.row,
+    required this.rowIdx,
+    required this.oldValue,
+    required this.stateManager,
+  });
 }

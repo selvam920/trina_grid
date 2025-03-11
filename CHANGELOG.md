@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.14] - 2025. 03. 11
+
+* Added cell validator for plutoColumn & onValidationFailed for TrinaGrid
+* updated some docs
+
 ## [1.4.13] - 2025. 03. 10
 
 * Added cell-level renderer support with TrinaCellRenderer

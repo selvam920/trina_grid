@@ -5,9 +5,7 @@ import 'package:trina_grid/trina_grid.dart';
 class TrinaGridOnLoadedEvent {
   final TrinaGridStateManager stateManager;
 
-  const TrinaGridOnLoadedEvent({
-    required this.stateManager,
-  });
+  const TrinaGridOnLoadedEvent({required this.stateManager});
 }
 
 /// Event called when the value of [TrinaCell] is changed.
@@ -84,10 +82,7 @@ class TrinaGridOnSortedEvent {
 
   final TrinaColumnSort oldSort;
 
-  const TrinaGridOnSortedEvent({
-    required this.column,
-    required this.oldSort,
-  });
+  const TrinaGridOnSortedEvent({required this.column, required this.oldSort});
 
   @override
   String toString() {
@@ -111,11 +106,7 @@ abstract class TrinaGridOnRowCheckedEvent {
   final int? rowIdx;
   final bool? isChecked;
 
-  const TrinaGridOnRowCheckedEvent({
-    this.row,
-    this.rowIdx,
-    this.isChecked,
-  });
+  const TrinaGridOnRowCheckedEvent({this.row, this.rowIdx, this.isChecked});
 
   @override
   String toString() {
@@ -136,9 +127,8 @@ class TrinaGridOnRowCheckedOneEvent extends TrinaGridOnRowCheckedEvent {
 
 /// Argument of [TrinaGrid.onRowChecked] callback when all checkboxes of the column are tapped.
 class TrinaGridOnRowCheckedAllEvent extends TrinaGridOnRowCheckedEvent {
-  const TrinaGridOnRowCheckedAllEvent({
-    super.isChecked,
-  }) : super(row: null, rowIdx: null);
+  const TrinaGridOnRowCheckedAllEvent({super.isChecked})
+    : super(row: null, rowIdx: null);
 }
 
 /// The argument of the [TrinaGrid.onRowDoubleTap] callback
@@ -177,10 +167,7 @@ class TrinaGridOnRowEnterEvent {
   final TrinaRow? row;
   final int? rowIdx;
 
-  const TrinaGridOnRowEnterEvent({
-    this.row,
-    this.rowIdx,
-  });
+  const TrinaGridOnRowEnterEvent({this.row, this.rowIdx});
 }
 
 /// Argument of [TrinaGrid.onRowExit] callback
@@ -189,10 +176,7 @@ class TrinaGridOnRowExitEvent {
   final TrinaRow? row;
   final int? rowIdx;
 
-  const TrinaGridOnRowExitEvent({
-    this.row,
-    this.rowIdx,
-  });
+  const TrinaGridOnRowExitEvent({this.row, this.rowIdx});
 }
 
 /// Argument of [TrinaGrid.onRowsMoved] callback
@@ -201,10 +185,7 @@ class TrinaGridOnRowsMovedEvent {
   final int idx;
   final List<TrinaRow> rows;
 
-  const TrinaGridOnRowsMovedEvent({
-    required this.idx,
-    required this.rows,
-  });
+  const TrinaGridOnRowsMovedEvent({required this.idx, required this.rows});
 }
 
 /// Argument of [TrinaGrid.onColumnsMoved] callback
@@ -248,4 +229,33 @@ class TrinaGridOnActiveCellChangedEvent {
     required this.idx,
     required this.cell,
   });
+}
+
+/// Event triggered when cell validation fails
+class TrinaGridValidationEvent {
+  final TrinaColumn column;
+  final TrinaRow row;
+  final int rowIdx;
+  final dynamic value;
+  final dynamic oldValue;
+  final String errorMessage;
+
+  const TrinaGridValidationEvent({
+    required this.column,
+    required this.row,
+    required this.rowIdx,
+    required this.value,
+    required this.oldValue,
+    required this.errorMessage,
+  });
+
+  @override
+  String toString() {
+    String out = '[TrinaGridValidationEvent] ';
+    out += 'Column: ${column.title}, RowIndex: $rowIdx\n';
+    out += '::: oldValue: $oldValue\n';
+    out += '::: newValue: $value\n';
+    out += '::: error: $errorMessage';
+    return out;
+  }
 }

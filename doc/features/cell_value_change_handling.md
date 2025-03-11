@@ -309,4 +309,4 @@ class _CellChangeHandlingExampleState extends State<CellChangeHandlingExample> {
 }
 ```
 
-This example demonstrates how to use both cell-level and grid-level callbacks to handle changes in a TrinaGrid, with a visual log showing the sequence of events. 
+This example demonstrates how to use both cell-level and grid-level callbacks to handle changes in a TrinaGrid, with a visual log showing the sequence of events.

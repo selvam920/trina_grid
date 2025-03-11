@@ -65,9 +65,11 @@ The migration tool automatically replaces:
 ## Complete Class Mapping
 
 ### Main Components
+
 - `PlutoGrid` → `TrinaGrid`
 
 ### Column Related
+
 - `PlutoColumn` → `TrinaColumn`
 - `PlutoColumnGroup` → `TrinaColumnGroup`
 - `PlutoColumnType` → `TrinaColumnType`
@@ -76,23 +78,28 @@ The migration tool automatically replaces:
 - `PlutoColumnTextAlign` → `TrinaColumnTextAlign`
 
 ### Row Related
+
 - `PlutoRow` → `TrinaRow`
 - `PlutoRowType` → `TrinaRowType`
 - `PlutoRowColorContext` → `TrinaRowColorContext`
 
 ### Cell Related
+
 - `PlutoCell` → `TrinaCell`
 - `PlutoCellDisplayType` → `TrinaCellDisplayType`
 
 ### State Management
+
 - `PlutoGridStateManager` → `TrinaGridStateManager`
 - `PlutoNotifierEvent` → `TrinaNotifierEvent`
 - `PlutoGridEventManager` → `TrinaGridEventManager`
 
 ### Selection
+
 - `PlutoGridSelectingMode` → `TrinaGridSelectingMode`
 
 ### Other Components
+
 - `PlutoGridConfiguration` → `TrinaGridConfiguration`
 - `PlutoGridScrollbarConfig` → `TrinaGridScrollbarConfig`
 - `PlutoGridStyleConfig` → `TrinaGridStyleConfig`
@@ -101,15 +108,18 @@ The migration tool automatically replaces:
 - `PlutoGridKeyPressed` → `TrinaGridKeyPressed`
 
 ### Enums and Constants
+
 - `PlutoGridMode` → `TrinaGridMode`
 - `PlutoGridScrollUpdateEvent` → `TrinaGridScrollUpdateEvent`
 - `PlutoGridScrollAnimationEvent` → `TrinaGridScrollAnimationEvent`
 - `PlutoMoveDirection` → `TrinaMoveDirection`
 
 ### Widgets
+
 - `PlutoBaseCell` → `TrinaBaseCell`
 - `PlutoBaseColumn` → `TrinaBaseColumn`
 - `PlutoBaseRow` → `TrinaBaseRow`
 
 ### Additional Components
+
 - `

@@ -90,20 +90,21 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     this.selectDateCallback,
     this.createHeader,
     this.createFooter,
+    this.onValidationFailed,
     TrinaColumnMenuDelegate? columnMenuDelegate,
     TrinaChangeNotifierFilterResolver? notifierFilterResolver,
     TrinaGridConfiguration configuration = const TrinaGridConfiguration(),
     TrinaGridMode? mode,
-  })  : refColumns = FilteredList(initialList: columns),
-        refRows = FilteredList(initialList: rows),
-        refColumnGroups = FilteredList<TrinaColumnGroup>(
-          initialList: columnGroups,
-        ),
-        columnMenuDelegate =
-            columnMenuDelegate ?? const TrinaColumnMenuDelegateDefault(),
-        notifierFilterResolver = notifierFilterResolver ??
-            const TrinaNotifierFilterResolverDefault(),
-        gridKey = GlobalKey() {
+  }) : refColumns = FilteredList(initialList: columns),
+       refRows = FilteredList(initialList: rows),
+       refColumnGroups = FilteredList<TrinaColumnGroup>(
+         initialList: columnGroups,
+       ),
+       columnMenuDelegate =
+           columnMenuDelegate ?? const TrinaColumnMenuDelegateDefault(),
+       notifierFilterResolver =
+           notifierFilterResolver ?? const TrinaNotifierFilterResolverDefault(),
+       gridKey = GlobalKey() {
     setConfiguration(configuration);
     setGridMode(mode ?? TrinaGridMode.normal);
     _initialize();
@@ -114,8 +115,12 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   final RowWrapper? rowWrapper;
 
   @override
-  final Widget Function(Widget editCellWidget, TrinaCell cell,
-      TextEditingController controller)? editCellWrapper;
+  final Widget Function(
+    Widget editCellWidget,
+    TrinaCell cell,
+    TextEditingController controller,
+  )?
+  editCellWrapper;
 
   @override
   final FilteredList<TrinaColumn> refColumns;
@@ -185,6 +190,9 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   @override
   final GlobalKey gridKey;
 
+  /// Callback triggered when cell validation fails
+  final TrinaOnValidationFailedCallback? onValidationFailed;
+
   void _initialize() {
     TrinaGridStateManager.initializeRows(
       refColumns.originalList,
@@ -227,11 +235,8 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
 /// add rows initialized with [initializeRowsAsync] as shown below.
 ///
 /// ```dart
-/// TrinaGridStateManager.initializeRowsAsync(
-///   columns,
-///   fetchedRows,
-/// ).then((value) {
-///   stateManager.refRows.addAll(FilteredList(initialList: value));
+/// TrinaGridStateManager.initializeRowsAsync(columns, fetchedRows).then((initializedRows) {
+///   stateManager.refRows.addAll(initializedRows);
 ///   stateManager.notifyListeners();
 /// });
 /// ```
@@ -260,6 +265,7 @@ class TrinaGridStateManager extends TrinaGridStateChangeNotifier {
     super.selectDateCallback,
     super.createHeader,
     super.createFooter,
+    super.onValidationFailed,
     super.columnMenuDelegate,
     super.notifierFilterResolver,
     super.configuration,
@@ -463,10 +469,7 @@ class TrinaGridScrollController {
 
   LinkedScrollControllerGroup? horizontal;
 
-  TrinaGridScrollController({
-    this.vertical,
-    this.horizontal,
-  });
+  TrinaGridScrollController({this.vertical, this.horizontal});
 
   ScrollController? get bodyRowsHorizontal => _bodyRowsHorizontal;
 
@@ -505,10 +508,7 @@ class TrinaGridCellPosition {
   final int? columnIdx;
   final int? rowIdx;
 
-  const TrinaGridCellPosition({
-    this.columnIdx,
-    this.rowIdx,
-  });
+  const TrinaGridCellPosition({this.columnIdx, this.rowIdx});
 
   bool get hasPosition => columnIdx != null && rowIdx != null;
 
@@ -529,10 +529,7 @@ class TrinaGridSelectingCellPosition {
   final String? field;
   final int? rowIdx;
 
-  const TrinaGridSelectingCellPosition({
-    this.field,
-    this.rowIdx,
-  });
+  const TrinaGridSelectingCellPosition({this.field, this.rowIdx});
 
   @override
   bool operator ==(covariant Object other) {
