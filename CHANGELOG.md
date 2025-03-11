@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.15] - 2025. 03. 11
+
+* Enhance the pluto grid migration script
+* Add more documentation
+
 ## [1.4.14] - 2025. 03. 11
 
 * Added cell validator for plutoColumn & onValidationFailed for TrinaGrid
