@@ -8,7 +8,7 @@
 
 TrinaGrid is a powerful data grid for Flutter that provides a wide range of features for displaying, editing, and managing tabular data. It works seamlessly on all platforms including web, desktop, and mobile.
 
-![TrinaGrid Demo](https://raw.githubusercontent.com/doonfrs/trina_grid/master/screenshots/trina_grid_plus_demo.gif)
+![TrinaGrid Demo](https://raw.githubusercontent.com/doonfrs/trina_grid/master/screenshots/demo.gif)
 
 > TrinaGrid is a maintained and enhanced version of the original TrinaGrid package. I'm [Feras Abdulrahman](https://github.com/doonfrs), the current maintainer, and I'm actively working on adding new features and keeping this great package rich and up-to-date. I continued the development after the original package [TrinaGrid](https://github.com/bosskmk/pluto_grid) was no longer being maintained.
 
@@ -251,13 +251,13 @@ Cell renderers take precedence over column renderers, giving you fine-grained co
 
 ## Documentation
 
-For detailed documentation on each feature, please visit our [Wiki](https://github.com/doonfrs/trina_grid_plus/blob/master/docs/index.md) or check the `/docs` folder in the repository.
+For detailed documentation on each feature, please visit our [Wiki](https://github.com/doonfrs/trina_grid/blob/main/doc/index.md) or check the `/doc` folder in the repository.
 
 ## Examples
 
 Check out the [example project](https://github.com/doonfrs/trina_grid/tree/master/example) for more usage examples.
 
-You can also try the [live demo](https://doonfrs.github.io/trina_grid_plus/) to see TrinaGrid in action.
+You can also try the [live demo](https://doonfrs.github.io/trina_grid/) to see TrinaGrid in action.
 
 ## Contributing
 
