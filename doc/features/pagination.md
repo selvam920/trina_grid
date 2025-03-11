@@ -1,183 +1,82 @@
-# Lazy Pagination in Trina Grid
+# Pagination in Trina Grid
 
-Lazy pagination (or server-side pagination) is designed for handling large datasets where loading all data at once would be inefficient. Instead of loading the entire dataset, it fetches only the data needed for the current page from the server.
+Trina Grid offers multiple pagination options to efficiently handle datasets of various sizes. This document provides an overview of the available pagination features and helps you choose the right approach for your application.
 
-## Key Benefits
+## Pagination Types
 
-- Reduces memory usage by loading only necessary data
-- Improves initial load time and performance
-- Efficiently handles very large datasets
-- Allows server-side processing of sorting and filtering
+Trina Grid supports three main types of pagination:
 
-## Implementation
+1. **[Client-Side Pagination](pagination-client.md)** - For smaller datasets that can be loaded entirely into memory
+2. **[Lazy Pagination (Server-Side)](lazy-pagination.md)** - For large datasets where data is fetched from the server page by page
+3. **[Infinity Scroll](infinity-scroll.md)** - For continuous scrolling with on-demand data loading
 
-To implement lazy pagination, you need to:
+## Choosing the Right Pagination Type
 
-1. Create a fetch function that handles data retrieval from the server
-2. Add the `TrinaLazyPagination` widget to your grid's footer
+| Pagination Type | Best For | Key Benefits | Limitations |
+|----------------|----------|-------------|------------|
+| **Client-Side** | Small to medium datasets (<1000 rows) | Simple implementation, instant page changes, full client-side sorting and filtering | Requires loading all data upfront, higher memory usage |
+| **Lazy (Server-Side)** | Large datasets, server APIs with pagination support | Minimal memory usage, handles millions of records, server-side sorting and filtering | Requires server-side implementation, page changes require network requests |
+| **Infinity Scroll** | Continuous data streams, social media-like feeds | Seamless user experience, progressive loading | More complex to implement with sorting and filtering |
 
-```dart
-createFooter: (stateManager) {
-  return TrinaLazyPagination(
-    fetch: fetch,
-    stateManager: stateManager,
-  );
-},
-```
+## Implementation Overview
 
-The fetch function should implement the `TrinaLazyPaginationFetch` type:
+### Client-Side Pagination
 
 ```dart
-Future<TrinaLazyPaginationResponse> fetch(
-  TrinaLazyPaginationRequest request,
-) async {
-  // Fetch data from server based on request parameters
-  // ...
-
-  return TrinaLazyPaginationResponse(
-    totalPage: totalPages,
-    rows: fetchedRows,
-    totalRecords: totalRecordCount,
-  );
-}
-```
-
-## Configuration Options
-
-`TrinaLazyPagination` provides several configuration options:
-
-```dart
-TrinaLazyPagination(
-  // Set the initial page (default: 1)
-  initialPage: 1,
-  
-  // Set the initial page size (default: 10)
-  initialPageSize: 10,
-  
-  // Whether to fetch data on initialization (default: true)
-  initialFetch: true,
-  
-  // Whether sorting should trigger server-side fetching (default: true)
-  fetchWithSorting: true,
-  
-  // Whether filtering should trigger server-side fetching (default: true)
-  fetchWithFiltering: true,
-  
-  // Number of pages to move with prev/next buttons (default: null - moves by visible page count)
-  pageSizeToMove: null,
-  
-  // Required fetch function
-  fetch: fetch,
-  
-  // Required state manager
-  stateManager: stateManager,
-);
-```
-
-## Handling Sorting and Filtering
-
-The `TrinaLazyPaginationRequest` provides information about the current sorting and filtering state:
-
-```dart
-// Sorting
-if (request.sortColumn != null && !request.sortColumn!.sort.isNone) {
-  // Apply server-side sorting based on sortColumn
-}
-
-// Filtering
-if (request.filterRows.isNotEmpty) {
-  // Apply server-side filtering based on filterRows
-  // You can convert filterRows to a more usable format:
-  final filterMap = FilterHelper.convertRowsToMap(request.filterRows);
-  // or
-  final filter = FilterHelper.convertRowsToFilter(
-    request.filterRows,
-    stateManager.refColumns,
-  );
-}
-```
-
-When sorting or filtering changes, the pagination automatically resets to page 1 to ensure data consistency.
-
-## Page Size Selection
-
-Lazy pagination supports a page size selector dropdown:
-
-```dart
-TrinaLazyPagination(
-  // Enable page size selector dropdown
-  showPageSizeSelector: true,
-  
-  // Available page size options
-  pageSizes: [10, 20, 30, 50, 100],
-  
-  // Callback when page size changes
-  onPageSizeChanged: (pageSize) {
-    print('Page size changed to: $pageSize');
+TrinaGrid(
+  // Grid configuration
+  createFooter: (stateManager) {
+    return TrinaPagination(
+      stateManager: stateManager,
+    );
   },
-  
-  // Optional styling for dropdown
-  dropdownDecoration: BoxDecoration(...),
-  dropdownItemDecoration: BoxDecoration(...),
-  pageSizeDropdownIcon: Icon(...),
-  
-  // Other required parameters
-  fetch: fetch,
-  stateManager: stateManager,
-);
+)
 ```
 
-## Complete Example
+[Learn more about Client-Side Pagination](pagination-client.md)
 
-Here's a complete example demonstrating lazy pagination:
+### Lazy Pagination (Server-Side)
 
 ```dart
-class MyDataGrid extends StatefulWidget {
-  @override
-  _MyDataGridState createState() => _MyDataGridState();
-}
-
-class _MyDataGridState extends State<MyDataGrid> {
-  late TrinaGridStateManager stateManager;
-  final List<TrinaColumn> columns = [];
-  final List<TrinaRow> rows = [];
-
-  Future<TrinaLazyPaginationResponse> fetch(TrinaLazyPaginationRequest request) async {
-    // Simulate API call
-    final response = await myApi.fetchData(
-      page: request.page,
-      pageSize: request.pageSize,
-      sortColumn: request.sortColumn,
-      filterRows: request.filterRows,
+TrinaGrid(
+  // Grid configuration
+  createFooter: (stateManager) {
+    return TrinaLazyPagination(
+      fetch: fetch,  // Your data fetching function
+      stateManager: stateManager,
     );
-
-    return TrinaLazyPaginationResponse(
-      totalPage: response.totalPages,
-      rows: response.rows,
-      totalRecords: response.totalCount,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TrinaGrid(
-      columns: columns,
-      rows: rows,
-      onLoaded: (event) => stateManager = event.stateManager,
-      createFooter: (stateManager) => TrinaLazyPagination(
-        initialPage: 1,
-        initialPageSize: 20,
-        showPageSizeSelector: true,
-        pageSizes: [10, 20, 50, 100],
-        fetch: fetch,
-        stateManager: stateManager,
-      ),
-    );
-  }
-}
+  },
+)
 ```
+
+[Learn more about Lazy Pagination](lazy-pagination.md)
+
+### Infinity Scroll
+
+```dart
+TrinaGrid(
+  // Grid configuration
+  createFooter: (stateManager) {
+    return TrinaInfinityScrollRows(
+      fetch: fetch,  // Your data fetching function
+      stateManager: stateManager,
+    );
+  },
+)
+```
+
+[Learn more about Infinity Scroll](infinity-scroll.md)
+
+## Best Practices
+
+1. **Choose the right pagination type** based on your dataset size and requirements
+2. **Set appropriate page sizes** - typically 10-50 rows per page depending on row complexity
+3. **Consider user experience** - show loading indicators, total record counts, and clear navigation
+4. **Test with realistic data volumes** to ensure performance meets expectations
+5. **Combine with other features** like sorting and filtering for a complete data management solution
 
 ## Related Features
 
-- For client-side pagination, see [Client-Side Pagination](pagination-client.md)
-- For infinite scrolling, see [Infinity Scroll](infinity-scroll.md)
+- [Column Sorting](column-sorting.md)
+- [Column Filtering](column-filtering.md)
+- [Export](export.md)

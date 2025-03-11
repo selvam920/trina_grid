@@ -47,7 +47,9 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 
 ### Data Management
 
-- [Pagination](features/pagination.md)
+- [Pagination Overview](features/pagination.md)
+  - [Client-Side Pagination](features/pagination-client.md)
+  - [Lazy Pagination (Server-Side)](features/lazy-pagination.md)
 - [Infinite Scrolling](features/infinite-scrolling.md)
 - [Lazy Loading](features/lazy-loading.md)
 - [Copy & Paste](features/copy-paste.md)
