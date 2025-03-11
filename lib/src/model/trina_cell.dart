@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
-typedef TrinaCellRenderer = Widget Function(
-    TrinaCellRendererContext rendererContext);
+typedef TrinaCellRenderer =
+    Widget Function(TrinaCellRendererContext rendererContext);
 
 class TrinaCellRendererContext {
   final TrinaColumn column;
@@ -25,13 +25,16 @@ class TrinaCellRendererContext {
 }
 
 class TrinaCell {
-  TrinaCell({
-    dynamic value,
-    Key? key,
-    this.renderer,
-  })  : _key = key ?? UniqueKey(),
-        _value = value,
-        _originalValue = value;
+  /// Creates a cell with an optional initial value, key, renderer, and onChanged callback.
+  ///
+  /// The [value] parameter sets the initial value of the cell.
+  /// The [key] parameter provides a unique identifier for the cell.
+  /// The [renderer] parameter allows for custom rendering of the cell.
+  /// The [onChanged] parameter allows for cell-level control over value changes.
+  TrinaCell({dynamic value, Key? key, this.renderer, this.onChanged})
+    : _key = key ?? UniqueKey(),
+      _value = value,
+      _originalValue = value;
 
   final Key _key;
 
@@ -44,6 +47,10 @@ class TrinaCell {
   /// Custom renderer for this specific cell.
   /// If provided, this will be used instead of the column renderer.
   final TrinaCellRenderer? renderer;
+
+  /// Callback that is triggered when this specific cell's value is changed.
+  /// This allows for cell-level control over value changes.
+  final TrinaOnChangedEventCallback? onChanged;
 
   /// Returns true if this cell has a custom renderer.
   bool get hasRenderer => renderer != null;
@@ -132,8 +139,9 @@ class TrinaCell {
     _value = _column!.type.applyFormat(_value);
 
     if (_column!.type is TrinaColumnTypeWithNumberFormat) {
-      _value =
-          (_column!.type as TrinaColumnTypeWithNumberFormat).toNumber(_value);
+      _value = (_column!.type as TrinaColumnTypeWithNumberFormat).toNumber(
+        _value,
+      );
     }
 
     _needToApplyFormatOnInit = false;

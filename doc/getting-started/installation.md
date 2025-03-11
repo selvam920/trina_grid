@@ -8,7 +8,7 @@ Add the following dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  trina_grid: ^8.4.13
+  trina_grid: <latest_version>
 ```
 
 ## 2. Install Package

@@ -15,15 +15,9 @@ abstract class IEditingState {
   bool isEditableCell(TrinaCell cell);
 
   /// Change the editing status of the current cell.
-  void setEditing(
-    bool flag, {
-    bool notify = true,
-  });
+  void setEditing(bool flag, {bool notify = true});
 
-  void setAutoEditing(
-    bool flag, {
-    bool notify = true,
-  });
+  void setAutoEditing(bool flag, {bool notify = true});
 
   void setTextEditingController(TextEditingController? textEditingController);
 
@@ -58,8 +52,12 @@ class _State {
 mixin EditingState implements ITrinaGridState {
   final _State _state = _State();
 
-  Widget Function(Widget editCellWidget, TrinaCell cell,
-      TextEditingController controller)? get editCellWrapper;
+  Widget Function(
+    Widget editCellWidget,
+    TrinaCell cell,
+    TextEditingController controller,
+  )?
+  get editCellWrapper;
 
   @override
   bool get isEditing => _state._isEditing;
@@ -86,10 +84,7 @@ mixin EditingState implements ITrinaGridState {
   }
 
   @override
-  void setEditing(
-    bool flag, {
-    bool notify = true,
-  }) {
+  void setEditing(bool flag, {bool notify = true}) {
     if (!mode.isEditableMode || (flag && currentCell == null)) {
       flag = false;
     }
@@ -97,16 +92,13 @@ mixin EditingState implements ITrinaGridState {
     if (isEditing == flag) return;
 
     if (flag) {
-      assert(
-        currentCell?.column != null && currentCell?.row != null,
-        """
+      assert(currentCell?.column != null && currentCell?.row != null, """
       TrinaCell is not Initialized. 
       TrinaColumn and TrinaRow must be initialized in TrinaCell via TrinaGridStateManager.
       initializeRows method. When adding or deleting columns or rows, 
       you must use methods on TrinaGridStateManager. Otherwise, 
       the TrinaCell is not initialized and this error occurs.
-      """,
-      );
+      """);
 
       if (!isEditableCell(currentCell!)) {
         flag = false;
@@ -121,10 +113,7 @@ mixin EditingState implements ITrinaGridState {
   }
 
   @override
-  void setAutoEditing(
-    bool flag, {
-    bool notify = true,
-  }) {
+  void setAutoEditing(bool flag, {bool notify = true}) {
     if (autoEditing == flag) {
       return;
     }
@@ -140,10 +129,8 @@ mixin EditingState implements ITrinaGridState {
   }
 
   @override
-  void toggleEditing({bool notify = true}) => setEditing(
-        !(isEditing == true),
-        notify: notify,
-      );
+  void toggleEditing({bool notify = true}) =>
+      setEditing(!(isEditing == true), notify: notify);
 
   @override
   void pasteCellValue(List<List<String>> textList) {
@@ -174,17 +161,25 @@ mixin EditingState implements ITrinaGridState {
         rowEndIdx = currentCellPosition!.rowIdx! + textList.length - 1;
       } else {
         // If there are selected cells : Paste in order from selected cell range
-        columnStartIdx = min(currentCellPosition!.columnIdx!,
-            currentSelectingPosition!.columnIdx!);
+        columnStartIdx = min(
+          currentCellPosition!.columnIdx!,
+          currentSelectingPosition!.columnIdx!,
+        );
 
-        columnEndIdx = max(currentCellPosition!.columnIdx!,
-            currentSelectingPosition!.columnIdx!);
+        columnEndIdx = max(
+          currentCellPosition!.columnIdx!,
+          currentSelectingPosition!.columnIdx!,
+        );
 
         rowStartIdx = min(
-            currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
+          currentCellPosition!.rowIdx!,
+          currentSelectingPosition!.rowIdx!,
+        );
 
         rowEndIdx = max(
-            currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
+          currentCellPosition!.rowIdx!,
+          currentSelectingPosition!.rowIdx!,
+        );
       }
 
       _pasteCellValueInOrder(
@@ -201,8 +196,9 @@ mixin EditingState implements ITrinaGridState {
   @override
   dynamic castValueByColumnType(dynamic value, TrinaColumn column) {
     if (column.type is TrinaColumnTypeWithNumberFormat) {
-      return (column.type as TrinaColumnTypeWithNumberFormat)
-          .toNumber(column.type.applyFormat(value));
+      return (column.type as TrinaColumnTypeWithNumberFormat).toNumber(
+        column.type.applyFormat(value),
+      );
     }
 
     return value;
@@ -243,15 +239,24 @@ mixin EditingState implements ITrinaGridState {
 
     cell.value = value;
 
+    // Create the event object once to reuse for both callbacks
+    final changedEvent = TrinaGridOnChangedEvent(
+      columnIdx: columnIndex(currentColumn)!,
+      column: currentColumn,
+      rowIdx: refRows.indexOf(currentRow),
+      row: currentRow,
+      value: value,
+      oldValue: oldValue,
+    );
+
+    // Call the cell-level onChanged callback if it exists
+    if (callOnChangedEvent == true && cell.onChanged != null) {
+      cell.onChanged!(changedEvent);
+    }
+
+    // Call the grid-level onChanged callback if it exists
     if (callOnChangedEvent == true && onChanged != null) {
-      onChanged!(TrinaGridOnChangedEvent(
-        columnIdx: columnIndex(currentColumn)!,
-        column: currentColumn,
-        rowIdx: refRows.indexOf(currentRow),
-        row: currentRow,
-        value: value,
-        oldValue: oldValue,
-      ));
+      onChanged!(changedEvent);
     }
 
     notifyListeners(notify, changeCellValue.hashCode);
@@ -262,8 +267,9 @@ mixin EditingState implements ITrinaGridState {
 
     int columnEndIdx = refColumns.length - 1;
 
-    final Set<Key> selectingRowKeys =
-        Set.from(currentSelectingRows.map((e) => e.key));
+    final Set<Key> selectingRowKeys = Set.from(
+      currentSelectingRows.map((e) => e.key),
+    );
 
     List<int> rowIdxList = [];
 
@@ -311,9 +317,11 @@ mixin EditingState implements ITrinaGridState {
         textRowIdx = 0;
       }
 
-      for (int columnIdx = columnStartIdx!;
-          columnIdx <= columnEndIdx!;
-          columnIdx += 1) {
+      for (
+        int columnIdx = columnStartIdx!;
+        columnIdx <= columnEndIdx!;
+        columnIdx += 1
+      ) {
         if (columnIdx > columnIndexes.length - 1) {
           break;
         }
@@ -351,15 +359,24 @@ mixin EditingState implements ITrinaGridState {
 
         currentCell.value = newValue;
 
+        // Create the event object once to reuse for both callbacks
+        final changedEvent = TrinaGridOnChangedEvent(
+          columnIdx: columnIndexes[columnIdx],
+          column: currentColumn,
+          rowIdx: rowIdx,
+          row: refRows[rowIdx],
+          value: newValue,
+          oldValue: oldValue,
+        );
+
+        // Call the cell-level onChanged callback if it exists
+        if (currentCell.onChanged != null) {
+          currentCell.onChanged!(changedEvent);
+        }
+
+        // Call the grid-level onChanged callback if it exists
         if (onChanged != null) {
-          onChanged!(TrinaGridOnChangedEvent(
-            columnIdx: columnIndexes[columnIdx],
-            column: currentColumn,
-            rowIdx: rowIdx,
-            row: refRows[rowIdx],
-            value: newValue,
-            oldValue: oldValue,
-          ));
+          onChanged!(changedEvent);
         }
 
         ++textColumnIdx;
