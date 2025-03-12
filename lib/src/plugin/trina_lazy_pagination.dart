@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 /// Callback function to implement to add lazy pagination data.
-typedef TrinaLazyPaginationFetch = Future<TrinaLazyPaginationResponse> Function(
-    TrinaLazyPaginationRequest);
+typedef TrinaLazyPaginationFetch =
+    Future<TrinaLazyPaginationResponse> Function(TrinaLazyPaginationRequest);
 
 /// Request data for lazy pagination processing.
 class TrinaLazyPaginationRequest {
@@ -95,8 +95,10 @@ class TrinaLazyPagination extends StatefulWidget {
     required this.fetch,
     required this.stateManager,
     super.key,
-  }) : assert(!showPageSizeSelector || pageSizes.contains(initialPageSize),
-            'initialPageSize must be included in pageSizes list when showPageSizeSelector is true');
+  }) : assert(
+         !showPageSizeSelector || pageSizes.contains(initialPageSize),
+         'initialPageSize must be included in pageSizes list when showPageSizeSelector is true',
+       );
 
   /// Set the first page.
   final int initialPage;
@@ -216,29 +218,29 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
 
     widget
         .fetch(
-      TrinaLazyPaginationRequest(
-        page: page,
-        pageSize: _pageSize,
-        sortColumn: stateManager.getSortedColumn,
-        filterRows: stateManager.filterRows,
-      ),
-    )
+          TrinaLazyPaginationRequest(
+            page: page,
+            pageSize: _pageSize,
+            sortColumn: stateManager.getSortedColumn,
+            filterRows: stateManager.filterRows,
+          ),
+        )
         .then((data) {
-      if (!mounted) return;
-      stateManager.scroll.bodyRowsVertical!.jumpTo(0);
+          if (!mounted) return;
+          stateManager.scroll.bodyRowsVertical!.jumpTo(0);
 
-      stateManager.refRows.clearFromOriginal();
-      stateManager.insertRows(0, data.rows);
+          stateManager.refRows.clearFromOriginal();
+          stateManager.insertRows(0, data.rows);
 
-      setState(() {
-        _page = page;
-        _totalPage = data.totalPage;
-        _totalRecords = data.totalRecords;
-        _isFetching = false;
-      });
+          setState(() {
+            _page = page;
+            _totalPage = data.totalPage;
+            _totalRecords = data.totalRecords;
+            _isFetching = false;
+          });
 
-      stateManager.setShowLoading(false);
-    });
+          stateManager.setShowLoading(false);
+        });
   }
 
   void setPageSize(int size) {
@@ -403,14 +405,14 @@ class _PageSizeDropdownPaginationWidgetState
     return TextButton.styleFrom(
       disabledForegroundColor: Colors.transparent,
       shadowColor: Colors.transparent,
-      padding: const EdgeInsets.fromLTRB(5, 0, 0, 10),
+      padding: const EdgeInsets.fromLTRB(3, 0, 0, 3),
       backgroundColor: Colors.transparent,
     );
   }
 
   TextStyle _getNumberTextStyle(bool isCurrentIndex) {
     return TextStyle(
-      fontSize: isCurrentIndex ? widget.iconSize : null,
+      fontSize: isCurrentIndex ? widget.iconSize - 2 : null,
       color: isCurrentIndex ? widget.activatedColor : widget.iconColor,
     );
   }
@@ -446,13 +448,15 @@ class _PageSizeDropdownPaginationWidgetState
               children: [
                 if (widget.totalRecords != null) _totalRecordsWidget(),
                 const Spacer(),
-                Row(children: [
-                  _firstPageIconButton(),
-                  _beforePageIconButton(),
-                  ..._pageNumbers.map(_makeNumberButton),
-                  _nextPageIconButton(),
-                  _lastPageIconButton(),
-                ]),
+                Row(
+                  children: [
+                    _firstPageIconButton(),
+                    _beforePageIconButton(),
+                    ..._pageNumbers.map(_makeNumberButton),
+                    _nextPageIconButton(),
+                    _lastPageIconButton(),
+                  ],
+                ),
                 const Spacer(),
                 if (widget.showPageSizeSelector) _pageSizeDropdownButton(),
               ],
@@ -477,7 +481,7 @@ class _PageSizeDropdownPaginationWidgetState
             widget.totalRecords.toString(),
             style: TextStyle(
               color: widget.iconColor,
-              fontSize: widget.iconSize,
+              fontSize: widget.iconSize - 3,
             ),
           ),
         ],
@@ -539,37 +543,31 @@ class _PageSizeDropdownPaginationWidgetState
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         children: [
-          Icon(
-            Icons.view_list,
-            color: widget.iconColor,
-            size: widget.iconSize,
-          ),
-          const SizedBox(width: 8),
           SizedBox(
             child: DropdownButton<int>(
               value: widget.currentPageSize,
               focusColor: Colors.transparent,
               underline: const SizedBox.shrink(),
-              icon: widget.pageSizeDropdownIcon ??
-                  Icon(
-                    Icons.arrow_drop_down,
-                    color: widget.iconColor,
-                  ),
-              items: widget.pageSizes.map<DropdownMenuItem<int>>((int value) {
-                return DropdownMenuItem<int>(
-                  value: value,
-                  child: Container(
-                    decoration: widget.dropdownItemDecoration,
-                    child: Text(
-                      '$value',
-                      style: TextStyle(
-                        color: widget.iconColor,
-                        fontSize: widget.iconSize,
+              isDense: true,
+              icon:
+                  widget.pageSizeDropdownIcon ??
+                  Icon(Icons.view_list, color: widget.iconColor),
+              items:
+                  widget.pageSizes.map<DropdownMenuItem<int>>((int value) {
+                    return DropdownMenuItem<int>(
+                      value: value,
+                      child: Container(
+                        decoration: widget.dropdownItemDecoration,
+                        child: Text(
+                          '$value',
+                          style: TextStyle(
+                            color: widget.iconColor,
+                            fontSize: widget.iconSize - 3,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              }).toList(),
+                    );
+                  }).toList(),
               onChanged: (int? value) {
                 if (value != null) {
                   widget.onPageSizeChanged(value);
