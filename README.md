@@ -10,7 +10,7 @@ TrinaGrid is a powerful data grid for Flutter that provides a wide range of feat
 
 ![TrinaGrid Demo](https://raw.githubusercontent.com/doonfrs/trina_grid/master/screenshots/demo.gif)
 
-> TrinaGrid is a maintained and enhanced version of the original TrinaGrid package. I'm [Feras](https://github.com/doonfrs), the current maintainer, and I'm actively working on adding new features and keeping this great package rich and up-to-date. I continued the development after the original package [TrinaGrid](https://github.com/bosskmk/pluto_grid) was no longer being maintained.
+> TrinaGrid is a maintained and enhanced version of the original TrinaGrid package. I'm [Feras](https://github.com/doonfrs), the current maintainer, and I'm actively working on adding new features and keeping this great package rich and up-to-date. I continued the development after the original package [PlutoGrid](https://github.com/bosskmk/pluto_grid) was no longer being maintained.
 
 ## Migration from PlutoGrid
 
