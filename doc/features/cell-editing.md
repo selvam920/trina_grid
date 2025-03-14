@@ -2,6 +2,8 @@
 
 Cell editing is a fundamental feature in TrinaGrid that allows users to modify cell values directly within the grid. This feature provides a spreadsheet-like experience, enabling efficient data entry and manipulation.
 
+![Cell Editing Demo](https://raw.githubusercontent.com/doonfrs/trina_grid/master/doc/assets/cell-editing.gif)
+
 ## Overview
 
 The cell editing feature enables you to:
@@ -82,14 +84,14 @@ TrinaColumn(
   field: 'name',
   type: TrinaColumnType.text(),
   enableEditingMode: true,
-  editCellRenderer: (defaultEditCellWidget, cell, controller, focusNode) {
+  editCellRenderer: (defaultEditCellWidget, cell, controller, focusNode, handleSelected) {
     // Return a custom widget that wraps the default edit cell widget
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue, width: 2),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: defaultEditCellWidget,
+      child: defaultEditCellWidget, // Uses the controller automatically
     );
   },
 )
@@ -103,7 +105,7 @@ To apply a custom edit cell renderer to all editable columns:
 TrinaGrid(
   columns: columns,
   rows: rows,
-  editCellRenderer: (defaultEditCellWidget, cell, controller, focusNode) {
+  editCellRenderer: (defaultEditCellWidget, cell, controller, focusNode, handleSelected) {
     // This will be used for all columns unless they have their own editCellRenderer
     return Container(
       decoration: BoxDecoration(
@@ -117,10 +119,12 @@ TrinaGrid(
 ```
 
 The `editCellRenderer` function provides:
+
 - `defaultEditCellWidget`: The default edit cell widget (usually a TextField)
 - `cell`: The current cell being edited
 - `controller`: The TextEditingController for the edit field
 - `focusNode`: The FocusNode for the edit field, allowing you to control focus
+- `handleSelected`: A callback function to notify the grid when a value is selected (required for select and date fields)
 
 Column-level renderers take precedence over grid-level renderers.
 
@@ -130,7 +134,7 @@ For different column types, you may need to implement custom widgets instead of 
 
 #### Select/Dropdown Columns
 
-For select columns, you may need to use both `renderer` and `editCellRenderer` to fully customize the behavior:
+For select columns, you need to use the `handleSelected` callback to notify the grid of value changes:
 
 ```dart
 TrinaColumn(
@@ -138,115 +142,50 @@ TrinaColumn(
   field: 'status',
   type: TrinaColumnType.select(['Active', 'Inactive', 'Pending']),
   enableEditingMode: true,
-  // Custom renderer for display mode
-  renderer: (rendererContext) {
-    // Create a custom display for the cell
-    return GestureDetector(
-      onTap: () {
-        // When tapped, enter edit mode
-        rendererContext.stateManager.setCurrentCell(
-          rendererContext.cell, 
-          rendererContext.rowIdx
+  editCellRenderer: (defaultEditCellWidget, cell, controller, focusNode, handleSelected) {
+    String? value = cell.value;
+    Color indicatorColor = Colors.grey;
+    
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: indicatorColor, width: 2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: StatefulBuilder(builder: (context, mSetState) {
+        return DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            value: value,
+            isExpanded: true,
+            focusNode: focusNode, // Use the provided focus node
+            onChanged: (String? newValue) {
+              // Important: Call handleSelected to notify the grid of the value change
+              handleSelected?.call(newValue);
+              
+              // Update local state if needed
+              mSetState(() {
+                value = newValue;
+              });
+            },
+            items: (cell.column.type as TrinaColumnTypeSelect)
+                .items
+                .map<DropdownMenuItem<String>>((dynamic value) {
+              return DropdownMenuItem<String>(
+                value: value as String,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
         );
-        rendererContext.stateManager.setEditing(true);
-      },
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        child: Text(rendererContext.cell.value.toString()),
-      ),
-    );
-  },
-  // Custom renderer for edit mode
-  editCellRenderer: (defaultEditCellWidget, cell, controller, focusNode) {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton<String>(
-        value: cell.value as String,
-        focusNode: focusNode, // Use the provided focus node
-        isExpanded: true,
-        onChanged: (String? newValue) {
-          if (newValue != null) {
-            // Update the cell value directly through the state manager
-            stateManager.changeCellValue(cell, newValue);
-            
-            // Exit editing mode after selection
-            stateManager.setEditing(false);
-          }
-        },
-        items: (cell.column.type as TrinaColumnTypeSelect)
-            .items
-            .map<DropdownMenuItem<String>>((dynamic value) {
-          return DropdownMenuItem<String>(
-            value: value as String,
-            child: Text(value),
-          );
-        }).toList(),
-      ),
+      }),
     );
   },
 )
 ```
 
-This approach gives you full control over both the display and editing experience for select columns. The `renderer` handles the normal display state and can trigger the edit mode, while the `editCellRenderer` handles the actual dropdown interface when in edit mode.
-
-> **Note:** For popup-based columns (select, date, time), the `editCellRenderer` may not be called due to how these cells handle editing internally. In such cases, you can use a fully custom renderer that handles both display and edit modes:
->
-> ```dart
-> TrinaColumn(
->   title: 'Status',
->   field: 'status',
->   type: TrinaColumnType.select(['Active', 'Inactive', 'Pending']),
->   enableEditingMode: true,
->   renderer: (rendererContext) {
->     // Check if this cell is currently being edited
->     bool isEditing = rendererContext.stateManager.isEditing && 
->                     rendererContext.stateManager.currentCell == rendererContext.cell;
->
->     // If in edit mode, show dropdown
->     if (isEditing) {
->       return DropdownButtonHideUnderline(
->         child: DropdownButton<String>(
->           value: rendererContext.cell.value as String,
->           isExpanded: true,
->           onChanged: (String? newValue) {
->             if (newValue != null) {
->               // Update the cell value
->               rendererContext.stateManager.changeCellValue(rendererContext.cell, newValue);
->               // Exit editing mode
->               rendererContext.stateManager.setEditing(false);
->             }
->           },
->           items: (rendererContext.cell.column.type as TrinaColumnTypeSelect)
->               .items
->               .map<DropdownMenuItem<String>>((dynamic value) {
->             return DropdownMenuItem<String>(
->               value: value as String,
->               child: Text(value),
->             );
->           }).toList(),
->         ),
->       );
->     } 
->     // Otherwise show display mode
->     else {
->       return GestureDetector(
->         onTap: () {
->           // When tapped, enter edit mode
->           rendererContext.stateManager.setCurrentCell(
->             rendererContext.cell, 
->             rendererContext.rowIdx
->           );
->           rendererContext.stateManager.setEditing(true);
->         },
->         child: Text(rendererContext.cell.value.toString()),
->       );
->     }
->   },
-> )
-> ```
-
 #### Date Columns
 
-For date columns, you can implement a custom date picker:
+For date columns, you also need to use the `handleSelected` callback:
 
 ```dart
 TrinaColumn(
@@ -254,114 +193,49 @@ TrinaColumn(
   field: 'date',
   type: TrinaColumnType.date(),
   enableEditingMode: true,
-  editCellRenderer: (defaultEditCellWidget, cell, controller, focusNode) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            cell.value != null
-                ? '${(cell.value as DateTime).day}/${(cell.value as DateTime).month}/${(cell.value as DateTime).year}'
-                : 'Select date',
+  editCellRenderer: (defaultEditCellWidget, cell, controller, focusNode, handleSelected) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.orange, width: 2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              controller: controller,
+              focusNode: focusNode,
+              style: const TextStyle(fontSize: 14),
+            ),
           ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.calendar_today),
-          onPressed: () async {
-            // Request focus to maintain grid control
-            focusNode.requestFocus();
-            
-            // Show date picker
-            final DateTime? picked = await showDatePicker(
-              context: context,
-              initialDate: cell.value ?? DateTime.now(),
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2100),
-            );
-            
-            // Update cell value if a date was picked
-            if (picked != null) {
-              stateManager.changeCellValue(cell, picked);
-            }
-            
-            // Request focus again after dialog is closed
-            focusNode.requestFocus();
-          },
-        ),
-      ],
+          IconButton(
+            icon: const Icon(Icons.calendar_today),
+            onPressed: () async {
+              // Show date picker
+              final DateTime? picked = await showDatePicker(
+                context: context,
+                initialDate: DateTime.tryParse(cell.value.toString()) ?? DateTime.now(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+              );
+              
+              // Important: Call handleSelected to notify the grid of the value change
+              if (picked != null) {
+                handleSelected?.call(picked);
+              }
+            },
+          ),
+        ],
+      ),
     );
   },
 )
 ```
 
-> **Note:** As with select columns, for date columns you may need to use a fully custom renderer:
->
-> ```dart
-> TrinaColumn(
->   title: 'Date',
->   field: 'date',
->   type: TrinaColumnType.date(),
->   enableEditingMode: true,
->   renderer: (rendererContext) {
->     // Check if this cell is currently being edited
->     bool isEditing = rendererContext.stateManager.isEditing && 
->                     rendererContext.stateManager.currentCell == rendererContext.cell;
->
->     // Format the date for display
->     String displayText = rendererContext.cell.value != null
->         ? '${(rendererContext.cell.value as DateTime).day}/${(rendererContext.cell.value as DateTime).month}/${(rendererContext.cell.value as DateTime).year}'
->         : 'Select date';
->
->     // If in edit mode, show date picker interface
->     if (isEditing) {
->       return Row(
->         children: [
->           Expanded(
->             child: Text(displayText),
->           ),
->           IconButton(
->             icon: const Icon(Icons.calendar_today),
->             onPressed: () async {
->               // Show date picker
->               final DateTime? picked = await showDatePicker(
->                 context: context,
->                 initialDate: rendererContext.cell.value ?? DateTime.now(),
->                 firstDate: DateTime(2000),
->                 lastDate: DateTime(2100),
->               );
->               
->               // Update cell value if a date was picked
->               if (picked != null) {
->                 rendererContext.stateManager.changeCellValue(rendererContext.cell, picked);
->               }
->               
->               // Exit editing mode after selection
->               rendererContext.stateManager.setEditing(false);
->             },
->           ),
->         ],
->       );
->     } 
->     // Otherwise show display mode
->     else {
->       return GestureDetector(
->         onTap: () {
->           // When tapped, enter edit mode
->           rendererContext.stateManager.setCurrentCell(
->             rendererContext.cell, 
->             rendererContext.rowIdx
->           );
->           rendererContext.stateManager.setEditing(true);
->         },
->         child: Text(displayText),
->       );
->     }
->   },
-> )
-> ```
-
 #### Number Columns
 
-For number columns, you can create a custom number input with increment/decrement buttons:
+For number columns, you can either use the controller (which automatically updates the grid) or manually call `stateManager.changeCellValue()`:
 
 ```dart
 TrinaColumn(
@@ -369,18 +243,18 @@ TrinaColumn(
   field: 'quantity',
   type: TrinaColumnType.number(),
   enableEditingMode: true,
-  editCellRenderer: (defaultEditCellWidget, cell, controller, focusNode) {
+  editCellRenderer: (defaultEditCellWidget, cell, controller, focusNode, handleSelected) {
     return Row(
       children: [
         IconButton(
           icon: const Icon(Icons.remove_circle_outline),
           onPressed: () {
-            // Decrement the value
-            final currentValue = (cell.value as num?) ?? 0;
-            stateManager.changeCellValue(cell, currentValue - 1);
-            
-            // Update the controller text to reflect the new value
+            // Option 1: Update the controller (automatically updates the grid)
+            final currentValue = int.tryParse(controller.text) ?? 0;
             controller.text = (currentValue - 1).toString();
+            
+            // Option 2: Manually update the cell value
+            // stateManager.changeCellValue(cell, currentValue - 1);
             
             // Maintain focus
             focusNode.requestFocus();
@@ -388,33 +262,21 @@ TrinaColumn(
         ),
         Expanded(
           child: TextField(
-            controller: controller,
+            controller: controller, // Using the controller automatically updates the grid
             focusNode: focusNode,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
               border: InputBorder.none,
             ),
-            onChanged: (value) {
-              // Update the cell value when the text changes
-              if (value.isNotEmpty) {
-                final numValue = int.tryParse(value) ?? 0;
-                stateManager.changeCellValue(cell, numValue);
-              }
-            },
+            // No need for onChanged if using the controller
           ),
         ),
         IconButton(
           icon: const Icon(Icons.add_circle_outline),
           onPressed: () {
-            // Increment the value
-            final currentValue = (cell.value as num?) ?? 0;
-            stateManager.changeCellValue(cell, currentValue + 1);
-            
-            // Update the controller text to reflect the new value
+            final currentValue = int.tryParse(controller.text) ?? 0;
             controller.text = (currentValue + 1).toString();
-            
-            // Maintain focus
             focusNode.requestFocus();
           },
         ),
@@ -427,9 +289,35 @@ TrinaColumn(
 ### Important Notes
 
 1. **Maintaining Focus**: Always use the provided `focusNode` to maintain grid focus control.
-2. **Updating Values**: Use `stateManager.changeCellValue(cell, newValue)` to update cell values.
+2. **Updating Values**:
+   - For text-based fields, use the provided `controller` to automatically update the grid.
+   - If not using the controller, call `stateManager.changeCellValue(cell, newValue)` to update cell values.
+   - For select and date fields, use the `handleSelected` callback to notify the grid of value changes.
 3. **Controller Synchronization**: For custom inputs, make sure to update the `controller.text` to reflect the new value.
 4. **Type Casting**: Be careful with type casting when working with different column types.
+
+### Understanding Value Change Handling by Column Type
+
+Different column types handle value changes differently:
+
+| Column Type | How to Handle Value Changes |
+|-------------|----------------------------|
+| Text        | Use the provided `controller` which automatically updates the grid. If not using the controller, call `stateManager.changeCellValue(cell, newValue)`. |
+| Number      | Use the provided `controller` or call `stateManager.changeCellValue(cell, numValue)`. |
+| Select      | Call `handleSelected?.call(newValue)` to notify the grid of the selection. |
+| Date        | Call `handleSelected?.call(pickedDate)` to notify the grid of the date selection. |
+| Time        | Call `handleSelected?.call(pickedTime)` to notify the grid of the time selection. |
+
+The key differences:
+
+1. **Text and Number columns**:
+   - When using the provided `controller`, the grid automatically detects changes.
+   - If implementing a custom input that doesn't use the controller, you must manually call `stateManager.changeCellValue()`.
+
+2. **Select, Date, and Time columns**:
+   - These columns implement `PopupCell` which requires using the `handleSelected` callback.
+   - The `handleSelected` callback properly updates the cell and handles any necessary state changes.
+   - Do not use `stateManager.changeCellValue()` directly for these column types as it may not properly update the grid's internal state.
 
 ## Keyboard Navigation
 

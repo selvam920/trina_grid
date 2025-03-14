@@ -38,7 +38,7 @@ class _EditCellRendererScreenState extends State<EditCellRendererScreen> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.blue, width: 2),
               borderRadius: BorderRadius.circular(8),
-              color: Colors.blue.withOpacity(0.1),
+              color: Colors.blue.withAlpha((0.1 * 255).toInt()),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: defaultEditCellWidget,
@@ -65,7 +65,7 @@ class _EditCellRendererScreenState extends State<EditCellRendererScreen> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.purple, width: 2),
               borderRadius: BorderRadius.circular(8),
-              color: Colors.purple.withOpacity(0.1),
+              color: Colors.purple.withAlpha((0.1 * 255).toInt()),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Row(
@@ -94,7 +94,7 @@ class _EditCellRendererScreenState extends State<EditCellRendererScreen> {
             decoration: BoxDecoration(
               border: Border.all(color: indicatorColor, width: 2),
               borderRadius: BorderRadius.circular(8),
-              color: indicatorColor.withOpacity(0.1),
+              color: indicatorColor.withAlpha((0.1 * 255).toInt()),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: StatefulBuilder(builder: (context, mSetState) {
@@ -169,10 +169,11 @@ class _EditCellRendererScreenState extends State<EditCellRendererScreen> {
               : 'Select date';
           return Container(
             decoration: BoxDecoration(
-              border:
-                  Border.all(color: Colors.orange.withOpacity(0.5), width: 1),
+              border: Border.all(
+                  color: Colors.orange.withAlpha((0.5 * 255).toInt()),
+                  width: 1),
               borderRadius: BorderRadius.circular(4),
-              color: Colors.orange.withOpacity(0.1),
+              color: Colors.orange.withAlpha((0.1 * 255).toInt()),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Row(
@@ -196,7 +197,7 @@ class _EditCellRendererScreenState extends State<EditCellRendererScreen> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.orange, width: 2),
               borderRadius: BorderRadius.circular(8),
-              color: Colors.orange.withOpacity(0.1),
+              color: Colors.orange.withAlpha((0.1 * 255).toInt()),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Row(
@@ -255,7 +256,7 @@ class _EditCellRendererScreenState extends State<EditCellRendererScreen> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.indigo, width: 2),
               borderRadius: BorderRadius.circular(8),
-              color: Colors.indigo.withOpacity(0.1),
+              color: Colors.indigo.withAlpha((0.1 * 255).toInt()),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Row(
@@ -291,7 +292,7 @@ class _EditCellRendererScreenState extends State<EditCellRendererScreen> {
                       color: Colors.indigo),
                   onPressed: () {
                     // Increment the value
-                    final currentValue = int.parse(controller.text) ?? 0;
+                    final currentValue = int.parse(controller.text);
                     controller.text = (currentValue + 1).toString();
                     focusNode.requestFocus();
                   },
@@ -359,7 +360,7 @@ class _EditCellRendererScreenState extends State<EditCellRendererScreen> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.green, width: 2),
               borderRadius: BorderRadius.circular(8),
-              color: Colors.green.withOpacity(0.1),
+              color: Colors.green.withAlpha((0.1 * 255).toInt()),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: defaultEditCellWidget,

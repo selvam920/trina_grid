@@ -3,10 +3,12 @@
 ## [1.5.0] - 2025. 03. 15
 
 ### Breaking Changes
+
 * Renamed `editCellWrapper` to `editCellRenderer` for better semantic clarity
 * Renamed parameter `editCellWidget` to `defaultEditCellWidget` in editCellRenderer function signature
 
 ### Enhancements
+
 * Enhanced editCellRenderer to be column-based
 * Added focus node parameter to editCellRenderer to allow custom widgets to maintain grid focus control
 
