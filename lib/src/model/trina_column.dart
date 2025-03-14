@@ -205,6 +205,18 @@ class TrinaColumn {
   final String? Function(dynamic value, TrinaValidationContext context)?
   validator;
 
+  /// Custom renderer for the edit cell widget.
+  /// This allows customizing the edit cell UI for this specific column.
+  /// If provided, this takes precedence over the grid-level editCellRenderer.
+  final Widget Function(
+    Widget defaultEditCellWidget,
+    TrinaCell cell,
+    TextEditingController controller,
+    FocusNode focusNode,
+    Function(dynamic value)? handleSelected,
+  )?
+  editCellRenderer;
+
   TrinaColumn({
     required this.title,
     required this.field,
@@ -245,6 +257,7 @@ class TrinaColumn {
         const TrinaFilterColumnWidgetDelegate.textField(),
     this.disableRowCheckboxWhen,
     this.validator,
+    this.editCellRenderer,
   }) : _key = UniqueKey(),
        _checkReadOnly = checkReadOnly;
 

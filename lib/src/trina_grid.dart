@@ -81,7 +81,7 @@ class TrinaGrid extends TrinaStatefulWidget {
     required this.columns,
     required this.rows,
     this.rowWrapper,
-    this.editCellWrapper,
+    this.editCellRenderer,
     this.columnGroups,
     this.onLoaded,
     this.onChanged,
@@ -110,12 +110,17 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// {@macro trina_grid_row_wrapper}
   final RowWrapper? rowWrapper;
 
+  /// Grid-level edit cell renderer.
+  /// This allows customizing the edit cell UI for all columns.
+  /// Column-level editCellRenderer takes precedence if provided.
   final Widget Function(
-    Widget editCellWidget,
+    Widget defaultEditCellWidget,
     TrinaCell cell,
     TextEditingController controller,
+    FocusNode focusNode,
+    Function(dynamic value)? handleSelected,
   )?
-  editCellWrapper;
+  editCellRenderer;
 
   /// {@template trina_grid_property_columns}
   /// The [TrinaColumn] column is delivered as a list and can be added or deleted after grid creation.
@@ -563,7 +568,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
         horizontal: _horizontalScroll,
       ),
       rowWrapper: widget.rowWrapper,
-      editCellWrapper: widget.editCellWrapper,
+      editCellRenderer: widget.editCellRenderer,
       columnGroups: widget.columnGroups,
       onChanged: widget.onChanged,
       onSelected: widget.onSelected,

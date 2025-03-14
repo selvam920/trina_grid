@@ -74,7 +74,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     required this.scroll,
     List<TrinaColumnGroup>? columnGroups,
     this.rowWrapper,
-    this.editCellWrapper,
+    this.editCellRenderer,
     this.onChanged,
     this.onSelected,
     this.onSorted,
@@ -116,11 +116,13 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
 
   @override
   final Widget Function(
-    Widget editCellWidget,
+    Widget defaultEditCellWidget,
     TrinaCell cell,
     TextEditingController controller,
+    FocusNode focusNode,
+    Function(dynamic value)? handleSelected,
   )?
-  editCellWrapper;
+  editCellRenderer;
 
   @override
   final FilteredList<TrinaColumn> refColumns;
@@ -249,7 +251,7 @@ class TrinaGridStateManager extends TrinaGridStateChangeNotifier {
     required super.gridFocusNode,
     required super.scroll,
     super.rowWrapper,
-    super.editCellWrapper,
+    super.editCellRenderer,
     super.columnGroups,
     super.onChanged,
     super.onSelected,

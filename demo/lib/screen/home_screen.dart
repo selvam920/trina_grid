@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:demo/screen/empty_screen.dart';
 import 'package:demo/screen/feature/check_visible_columns_screen.dart';
+import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/frozen_rows_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -442,6 +443,14 @@ class TrinaFeatures extends StatelessWidget {
             onTapLiveDemo: () {
               Navigator.pushNamed(context, EditingStateScreen.routeName);
             },
+          ),
+          TrinaListTile(
+            title: 'Edit Cell Renderer',
+            description: 'Customize the appearance of cells in edit mode.',
+            onTapLiveDemo: () {
+              Navigator.pushNamed(context, EditCellRendererScreen.routeName);
+            },
+            trailing: newIcon,
           ),
           TrinaListTile(
             title: 'RTL - TextDirection.',

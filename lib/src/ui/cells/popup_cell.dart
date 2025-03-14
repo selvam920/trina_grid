@@ -58,9 +58,11 @@ mixin PopupCellState<T extends PopupCell> on State<T>
   void initState() {
     super.initState();
 
-    textController = TextEditingController()
-      ..text =
-          widget.column.formattedValueForDisplayInEditing(widget.cell.value);
+    textController =
+        TextEditingController()
+          ..text = widget.column.formattedValueForDisplayInEditing(
+            widget.cell.value,
+          );
 
     textFocus = FocusNode(onKeyEvent: _handleKeyboardFocusOnKey);
   }
@@ -88,7 +90,8 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       onSelected: onSelected,
       columns: popupColumns,
       rows: popupRows,
-      width: popupColumns.fold<double>(0, (previous, column) {
+      width:
+          popupColumns.fold<double>(0, (previous, column) {
             return previous + column.width;
           }) +
           1,
@@ -117,14 +120,18 @@ mixin PopupCellState<T extends PopupCell> on State<T>
         for (var entry in popupRows[i].cells.entries) {
           if (popupRows[i].cells[entry.key]!.value == widget.cell.value) {
             event.stateManager.setCurrentCell(
-                event.stateManager.refRows[i].cells[entry.key], i);
+              event.stateManager.refRows[i].cells[entry.key],
+              i,
+            );
             break;
           }
         }
       } else {
         if (popupRows[i].cells[fieldOnSelected!]!.value == widget.cell.value) {
           event.stateManager.setCurrentCell(
-              event.stateManager.refRows[i].cells[fieldOnSelected!], i);
+            event.stateManager.refRows[i].cells[fieldOnSelected!],
+            i,
+          );
           break;
         }
       }
@@ -138,7 +145,9 @@ mixin PopupCellState<T extends PopupCell> on State<T>
         event.stateManager.moveScrollByRow(TrinaMoveDirection.up, rowIdxToMove);
       } else {
         event.stateManager.moveScrollByRow(
-            TrinaMoveDirection.up, event.stateManager.refRows.length);
+          TrinaMoveDirection.up,
+          event.stateManager.refRows.length,
+        );
       }
     }
   }
@@ -176,10 +185,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
   }
 
   KeyEventResult _handleKeyboardFocusOnKey(FocusNode node, KeyEvent event) {
-    var keyManager = TrinaKeyManagerEvent(
-      focusNode: node,
-      event: event,
-    );
+    var keyManager = TrinaKeyManagerEvent(focusNode: node, event: event);
 
     if (keyManager.isKeyUpEvent) {
       return KeyEventResult.handled;
@@ -210,7 +216,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       textFocus.requestFocus();
     }
 
-    return TextField(
+    Widget w = TextField(
       focusNode: textFocus,
       controller: textController,
       readOnly: true,
@@ -218,22 +224,40 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       onTap: openPopup,
       style: widget.stateManager.configuration.style.cellTextStyle,
       decoration: InputDecoration(
-        border: const OutlineInputBorder(
-          borderSide: BorderSide.none,
-        ),
+        border: const OutlineInputBorder(borderSide: BorderSide.none),
         contentPadding: EdgeInsets.zero,
-        suffixIcon: icon == null
-            ? null
-            : IconButton(
-                icon: Icon(icon),
-                color: widget.stateManager.configuration.style.iconColor,
-                iconSize: widget.stateManager.configuration.style.iconSize,
-                onPressed: openPopup,
-              ),
+        suffixIcon:
+            icon == null
+                ? null
+                : IconButton(
+                  icon: Icon(icon),
+                  color: widget.stateManager.configuration.style.iconColor,
+                  iconSize: widget.stateManager.configuration.style.iconSize,
+                  onPressed: openPopup,
+                ),
       ),
       maxLines: 1,
       textAlignVertical: TextAlignVertical.center,
       textAlign: widget.column.textAlign.value,
     );
+
+    if (widget.column.editCellRenderer != null) {
+      w = widget.column.editCellRenderer!(
+        w,
+        widget.cell,
+        textController,
+        textFocus,
+        handleSelected,
+      );
+    } else if (widget.stateManager.editCellRenderer != null) {
+      w = widget.stateManager.editCellRenderer!(
+        w,
+        widget.cell,
+        textController,
+        textFocus,
+        handleSelected,
+      );
+    }
+    return w;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:demo/screen/feature/check_visible_columns_screen.dart';
+import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'constants/trina_grid_example_colors.dart';
@@ -68,6 +69,8 @@ class MyApp extends StatelessWidget {
         CellSelectionScreen.routeName: (context) => const CellSelectionScreen(),
         CheckVisibleColumnsScreen.routeName: (context) =>
             const CheckVisibleColumnsScreen(),
+        EditCellRendererScreen.routeName: (context) =>
+            const EditCellRendererScreen(),
         RTLScreen.routeName: (context) => const RTLScreen(),
         ColumnFilteringScreen.routeName: (context) =>
             const ColumnFilteringScreen(),

@@ -26,11 +26,7 @@ abstract class ICellState {
   void clearCurrentCell({bool notify = true});
 
   /// Change the selected cell.
-  void setCurrentCell(
-    TrinaCell? cell,
-    int? rowIdx, {
-    bool notify = true,
-  });
+  void setCurrentCell(TrinaCell? cell, int? rowIdx, {bool notify = true});
 
   /// Whether it is possible to move in the [direction] from [cellPosition].
   bool canMoveCell(
@@ -184,11 +180,7 @@ mixin CellState implements ITrinaGridState {
   }
 
   @override
-  void setCurrentCell(
-    TrinaCell? cell,
-    int? rowIdx, {
-    bool notify = true,
-  }) {
+  void setCurrentCell(TrinaCell? cell, int? rowIdx, {bool notify = true}) {
     if (cell == null ||
         rowIdx == null ||
         refRows.isEmpty ||
@@ -214,10 +206,9 @@ mixin CellState implements ITrinaGridState {
 
     notifyListeners(notify, setCurrentCell.hashCode);
 
-    onActiveCellChanged?.call(TrinaGridOnActiveCellChangedEvent(
-      idx: rowIdx,
-      cell: _state._currentCell,
-    ));
+    onActiveCellChanged?.call(
+      TrinaGridOnActiveCellChangedEvent(idx: rowIdx, cell: _state._currentCell),
+    );
   }
 
   @override
@@ -302,14 +293,15 @@ mixin CellState implements ITrinaGridState {
 
     if (column.type.isDate) {
       try {
-        final parseNewValue =
-            column.type.date.dateFormat.parseStrict(newValue.toString());
+        final parseNewValue = column.type.date.dateFormat.parse(
+          newValue.toString(),
+        );
 
         return TrinaDateTimeHelper.isValidRange(
-          date: parseNewValue,
-          start: column.type.date.startDate,
-          end: column.type.date.endDate,
-        )
+              date: parseNewValue,
+              start: column.type.date.startDate,
+              end: column.type.date.endDate,
+            )
             ? column.type.date.dateFormat.format(parseNewValue)
             : oldValue;
       } catch (e) {

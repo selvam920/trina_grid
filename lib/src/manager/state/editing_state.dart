@@ -15,6 +15,17 @@ abstract class IEditingState {
   /// Callback triggered when cell validation fails
   TrinaOnValidationFailedCallback? get onValidationFailed;
 
+  /// Custom renderer for the edit cell widget.
+  /// This allows customizing the edit cell UI.
+  Widget Function(
+    Widget defaultEditCellWidget,
+    TrinaCell cell,
+    TextEditingController controller,
+    FocusNode focusNode,
+    Function(dynamic value)? handleSelected,
+  )?
+  get editCellRenderer;
+
   bool isEditableCell(TrinaCell cell);
 
   /// Change the editing status of the current cell.
@@ -55,12 +66,15 @@ class _State {
 mixin EditingState implements ITrinaGridState {
   final _State _state = _State();
 
+  @override
   Widget Function(
-    Widget editCellWidget,
+    Widget defaultEditCellWidget,
     TrinaCell cell,
     TextEditingController controller,
+    FocusNode focusNode,
+    Function(dynamic value)? handleSelected,
   )?
-  get editCellWrapper;
+  get editCellRenderer;
 
   @override
   bool get isEditing => _state._isEditing;

@@ -152,9 +152,10 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void _handleOnChanged(String value) {
-    _cellEditingStatus = formattedValue != value.toString()
-        ? _CellEditingStatus.changed
-        : _initialCellValue.toString() == value.toString()
+    _cellEditingStatus =
+        formattedValue != value.toString()
+            ? _CellEditingStatus.changed
+            : _initialCellValue.toString() == value.toString()
             ? _CellEditingStatus.init
             : _CellEditingStatus.updated;
   }
@@ -173,21 +174,19 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
-    var keyManager = TrinaKeyManagerEvent(
-      focusNode: node,
-      event: event,
-    );
+    var keyManager = TrinaKeyManagerEvent(focusNode: node, event: event);
 
     if (keyManager.isKeyUpEvent) {
       return KeyEventResult.handled;
     }
 
-    final skip = !(keyManager.isVertical ||
-        _moveHorizontal(keyManager) ||
-        keyManager.isEsc ||
-        keyManager.isTab ||
-        keyManager.isF3 ||
-        keyManager.isEnter);
+    final skip =
+        !(keyManager.isVertical ||
+            _moveHorizontal(keyManager) ||
+            keyManager.isEsc ||
+            keyManager.isTab ||
+            keyManager.isF3 ||
+            keyManager.isEnter);
 
     // Movement and enter key, non-editable cell left and right movement, etc. key input is propagated to text field.
     if (skip) {
@@ -241,9 +240,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       onTap: _handleOnTap,
       style: widget.stateManager.configuration.style.cellTextStyle,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-        ),
+        border: OutlineInputBorder(borderSide: BorderSide.none),
         contentPadding: EdgeInsets.zero,
       ),
       maxLines: 1,
@@ -253,8 +250,23 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       textAlign: widget.column.textAlign.value,
     );
 
-    if (widget.stateManager.editCellWrapper != null) {
-      w = widget.stateManager.editCellWrapper!(w, widget.cell, _textController);
+    // Use column-level editCellRenderer if available, otherwise fall back to grid-level
+    if (widget.column.editCellRenderer != null) {
+      w = widget.column.editCellRenderer!(
+        w,
+        widget.cell,
+        _textController,
+        cellFocus,
+        null,
+      );
+    } else if (widget.stateManager.editCellRenderer != null) {
+      w = widget.stateManager.editCellRenderer!(
+        w,
+        widget.cell,
+        _textController,
+        cellFocus,
+        null,
+      );
     }
 
     return w;

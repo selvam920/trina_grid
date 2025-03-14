@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.5.0] - 2025. 03. 15
+
+### Breaking Changes
+* Renamed `editCellWrapper` to `editCellRenderer` for better semantic clarity
+* Renamed parameter `editCellWidget` to `defaultEditCellWidget` in editCellRenderer function signature
+
+### Enhancements
+* Enhanced editCellRenderer to be column-based
+* Added focus node parameter to editCellRenderer to allow custom widgets to maintain grid focus control
+
+## [1.4.16] - 2025. 03. 12
+
+* Enhanced editCellWrapper to be column-based
+* Added focus node parameter to editCellWrapper to allow custom widgets to maintain grid focus control
+
 ## [1.4.15] - 2025. 03. 11
 
 * Enhance the pluto grid migration script
