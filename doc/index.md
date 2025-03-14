@@ -67,6 +67,7 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 - [Context Menus](features/context-menus.md)
 - [Dual Grid Mode](features/dual-grid-mode.md)
 - [Popup Mode](features/popup-mode.md)
+- [Change Tracking](features/change-tracking.md)
 
 ## Examples
 

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:demo/screen/empty_screen.dart';
+import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_visible_columns_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/frozen_rows_screen.dart';
@@ -201,6 +202,15 @@ class TrinaFeatures extends StatelessWidget {
         spacing: 10,
         runSpacing: 10,
         children: [
+          TrinaListTile(
+            title: 'Change Tracking',
+            description:
+                'Track changes in cells and highlight dirty cells. You can commit or revert changes.',
+            onTapLiveDemo: () {
+              Navigator.pushNamed(context, ChangeTrackingScreen.routeName);
+            },
+            trailing: newIcon,
+          ),
           TrinaListTile(
             title: 'Column moving',
             description:

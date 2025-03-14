@@ -231,6 +231,7 @@ class TrinaGridStyleConfig {
     this.cellColorInEditState = Colors.white,
     this.cellColorInReadOnlyState = const Color(0xFFDBDBDC),
     this.cellColorGroupedRow,
+    this.cellDirtyColor = const Color(0xFFFFF9C4),
     this.frozenRowColor = const Color(0xFFF8F8F8),
     this.frozenRowBorderColor = const Color(0xFFE0E0E0),
     this.dragTargetColumnColor = const Color(0xFFDCF5FF),
@@ -303,6 +304,7 @@ class TrinaGridStyleConfig {
     this.cellColorInEditState = const Color(0xFF666666),
     this.cellColorInReadOnlyState = const Color(0xFF222222),
     this.cellColorGroupedRow,
+    this.cellDirtyColor = const Color(0xFF5D4037),
     this.frozenRowColor = const Color(0xFF222222),
     this.frozenRowBorderColor = const Color(0xFF666666),
     this.dragTargetColumnColor = const Color(0xFF313131),
@@ -424,6 +426,9 @@ class TrinaGridStyleConfig {
 
   /// Background color of cells grouped by column.
   final Color? cellColorGroupedRow;
+
+  /// Background color of cells with uncommitted changes (dirty cells)
+  final Color cellDirtyColor;
 
   /// Background color for frozen rows
   final Color frozenRowColor;

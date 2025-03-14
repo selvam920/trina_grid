@@ -311,6 +311,11 @@ mixin EditingState implements ITrinaGridState {
       return;
     }
 
+    // Store the old value if change tracking is enabled
+    if ((this as TrinaGridStateManager).enableChangeTracking && !cell.isDirty) {
+      cell.trackChange();
+    }
+
     currentRow.setState(TrinaRowState.updated);
     cell.value = value;
 

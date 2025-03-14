@@ -104,7 +104,8 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
            columnMenuDelegate ?? const TrinaColumnMenuDelegateDefault(),
        notifierFilterResolver =
            notifierFilterResolver ?? const TrinaNotifierFilterResolverDefault(),
-       gridKey = GlobalKey() {
+       gridKey = GlobalKey(),
+       _enableChangeTracking = false {
     setConfiguration(configuration);
     setGridMode(mode ?? TrinaGridMode.normal);
     _initialize();
@@ -195,6 +196,55 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   /// Callback triggered when cell validation fails
   @override
   final TrinaOnValidationFailedCallback? onValidationFailed;
+
+  /// Flag to enable/disable change tracking
+  bool _enableChangeTracking = false;
+
+  /// Get the current state of change tracking
+  bool get enableChangeTracking => _enableChangeTracking;
+
+  /// Enable or disable change tracking
+  void setChangeTracking(bool enable, {bool notify = true}) {
+    if (_enableChangeTracking == enable) return;
+
+    _enableChangeTracking = enable;
+
+    notifyListeners(notify, setChangeTracking.hashCode);
+  }
+
+  /// Commit changes for all cells or a specific cell
+  void commitChanges({TrinaCell? cell, bool notify = true}) {
+    if (cell != null) {
+      // Commit changes for a specific cell
+      cell.commitChanges();
+    } else {
+      // Commit changes for all cells
+      for (final row in refRows) {
+        for (final cell in row.cells.values) {
+          cell.commitChanges();
+        }
+      }
+    }
+
+    notifyListeners(notify, commitChanges.hashCode);
+  }
+
+  /// Revert changes for all cells or a specific cell
+  void revertChanges({TrinaCell? cell, bool notify = true}) {
+    if (cell != null) {
+      // Revert changes for a specific cell
+      cell.revertChanges();
+    } else {
+      // Revert changes for all cells
+      for (final row in refRows) {
+        for (final cell in row.cells.values) {
+          cell.revertChanges();
+        }
+      }
+    }
+
+    notifyListeners(notify, revertChanges.hashCode);
+  }
 
   void _initialize() {
     TrinaGridStateManager.initializeRows(

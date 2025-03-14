@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.5.1] - 2025. 03. 15
+
+* Introduce Change Tracking feature
+
 ## [1.5.0] - 2025. 03. 15
 
 ### Breaking Changes

@@ -34,13 +34,17 @@ class TrinaCell {
   TrinaCell({dynamic value, Key? key, this.renderer, this.onChanged})
     : _key = key ?? UniqueKey(),
       _value = value,
-      _originalValue = value;
+      _originalValue = value,
+      _oldValue = null;
 
   final Key _key;
 
   dynamic _value;
 
   final dynamic _originalValue;
+
+  /// Stores the old value when change tracking is enabled
+  dynamic _oldValue;
 
   dynamic _valueForSorting;
 
@@ -97,14 +101,40 @@ class TrinaCell {
     return _originalValue;
   }
 
+  /// Returns the old value before the change
+  dynamic get oldValue {
+    return _oldValue;
+  }
+
+  /// Returns true if the cell has uncommitted changes
+  bool get isDirty {
+    return _oldValue != null;
+  }
+
+  /// Commit changes by clearing the old value
+  void commitChanges() {
+    _oldValue = null;
+  }
+
+  /// Revert changes by restoring the old value
+  void revertChanges() {
+    if (_oldValue != null) {
+      _value = _oldValue;
+      _oldValue = null;
+    }
+  }
+
   set value(dynamic changed) {
     if (_value == changed) {
       return;
     }
 
     _value = changed;
+  }
 
-    _valueForSorting = null;
+  /// Helper method to store the old value when change tracking is enabled
+  void trackChange() {
+    _oldValue ??= _value;
   }
 
   dynamic get valueForSorting {
