@@ -2,6 +2,7 @@ import 'package:demo/screen/feature/boolean_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_visible_columns_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
+import 'package:demo/screen/feature/grid_export_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'constants/trina_grid_example_colors.dart';
@@ -99,6 +100,7 @@ class MyApp extends StatelessWidget {
         DualModeScreen.routeName: (context) => const DualModeScreen(),
         EditingStateScreen.routeName: (context) => const EditingStateScreen(),
         GridAsPopupScreen.routeName: (context) => const GridAsPopupScreen(),
+        GridExportScreen.routeName: (context) => const GridExportScreen(),
         ListingModeScreen.routeName: (context) => const ListingModeScreen(),
         MovingScreen.routeName: (context) => const MovingScreen(),
         NumberTypeColumnScreen.routeName: (context) =>

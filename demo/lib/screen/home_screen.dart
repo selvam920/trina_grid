@@ -6,6 +6,7 @@ import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_visible_columns_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/frozen_rows_screen.dart';
+import 'package:demo/screen/feature/grid_export_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -379,7 +380,8 @@ class TrinaFeatures extends StatelessWidget {
           ),
           TrinaListTile(
             title: 'Row infinity scroll',
-            description: 'Add a new row when scrolling reaches the bottom end.',
+            description:
+                'Add a new row when scrolling reaches the bottom end.',
             onTapLiveDemo: () {
               Navigator.pushNamed(context, RowInfinityScrollScreen.routeName);
             },
@@ -391,6 +393,15 @@ class TrinaFeatures extends StatelessWidget {
             onTapLiveDemo: () {
               Navigator.pushNamed(context, RowGroupScreen.routeName);
             },
+          ),
+          TrinaListTile(
+            title: 'Grid Export',
+            description:
+                'Export grid data in various formats (PDF, CSV, JSON).',
+            onTapLiveDemo: () {
+              Navigator.pushNamed(context, GridExportScreen.routeName);
+            },
+            trailing: newIcon,
           ),
           TrinaListTile(
             title: 'Row with checkbox',
