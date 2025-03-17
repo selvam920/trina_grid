@@ -174,7 +174,14 @@ TrinaColumn(
   type: TrinaColumnType.boolean(
     trueText: 'Yes',
     falseText: 'No',
-    useCheckbox: true,
+    allowEmpty: false,
+    defaultValue: false,
+    width: 120,
+    popupIcon: Icons.check_box,
+    builder: (item) => CustomBooleanWidget(value: item),
+    onItemSelected: (event) {
+      // Handle selection event
+    },
   ),
 )
 ```
@@ -183,11 +190,14 @@ TrinaColumn(
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `trueText` | `String` | Text to display for true values |
-| `falseText` | `String` | Text to display for false values |
-| `useCheckbox` | `bool` | Whether to use a checkbox instead of text |
-| `checkboxSize` | `double` | Size of the checkbox |
-| `activeColor` | `Color?` | Color of the checkbox when checked |
+| `defaultValue` | `dynamic` | Default value for new cells (defaults to `false`) |
+| `allowEmpty` | `bool` | Whether to allow null/empty values (defaults to `false`) |
+| `trueText` | `String` | Text to display for true values (defaults to "Yes") |
+| `falseText` | `String` | Text to display for false values (defaults to "No") |
+| `width` | `double?` | Width of the popup selector |
+| `popupIcon` | `IconData?` | Icon to display for opening the popup selector |
+| `builder` | `Widget Function(dynamic item)?` | Custom widget builder for rendering boolean values |
+| `onItemSelected` | `Function(TrinaGridOnSelectedEvent event)?` | Callback when a value is selected |
 
 ### Currency Column
 
