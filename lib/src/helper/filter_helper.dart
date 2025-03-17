@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
-typedef SetFilterPopupHandler = void Function(
-    TrinaGridStateManager? stateManager);
+typedef SetFilterPopupHandler =
+    void Function(TrinaGridStateManager? stateManager);
 
 class FilterHelper {
   /// A value to identify all column searches when searching filters.
@@ -41,10 +41,12 @@ class FilterHelper {
   }) {
     return TrinaRow(
       cells: {
-        filterFieldColumn:
-            TrinaCell(value: columnField ?? filterFieldAllColumns),
-        filterFieldType:
-            TrinaCell(value: filterType ?? const TrinaFilterTypeContains()),
+        filterFieldColumn: TrinaCell(
+          value: columnField ?? filterFieldAllColumns,
+        ),
+        filterFieldType: TrinaCell(
+          value: filterType ?? const TrinaFilterTypeContains(),
+        ),
         filterFieldValue: TrinaCell(value: filterValue ?? ''),
       },
     );
@@ -97,8 +99,9 @@ class FilterHelper {
               flag,
               compareByFilterType(
                 filterType: filterType!,
-                base: row!.cells[e.cells[filterFieldColumn]!.value]!.value
-                    .toString(),
+                base:
+                    row!.cells[e.cells[filterFieldColumn]!.value]!.value
+                        .toString(),
                 search: e.cells[filterFieldValue]!.value.toString(),
                 column: foundColumn,
               ),
@@ -219,7 +222,8 @@ class FilterHelper {
     if (column.type is TrinaColumnTypeWithNumberFormat) {
       final numberColumn = column.type as TrinaColumnTypeWithNumberFormat;
 
-      compare = compare ||
+      compare =
+          compare ||
           filterType.compare(
             base: numberColumn.applyFormat(base),
             search: search,
@@ -233,11 +237,7 @@ class FilterHelper {
     }
 
     return compare ||
-        filterType.compare(
-          base: base,
-          search: search,
-          column: column,
-        );
+        filterType.compare(base: base, search: search, column: column);
   }
 
   /// Whether [search] is contains in [base].
@@ -246,10 +246,7 @@ class FilterHelper {
     required String? search,
     required TrinaColumn column,
   }) {
-    return _compareWithRegExp(
-      RegExp.escape(search!),
-      base!,
-    );
+    return _compareWithRegExp(RegExp.escape(search!), base!);
   }
 
   /// Whether [search] is equals to [base].
@@ -328,10 +325,7 @@ class FilterHelper {
     String value, {
     bool caseSensitive = false,
   }) {
-    return RegExp(
-      pattern,
-      caseSensitive: caseSensitive,
-    ).hasMatch(value);
+    return RegExp(pattern, caseSensitive: caseSensitive).hasMatch(value);
   }
 }
 
@@ -377,8 +371,8 @@ class FilterPopupState {
     this.width = 600,
     this.height = 450,
     this.onClosed,
-  })  : assert(columns.isNotEmpty),
-        _previousFilterRows = [...filterRows];
+  }) : assert(columns.isNotEmpty),
+       _previousFilterRows = [...filterRows];
 
   TrinaGridStateManager? _stateManager;
   List<TrinaRow?> _previousFilterRows;
@@ -562,11 +556,12 @@ class TrinaGridFilterPopupHeader extends StatelessWidget {
 
 /// [base] is the cell values of the column on which the search is based.
 /// [search] is the value entered by the user to search.
-typedef TrinaCompareFunction = bool Function({
-  required String? base,
-  required String? search,
-  required TrinaColumn column,
-});
+typedef TrinaCompareFunction =
+    bool Function({
+      required String? base,
+      required String? search,
+      required TrinaColumn column,
+    });
 
 abstract class TrinaFilterType {
   String get title => throw UnimplementedError();

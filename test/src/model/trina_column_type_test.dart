@@ -5,25 +5,33 @@ void main() {
   group('text', () {
     const textTypeColumn = TrinaColumnTypeText();
 
-    test('When accessing the text property, a TypeError should not be thrown.',
-        () {
-      expect(() => textTypeColumn.text, isNot(throwsA(isA<TypeError>())));
-    });
+    test(
+      'When accessing the text property, a TypeError should not be thrown.',
+      () {
+        expect(() => textTypeColumn.text, isNot(throwsA(isA<TypeError>())));
+      },
+    );
 
-    test('When accessing the number property, a TypeError should be thrown.',
-        () {
-      expect(() => textTypeColumn.number, throwsA(isA<TypeError>()));
-    });
+    test(
+      'When accessing the number property, a TypeError should be thrown.',
+      () {
+        expect(() => textTypeColumn.number, throwsA(isA<TypeError>()));
+      },
+    );
 
-    test('When accessing the currency property, a TypeError should be thrown.',
-        () {
-      expect(() => textTypeColumn.currency, throwsA(isA<TypeError>()));
-    });
+    test(
+      'When accessing the currency property, a TypeError should be thrown.',
+      () {
+        expect(() => textTypeColumn.currency, throwsA(isA<TypeError>()));
+      },
+    );
 
-    test('When accessing the select property, a TypeError should be thrown.',
-        () {
-      expect(() => textTypeColumn.select, throwsA(isA<TypeError>()));
-    });
+    test(
+      'When accessing the select property, a TypeError should be thrown.',
+      () {
+        expect(() => textTypeColumn.select, throwsA(isA<TypeError>()));
+      },
+    );
 
     test('When accessing the date property, a TypeError should be thrown.', () {
       expect(() => textTypeColumn.date, throwsA(isA<TypeError>()));

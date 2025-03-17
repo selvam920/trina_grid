@@ -12,71 +12,53 @@ import '../../mock/shared_mocks.mocks.dart';
 
 void main() {
   group('createFilterRow', () {
-    test(
-      'When called without arguments,'
-      'Should be returned a row filled with default values.',
-      () {
-        var row = FilterHelper.createFilterRow();
+    test('When called without arguments,'
+        'Should be returned a row filled with default values.', () {
+      var row = FilterHelper.createFilterRow();
 
-        expect(row.cells.length, 3);
+      expect(row.cells.length, 3);
 
-        expect(
-          row.cells[FilterHelper.filterFieldColumn]!.value,
-          FilterHelper.filterFieldAllColumns,
-        );
+      expect(
+        row.cells[FilterHelper.filterFieldColumn]!.value,
+        FilterHelper.filterFieldAllColumns,
+      );
 
-        expect(
-          row.cells[FilterHelper.filterFieldType]!.value,
-          isA<TrinaFilterTypeContains>(),
-        );
+      expect(
+        row.cells[FilterHelper.filterFieldType]!.value,
+        isA<TrinaFilterTypeContains>(),
+      );
 
-        expect(
-          row.cells[FilterHelper.filterFieldValue]!.value,
-          '',
-        );
-      },
-    );
+      expect(row.cells[FilterHelper.filterFieldValue]!.value, '');
+    });
 
-    test(
-      'When called with arguments,'
-      'Should be returned a row filled with arguments.',
-      () {
-        var filter = const TrinaFilterTypeEndsWith();
+    test('When called with arguments,'
+        'Should be returned a row filled with arguments.', () {
+      var filter = const TrinaFilterTypeEndsWith();
 
-        var row = FilterHelper.createFilterRow(
-          columnField: 'filterColumnField',
-          filterType: filter,
-          filterValue: 'abc',
-        );
+      var row = FilterHelper.createFilterRow(
+        columnField: 'filterColumnField',
+        filterType: filter,
+        filterValue: 'abc',
+      );
 
-        expect(row.cells.length, 3);
+      expect(row.cells.length, 3);
 
-        expect(
-          row.cells[FilterHelper.filterFieldColumn]!.value,
-          'filterColumnField',
-        );
+      expect(
+        row.cells[FilterHelper.filterFieldColumn]!.value,
+        'filterColumnField',
+      );
 
-        expect(
-          row.cells[FilterHelper.filterFieldType]!.value,
-          filter,
-        );
+      expect(row.cells[FilterHelper.filterFieldType]!.value, filter);
 
-        expect(
-          row.cells[FilterHelper.filterFieldValue]!.value,
-          'abc',
-        );
-      },
-    );
+      expect(row.cells[FilterHelper.filterFieldValue]!.value, 'abc');
+    });
   });
 
   group('convertRowsToFilter', () {
-    test(
-      'When called with empty rows, '
-      'Should be returned null.',
-      () {
-        expect(FilterHelper.convertRowsToFilter([], []), isNull);
-      },
-    );
+    test('When called with empty rows, '
+        'Should be returned null.', () {
+      expect(FilterHelper.convertRowsToFilter([], []), isNull);
+    });
 
     group('with rows.', () {
       List<TrinaColumn>? columns;
@@ -95,139 +77,112 @@ void main() {
         );
       });
 
-      test(
-        'filterFieldColumn : All, '
-        'filterFieldType : Contains, '
-        'filterFieldValue : column1, '
-        'true',
-        () {
-          var filterRows = [
-            FilterHelper.createFilterRow(
-              filterValue: 'column1',
-            )
-          ];
+      test('filterFieldColumn : All, '
+          'filterFieldType : Contains, '
+          'filterFieldValue : column1, '
+          'true', () {
+        var filterRows = [FilterHelper.createFilterRow(filterValue: 'column1')];
 
-          var enabledFilterColumns = columns;
+        var enabledFilterColumns = columns;
 
-          expect(
-            FilterHelper.convertRowsToFilter(
-              filterRows,
-              enabledFilterColumns,
-            )!(row),
-            isTrue,
-          );
-        },
-      );
+        expect(
+          FilterHelper.convertRowsToFilter(filterRows, enabledFilterColumns)!(
+            row,
+          ),
+          isTrue,
+        );
+      });
 
-      test(
-        'filterFieldColumn : column2, '
-        'filterFieldType : Contains, '
-        'filterFieldValue : column1, '
-        'false',
-        () {
-          var filterRows = [
-            FilterHelper.createFilterRow(
-              columnField: 'column2',
-              filterValue: 'column1',
-            )
-          ];
+      test('filterFieldColumn : column2, '
+          'filterFieldType : Contains, '
+          'filterFieldValue : column1, '
+          'false', () {
+        var filterRows = [
+          FilterHelper.createFilterRow(
+            columnField: 'column2',
+            filterValue: 'column1',
+          ),
+        ];
 
-          var enabledFilterColumns = columns;
+        var enabledFilterColumns = columns;
 
-          expect(
-            FilterHelper.convertRowsToFilter(
-              filterRows,
-              enabledFilterColumns,
-            )!(row),
-            isFalse,
-          );
-        },
-      );
+        expect(
+          FilterHelper.convertRowsToFilter(filterRows, enabledFilterColumns)!(
+            row,
+          ),
+          isFalse,
+        );
+      });
 
-      test(
-        'filterFieldColumn : column1, '
-        'filterFieldType : StartsWith, '
-        'filterFieldValue : column1, '
-        'true',
-        () {
-          var filterRows = [
-            FilterHelper.createFilterRow(
-              columnField: 'column1',
-              filterType: const TrinaFilterTypeStartsWith(),
-              filterValue: 'column1',
-            )
-          ];
+      test('filterFieldColumn : column1, '
+          'filterFieldType : StartsWith, '
+          'filterFieldValue : column1, '
+          'true', () {
+        var filterRows = [
+          FilterHelper.createFilterRow(
+            columnField: 'column1',
+            filterType: const TrinaFilterTypeStartsWith(),
+            filterValue: 'column1',
+          ),
+        ];
 
-          var enabledFilterColumns = columns;
+        var enabledFilterColumns = columns;
 
-          expect(
-            FilterHelper.convertRowsToFilter(
-              filterRows,
-              enabledFilterColumns,
-            )!(row),
-            isTrue,
-          );
-        },
-      );
+        expect(
+          FilterHelper.convertRowsToFilter(filterRows, enabledFilterColumns)!(
+            row,
+          ),
+          isTrue,
+        );
+      });
 
-      test(
-        'When column1 does not exist in enabledFilterColumns, '
-        'filterFieldColumn : column1, '
-        'filterFieldType : Contains, '
-        'filterFieldValue : column1, '
-        'false',
-        () {
-          var filterRows = [
-            FilterHelper.createFilterRow(
-              columnField: 'column1',
-              filterType: const TrinaFilterTypeContains(),
-              filterValue: 'column1',
-            )
-          ];
+      test('When column1 does not exist in enabledFilterColumns, '
+          'filterFieldColumn : column1, '
+          'filterFieldType : Contains, '
+          'filterFieldValue : column1, '
+          'false', () {
+        var filterRows = [
+          FilterHelper.createFilterRow(
+            columnField: 'column1',
+            filterType: const TrinaFilterTypeContains(),
+            filterValue: 'column1',
+          ),
+        ];
 
-          columns!.removeWhere((element) => element.field == 'column1');
+        columns!.removeWhere((element) => element.field == 'column1');
 
-          var enabledFilterColumns = columns;
+        var enabledFilterColumns = columns;
 
-          expect(
-            FilterHelper.convertRowsToFilter(
-              filterRows,
-              enabledFilterColumns,
-            )!(row),
-            isFalse,
-          );
-        },
-      );
+        expect(
+          FilterHelper.convertRowsToFilter(filterRows, enabledFilterColumns)!(
+            row,
+          ),
+          isFalse,
+        );
+      });
 
-      test(
-        'filterFieldColumn : All, '
-        'filterFieldType : StartsWith, '
-        'filterFieldValue : column1, '
-        'enabledFilterColumnFields : [column3]'
-        'false',
-        () {
-          var filterRows = [
-            FilterHelper.createFilterRow(
-              filterType: const TrinaFilterTypeStartsWith(),
-              filterValue: 'column1',
-            )
-          ];
+      test('filterFieldColumn : All, '
+          'filterFieldType : StartsWith, '
+          'filterFieldValue : column1, '
+          'enabledFilterColumnFields : [column3]'
+          'false', () {
+        var filterRows = [
+          FilterHelper.createFilterRow(
+            filterType: const TrinaFilterTypeStartsWith(),
+            filterValue: 'column1',
+          ),
+        ];
 
-          var enabledFilterColumns = columns!
-              .where(
-                (element) => element.field == 'column3',
-              )
-              .toList();
+        var enabledFilterColumns =
+            columns!.where((element) => element.field == 'column3').toList();
 
-          expect(
-            FilterHelper.convertRowsToFilter(
-              filterRows,
-              enabledFilterColumns,
-            )!(row),
-            isFalse,
-          );
-        },
-      );
+        expect(
+          FilterHelper.convertRowsToFilter(filterRows, enabledFilterColumns)!(
+            row,
+          ),
+          isFalse,
+        );
+      });
     });
   });
 
@@ -243,115 +198,139 @@ void main() {
 
     test('When filterRows is set, the map should be returned with values.', () {
       final List<TrinaRow> filterRows = [
-        TrinaRow(cells: {
-          FilterHelper.filterFieldColumn: TrinaCell(value: 'column'),
-          FilterHelper.filterFieldType: TrinaCell(
-            value: const TrinaFilterTypeContains(),
-          ),
-          FilterHelper.filterFieldValue: TrinaCell(value: '123'),
-        }),
+        TrinaRow(
+          cells: {
+            FilterHelper.filterFieldColumn: TrinaCell(value: 'column'),
+            FilterHelper.filterFieldType: TrinaCell(
+              value: const TrinaFilterTypeContains(),
+            ),
+            FilterHelper.filterFieldValue: TrinaCell(value: '123'),
+          },
+        ),
       ];
 
       final result = FilterHelper.convertRowsToMap(filterRows);
 
       expect(result.length, 1);
-      expect(result, TrinaObjectMatcher<Map<String, List<Map<String, String>>>>(
-        rule: (value) {
-          return value.keys.first == 'column' &&
-              value.values.first[0].keys.first ==
-                  TrinaFilterTypeContains.name &&
-              value.values.first[0].values.first == '123';
-        },
-      ));
+      expect(
+        result,
+        TrinaObjectMatcher<Map<String, List<Map<String, String>>>>(
+          rule: (value) {
+            return value.keys.first == 'column' &&
+                value.values.first[0].keys.first ==
+                    TrinaFilterTypeContains.name &&
+                value.values.first[0].values.first == '123';
+          },
+        ),
+      );
     });
 
-    test(
-        'When filterRows has duplicate column conditions, '
+    test('When filterRows has duplicate column conditions, '
         'the map should be returned with values.', () {
       final List<TrinaRow> filterRows = [
-        TrinaRow(cells: {
-          FilterHelper.filterFieldColumn: TrinaCell(value: 'column'),
-          FilterHelper.filterFieldType: TrinaCell(
-            value: const TrinaFilterTypeContains(),
-          ),
-          FilterHelper.filterFieldValue: TrinaCell(value: '123'),
-        }),
-        TrinaRow(cells: {
-          FilterHelper.filterFieldColumn: TrinaCell(value: 'column'),
-          FilterHelper.filterFieldType: TrinaCell(
-            value: const TrinaFilterTypeEndsWith(),
-          ),
-          FilterHelper.filterFieldValue: TrinaCell(value: '456'),
-        }),
+        TrinaRow(
+          cells: {
+            FilterHelper.filterFieldColumn: TrinaCell(value: 'column'),
+            FilterHelper.filterFieldType: TrinaCell(
+              value: const TrinaFilterTypeContains(),
+            ),
+            FilterHelper.filterFieldValue: TrinaCell(value: '123'),
+          },
+        ),
+        TrinaRow(
+          cells: {
+            FilterHelper.filterFieldColumn: TrinaCell(value: 'column'),
+            FilterHelper.filterFieldType: TrinaCell(
+              value: const TrinaFilterTypeEndsWith(),
+            ),
+            FilterHelper.filterFieldValue: TrinaCell(value: '456'),
+          },
+        ),
       ];
 
       final result = FilterHelper.convertRowsToMap(filterRows);
 
       expect(result.length, 1);
-      expect(result, TrinaObjectMatcher<Map<String, List<Map<String, String>>>>(
-        rule: (value) {
-          return value.keys.contains('column') &&
-              value['column']!.length == 2 &&
-              value['column']![0].keys.contains(TrinaFilterTypeContains.name) &&
-              value['column']![0].values.contains('123') &&
-              value['column']![1].keys.contains(TrinaFilterTypeEndsWith.name) &&
-              value['column']![1].values.contains('456');
-        },
-      ));
+      expect(
+        result,
+        TrinaObjectMatcher<Map<String, List<Map<String, String>>>>(
+          rule: (value) {
+            return value.keys.contains('column') &&
+                value['column']!.length == 2 &&
+                value['column']![0].keys.contains(
+                  TrinaFilterTypeContains.name,
+                ) &&
+                value['column']![0].values.contains('123') &&
+                value['column']![1].keys.contains(
+                  TrinaFilterTypeEndsWith.name,
+                ) &&
+                value['column']![1].values.contains('456');
+          },
+        ),
+      );
     });
 
-    test(
-        'When all columns are included in the filtering conditions, '
+    test('When all columns are included in the filtering conditions, '
         'the map should be returned with default value all.', () {
       final List<TrinaRow> filterRows = [
-        TrinaRow(cells: {
-          FilterHelper.filterFieldColumn: TrinaCell(value: 'column'),
-          FilterHelper.filterFieldType: TrinaCell(
-            value: const TrinaFilterTypeContains(),
-          ),
-          FilterHelper.filterFieldValue: TrinaCell(value: '123'),
-        }),
-        TrinaRow(cells: {
-          FilterHelper.filterFieldColumn: TrinaCell(
-            value: FilterHelper.filterFieldAllColumns,
-          ),
-          FilterHelper.filterFieldType: TrinaCell(
-            value: const TrinaFilterTypeContains(),
-          ),
-          FilterHelper.filterFieldValue: TrinaCell(value: '123'),
-        }),
+        TrinaRow(
+          cells: {
+            FilterHelper.filterFieldColumn: TrinaCell(value: 'column'),
+            FilterHelper.filterFieldType: TrinaCell(
+              value: const TrinaFilterTypeContains(),
+            ),
+            FilterHelper.filterFieldValue: TrinaCell(value: '123'),
+          },
+        ),
+        TrinaRow(
+          cells: {
+            FilterHelper.filterFieldColumn: TrinaCell(
+              value: FilterHelper.filterFieldAllColumns,
+            ),
+            FilterHelper.filterFieldType: TrinaCell(
+              value: const TrinaFilterTypeContains(),
+            ),
+            FilterHelper.filterFieldValue: TrinaCell(value: '123'),
+          },
+        ),
       ];
 
       final result = FilterHelper.convertRowsToMap(filterRows);
 
       expect(result.length, 2);
-      expect(result, TrinaObjectMatcher<Map<String, List<Map<String, String>>>>(
-        rule: (value) {
-          return value.containsKey('all');
-        },
-      ));
+      expect(
+        result,
+        TrinaObjectMatcher<Map<String, List<Map<String, String>>>>(
+          rule: (value) {
+            return value.containsKey('all');
+          },
+        ),
+      );
     });
 
-    test(
-        'When allField is changed to allColumns, '
+    test('When allField is changed to allColumns, '
         'the map should be returned with default value allColumns.', () {
       final List<TrinaRow> filterRows = [
-        TrinaRow(cells: {
-          FilterHelper.filterFieldColumn: TrinaCell(value: 'column'),
-          FilterHelper.filterFieldType: TrinaCell(
-            value: const TrinaFilterTypeContains(),
-          ),
-          FilterHelper.filterFieldValue: TrinaCell(value: '123'),
-        }),
-        TrinaRow(cells: {
-          FilterHelper.filterFieldColumn: TrinaCell(
-            value: FilterHelper.filterFieldAllColumns,
-          ),
-          FilterHelper.filterFieldType: TrinaCell(
-            value: const TrinaFilterTypeContains(),
-          ),
-          FilterHelper.filterFieldValue: TrinaCell(value: '123'),
-        }),
+        TrinaRow(
+          cells: {
+            FilterHelper.filterFieldColumn: TrinaCell(value: 'column'),
+            FilterHelper.filterFieldType: TrinaCell(
+              value: const TrinaFilterTypeContains(),
+            ),
+            FilterHelper.filterFieldValue: TrinaCell(value: '123'),
+          },
+        ),
+        TrinaRow(
+          cells: {
+            FilterHelper.filterFieldColumn: TrinaCell(
+              value: FilterHelper.filterFieldAllColumns,
+            ),
+            FilterHelper.filterFieldType: TrinaCell(
+              value: const TrinaFilterTypeContains(),
+            ),
+            FilterHelper.filterFieldValue: TrinaCell(value: '123'),
+          },
+        ),
       ];
 
       final result = FilterHelper.convertRowsToMap(
@@ -360,105 +339,97 @@ void main() {
       );
 
       expect(result.length, 2);
-      expect(result, TrinaObjectMatcher<Map<String, List<Map<String, String>>>>(
-        rule: (value) {
-          return value.containsKey('allColumns');
-        },
-      ));
+      expect(
+        result,
+        TrinaObjectMatcher<Map<String, List<Map<String, String>>>>(
+          rule: (value) {
+            return value.containsKey('allColumns');
+          },
+        ),
+      );
     });
   });
 
   group('isFilteredColumn', () {
-    test(
-      'filterRows : null, empty, '
-      'Should be returned false.',
-      () {
-        expect(
-          FilterHelper.isFilteredColumn(
-            TrinaColumn(
-              title: 'column',
-              field: 'column',
-              type: TrinaColumnType.text(),
-            ),
-            null,
+    test('filterRows : null, empty, '
+        'Should be returned false.', () {
+      expect(
+        FilterHelper.isFilteredColumn(
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.text(),
           ),
-          isFalse,
-        );
+          null,
+        ),
+        isFalse,
+      );
 
-        expect(
-          FilterHelper.isFilteredColumn(
-            TrinaColumn(
-              title: 'column',
-              field: 'column',
-              type: TrinaColumnType.text(),
-            ),
-            [],
+      expect(
+        FilterHelper.isFilteredColumn(
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.text(),
           ),
-          isFalse,
-        );
-      },
-    );
+          [],
+        ),
+        isFalse,
+      );
+    });
 
-    test(
-      'filterRows : [All columns], '
-      'Should be returned true.',
-      () {
-        expect(
-          FilterHelper.isFilteredColumn(
-            TrinaColumn(
-              title: 'column',
-              field: 'column',
-              type: TrinaColumnType.text(),
-            ),
-            [FilterHelper.createFilterRow()],
+    test('filterRows : [All columns], '
+        'Should be returned true.', () {
+      expect(
+        FilterHelper.isFilteredColumn(
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.text(),
           ),
-          isTrue,
-        );
-      },
-    );
+          [FilterHelper.createFilterRow()],
+        ),
+        isTrue,
+      );
+    });
 
-    test(
-      'filterRows : [column], '
-      'Should be returned true.',
-      () {
-        expect(
-          FilterHelper.isFilteredColumn(
-            TrinaColumn(
-              title: 'column',
-              field: 'column',
-              type: TrinaColumnType.text(),
-            ),
-            [FilterHelper.createFilterRow(columnField: 'column')],
+    test('filterRows : [column], '
+        'Should be returned true.', () {
+      expect(
+        FilterHelper.isFilteredColumn(
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.text(),
           ),
-          isTrue,
-        );
-      },
-    );
+          [FilterHelper.createFilterRow(columnField: 'column')],
+        ),
+        isTrue,
+      );
+    });
 
-    test(
-      'filterRows : [non_exists_column], '
-      'Should be returned false.',
-      () {
-        expect(
-          FilterHelper.isFilteredColumn(
-            TrinaColumn(
-              title: 'column',
-              field: 'column',
-              type: TrinaColumnType.text(),
-            ),
-            [FilterHelper.createFilterRow(columnField: 'non_exists_column')],
+    test('filterRows : [non_exists_column], '
+        'Should be returned false.', () {
+      expect(
+        FilterHelper.isFilteredColumn(
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.text(),
           ),
-          isFalse,
-        );
-      },
-    );
+          [FilterHelper.createFilterRow(columnField: 'non_exists_column')],
+        ),
+        isFalse,
+      );
+    });
   });
 
   group('compareByFilterType', () {
     late bool Function(dynamic a, dynamic b) Function(
       TrinaFilterType filterType, {
       TrinaColumn? column,
-    }) makeCompareFunction;
+    })
+    makeCompareFunction;
 
     setUp(() {
       makeCompareFunction = (
@@ -626,60 +597,53 @@ void main() {
   });
 
   group('FilterPopupState', () {
-    test(
-      'columns should not be empty.',
-      () {
-        expect(
-          () {
-            FilterPopupState(
-              context: MockBuildContext(),
-              configuration: const TrinaGridConfiguration(),
-              handleAddNewFilter: (_) {},
-              handleApplyFilter: (_) {},
-              columns: [],
-              filterRows: [],
-              focusFirstFilterValue: false,
-            );
-          },
-          throwsA(isA<AssertionError>()),
+    test('columns should not be empty.', () {
+      expect(() {
+        FilterPopupState(
+          context: MockBuildContext(),
+          configuration: const TrinaGridConfiguration(),
+          handleAddNewFilter: (_) {},
+          handleApplyFilter: (_) {},
+          columns: [],
+          filterRows: [],
+          focusFirstFilterValue: false,
         );
-      },
-    );
+      }, throwsA(isA<AssertionError>()));
+    });
 
     group('onLoaded', () {
-      test(
-        'should be called setSelectingMode, addListener.',
-        () {
-          final List<TrinaRow> filterRows = [];
+      test('should be called setSelectingMode, addListener.', () {
+        final List<TrinaRow> filterRows = [];
 
-          var filterPopupState = FilterPopupState(
-            context: MockBuildContext(),
-            configuration: const TrinaGridConfiguration(),
-            handleAddNewFilter: (_) {},
-            handleApplyFilter: (_) {},
-            columns: ColumnHelper.textColumn('column'),
-            filterRows: filterRows,
-            focusFirstFilterValue: false,
-          );
+        var filterPopupState = FilterPopupState(
+          context: MockBuildContext(),
+          configuration: const TrinaGridConfiguration(),
+          handleAddNewFilter: (_) {},
+          handleApplyFilter: (_) {},
+          columns: ColumnHelper.textColumn('column'),
+          filterRows: filterRows,
+          focusFirstFilterValue: false,
+        );
 
-          var stateManager = MockTrinaGridStateManager();
+        var stateManager = MockTrinaGridStateManager();
 
-          when(stateManager.rows).thenReturn(filterRows);
+        when(stateManager.rows).thenReturn(filterRows);
 
-          filterPopupState.onLoaded(
-            TrinaGridOnLoadedEvent(stateManager: stateManager),
-          );
+        filterPopupState.onLoaded(
+          TrinaGridOnLoadedEvent(stateManager: stateManager),
+        );
 
-          verify(stateManager.setSelectingMode(
+        verify(
+          stateManager.setSelectingMode(
             TrinaGridSelectingMode.row,
             notify: false,
-          )).called(1);
+          ),
+        ).called(1);
 
-          verify(
-            stateManager.addListener(filterPopupState.stateListener),
-          ).called(1);
-        },
-      );
+        verify(
+          stateManager.addListener(filterPopupState.stateListener),
+        ).called(1);
+      });
 
       test(
         'if focusFirstFilterValue is true and stateManager has rows, '
@@ -696,9 +660,10 @@ void main() {
             columns: columns,
             filterRows: [
               FilterHelper.createFilterRow(
-                columnField: columns[0].enableFilterMenuItem
-                    ? columns[0].field
-                    : FilterHelper.filterFieldAllColumns,
+                columnField:
+                    columns[0].enableFilterMenuItem
+                        ? columns[0].field
+                        : FilterHelper.filterFieldAllColumns,
                 filterType: columns[0].defaultFilter,
               ),
             ],
@@ -715,11 +680,13 @@ void main() {
 
           verify(stateManager.setKeepFocus(true, notify: false)).called(1);
 
-          verify(stateManager.setCurrentCell(
-            rows.first.cells[FilterHelper.filterFieldValue],
-            0,
-            notify: false,
-          )).called(1);
+          verify(
+            stateManager.setCurrentCell(
+              rows.first.cells[FilterHelper.filterFieldValue],
+              0,
+              notify: false,
+            ),
+          ).called(1);
 
           verify(stateManager.setEditing(true, notify: false)).called(1);
 
@@ -745,12 +712,14 @@ void main() {
         focusFirstFilterValue: true,
       );
 
-      filterPopupState.onChanged(TrinaGridOnChangedEvent(
-        columnIdx: 0,
-        column: columns.first,
-        rowIdx: 0,
-        row: rows.first,
-      ));
+      filterPopupState.onChanged(
+        TrinaGridOnChangedEvent(
+          columnIdx: 0,
+          column: columns.first,
+          rowIdx: 0,
+          row: rows.first,
+        ),
+      );
 
       verify(mock.oneParamReturnVoid(any)).called(1);
     });
@@ -785,65 +754,68 @@ void main() {
 
     group('stateListener', () {
       test(
-          'When filterRows is not changed, handleApplyFilter should not be called.',
-          () {
-        var mock = MockMethods();
+        'When filterRows is not changed, handleApplyFilter should not be called.',
+        () {
+          var mock = MockMethods();
 
-        var columns = ColumnHelper.textColumn('column');
+          var columns = ColumnHelper.textColumn('column');
 
-        var filterRows = RowHelper.count(1, columns);
+          var filterRows = RowHelper.count(1, columns);
 
-        var filterPopupState = FilterPopupState(
-          context: MockBuildContext(),
-          configuration: const TrinaGridConfiguration(),
-          handleAddNewFilter: (_) {},
-          handleApplyFilter: mock.oneParamReturnVoid,
-          columns: columns,
-          filterRows: filterRows,
-          focusFirstFilterValue: false,
-        );
+          var filterPopupState = FilterPopupState(
+            context: MockBuildContext(),
+            configuration: const TrinaGridConfiguration(),
+            handleAddNewFilter: (_) {},
+            handleApplyFilter: mock.oneParamReturnVoid,
+            columns: columns,
+            filterRows: filterRows,
+            focusFirstFilterValue: false,
+          );
 
-        var stateManager = MockTrinaGridStateManager();
+          var stateManager = MockTrinaGridStateManager();
 
-        when(stateManager.rows).thenReturn([...filterRows]);
+          when(stateManager.rows).thenReturn([...filterRows]);
 
-        filterPopupState.onLoaded(
-          TrinaGridOnLoadedEvent(stateManager: stateManager),
-        );
+          filterPopupState.onLoaded(
+            TrinaGridOnLoadedEvent(stateManager: stateManager),
+          );
 
-        filterPopupState.stateListener();
+          filterPopupState.stateListener();
 
-        verifyNever(mock.oneParamReturnVoid(stateManager));
-      });
+          verifyNever(mock.oneParamReturnVoid(stateManager));
+        },
+      );
 
-      test('When filterRows is changed, handleApplyFilter should be called.',
-          () {
-        var mock = MockMethods();
+      test(
+        'When filterRows is changed, handleApplyFilter should be called.',
+        () {
+          var mock = MockMethods();
 
-        var columns = ColumnHelper.textColumn('column');
+          var columns = ColumnHelper.textColumn('column');
 
-        var filterPopupState = FilterPopupState(
-          context: MockBuildContext(),
-          configuration: const TrinaGridConfiguration(),
-          handleAddNewFilter: (_) {},
-          handleApplyFilter: mock.oneParamReturnVoid,
-          columns: columns,
-          filterRows: [],
-          focusFirstFilterValue: false,
-        );
+          var filterPopupState = FilterPopupState(
+            context: MockBuildContext(),
+            configuration: const TrinaGridConfiguration(),
+            handleAddNewFilter: (_) {},
+            handleApplyFilter: mock.oneParamReturnVoid,
+            columns: columns,
+            filterRows: [],
+            focusFirstFilterValue: false,
+          );
 
-        var stateManager = MockTrinaGridStateManager();
+          var stateManager = MockTrinaGridStateManager();
 
-        when(stateManager.rows).thenReturn(RowHelper.count(1, columns));
+          when(stateManager.rows).thenReturn(RowHelper.count(1, columns));
 
-        filterPopupState.onLoaded(
-          TrinaGridOnLoadedEvent(stateManager: stateManager),
-        );
+          filterPopupState.onLoaded(
+            TrinaGridOnLoadedEvent(stateManager: stateManager),
+          );
 
-        filterPopupState.stateListener();
+          filterPopupState.stateListener();
 
-        verify(mock.oneParamReturnVoid(stateManager)).called(1);
-      });
+          verify(mock.oneParamReturnVoid(stateManager)).called(1);
+        },
+      );
     });
 
     group('makeColumns', () {
@@ -892,10 +864,7 @@ void main() {
         );
 
         for (var i = 0; i < columns.length; i += 1) {
-          expect(
-            filterColumn.formatter!(columns[i].field),
-            columns[i].title,
-          );
+          expect(filterColumn.formatter!(columns[i].field), columns[i].title);
         }
       });
 
@@ -909,7 +878,9 @@ void main() {
         // configuration's filter count should be created. (default 8)
         expect(configuration.columnFilter.filters.length, 8);
         expect(
-            columnType.items.length, configuration.columnFilter.filters.length);
+          columnType.items.length,
+          configuration.columnFilter.filters.length,
+        );
 
         // formatter (filter value is used formatter to return title.)
         for (var i = 0; i < configuration.columnFilter.filters.length; i += 1) {
@@ -936,15 +907,17 @@ void main() {
         const configuration = TrinaGridConfiguration();
         final mockListener = MockMethods();
 
-        await tester.pumpWidget(MaterialApp(
-          home: Material(
-            child: TrinaGridFilterPopupHeader(
-              stateManager: stateManager,
-              configuration: configuration,
-              handleAddNewFilter: mockListener.oneParamReturnVoid,
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: TrinaGridFilterPopupHeader(
+                stateManager: stateManager,
+                configuration: configuration,
+                handleAddNewFilter: mockListener.oneParamReturnVoid,
+              ),
             ),
           ),
-        ));
+        );
 
         final button = find.byType(IconButton).first;
 
@@ -959,17 +932,18 @@ void main() {
       },
     );
 
-    testWidgets(
-      'When currentSelectingRows is empty, '
-      'tapping the remove icon should call removeCurrentRow.',
-      (tester) async {
-        final stateManager = MockTrinaGridStateManager();
-        const configuration = TrinaGridConfiguration();
-        final mockListener = MockMethods();
+    testWidgets('When currentSelectingRows is empty, '
+        'tapping the remove icon should call removeCurrentRow.', (
+      tester,
+    ) async {
+      final stateManager = MockTrinaGridStateManager();
+      const configuration = TrinaGridConfiguration();
+      final mockListener = MockMethods();
 
-        when(stateManager.currentSelectingRows).thenReturn([]);
+      when(stateManager.currentSelectingRows).thenReturn([]);
 
-        await tester.pumpWidget(MaterialApp(
+      await tester.pumpWidget(
+        MaterialApp(
           home: Material(
             child: TrinaGridFilterPopupHeader(
               stateManager: stateManager,
@@ -977,34 +951,33 @@ void main() {
               handleAddNewFilter: mockListener.oneParamReturnVoid,
             ),
           ),
-        ));
+        ),
+      );
 
-        final button = find.byType(IconButton).at(1);
+      final button = find.byType(IconButton).at(1);
 
-        await tester.tap(button);
+      await tester.tap(button);
 
-        expect(
-          ((button.evaluate().first.widget as IconButton).icon as Icon).icon,
-          Icons.remove,
-        );
+      expect(
+        ((button.evaluate().first.widget as IconButton).icon as Icon).icon,
+        Icons.remove,
+      );
 
-        verify(stateManager.removeCurrentRow()).called(1);
-      },
-    );
+      verify(stateManager.removeCurrentRow()).called(1);
+    });
 
-    testWidgets(
-      'When currentSelectingRows is not empty, '
-      'tapping the remove icon should call removeRows.',
-      (tester) async {
-        final stateManager = MockTrinaGridStateManager();
-        const configuration = TrinaGridConfiguration();
-        final mockListener = MockMethods();
+    testWidgets('When currentSelectingRows is not empty, '
+        'tapping the remove icon should call removeRows.', (tester) async {
+      final stateManager = MockTrinaGridStateManager();
+      const configuration = TrinaGridConfiguration();
+      final mockListener = MockMethods();
 
-        final dummyRow = TrinaRow(cells: {'test': TrinaCell(value: '')});
+      final dummyRow = TrinaRow(cells: {'test': TrinaCell(value: '')});
 
-        when(stateManager.currentSelectingRows).thenReturn([dummyRow]);
+      when(stateManager.currentSelectingRows).thenReturn([dummyRow]);
 
-        await tester.pumpWidget(MaterialApp(
+      await tester.pumpWidget(
+        MaterialApp(
           home: Material(
             child: TrinaGridFilterPopupHeader(
               stateManager: stateManager,
@@ -1012,19 +985,19 @@ void main() {
               handleAddNewFilter: mockListener.oneParamReturnVoid,
             ),
           ),
-        ));
+        ),
+      );
 
-        final button = find.byType(IconButton).at(1);
+      final button = find.byType(IconButton).at(1);
 
-        await tester.tap(button);
+      await tester.tap(button);
 
-        expect(
-          ((button.evaluate().first.widget as IconButton).icon as Icon).icon,
-          Icons.remove,
-        );
+      expect(
+        ((button.evaluate().first.widget as IconButton).icon as Icon).icon,
+        Icons.remove,
+      );
 
-        verify(stateManager.removeRows([dummyRow])).called(1);
-      },
-    );
+      verify(stateManager.removeRows([dummyRow])).called(1);
+    });
   });
 }

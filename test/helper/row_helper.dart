@@ -45,11 +45,8 @@ class RowHelper {
 
   static TrinaCell cellOfDateColumn(TrinaColumn column, int rowIdx) {
     return TrinaCell(
-      value: DateTime.now()
-          .add(Duration(
-            days: Random().nextInt(365),
-          ))
-          .toString(),
+      value:
+          DateTime.now().add(Duration(days: Random().nextInt(365))).toString(),
     );
   }
 

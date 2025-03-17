@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:demo/screen/empty_screen.dart';
+import 'package:demo/screen/feature/boolean_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_visible_columns_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
@@ -208,6 +209,15 @@ class TrinaFeatures extends StatelessWidget {
                 'Track changes in cells and highlight dirty cells. You can commit or revert changes.',
             onTapLiveDemo: () {
               Navigator.pushNamed(context, ChangeTrackingScreen.routeName);
+            },
+            trailing: newIcon,
+          ),
+          TrinaListTile(
+            title: 'Boolean type column',
+            description:
+                'A column to enter a boolean value. You can select from a list of options.',
+            onTapLiveDemo: () {
+              Navigator.pushNamed(context, BooleanTypeColumnScreen.routeName);
             },
             trailing: newIcon,
           ),

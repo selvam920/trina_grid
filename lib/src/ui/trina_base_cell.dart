@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/helper/platform_helper.dart';
 import 'package:trina_grid/src/helper/trina_double_tap_detector.dart';
+import 'package:trina_grid/src/ui/cells/trina_boolean_cell.dart';
 
 import 'ui.dart';
 
@@ -406,6 +407,13 @@ class _CellState extends TrinaStateWithChange<_Cell> {
         );
       } else if (widget.column.type.isCurrency) {
         return TrinaCurrencyCell(
+          stateManager: stateManager,
+          cell: widget.cell,
+          column: widget.column,
+          row: widget.row,
+        );
+      } else if (widget.column.type.isBoolean) {
+        return TrinaBooleanCell(
           stateManager: stateManager,
           cell: widget.cell,
           column: widget.column,

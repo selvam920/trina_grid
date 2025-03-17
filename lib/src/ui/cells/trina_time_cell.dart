@@ -120,11 +120,13 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
           ),
         ],
         rows: Iterable<int>.generate(24)
-            .map((hour) => TrinaRow(cells: {
-                  'hour': TrinaCell(
-                    value: hour.toString().padLeft(2, '0'),
-                  ),
-                }))
+            .map(
+              (hour) => TrinaRow(
+                cells: {
+                  'hour': TrinaCell(value: hour.toString().padLeft(2, '0')),
+                },
+              ),
+            )
             .toList(growable: false),
         onLoaded: (TrinaGridOnLoadedEvent event) {
           final stateManager = event.stateManager;
@@ -166,11 +168,13 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
           ),
         ],
         rows: Iterable<int>.generate(60)
-            .map((minute) => TrinaRow(cells: {
-                  'minute': TrinaCell(
-                    value: minute.toString().padLeft(2, '0'),
-                  ),
-                }))
+            .map(
+              (minute) => TrinaRow(
+                cells: {
+                  'minute': TrinaCell(value: minute.toString().padLeft(2, '0')),
+                },
+              ),
+            )
             .toList(growable: false),
         onLoaded: (TrinaGridOnLoadedEvent event) {
           final stateManager = event.stateManager;
@@ -197,9 +201,7 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
       mode: TrinaGridMode.select,
       width: 276,
       height: 300,
-      divider: const TrinaDualGridDivider(
-        show: false,
-      ),
+      divider: const TrinaDualGridDivider(show: false),
     );
   }
 
@@ -208,34 +210,34 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
 
     final isCurrentCell = renderContext.stateManager.isCurrentCell(cell);
 
-    final cellColor = isCurrentCell && renderContext.stateManager.hasFocus
-        ? widget.stateManager.style.activatedBorderColor
-        : widget.stateManager.style.gridBackgroundColor;
+    final cellColor =
+        isCurrentCell && renderContext.stateManager.hasFocus
+            ? widget.stateManager.style.activatedBorderColor
+            : widget.stateManager.style.gridBackgroundColor;
 
-    final textColor = isCurrentCell && renderContext.stateManager.hasFocus
-        ? widget.stateManager.style.gridBackgroundColor
-        : widget.stateManager.style.cellTextStyle.color;
+    final textColor =
+        isCurrentCell && renderContext.stateManager.hasFocus
+            ? widget.stateManager.style.gridBackgroundColor
+            : widget.stateManager.style.cellTextStyle.color;
 
     return DecoratedBox(
       decoration: BoxDecoration(
         color: cellColor,
         shape: BoxShape.circle,
-        border: !isCurrentCell
-            ? null
-            : !renderContext.stateManager.hasFocus
+        border:
+            !isCurrentCell
+                ? null
+                : !renderContext.stateManager.hasFocus
                 ? Border.all(
-                    color: widget.stateManager.style.activatedBorderColor,
-                    width: 1,
-                  )
+                  color: widget.stateManager.style.activatedBorderColor,
+                  width: 1,
+                )
                 : null,
       ),
       child: Padding(
         padding: const EdgeInsets.all(5),
         child: Center(
-          child: Text(
-            cell.value,
-            style: TextStyle(color: textColor),
-          ),
+          child: Text(cell.value, style: TextStyle(color: textColor)),
         ),
       ),
     );

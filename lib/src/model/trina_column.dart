@@ -330,6 +330,16 @@ class TrinaColumn {
       return type.applyFormat(value);
     }
 
+    if (type is TrinaColumnTypeBoolean) {
+      switch (value) {
+        case true:
+          return (type as TrinaColumnTypeBoolean).trueText;
+        case false:
+          return (type as TrinaColumnTypeBoolean).falseText;
+        default:
+          return '';
+      }
+    }
     return value.toString();
   }
 
@@ -350,6 +360,15 @@ class TrinaColumn {
             .symbols
             .DECIMAL_SEP,
       );
+    } else if (type is TrinaColumnTypeBoolean) {
+      switch (value) {
+        case true:
+          return (type as TrinaColumnTypeBoolean).trueText;
+        case false:
+          return (type as TrinaColumnTypeBoolean).falseText;
+        default:
+          return '';
+      }
     }
 
     if (formatter != null) {

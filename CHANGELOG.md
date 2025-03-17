@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.5.2] - 2025. 03. 17
+
+* Introduce Boolean Type Column
+
 ## [1.5.1] - 2025. 03. 15
 
 * Introduce Change Tracking feature
