@@ -65,7 +65,7 @@ TrinaGridConfiguration(
 
 ### Scrollbar Configuration
 
-Configure the scrollbars with the `scrollbar` property:
+Configure the scrollbars with the `scrollbar` property for general scrollbar behavior:
 
 ```dart
 TrinaGridConfiguration(
@@ -78,6 +78,44 @@ TrinaGridConfiguration(
   ),
 )
 ```
+
+For more detailed control over the grid's scrollbars, you can use the `scrollbarConfig` extension property which provides additional customization options:
+
+```dart
+TrinaGridConfiguration(
+  // General scrollbar behavior
+  scrollbar: TrinaGridScrollbarConfig(
+    isAlwaysShown: true,
+    draggableScrollbar: true,
+  ),
+  // The scrollbarConfig extension provides access to the custom scrollbar settings
+).scrollbarConfig = TrinaScrollbarConfig(
+  // Control visibility
+  visible: true,
+  showTrack: true,
+  showHorizontal: true,
+  showVertical: true,
+  
+  // Appearance
+  thickness: 8.0,
+  minThumbLength: 40.0,
+  thumbColor: Colors.grey.withOpacity(0.6),
+  trackColor: Colors.grey.withOpacity(0.2),
+);
+```
+
+The `TrinaScrollbarConfig` provides the following options:
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `visible` | `bool` | `true` | Whether the scrollbar thumb is visible |
+| `showTrack` | `bool` | `true` | Whether to show the scrollbar track |
+| `showHorizontal` | `bool` | `true` | Whether to show the horizontal scrollbar |
+| `showVertical` | `bool` | `true` | Whether to show the vertical scrollbar |
+| `thickness` | `double` | `8.0` | Thickness of the scrollbar |
+| `minThumbLength` | `double` | `40.0` | Minimum length of the scrollbar thumb |
+| `thumbColor` | `Color?` | `Colors.grey.withOpacity(0.6)` | Color of the scrollbar thumb |
+| `trackColor` | `Color?` | `Colors.grey.withOpacity(0.2)` | Color of the scrollbar track |
 
 ### Column Configuration
 
@@ -272,6 +310,19 @@ TrinaGrid(
       thickness: 8,
       hoverThickness: 10,
     ),
+    
+    // Custom scrollbar appearance
+    // Access through the scrollbarConfig extension
+    // scrollbarConfig: TrinaScrollbarConfig(
+    //   visible: true,
+    //   showTrack: true,
+    //   showHorizontal: true,
+    //   showVertical: true,
+    //   thickness: 8.0,
+    //   minThumbLength: 40.0,
+    //   thumbColor: Colors.blue.withOpacity(0.6),
+    //   trackColor: Colors.grey.withOpacity(0.2),
+    // ),
     
     // Column configuration
     columnSize: const TrinaGridColumnSizeConfig(

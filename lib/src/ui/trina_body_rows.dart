@@ -6,10 +6,7 @@ import 'ui.dart';
 class TrinaBodyRows extends TrinaStatefulWidget {
   final TrinaGridStateManager stateManager;
 
-  const TrinaBodyRows(
-    this.stateManager, {
-    super.key,
-  });
+  const TrinaBodyRows(this.stateManager, {super.key});
 
   @override
   TrinaBodyRowsState createState() => TrinaBodyRowsState();
@@ -24,8 +21,23 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
   List<TrinaRow> _scrollableRows = [];
 
   late final ScrollController _verticalScroll;
-
   late final ScrollController _horizontalScroll;
+
+  // Value notifiers for scroll info to avoid rebuilding the entire widget
+  final ValueNotifier<double> _verticalScrollOffsetNotifier =
+      ValueNotifier<double>(0.0);
+  final ValueNotifier<double> _verticalScrollExtentNotifier =
+      ValueNotifier<double>(1.0);
+  final ValueNotifier<double> _verticalViewportExtentNotifier =
+      ValueNotifier<double>(1.0);
+
+  // Value notifiers for horizontal scroll
+  final ValueNotifier<double> _horizontalScrollOffsetNotifier =
+      ValueNotifier<double>(0.0);
+  final ValueNotifier<double> _horizontalScrollExtentNotifier =
+      ValueNotifier<double>(1.0);
+  final ValueNotifier<double> _horizontalViewportExtentNotifier =
+      ValueNotifier<double>(1.0);
 
   @override
   TrinaGridStateManager get stateManager => widget.stateManager;
@@ -35,22 +47,62 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
     super.initState();
 
     _horizontalScroll = stateManager.scroll.horizontal!.addAndGet();
-
     stateManager.scroll.setBodyRowsHorizontal(_horizontalScroll);
 
     _verticalScroll = stateManager.scroll.vertical!.addAndGet();
-
     stateManager.scroll.setBodyRowsVertical(_verticalScroll);
+
+    // Listen to scroll changes for the fake scrollbars
+    _verticalScroll.addListener(_updateVerticalScrollInfo);
+    _horizontalScroll.addListener(_updateHorizontalScrollInfo);
+
+    // Initialize scroll info with default values
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_verticalScroll.hasClients) {
+        _updateVerticalScrollInfo();
+      }
+      if (_horizontalScroll.hasClients) {
+        _updateHorizontalScrollInfo();
+      }
+    });
 
     updateState(TrinaNotifierEventForceUpdate.instance);
   }
 
+  void _updateVerticalScrollInfo() {
+    if (!_verticalScroll.hasClients) return;
+
+    // Update value notifiers without triggering setState
+    _verticalScrollOffsetNotifier.value = _verticalScroll.offset;
+    _verticalScrollExtentNotifier.value =
+        _verticalScroll.position.maxScrollExtent;
+    _verticalViewportExtentNotifier.value =
+        _verticalScroll.position.viewportDimension;
+  }
+
+  void _updateHorizontalScrollInfo() {
+    if (!_horizontalScroll.hasClients) return;
+
+    // Update value notifiers without triggering setState
+    _horizontalScrollOffsetNotifier.value = _horizontalScroll.offset;
+    _horizontalScrollExtentNotifier.value =
+        _horizontalScroll.position.maxScrollExtent;
+    _horizontalViewportExtentNotifier.value =
+        _horizontalScroll.position.viewportDimension;
+  }
+
   @override
   void dispose() {
+    _verticalScroll.removeListener(_updateVerticalScrollInfo);
+    _horizontalScroll.removeListener(_updateHorizontalScrollInfo);
     _verticalScroll.dispose();
-
     _horizontalScroll.dispose();
-
+    _verticalScrollOffsetNotifier.dispose();
+    _verticalScrollExtentNotifier.dispose();
+    _verticalViewportExtentNotifier.dispose();
+    _horizontalScrollOffsetNotifier.dispose();
+    _horizontalScrollExtentNotifier.dispose();
+    _horizontalViewportExtentNotifier.dispose();
     super.dispose();
   }
 
@@ -61,17 +113,31 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
     _columns = _getColumns();
 
     // Get frozen rows from the original list to keep them across pagination
-    _frozenTopRows = stateManager.refRows.originalList
-        .where((row) => row.frozen == TrinaRowFrozen.start)
-        .toList();
-    _frozenBottomRows = stateManager.refRows.originalList
-        .where((row) => row.frozen == TrinaRowFrozen.end)
-        .toList();
+    _frozenTopRows =
+        stateManager.refRows.originalList
+            .where((row) => row.frozen == TrinaRowFrozen.start)
+            .toList();
+    _frozenBottomRows =
+        stateManager.refRows.originalList
+            .where((row) => row.frozen == TrinaRowFrozen.end)
+            .toList();
 
     // Get non-frozen rows from the current page
     _rows = stateManager.refRows;
     _scrollableRows =
         _rows.where((row) => row.frozen == TrinaRowFrozen.none).toList();
+
+    if (_verticalScroll.hasClients) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _updateVerticalScrollInfo();
+      });
+    }
+
+    if (_horizontalScroll.hasClients) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _updateHorizontalScrollInfo();
+      });
+    }
   }
 
   List<TrinaColumn> _getColumns() {
@@ -94,62 +160,256 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
         rowWidget;
   }
 
+  // Build the fake vertical scrollbar using ValueListenableBuilder
+  Widget _buildFakeVerticalScrollbar(BuildContext context, double height) {
+    final scrollConfig = stateManager.configuration.scrollbarConfig;
+
+    return ValueListenableBuilder<double>(
+      valueListenable: _verticalScrollExtentNotifier,
+      builder: (context, scrollExtent, _) {
+        if (scrollExtent <= 0) return SizedBox(width: scrollConfig.thickness);
+
+        return ValueListenableBuilder<double>(
+          valueListenable: _verticalViewportExtentNotifier,
+          builder: (context, viewportExtent, _) {
+            final double thumbHeight =
+                (viewportExtent / (viewportExtent + scrollExtent)) * height;
+
+            return ValueListenableBuilder<double>(
+              valueListenable: _verticalScrollOffsetNotifier,
+              builder: (context, scrollOffset, _) {
+                final double thumbPosition =
+                    (scrollOffset / scrollExtent) * (height - thumbHeight);
+
+                return SizedBox(
+                  width: scrollConfig.thickness + 4, // Add padding
+                  height: height,
+                  child: Stack(
+                    children: [
+                      // Track
+                      if (scrollConfig.showTrack)
+                        Container(
+                          width: scrollConfig.thickness,
+                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                          decoration: BoxDecoration(
+                            color: scrollConfig.effectiveTrackColor,
+                            borderRadius: BorderRadius.circular(
+                              scrollConfig.thickness / 2,
+                            ),
+                          ),
+                        ),
+                      // Thumb
+                      if (scrollConfig.visible)
+                        Positioned(
+                          top: thumbPosition.isNaN ? 0 : thumbPosition,
+                          height:
+                              thumbHeight.isNaN
+                                  ? height
+                                  : thumbHeight.clamp(
+                                    scrollConfig.minThumbLength,
+                                    height,
+                                  ),
+                          width: scrollConfig.thickness,
+                          right: 2,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: scrollConfig.effectiveThumbColor,
+                              borderRadius: BorderRadius.circular(
+                                scrollConfig.thickness / 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // Build the fake horizontal scrollbar using ValueListenableBuilder
+  Widget _buildFakeHorizontalScrollbar(BuildContext context, double width) {
+    final scrollConfig = stateManager.configuration.scrollbarConfig;
+
+    return ValueListenableBuilder<double>(
+      valueListenable: _horizontalScrollExtentNotifier,
+      builder: (context, scrollExtent, _) {
+        if (scrollExtent <= 0) return SizedBox(height: scrollConfig.thickness);
+
+        return ValueListenableBuilder<double>(
+          valueListenable: _horizontalViewportExtentNotifier,
+          builder: (context, viewportExtent, _) {
+            final double thumbWidth =
+                (viewportExtent / (viewportExtent + scrollExtent)) * width;
+
+            return ValueListenableBuilder<double>(
+              valueListenable: _horizontalScrollOffsetNotifier,
+              builder: (context, scrollOffset, _) {
+                final double thumbPosition =
+                    (scrollOffset / scrollExtent) * (width - thumbWidth);
+
+                return SizedBox(
+                  width: width,
+                  height: scrollConfig.thickness + 4, // Add padding
+                  child: Stack(
+                    children: [
+                      // Track
+                      if (scrollConfig.showTrack)
+                        Container(
+                          height: scrollConfig.thickness,
+                          margin: const EdgeInsets.symmetric(vertical: 2),
+                          decoration: BoxDecoration(
+                            color: scrollConfig.effectiveTrackColor,
+                            borderRadius: BorderRadius.circular(
+                              scrollConfig.thickness / 2,
+                            ),
+                          ),
+                        ),
+                      // Thumb
+                      if (scrollConfig.visible)
+                        Positioned(
+                          left: thumbPosition.isNaN ? 0 : thumbPosition,
+                          width:
+                              thumbWidth.isNaN
+                                  ? width
+                                  : thumbWidth.clamp(
+                                    scrollConfig.minThumbLength,
+                                    width,
+                                  ),
+                          height: scrollConfig.thickness,
+                          top: 2,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: scrollConfig.effectiveThumbColor,
+                              borderRadius: BorderRadius.circular(
+                                scrollConfig.thickness / 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final scrollConfig = stateManager.configuration.scrollbarConfig;
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: stateManager.style.rowColor,
         borderRadius: stateManager.configuration.style.gridBorderRadius,
       ),
-      child: SingleChildScrollView(
-        controller: _horizontalScroll,
-        scrollDirection: Axis.horizontal,
-        physics: const ClampingScrollPhysics(),
-        child: CustomSingleChildLayout(
-          delegate: ListResizeDelegate(stateManager, _columns),
-          child: Column(
-            children: [
-              // Frozen top rows
-              if (_frozenTopRows.isNotEmpty)
-                Column(
-                  children: _frozenTopRows
-                      .asMap()
-                      .entries
-                      .map((e) => _buildRow(context, e.value, e.key))
-                      .toList(),
+      child: Column(
+        children: [
+          // Main content with vertical scrollbar
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Main grid content
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: _horizontalScroll,
+                    scrollDirection: Axis.horizontal,
+                    physics: const ClampingScrollPhysics(),
+                    child: CustomSingleChildLayout(
+                      delegate: ListResizeDelegate(stateManager, _columns),
+                      child: Column(
+                        children: [
+                          // Frozen top rows
+                          if (_frozenTopRows.isNotEmpty)
+                            Column(
+                              children:
+                                  _frozenTopRows
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (e) =>
+                                            _buildRow(context, e.value, e.key),
+                                      )
+                                      .toList(),
+                            ),
+                          // Scrollable rows
+                          Expanded(
+                            child: ListView.builder(
+                              controller: _verticalScroll,
+                              scrollDirection: Axis.vertical,
+                              physics: const ClampingScrollPhysics(),
+                              itemCount: _scrollableRows.length,
+                              itemExtent:
+                                  stateManager.rowWrapper != null
+                                      ? null
+                                      : stateManager.rowTotalHeight,
+                              addRepaintBoundaries: false,
+                              itemBuilder:
+                                  (ctx, i) => _buildRow(
+                                    context,
+                                    _scrollableRows[i],
+                                    i + _frozenTopRows.length,
+                                  ),
+                            ),
+                          ),
+                          // Frozen bottom rows
+                          if (_frozenBottomRows.isNotEmpty)
+                            Column(
+                              children:
+                                  _frozenBottomRows
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (e) => _buildRow(
+                                          context,
+                                          e.value,
+                                          e.key +
+                                              _frozenTopRows.length +
+                                              _scrollableRows.length,
+                                        ),
+                                      )
+                                      .toList(),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              // Scrollable rows
-              Expanded(
-                child: ListView.builder(
-                  controller: _verticalScroll,
-                  scrollDirection: Axis.vertical,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: _scrollableRows.length,
-                  itemExtent: stateManager.rowWrapper != null
-                      ? null
-                      : stateManager.rowTotalHeight,
-                  addRepaintBoundaries: false,
-                  itemBuilder: (ctx, i) => _buildRow(
-                      context, _scrollableRows[i], i + _frozenTopRows.length),
-                ),
-              ),
-              // Frozen bottom rows
-              if (_frozenBottomRows.isNotEmpty)
-                Column(
-                  children: _frozenBottomRows
-                      .asMap()
-                      .entries
-                      .map((e) => _buildRow(
-                          context,
-                          e.value,
-                          e.key +
-                              _frozenTopRows.length +
-                              _scrollableRows.length))
-                      .toList(),
-                ),
-            ],
+
+                // Fake vertical scrollbar
+                if (scrollConfig.showVertical)
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return _buildFakeVerticalScrollbar(
+                        context,
+                        constraints.maxHeight,
+                      );
+                    },
+                  ),
+              ],
+            ),
           ),
-        ),
+
+          // Fake horizontal scrollbar
+          if (scrollConfig.showHorizontal)
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return _buildFakeHorizontalScrollbar(
+                  context,
+                  constraints.maxWidth,
+                );
+              },
+            ),
+        ],
       ),
     );
   }
@@ -161,7 +421,7 @@ class ListResizeDelegate extends SingleChildLayoutDelegate {
   List<TrinaColumn> columns;
 
   ListResizeDelegate(this.stateManager, this.columns)
-      : super(relayout: stateManager.resizingChangeNotifier);
+    : super(relayout: stateManager.resizingChangeNotifier);
 
   @override
   bool shouldRelayout(covariant SingleChildLayoutDelegate oldDelegate) {

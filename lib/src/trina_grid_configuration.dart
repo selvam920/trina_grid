@@ -897,6 +897,54 @@ class TrinaGridScrollbarConfig {
   );
 }
 
+/// Extended scrollbar configuration for custom scrollbars in the grid
+class TrinaScrollbarConfig {
+  const TrinaScrollbarConfig({
+    this.visible = true,
+    this.showTrack = true,
+    this.showHorizontal = true,
+    this.showVertical = true,
+    this.thickness = 8.0,
+    this.minThumbLength = 40.0,
+    this.thumbColor,
+    this.trackColor,
+  });
+
+  /// Whether the scrollbar thumb is visible
+  final bool visible;
+
+  /// Whether to show the scrollbar track
+  final bool showTrack;
+
+  /// Whether to show the horizontal scrollbar
+  final bool showHorizontal;
+
+  /// Whether to show the vertical scrollbar
+  final bool showVertical;
+
+  /// Thickness of the scrollbar
+  final double thickness;
+
+  /// Minimum length of the scrollbar thumb
+  final double minThumbLength;
+
+  /// Color of the scrollbar thumb
+  final Color? thumbColor;
+
+  /// Color of the scrollbar track
+  final Color? trackColor;
+
+  Color get effectiveThumbColor =>
+      thumbColor ?? Colors.grey.withAlpha((153).toInt());
+
+  Color get effectiveTrackColor => trackColor ?? Colors.grey.withAlpha(51);
+}
+
+extension TrinaGridConfigurationScrollbarExtension on TrinaGridConfiguration {
+  /// Get the scrollbar configuration for custom scrollbars
+  TrinaScrollbarConfig get scrollbarConfig => const TrinaScrollbarConfig();
+}
+
 typedef TrinaGridColumnFilterResolver = Function<T>();
 
 typedef TrinaGridResolveDefaultColumnFilter =

@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.5.3] - 2025. 03. 17
+
+* Implemented functionality to display and customize scrollbars
+
 ## [1.5.2] - 2025. 03. 17
 
 * Introduce Boolean Type Column
