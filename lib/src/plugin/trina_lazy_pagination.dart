@@ -56,7 +56,25 @@ class TrinaLazyPaginationResponse {
     required this.totalPage,
     required this.rows,
     this.totalRecords,
-  });
+  }) {
+    final frozenStartRows =
+        rows.where((row) => row.frozen == TrinaRowFrozen.start).toList();
+    if (frozenStartRows.isNotEmpty) {
+      rows.removeWhere((row) => row.frozen == TrinaRowFrozen.start);
+      for (var row in frozenStartRows) {
+        rows.insert(0, row);
+      }
+    }
+
+    final frozenEndRows =
+        rows.where((row) => row.frozen == TrinaRowFrozen.end).toList();
+    if (frozenEndRows.isNotEmpty) {
+      rows.removeWhere((row) => row.frozen == TrinaRowFrozen.end);
+      for (var row in frozenEndRows) {
+        rows.add(row);
+      }
+    }
+  }
 
   /// Total number of pages to create pagination buttons.
   final int totalPage;
