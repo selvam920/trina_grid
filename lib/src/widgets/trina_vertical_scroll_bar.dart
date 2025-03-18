@@ -29,9 +29,14 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
   late Animation<double> _fadeAnimation;
   bool _hovering = false;
   bool _isDragging = false;
+  bool _isThumbHovered = false;
 
   // Track the last scroll position to detect scrolling
   double _lastScrollOffset = 0;
+
+  // Variables for drag functionality
+  double _dragStartPosition = 0.0;
+  double _dragStartScrollOffset = 0.0;
 
   @override
   void initState() {
@@ -156,6 +161,7 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
       onExit: (_) {
         setState(() {
           _hovering = false;
+          _isThumbHovered = false;
           if (!scrollConfig.isAlwaysShown && !_isDragging) {
             _fadeController.reverse();
           }
@@ -219,7 +225,11 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                   horizontal: 2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: scrollConfig.effectiveTrackColor,
+                                  color:
+                                      _hovering
+                                          ? scrollConfig
+                                              .effectiveTrackHoverColor
+                                          : scrollConfig.effectiveTrackColor,
                                   borderRadius: BorderRadius.circular(
                                     scrollConfig.thickness / 2,
                                   ),
@@ -238,11 +248,94 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                         ),
                                 width: scrollConfig.thickness,
                                 right: 2,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: scrollConfig.effectiveThumbColor,
-                                    borderRadius: BorderRadius.circular(
-                                      scrollConfig.thickness / 2,
+                                child: MouseRegion(
+                                  cursor: SystemMouseCursors.grab,
+                                  onEnter: (_) {
+                                    setState(() {
+                                      _isThumbHovered = true;
+                                    });
+                                  },
+                                  onExit: (_) {
+                                    setState(() {
+                                      _isThumbHovered = false;
+                                    });
+                                  },
+                                  child: GestureDetector(
+                                    onVerticalDragStart:
+                                        scrollConfig.isDraggable
+                                            ? (details) {
+                                              _dragStartPosition =
+                                                  details.localPosition.dy;
+                                              _dragStartScrollOffset =
+                                                  scrollOffset;
+                                              setState(() {
+                                                _isDragging = true;
+                                              });
+                                            }
+                                            : null,
+                                    onVerticalDragUpdate:
+                                        scrollConfig.isDraggable
+                                            ? (details) {
+                                              final double dragPosition =
+                                                  details.localPosition.dy;
+                                              final double dragDistance =
+                                                  dragPosition -
+                                                  _dragStartPosition;
+
+                                              // Calculate the scroll position based on the drag movement
+                                              final double scrollDistanceRatio =
+                                                  widget.height / scrollExtent;
+                                              final double scrollDelta =
+                                                  dragDistance /
+                                                  scrollDistanceRatio;
+
+                                              // Update the scroll position
+                                              final scrollController =
+                                                  widget
+                                                      .stateManager
+                                                      .scroll
+                                                      .bodyRowsVertical;
+                                              if (scrollController != null) {
+                                                final newOffset =
+                                                    (_dragStartScrollOffset +
+                                                            scrollDelta)
+                                                        .clamp(
+                                                          0.0,
+                                                          scrollController
+                                                              .position
+                                                              .maxScrollExtent,
+                                                        );
+                                                scrollController.jumpTo(
+                                                  newOffset,
+                                                );
+                                              }
+                                            }
+                                            : null,
+                                    onVerticalDragEnd:
+                                        scrollConfig.isDraggable
+                                            ? (_) {
+                                              setState(() {
+                                                _isDragging = false;
+                                                if (!scrollConfig
+                                                        .isAlwaysShown &&
+                                                    !_hovering) {
+                                                  _fadeController.reverse();
+                                                }
+                                              });
+                                            }
+                                            : null,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color:
+                                            _isThumbHovered || _isDragging
+                                                ? scrollConfig
+                                                    .effectiveThumbHoverColor
+                                                : scrollConfig
+                                                    .effectiveThumbColor,
+                                        borderRadius: BorderRadius.circular(
+                                          scrollConfig.thickness / 2,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),

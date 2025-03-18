@@ -73,7 +73,7 @@ TrinaGridConfiguration(
     // Visibility settings
     isAlwaysShown: true,      // Prevents scrollbars from fading out after scrolling stops
     thumbVisible: true,       // Whether the scrollbar thumb is visible at all
-    showTrack: true,          // Whether to show the scrollbar track
+    showTrack: true,          // Whether to show the scrollbar track background
     showHorizontal: true,     // Whether to show the horizontal scrollbar
     showVertical: true,       // Whether to show the vertical scrollbar
     
@@ -82,6 +82,9 @@ TrinaGridConfiguration(
     minThumbLength: 40.0,
     thumbColor: Colors.blue.withOpacity(0.6),
     trackColor: Colors.grey.withOpacity(0.2),
+    thumbHoverColor: Colors.blue.withOpacity(0.8),
+    trackHoverColor: Colors.grey.withOpacity(0.3),
+    isDraggable: true,
   ),
 )
 ```
@@ -99,6 +102,9 @@ The `TrinaGridScrollbarConfig` provides the following options:
 | `minThumbLength` | `double` | `40.0` | Minimum length of the scrollbar thumb. |
 | `thumbColor` | `Color?` | `null` | Color of the scrollbar thumb. |
 | `trackColor` | `Color?` | `null` | Color of the scrollbar track. |
+| `thumbHoverColor` | `Color?` | `null` | Color of the scrollbar thumb when hovered. |
+| `trackHoverColor` | `Color?` | `null` | Color of the scrollbar track when hovered. |
+| `isDraggable` | `bool` | `true` | Whether scrollbar thumbs can be dragged with mouse or touch to scroll. |
 
 For more detailed information about scrollbar customization, see the [Scrollbars](../features/scrollbars.md) feature documentation.
 
@@ -298,6 +304,9 @@ TrinaGrid(
       minThumbLength: 40.0,        // Minimum thumb length
       thumbColor: Colors.blue.withOpacity(0.6),  // Thumb color
       trackColor: Colors.grey.withOpacity(0.2),  // Track color
+      thumbHoverColor: Colors.blue.withOpacity(0.8),
+      trackHoverColor: Colors.grey.withOpacity(0.3),
+      isDraggable: true,
     ),
     
     // Column configuration

@@ -46,6 +46,9 @@ TrinaGrid(
       minThumbLength: 40.0,                    // Minimum length of the scrollbar thumb
       thumbColor: Colors.blue.withOpacity(0.6), // Color of the scrollbar thumb
       trackColor: Colors.grey.withOpacity(0.2), // Color of the scrollbar track
+      thumbHoverColor: Colors.blue.withOpacity(0.8), // Color when hovering over the thumb
+      trackHoverColor: Colors.grey.withOpacity(0.3), // Color when hovering over the track
+      isDraggable: true,                       // Enable scrollbar thumb dragging
     ),
   ),
 )
@@ -68,6 +71,9 @@ The `TrinaGridScrollbarConfig` class provides the following key options for scro
 | `minThumbLength` | `double` | `40.0` | Minimum length of the scrollbar thumb. |
 | `thumbColor` | `Color?` | `null` | Color of the scrollbar thumb (defaults to semi-transparent gray if null). |
 | `trackColor` | `Color?` | `null` | Color of the scrollbar track (defaults to light gray if null). |
+| `thumbHoverColor` | `Color?` | `null` | Color of the scrollbar thumb when hovered (defaults to a more opaque version of thumbColor if null). |
+| `trackHoverColor` | `Color?` | `null` | Color of the scrollbar track when hovered (defaults to a more opaque version of trackColor if null). |
+| `isDraggable` | `bool` | `true` | Whether scrollbar thumbs can be dragged with mouse or touch to scroll content. |
 
 ## Examples
 
@@ -139,6 +145,37 @@ TrinaGrid(
     scrollbar: TrinaGridScrollbarConfig(
       thickness: 12.0,
       minThumbLength: 60.0,
+    ),
+  ),
+)
+```
+
+### Disabling Scrollbar Dragging
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: TrinaGridConfiguration(
+    scrollbar: TrinaGridScrollbarConfig(
+      isDraggable: false, // Disable scrollbar thumb dragging
+    ),
+  ),
+)
+```
+
+### Custom Hover Colors
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: TrinaGridConfiguration(
+    scrollbar: TrinaGridScrollbarConfig(
+      thumbColor: Colors.blue.withOpacity(0.6),
+      thumbHoverColor: Colors.blue.withOpacity(0.9),
+      trackColor: Colors.grey.withOpacity(0.2),
+      trackHoverColor: Colors.grey.withOpacity(0.4),
     ),
   ),
 )

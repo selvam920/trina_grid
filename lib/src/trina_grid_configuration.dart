@@ -798,6 +798,7 @@ class TrinaGridScrollbarConfig {
     // Basic scrollbar behavior settings
     this.isAlwaysShown = false,
     this.dragDevices,
+    this.isDraggable = true,
 
     // Advanced scrollbar appearance settings
     this.thumbVisible = true,
@@ -808,12 +809,18 @@ class TrinaGridScrollbarConfig {
     this.minThumbLength = 40.0,
     this.thumbColor,
     this.trackColor,
+    this.thumbHoverColor,
+    this.trackHoverColor,
   });
 
   /// Whether the scrollbar is always visible
   final bool isAlwaysShown;
 
+  /// Set of devices that can interact with the scrollbar
   final Set<PointerDeviceKind>? dragDevices;
+
+  /// Whether scrollbar thumbs can be dragged with pointer devices
+  final bool isDraggable;
 
   /// Whether the scrollbar thumb is visible
   final bool thumbVisible;
@@ -839,12 +846,26 @@ class TrinaGridScrollbarConfig {
   /// Color of the scrollbar track
   final Color? trackColor;
 
+  /// Color of the scrollbar thumb when hovered
+  final Color? thumbHoverColor;
+
+  /// Color of the scrollbar track when hovered
+  final Color? trackHoverColor;
+
   /// Get effective thumb color
   Color get effectiveThumbColor =>
       thumbColor ?? Colors.grey.withAlpha((153).toInt());
 
+  /// Get effective thumb hover color
+  Color get effectiveThumbHoverColor =>
+      thumbHoverColor ?? effectiveThumbColor.withAlpha(220);
+
   /// Get effective track color
   Color get effectiveTrackColor => trackColor ?? Colors.grey.withAlpha(51);
+
+  /// Get effective track hover color
+  Color get effectiveTrackHoverColor =>
+      trackHoverColor ?? effectiveTrackColor.withAlpha(100);
 
   @override
   bool operator ==(covariant Object other) {
@@ -853,6 +874,7 @@ class TrinaGridScrollbarConfig {
             runtimeType == other.runtimeType &&
             isAlwaysShown == other.isAlwaysShown &&
             dragDevices == other.dragDevices &&
+            isDraggable == other.isDraggable &&
             thumbVisible == other.thumbVisible &&
             showTrack == other.showTrack &&
             showHorizontal == other.showHorizontal &&
@@ -867,6 +889,7 @@ class TrinaGridScrollbarConfig {
   int get hashCode => Object.hashAll([
     isAlwaysShown,
     dragDevices,
+    isDraggable,
     thumbVisible,
     showTrack,
     showHorizontal,
@@ -1541,7 +1564,7 @@ class TrinaGridLocaleText {
     this.wednesday = 'أر',
     this.thursday = 'خم',
     this.friday = 'جم',
-    this.saturday = 'سب',
+    this.saturday = 'ش',
     // Time column popup
     this.hour = 'ساعة',
     this.minute = 'دقيقي',
