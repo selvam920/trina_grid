@@ -259,3 +259,30 @@ class TrinaGridValidationEvent {
     return out;
   }
 }
+
+/// Event triggered when a lazy pagination fetch operation completes
+class TrinaGridOnLazyFetchCompletedEvent {
+  /// The associated state manager
+  final TrinaGridStateManager stateManager;
+
+  /// The current page number
+  final int page;
+
+  /// The total number of pages
+  final int totalPage;
+
+  /// The total number of records (if available)
+  final int? totalRecords;
+
+  const TrinaGridOnLazyFetchCompletedEvent({
+    required this.stateManager,
+    required this.page,
+    required this.totalPage,
+    this.totalRecords,
+  });
+
+  @override
+  String toString() {
+    return '[TrinaGridOnLazyFetchCompletedEvent] page: $page, totalPage: $totalPage, totalRecords: $totalRecords';
+  }
+}

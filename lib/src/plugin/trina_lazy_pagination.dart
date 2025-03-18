@@ -96,6 +96,30 @@ class TrinaLazyPaginationResponse {
 ///   );
 /// },
 /// ```
+///
+/// You can listen for fetch completion events at the grid level by setting the onLazyFetchCompleted
+/// callback on the TrinaGrid widget:
+///
+/// ```dart
+/// TrinaGrid(
+///   columns: columns,
+///   rows: rows,
+///   onLazyFetchCompleted: (event) {
+///     // Handle the lazy fetch completed event
+///     print('Fetch completed: page ${event.page} of ${event.totalPage}');
+///     print('Total records: ${event.totalRecords}');
+///
+///     // You can access the state manager if needed
+///     event.stateManager.setShowLoading(false);
+///   },
+///   createFooter: (stateManager) {
+///     return TrinaLazyPagination(
+///       fetch: fetch,
+///       stateManager: stateManager,
+///     );
+///   },
+/// )
+/// ```
 class TrinaLazyPagination extends StatefulWidget {
   TrinaLazyPagination({
     this.initialPage = 1,
@@ -112,6 +136,7 @@ class TrinaLazyPagination extends StatefulWidget {
     this.pageSizeDropdownIcon,
     required this.fetch,
     required this.stateManager,
+    this.onLazyFetchCompleted,
     super.key,
   }) : assert(
          !showPageSizeSelector || pageSizes.contains(initialPageSize),
@@ -168,6 +193,9 @@ class TrinaLazyPagination extends StatefulWidget {
   final TrinaLazyPaginationFetch fetch;
 
   final TrinaGridStateManager stateManager;
+
+  final void Function(int page, int totalPage, int? totalRecords)?
+  onLazyFetchCompleted;
 
   @override
   State<TrinaLazyPagination> createState() => TrinaLazyPaginationState();
@@ -258,6 +286,23 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
           });
 
           stateManager.setShowLoading(false);
+
+          // Call the onLazyFetchCompleted callback if provided
+          if (widget.onLazyFetchCompleted != null) {
+            widget.onLazyFetchCompleted!(_page, _totalPage, _totalRecords);
+          }
+
+          // Call the grid-level onLazyFetchCompleted callback if provided
+          if (stateManager.onLazyFetchCompleted != null) {
+            stateManager.onLazyFetchCompleted!(
+              TrinaGridOnLazyFetchCompletedEvent(
+                stateManager: stateManager,
+                page: _page,
+                totalPage: _totalPage,
+                totalRecords: _totalRecords,
+              ),
+            );
+          }
         });
   }
 

@@ -57,15 +57,18 @@ typedef TrinaSelectDateCallBack =
 typedef TrinaOnActiveCellChangedEventCallback =
     void Function(TrinaGridOnActiveCellChangedEvent event);
 
+typedef TrinaOnValidationFailedCallback =
+    void Function(TrinaGridValidationEvent event);
+
+typedef TrinaOnLazyFetchCompletedEventCallback =
+    void Function(TrinaGridOnLazyFetchCompletedEvent event);
+
 typedef RowWrapper =
     Widget Function(
       BuildContext context,
       Widget row,
       TrinaGridStateManager stateManager,
     );
-
-typedef TrinaOnValidationFailedCallback =
-    void Function(TrinaGridValidationEvent event);
 
 /// [TrinaGrid] is a widget that receives columns and rows and is expressed as a grid-type UI.
 ///
@@ -105,6 +108,7 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.notifierFilterResolver,
     this.mode = TrinaGridMode.normal,
     this.onValidationFailed,
+    this.onLazyFetchCompleted,
   });
 
   /// {@macro trina_grid_row_wrapper}
@@ -389,6 +393,9 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// Callback triggered when cell validation fails
   final TrinaOnValidationFailedCallback? onValidationFailed;
 
+  /// Callback triggered when a lazy pagination fetch operation completes
+  final TrinaOnLazyFetchCompletedEventCallback? onLazyFetchCompleted;
+
   /// [setDefaultLocale] sets locale when [Intl] package is used in [TrinaGrid].
   ///
   /// {@template intl_default_locale}
@@ -586,6 +593,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       createHeader: widget.createHeader,
       createFooter: widget.createFooter,
       onValidationFailed: widget.onValidationFailed,
+      onLazyFetchCompleted: widget.onLazyFetchCompleted,
       columnMenuDelegate: widget.columnMenuDelegate,
       notifierFilterResolver: widget.notifierFilterResolver,
       configuration: widget.configuration,

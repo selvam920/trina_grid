@@ -91,6 +91,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     this.createHeader,
     this.createFooter,
     this.onValidationFailed,
+    this.onLazyFetchCompleted,
     TrinaColumnMenuDelegate? columnMenuDelegate,
     TrinaChangeNotifierFilterResolver? notifierFilterResolver,
     TrinaGridConfiguration configuration = const TrinaGridConfiguration(),
@@ -196,6 +197,9 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   /// Callback triggered when cell validation fails
   @override
   final TrinaOnValidationFailedCallback? onValidationFailed;
+
+  /// Callback triggered when lazy fetch is completed
+  final TrinaOnLazyFetchCompletedEventCallback? onLazyFetchCompleted;
 
   /// Flag to enable/disable change tracking
   bool _enableChangeTracking = false;
@@ -319,6 +323,7 @@ class TrinaGridStateManager extends TrinaGridStateChangeNotifier {
     super.createHeader,
     super.createFooter,
     super.onValidationFailed,
+    super.onLazyFetchCompleted,
     super.columnMenuDelegate,
     super.notifierFilterResolver,
     super.configuration,
