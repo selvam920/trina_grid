@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trina_grid/src/widgets/trina_horizontal_scroll_bar.dart';
+import 'package:trina_grid/src/widgets/trina_vertical_scroll_bar.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import 'ui.dart';
@@ -161,150 +163,10 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
   }
 
   // Build the fake vertical scrollbar using ValueListenableBuilder
-  Widget _buildFakeVerticalScrollbar(BuildContext context, double height) {
-    final scrollConfig = stateManager.configuration.scrollbarConfig;
-
-    return ValueListenableBuilder<double>(
-      valueListenable: _verticalScrollExtentNotifier,
-      builder: (context, scrollExtent, _) {
-        if (scrollExtent <= 0) return SizedBox(width: scrollConfig.thickness);
-
-        return ValueListenableBuilder<double>(
-          valueListenable: _verticalViewportExtentNotifier,
-          builder: (context, viewportExtent, _) {
-            final double thumbHeight =
-                (viewportExtent / (viewportExtent + scrollExtent)) * height;
-
-            return ValueListenableBuilder<double>(
-              valueListenable: _verticalScrollOffsetNotifier,
-              builder: (context, scrollOffset, _) {
-                final double thumbPosition =
-                    (scrollOffset / scrollExtent) * (height - thumbHeight);
-
-                return SizedBox(
-                  width: scrollConfig.thickness + 4, // Add padding
-                  height: height,
-                  child: Stack(
-                    children: [
-                      // Track
-                      if (scrollConfig.showTrack)
-                        Container(
-                          width: scrollConfig.thickness,
-                          margin: const EdgeInsets.symmetric(horizontal: 2),
-                          decoration: BoxDecoration(
-                            color: scrollConfig.effectiveTrackColor,
-                            borderRadius: BorderRadius.circular(
-                              scrollConfig.thickness / 2,
-                            ),
-                          ),
-                        ),
-                      // Thumb
-                      if (scrollConfig.visible)
-                        Positioned(
-                          top: thumbPosition.isNaN ? 0 : thumbPosition,
-                          height:
-                              thumbHeight.isNaN
-                                  ? height
-                                  : thumbHeight.clamp(
-                                    scrollConfig.minThumbLength,
-                                    height,
-                                  ),
-                          width: scrollConfig.thickness,
-                          right: 2,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: scrollConfig.effectiveThumbColor,
-                              borderRadius: BorderRadius.circular(
-                                scrollConfig.thickness / 2,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
-
-  // Build the fake horizontal scrollbar using ValueListenableBuilder
-  Widget _buildFakeHorizontalScrollbar(BuildContext context, double width) {
-    final scrollConfig = stateManager.configuration.scrollbarConfig;
-
-    return ValueListenableBuilder<double>(
-      valueListenable: _horizontalScrollExtentNotifier,
-      builder: (context, scrollExtent, _) {
-        if (scrollExtent <= 0) return SizedBox(height: scrollConfig.thickness);
-
-        return ValueListenableBuilder<double>(
-          valueListenable: _horizontalViewportExtentNotifier,
-          builder: (context, viewportExtent, _) {
-            final double thumbWidth =
-                (viewportExtent / (viewportExtent + scrollExtent)) * width;
-
-            return ValueListenableBuilder<double>(
-              valueListenable: _horizontalScrollOffsetNotifier,
-              builder: (context, scrollOffset, _) {
-                final double thumbPosition =
-                    (scrollOffset / scrollExtent) * (width - thumbWidth);
-
-                return SizedBox(
-                  width: width,
-                  height: scrollConfig.thickness + 4, // Add padding
-                  child: Stack(
-                    children: [
-                      // Track
-                      if (scrollConfig.showTrack)
-                        Container(
-                          height: scrollConfig.thickness,
-                          margin: const EdgeInsets.symmetric(vertical: 2),
-                          decoration: BoxDecoration(
-                            color: scrollConfig.effectiveTrackColor,
-                            borderRadius: BorderRadius.circular(
-                              scrollConfig.thickness / 2,
-                            ),
-                          ),
-                        ),
-                      // Thumb
-                      if (scrollConfig.visible)
-                        Positioned(
-                          left: thumbPosition.isNaN ? 0 : thumbPosition,
-                          width:
-                              thumbWidth.isNaN
-                                  ? width
-                                  : thumbWidth.clamp(
-                                    scrollConfig.minThumbLength,
-                                    width,
-                                  ),
-                          height: scrollConfig.thickness,
-                          top: 2,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: scrollConfig.effectiveThumbColor,
-                              borderRadius: BorderRadius.circular(
-                                scrollConfig.thickness / 2,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    final scrollConfig = stateManager.configuration.scrollbarConfig;
+    final scrollConfig = stateManager.configuration.scrollbar;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -389,9 +251,16 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                 if (scrollConfig.showVertical)
                   LayoutBuilder(
                     builder: (context, constraints) {
-                      return _buildFakeVerticalScrollbar(
-                        context,
-                        constraints.maxHeight,
+                      return TrinaVerticalScrollBar(
+                        stateManager: stateManager,
+                        verticalScrollExtentNotifier:
+                            _verticalScrollExtentNotifier,
+                        verticalViewportExtentNotifier:
+                            _verticalViewportExtentNotifier,
+                        verticalScrollOffsetNotifier:
+                            _verticalScrollOffsetNotifier,
+                        context: context,
+                        height: constraints.maxHeight,
                       );
                     },
                   ),
@@ -403,9 +272,16 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
           if (scrollConfig.showHorizontal)
             LayoutBuilder(
               builder: (context, constraints) {
-                return _buildFakeHorizontalScrollbar(
-                  context,
-                  constraints.maxWidth,
+                return TrinaHorizontalScrollBar(
+                  stateManager: stateManager,
+                  horizontalScrollExtentNotifier:
+                      _horizontalScrollExtentNotifier,
+                  horizontalViewportExtentNotifier:
+                      _horizontalViewportExtentNotifier,
+                  horizontalScrollOffsetNotifier:
+                      _horizontalScrollOffsetNotifier,
+                  context: context,
+                  width: constraints.maxWidth,
                 );
               },
             ),

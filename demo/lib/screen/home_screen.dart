@@ -54,6 +54,7 @@ import 'feature/text_type_column_screen.dart';
 import 'feature/time_type_column_screen.dart';
 import 'feature/value_formatter_screen.dart';
 import 'feature/pages_list_screen.dart';
+import 'feature/scrollbars.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/';
@@ -417,6 +418,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, FrozenRowsScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'Scrollbars',
+        description: 'Customize scrollbar appearance, behavior, and visibility',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ScrollbarsScreen.routeName);
+        },
+        trailing: newIcon,
       ),
       TrinaListTile(
         title: 'Add rows asynchronously',

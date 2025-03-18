@@ -795,7 +795,7 @@ class TrinaGridStyleConfig {
 /// changing [isAlwaysShown] to true is recommended for more usability at desktops.
 class TrinaGridScrollbarConfig {
   const TrinaGridScrollbarConfig({
-    this.draggableScrollbar = true,
+    // Basic scrollbar behavior settings
     this.isAlwaysShown = false,
     this.onlyDraggingThumb = true,
     this.enableScrollAfterDragEnd = true,
@@ -812,10 +812,19 @@ class TrinaGridScrollbarConfig {
         TrinaScrollbar.defaultRadiusWhileDragging,
     this.longPressDuration,
     this.dragDevices,
+
+    // Advanced scrollbar appearance settings
+    this.thumbVisible = true,
+    this.showTrack = true,
+    this.showHorizontal = true,
+    this.showVertical = true,
+    this.thickness = 8.0,
+    this.minThumbLength = 40.0,
+    this.thumbColor,
+    this.trackColor,
   });
 
-  final bool draggableScrollbar;
-
+  /// Whether the scrollbar is always visible
   final bool isAlwaysShown;
 
   /// If [onlyDraggingThumb] is false, scrolling can be done by dragging the track area.
@@ -838,10 +847,12 @@ class TrinaGridScrollbarConfig {
 
   final double? crossAxisMargin;
 
-  /// ScrollBar Color
+  /// ScrollBar Color (use thumbColor instead)
+  /// @deprecated Use thumbColor instead
   final Color? scrollBarColor;
 
-  /// ScrollBar Track Color
+  /// ScrollBar Track Color (use trackColor instead)
+  /// @deprecated Use trackColor instead
   final Color? scrollBarTrackColor;
 
   final Radius scrollbarRadius;
@@ -853,12 +864,43 @@ class TrinaGridScrollbarConfig {
 
   final Set<PointerDeviceKind>? dragDevices;
 
+  /// Whether the scrollbar thumb is visible
+  final bool thumbVisible;
+
+  /// Whether to show the scrollbar track
+  final bool showTrack;
+
+  /// Whether to show the horizontal scrollbar
+  final bool showHorizontal;
+
+  /// Whether to show the vertical scrollbar
+  final bool showVertical;
+
+  /// Thickness of the scrollbar (preferred over scrollbarThickness)
+  final double thickness;
+
+  /// Minimum length of the scrollbar thumb
+  final double minThumbLength;
+
+  /// Color of the scrollbar thumb (preferred over scrollBarColor)
+  final Color? thumbColor;
+
+  /// Color of the scrollbar track (preferred over scrollBarTrackColor)
+  final Color? trackColor;
+
+  /// Get effective thumb color considering both thumbColor and scrollBarColor for compatibility
+  Color get effectiveThumbColor =>
+      thumbColor ?? scrollBarColor ?? Colors.grey.withAlpha((153).toInt());
+
+  /// Get effective track color considering both trackColor and scrollBarTrackColor for compatibility
+  Color get effectiveTrackColor =>
+      trackColor ?? scrollBarTrackColor ?? Colors.grey.withAlpha(51);
+
   @override
   bool operator ==(covariant Object other) {
     return identical(this, other) ||
         other is TrinaGridScrollbarConfig &&
             runtimeType == other.runtimeType &&
-            draggableScrollbar == other.draggableScrollbar &&
             isAlwaysShown == other.isAlwaysShown &&
             onlyDraggingThumb == other.onlyDraggingThumb &&
             enableScrollAfterDragEnd == other.enableScrollAfterDragEnd &&
@@ -874,12 +916,19 @@ class TrinaGridScrollbarConfig {
             scrollbarRadiusWhileDragging ==
                 other.scrollbarRadiusWhileDragging &&
             longPressDuration == other.longPressDuration &&
-            dragDevices == other.dragDevices;
+            dragDevices == other.dragDevices &&
+            thumbVisible == other.thumbVisible &&
+            showTrack == other.showTrack &&
+            showHorizontal == other.showHorizontal &&
+            showVertical == other.showVertical &&
+            thickness == other.thickness &&
+            minThumbLength == other.minThumbLength &&
+            thumbColor == other.thumbColor &&
+            trackColor == other.trackColor;
   }
 
   @override
-  int get hashCode => Object.hash(
-    draggableScrollbar,
+  int get hashCode => Object.hashAll([
     isAlwaysShown,
     onlyDraggingThumb,
     enableScrollAfterDragEnd,
@@ -894,55 +943,21 @@ class TrinaGridScrollbarConfig {
     scrollbarRadiusWhileDragging,
     longPressDuration,
     dragDevices,
-  );
-}
-
-/// Extended scrollbar configuration for custom scrollbars in the grid
-class TrinaScrollbarConfig {
-  const TrinaScrollbarConfig({
-    this.visible = true,
-    this.showTrack = true,
-    this.showHorizontal = true,
-    this.showVertical = true,
-    this.thickness = 8.0,
-    this.minThumbLength = 40.0,
-    this.thumbColor,
-    this.trackColor,
-  });
-
-  /// Whether the scrollbar thumb is visible
-  final bool visible;
-
-  /// Whether to show the scrollbar track
-  final bool showTrack;
-
-  /// Whether to show the horizontal scrollbar
-  final bool showHorizontal;
-
-  /// Whether to show the vertical scrollbar
-  final bool showVertical;
-
-  /// Thickness of the scrollbar
-  final double thickness;
-
-  /// Minimum length of the scrollbar thumb
-  final double minThumbLength;
-
-  /// Color of the scrollbar thumb
-  final Color? thumbColor;
-
-  /// Color of the scrollbar track
-  final Color? trackColor;
-
-  Color get effectiveThumbColor =>
-      thumbColor ?? Colors.grey.withAlpha((153).toInt());
-
-  Color get effectiveTrackColor => trackColor ?? Colors.grey.withAlpha(51);
+    thumbVisible,
+    showTrack,
+    showHorizontal,
+    showVertical,
+    thickness,
+    minThumbLength,
+    thumbColor,
+    trackColor,
+  ]);
 }
 
 extension TrinaGridConfigurationScrollbarExtension on TrinaGridConfiguration {
-  /// Get the scrollbar configuration for custom scrollbars
-  TrinaScrollbarConfig get scrollbarConfig => const TrinaScrollbarConfig();
+  /// Get the scrollbar configuration
+  /// @deprecated Use the configuration.scrollbar property directly instead
+  TrinaGridScrollbarConfig get scrollbarConfig => scrollbar;
 }
 
 typedef TrinaGridColumnFilterResolver = Function<T>();

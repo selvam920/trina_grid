@@ -3,6 +3,7 @@ import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_visible_columns_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/grid_export_screen.dart';
+import 'package:demo/screen/feature/scrollbars.dart';
 import 'package:flutter/material.dart';
 
 import 'constants/trina_grid_example_colors.dart';
@@ -128,6 +129,7 @@ class MyApp extends StatelessWidget {
         EmptyScreen.routeName: (context) => const EmptyScreen(),
         PagesListScreen.routeName: (context) => const PagesListScreen(),
         FrozenRowsScreen.routeName: (context) => const FrozenRowsScreen(),
+        ScrollbarsScreen.routeName: (context) => const ScrollbarsScreen(),
       },
       theme: ThemeData(
         primaryColor: TrinaGridExampleColors.primaryColor,

@@ -7,9 +7,7 @@ void main() {
     'When the dark constructor is called, the configuration should be created.',
     (WidgetTester tester) async {
       const TrinaGridConfiguration configuration = TrinaGridConfiguration.dark(
-        style: TrinaGridStyleConfig(
-          enableColumnBorderVertical: false,
-        ),
+        style: TrinaGridStyleConfig(enableColumnBorderVertical: false),
       );
 
       expect(configuration.style.enableColumnBorderVertical, false);
@@ -18,9 +16,7 @@ void main() {
 
   group('TrinaGridStyleConfig.copyWith', () {
     test('When oddRowColor is set to null, the value should be changed.', () {
-      const style = TrinaGridStyleConfig(
-        oddRowColor: Colors.cyan,
-      );
+      const style = TrinaGridStyleConfig(oddRowColor: Colors.cyan);
 
       final copiedStyle = style.copyWith(
         oddRowColor: const TrinaOptional<Color?>(null),
@@ -30,9 +26,7 @@ void main() {
     });
 
     test('When evenRowColor is set to null, the value should be changed.', () {
-      const style = TrinaGridStyleConfig(
-        evenRowColor: Colors.cyan,
-      );
+      const style = TrinaGridStyleConfig(evenRowColor: Colors.cyan);
 
       final copiedStyle = style.copyWith(
         evenRowColor: const TrinaOptional<Color?>(null),
@@ -53,591 +47,466 @@ void main() {
       expect(copiedSize.autoSizeMode, TrinaAutoSizeMode.scale);
     });
 
-    test('When resizeMode is set to pushAndPull, the value should be changed.',
-        () {
-      const size = TrinaGridColumnSizeConfig(
-        resizeMode: TrinaResizeMode.normal,
-      );
+    test(
+      'When resizeMode is set to pushAndPull, the value should be changed.',
+      () {
+        const size = TrinaGridColumnSizeConfig(
+          resizeMode: TrinaResizeMode.normal,
+        );
 
-      final copiedSize = size.copyWith(resizeMode: TrinaResizeMode.pushAndPull);
+        final copiedSize = size.copyWith(
+          resizeMode: TrinaResizeMode.pushAndPull,
+        );
 
-      expect(copiedSize.resizeMode, TrinaResizeMode.pushAndPull);
-    });
+        expect(copiedSize.resizeMode, TrinaResizeMode.pushAndPull);
+      },
+    );
   });
 
   group('configuration', () {
     test(
-        'When the values of configuration A and B are the same, the comparison should be true.',
-        () {
-      const configurationA = TrinaGridConfiguration(
-        enableMoveDownAfterSelecting: true,
-        enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
-        style: TrinaGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
-        scrollbar: TrinaGridScrollbarConfig(
-          isAlwaysShown: true,
-        ),
-        localeText: TrinaGridLocaleText(
-          setColumnsTitle: 'test',
-        ),
-      );
+      'When the values of configuration A and B are the same, the comparison should be true.',
+      () {
+        const configurationA = TrinaGridConfiguration(
+          enableMoveDownAfterSelecting: true,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
+          scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
+          localeText: TrinaGridLocaleText(setColumnsTitle: 'test'),
+        );
 
-      const configurationB = TrinaGridConfiguration(
-        enableMoveDownAfterSelecting: true,
-        enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
-        style: TrinaGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
-        scrollbar: TrinaGridScrollbarConfig(
-          isAlwaysShown: true,
-        ),
-        localeText: TrinaGridLocaleText(
-          setColumnsTitle: 'test',
-        ),
-      );
+        const configurationB = TrinaGridConfiguration(
+          enableMoveDownAfterSelecting: true,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
+          scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
+          localeText: TrinaGridLocaleText(setColumnsTitle: 'test'),
+        );
 
-      expect(configurationA == configurationB, true);
-    });
+        expect(configurationA == configurationB, true);
+      },
+    );
 
     test(
-        'When the values of configuration A and B are the same, the comparison should be true.',
-        () {
-      const configurationA = TrinaGridConfiguration(
-        enableMoveDownAfterSelecting: true,
-        enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
-        style: TrinaGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
-        scrollbar: TrinaGridScrollbarConfig(
-          isAlwaysShown: true,
-        ),
-        localeText: TrinaGridLocaleText(
-          setColumnsTitle: 'test',
-        ),
-      );
+      'When the values of configuration A and B are the same, the comparison should be true.',
+      () {
+        const configurationA = TrinaGridConfiguration(
+          enableMoveDownAfterSelecting: true,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
+          scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
+          localeText: TrinaGridLocaleText(setColumnsTitle: 'test'),
+        );
 
-      const configurationB = TrinaGridConfiguration(
-        enableMoveDownAfterSelecting: true,
-        enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
-        style: TrinaGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
-        scrollbar: TrinaGridScrollbarConfig(
-          isAlwaysShown: true,
-        ),
-        localeText: TrinaGridLocaleText(
-          setColumnsTitle: 'test',
-        ),
-      );
+        const configurationB = TrinaGridConfiguration(
+          enableMoveDownAfterSelecting: true,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
+          scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
+          localeText: TrinaGridLocaleText(setColumnsTitle: 'test'),
+        );
 
-      expect(configurationA.hashCode == configurationB.hashCode, true);
-    });
+        expect(configurationA.hashCode == configurationB.hashCode, true);
+      },
+    );
 
     test(
-        'When the enableMoveDownAfterSelecting value is different, the comparison should be false.',
-        () {
-      const configurationA = TrinaGridConfiguration(
-        enableMoveDownAfterSelecting: true,
-        enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
-        style: TrinaGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
-        scrollbar: TrinaGridScrollbarConfig(
-          isAlwaysShown: true,
-        ),
-        localeText: TrinaGridLocaleText(
-          setColumnsTitle: 'test',
-        ),
-      );
+      'When the enableMoveDownAfterSelecting value is different, the comparison should be false.',
+      () {
+        const configurationA = TrinaGridConfiguration(
+          enableMoveDownAfterSelecting: true,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
+          scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
+          localeText: TrinaGridLocaleText(setColumnsTitle: 'test'),
+        );
 
-      const configurationB = TrinaGridConfiguration(
-        enableMoveDownAfterSelecting: false,
-        enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
-        style: TrinaGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
-        scrollbar: TrinaGridScrollbarConfig(
-          isAlwaysShown: true,
-        ),
-        localeText: TrinaGridLocaleText(
-          setColumnsTitle: 'test',
-        ),
-      );
+        const configurationB = TrinaGridConfiguration(
+          enableMoveDownAfterSelecting: false,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
+          scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
+          localeText: TrinaGridLocaleText(setColumnsTitle: 'test'),
+        );
 
-      expect(configurationA == configurationB, false);
-    });
+        expect(configurationA == configurationB, false);
+      },
+    );
 
     test(
-        'When the isAlwaysShown value is different, the comparison should be false.',
-        () {
-      const configurationA = TrinaGridConfiguration(
-        enableMoveDownAfterSelecting: true,
-        enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
-        style: TrinaGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
-        scrollbar: TrinaGridScrollbarConfig(
-          isAlwaysShown: true,
-        ),
-        localeText: TrinaGridLocaleText(
-          setColumnsTitle: 'test',
-        ),
-      );
+      'When the isAlwaysShown value is different, the comparison should be false.',
+      () {
+        const configurationA = TrinaGridConfiguration(
+          enableMoveDownAfterSelecting: true,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
+          scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
+          localeText: TrinaGridLocaleText(setColumnsTitle: 'test'),
+        );
 
-      const configurationB = TrinaGridConfiguration(
-        enableMoveDownAfterSelecting: true,
-        enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
-        style: TrinaGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
-        scrollbar: TrinaGridScrollbarConfig(
-          isAlwaysShown: false,
-        ),
-        localeText: TrinaGridLocaleText(
-          setColumnsTitle: 'test',
-        ),
-      );
+        const configurationB = TrinaGridConfiguration(
+          enableMoveDownAfterSelecting: true,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
+          scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: false),
+          localeText: TrinaGridLocaleText(setColumnsTitle: 'test'),
+        );
 
-      expect(configurationA == configurationB, false);
-    });
+        expect(configurationA == configurationB, false);
+      },
+    );
 
     test(
-        'When the localeText value is different, the comparison should be false.',
-        () {
-      const configurationA = TrinaGridConfiguration(
-        enableMoveDownAfterSelecting: true,
-        enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
-        style: TrinaGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
-        scrollbar: TrinaGridScrollbarConfig(
-          isAlwaysShown: true,
-        ),
-        localeText: TrinaGridLocaleText(
-          setColumnsTitle: 'setColumnsTitle',
-        ),
-      );
+      'When the localeText value is different, the comparison should be false.',
+      () {
+        const configurationA = TrinaGridConfiguration(
+          enableMoveDownAfterSelecting: true,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
+          scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
+          localeText: TrinaGridLocaleText(setColumnsTitle: 'setColumnsTitle'),
+        );
 
-      const configurationB = TrinaGridConfiguration(
-        enableMoveDownAfterSelecting: true,
-        enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
-        style: TrinaGridStyleConfig(
-          columnResizeIcon: IconData(0),
-        ),
-        scrollbar: TrinaGridScrollbarConfig(
-          isAlwaysShown: true,
-        ),
-        localeText: TrinaGridLocaleText(
-          setColumnsTitle: '컬럼제목설정',
-        ),
-      );
+        const configurationB = TrinaGridConfiguration(
+          enableMoveDownAfterSelecting: true,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
+          scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
+          localeText: TrinaGridLocaleText(setColumnsTitle: '컬럼제목설정'),
+        );
 
-      expect(configurationA == configurationB, false);
-    });
+        expect(configurationA == configurationB, false);
+      },
+    );
   });
 
   group('style', () {
     test(
-        'When the values of style A and B are the same, the comparison should be true.',
-        () {
-      const styleA = TrinaGridStyleConfig(
-        enableGridBorderShadow: true,
-        oddRowColor: Colors.lightGreen,
-        columnTextStyle: TextStyle(fontSize: 20),
-        rowGroupExpandedIcon: IconData(0),
-        gridBorderRadius: BorderRadius.all(Radius.circular(15)),
-      );
+      'When the values of style A and B are the same, the comparison should be true.',
+      () {
+        const styleA = TrinaGridStyleConfig(
+          enableGridBorderShadow: true,
+          oddRowColor: Colors.lightGreen,
+          columnTextStyle: TextStyle(fontSize: 20),
+          rowGroupExpandedIcon: IconData(0),
+          gridBorderRadius: BorderRadius.all(Radius.circular(15)),
+        );
 
-      const styleB = TrinaGridStyleConfig(
-        enableGridBorderShadow: true,
-        oddRowColor: Colors.lightGreen,
-        columnTextStyle: TextStyle(fontSize: 20),
-        rowGroupExpandedIcon: IconData(0),
-        gridBorderRadius: BorderRadius.all(Radius.circular(15)),
-      );
+        const styleB = TrinaGridStyleConfig(
+          enableGridBorderShadow: true,
+          oddRowColor: Colors.lightGreen,
+          columnTextStyle: TextStyle(fontSize: 20),
+          rowGroupExpandedIcon: IconData(0),
+          gridBorderRadius: BorderRadius.all(Radius.circular(15)),
+        );
 
-      expect(styleA == styleB, true);
-    });
-
-    test(
-        'When the values of style A and B are the same, the comparison should be true.',
-        () {
-      const styleA = TrinaGridStyleConfig(
-        enableGridBorderShadow: true,
-        oddRowColor: Colors.lightGreen,
-        columnTextStyle: TextStyle(fontSize: 20),
-        rowGroupExpandedIcon: IconData(0),
-        gridBorderRadius: BorderRadius.all(Radius.circular(15)),
-      );
-
-      const styleB = TrinaGridStyleConfig(
-        enableGridBorderShadow: true,
-        oddRowColor: Colors.lightGreen,
-        columnTextStyle: TextStyle(fontSize: 20),
-        rowGroupExpandedIcon: IconData(0),
-        gridBorderRadius: BorderRadius.all(Radius.circular(15)),
-      );
-
-      expect(styleA.hashCode == styleB.hashCode, true);
-    });
+        expect(styleA == styleB, true);
+      },
+    );
 
     test(
-        'When the enableGridBorderShadow value is different, the comparison should be false.',
-        () {
-      const styleA = TrinaGridStyleConfig(
-        enableGridBorderShadow: true,
-        oddRowColor: Colors.lightGreen,
-        columnTextStyle: TextStyle(fontSize: 20),
-        rowGroupExpandedIcon: IconData(0),
-        gridBorderRadius: BorderRadius.all(Radius.circular(15)),
-      );
+      'When the values of style A and B are the same, the comparison should be true.',
+      () {
+        const styleA = TrinaGridStyleConfig(
+          enableGridBorderShadow: true,
+          oddRowColor: Colors.lightGreen,
+          columnTextStyle: TextStyle(fontSize: 20),
+          rowGroupExpandedIcon: IconData(0),
+          gridBorderRadius: BorderRadius.all(Radius.circular(15)),
+        );
 
-      const styleB = TrinaGridStyleConfig(
-        enableGridBorderShadow: false,
-        oddRowColor: Colors.lightGreen,
-        columnTextStyle: TextStyle(fontSize: 20),
-        rowGroupExpandedIcon: IconData(0),
-        gridBorderRadius: BorderRadius.all(Radius.circular(15)),
-      );
+        const styleB = TrinaGridStyleConfig(
+          enableGridBorderShadow: true,
+          oddRowColor: Colors.lightGreen,
+          columnTextStyle: TextStyle(fontSize: 20),
+          rowGroupExpandedIcon: IconData(0),
+          gridBorderRadius: BorderRadius.all(Radius.circular(15)),
+        );
 
-      expect(styleA == styleB, false);
-    });
-
-    test(
-        'When the oddRowColor value is different, the comparison should be false.',
-        () {
-      const styleA = TrinaGridStyleConfig(
-        enableGridBorderShadow: true,
-        oddRowColor: Colors.lightGreen,
-        columnTextStyle: TextStyle(fontSize: 20),
-        rowGroupExpandedIcon: IconData(0),
-        gridBorderRadius: BorderRadius.all(Radius.circular(15)),
-      );
-
-      const styleB = TrinaGridStyleConfig(
-        enableGridBorderShadow: true,
-        oddRowColor: Colors.red,
-        columnTextStyle: TextStyle(fontSize: 20),
-        rowGroupExpandedIcon: IconData(0),
-        gridBorderRadius: BorderRadius.all(Radius.circular(15)),
-      );
-
-      expect(styleA == styleB, false);
-    });
+        expect(styleA.hashCode == styleB.hashCode, true);
+      },
+    );
 
     test(
-        'When the gridBorderRadius value is different, the comparison should be false.',
-        () {
-      const styleA = TrinaGridStyleConfig(
-        enableGridBorderShadow: true,
-        oddRowColor: Colors.lightGreen,
-        columnTextStyle: TextStyle(fontSize: 20),
-        rowGroupExpandedIcon: IconData(0),
-        gridBorderRadius: BorderRadius.horizontal(left: Radius.circular(10)),
-      );
+      'When the enableGridBorderShadow value is different, the comparison should be false.',
+      () {
+        const styleA = TrinaGridStyleConfig(
+          enableGridBorderShadow: true,
+          oddRowColor: Colors.lightGreen,
+          columnTextStyle: TextStyle(fontSize: 20),
+          rowGroupExpandedIcon: IconData(0),
+          gridBorderRadius: BorderRadius.all(Radius.circular(15)),
+        );
 
-      const styleB = TrinaGridStyleConfig(
-        enableGridBorderShadow: true,
-        oddRowColor: Colors.lightGreen,
-        columnTextStyle: TextStyle(fontSize: 20),
-        rowGroupExpandedIcon: IconData(0),
-        gridBorderRadius: BorderRadius.all(Radius.circular(15)),
-      );
+        const styleB = TrinaGridStyleConfig(
+          enableGridBorderShadow: false,
+          oddRowColor: Colors.lightGreen,
+          columnTextStyle: TextStyle(fontSize: 20),
+          rowGroupExpandedIcon: IconData(0),
+          gridBorderRadius: BorderRadius.all(Radius.circular(15)),
+        );
 
-      expect(styleA == styleB, false);
-    });
-  });
-
-  group('scrollbar', () {
-    test(
-        'When the values of scrollbar A and B are the same, the comparison should be true.',
-        () {
-      const scrollA = TrinaGridScrollbarConfig(
-        draggableScrollbar: true,
-        isAlwaysShown: true,
-        scrollbarThicknessWhileDragging: 10,
-      );
-
-      const scrollB = TrinaGridScrollbarConfig(
-        draggableScrollbar: true,
-        isAlwaysShown: true,
-        scrollbarThicknessWhileDragging: 10,
-      );
-
-      expect(scrollA == scrollB, true);
-    });
+        expect(styleA == styleB, false);
+      },
+    );
 
     test(
-        'When the values of scrollbar A and B are the same, the comparison should be true.',
-        () {
-      const scrollA = TrinaGridScrollbarConfig(
-        draggableScrollbar: true,
-        isAlwaysShown: true,
-        scrollbarThicknessWhileDragging: 10,
-      );
+      'When the oddRowColor value is different, the comparison should be false.',
+      () {
+        const styleA = TrinaGridStyleConfig(
+          enableGridBorderShadow: true,
+          oddRowColor: Colors.lightGreen,
+          columnTextStyle: TextStyle(fontSize: 20),
+          rowGroupExpandedIcon: IconData(0),
+          gridBorderRadius: BorderRadius.all(Radius.circular(15)),
+        );
 
-      const scrollB = TrinaGridScrollbarConfig(
-        draggableScrollbar: true,
-        isAlwaysShown: true,
-        scrollbarThicknessWhileDragging: 10,
-      );
+        const styleB = TrinaGridStyleConfig(
+          enableGridBorderShadow: true,
+          oddRowColor: Colors.red,
+          columnTextStyle: TextStyle(fontSize: 20),
+          rowGroupExpandedIcon: IconData(0),
+          gridBorderRadius: BorderRadius.all(Radius.circular(15)),
+        );
 
-      expect(scrollA.hashCode == scrollB.hashCode, true);
-    });
-
-    test(
-        'When the isAlwaysShown value is different, the comparison should be false.',
-        () {
-      const scrollA = TrinaGridScrollbarConfig(
-        draggableScrollbar: true,
-        isAlwaysShown: true,
-        scrollbarThicknessWhileDragging: 10,
-      );
-
-      const scrollB = TrinaGridScrollbarConfig(
-        draggableScrollbar: true,
-        isAlwaysShown: false,
-        scrollbarThicknessWhileDragging: 10,
-      );
-
-      expect(scrollA == scrollB, false);
-    });
+        expect(styleA == styleB, false);
+      },
+    );
 
     test(
-        'When the scrollbarRadiusWhileDragging value is different, the comparison should be false.',
-        () {
-      const scrollA = TrinaGridScrollbarConfig(
-        draggableScrollbar: true,
-        isAlwaysShown: true,
-        scrollbarRadiusWhileDragging: Radius.circular(10),
-      );
+      'When the gridBorderRadius value is different, the comparison should be false.',
+      () {
+        const styleA = TrinaGridStyleConfig(
+          enableGridBorderShadow: true,
+          oddRowColor: Colors.lightGreen,
+          columnTextStyle: TextStyle(fontSize: 20),
+          rowGroupExpandedIcon: IconData(0),
+          gridBorderRadius: BorderRadius.horizontal(left: Radius.circular(10)),
+        );
 
-      const scrollB = TrinaGridScrollbarConfig(
-        draggableScrollbar: true,
-        isAlwaysShown: true,
-        scrollbarRadiusWhileDragging: Radius.circular(11),
-      );
+        const styleB = TrinaGridStyleConfig(
+          enableGridBorderShadow: true,
+          oddRowColor: Colors.lightGreen,
+          columnTextStyle: TextStyle(fontSize: 20),
+          rowGroupExpandedIcon: IconData(0),
+          gridBorderRadius: BorderRadius.all(Radius.circular(15)),
+        );
 
-      expect(scrollA == scrollB, false);
-    });
+        expect(styleA == styleB, false);
+      },
+    );
   });
 
   group('columnFilter', () {
     test(
-        'When the values of columnFilter A and B are the same, the comparison should be true.',
-        () {
-      const columnFilterA = TrinaGridColumnFilterConfig(
-        filters: [
-          ...FilterHelper.defaultFilters,
-        ],
-        debounceMilliseconds: 300,
-      );
+      'When the values of columnFilter A and B are the same, the comparison should be true.',
+      () {
+        const columnFilterA = TrinaGridColumnFilterConfig(
+          filters: [...FilterHelper.defaultFilters],
+          debounceMilliseconds: 300,
+        );
 
-      const columnFilterB = TrinaGridColumnFilterConfig(
-        filters: [
-          ...FilterHelper.defaultFilters,
-        ],
-        debounceMilliseconds: 300,
-      );
+        const columnFilterB = TrinaGridColumnFilterConfig(
+          filters: [...FilterHelper.defaultFilters],
+          debounceMilliseconds: 300,
+        );
 
-      expect(columnFilterA == columnFilterB, true);
-    });
+        expect(columnFilterA == columnFilterB, true);
+      },
+    );
 
     test(
-        'When the values of columnFilter A and B are the same, the comparison should be true.',
-        () {
-      const columnFilterA = TrinaGridColumnFilterConfig(
-        filters: [
-          ...FilterHelper.defaultFilters,
-        ],
-        debounceMilliseconds: 300,
-      );
+      'When the values of columnFilter A and B are the same, the comparison should be true.',
+      () {
+        const columnFilterA = TrinaGridColumnFilterConfig(
+          filters: [...FilterHelper.defaultFilters],
+          debounceMilliseconds: 300,
+        );
 
-      const columnFilterB = TrinaGridColumnFilterConfig(
-        filters: [
-          ...FilterHelper.defaultFilters,
-        ],
-        debounceMilliseconds: 300,
-      );
+        const columnFilterB = TrinaGridColumnFilterConfig(
+          filters: [...FilterHelper.defaultFilters],
+          debounceMilliseconds: 300,
+        );
 
-      expect(columnFilterA.hashCode == columnFilterB.hashCode, true);
-    });
-
-    test('When the filters value is different, the comparison should be false.',
-        () {
-      final columnFilterA = TrinaGridColumnFilterConfig(
-        filters: [
-          ...FilterHelper.defaultFilters,
-        ].reversed.toList(),
-        debounceMilliseconds: 300,
-      );
-
-      const columnFilterB = TrinaGridColumnFilterConfig(
-        filters: [
-          ...FilterHelper.defaultFilters,
-        ],
-        debounceMilliseconds: 300,
-      );
-
-      expect(columnFilterA == columnFilterB, false);
-    });
+        expect(columnFilterA.hashCode == columnFilterB.hashCode, true);
+      },
+    );
 
     test(
-        'When the debounceMilliseconds value is different, the comparison should be false.',
-        () {
-      const columnFilterA = TrinaGridColumnFilterConfig(
-        filters: [
-          ...FilterHelper.defaultFilters,
-        ],
-        debounceMilliseconds: 300,
-      );
+      'When the filters value is different, the comparison should be false.',
+      () {
+        final columnFilterA = TrinaGridColumnFilterConfig(
+          filters: [...FilterHelper.defaultFilters].reversed.toList(),
+          debounceMilliseconds: 300,
+        );
 
-      const columnFilterB = TrinaGridColumnFilterConfig(
-        filters: [
-          ...FilterHelper.defaultFilters,
-        ],
-        debounceMilliseconds: 301,
-      );
+        const columnFilterB = TrinaGridColumnFilterConfig(
+          filters: [...FilterHelper.defaultFilters],
+          debounceMilliseconds: 300,
+        );
 
-      expect(columnFilterA == columnFilterB, false);
-    });
+        expect(columnFilterA == columnFilterB, false);
+      },
+    );
+
+    test(
+      'When the debounceMilliseconds value is different, the comparison should be false.',
+      () {
+        const columnFilterA = TrinaGridColumnFilterConfig(
+          filters: [...FilterHelper.defaultFilters],
+          debounceMilliseconds: 300,
+        );
+
+        const columnFilterB = TrinaGridColumnFilterConfig(
+          filters: [...FilterHelper.defaultFilters],
+          debounceMilliseconds: 301,
+        );
+
+        expect(columnFilterA == columnFilterB, false);
+      },
+    );
   });
 
   group('columnSize', () {
     test(
-        'When the properties of TrinaGridColumnSizeConfig are the same, the comparison should be true.',
-        () {
-      const sizeA = TrinaGridColumnSizeConfig(
-        autoSizeMode: TrinaAutoSizeMode.scale,
-        resizeMode: TrinaResizeMode.none,
-        restoreAutoSizeAfterHideColumn: true,
-        restoreAutoSizeAfterFrozenColumn: false,
-        restoreAutoSizeAfterMoveColumn: true,
-        restoreAutoSizeAfterInsertColumn: false,
-        restoreAutoSizeAfterRemoveColumn: false,
-      );
+      'When the properties of TrinaGridColumnSizeConfig are the same, the comparison should be true.',
+      () {
+        const sizeA = TrinaGridColumnSizeConfig(
+          autoSizeMode: TrinaAutoSizeMode.scale,
+          resizeMode: TrinaResizeMode.none,
+          restoreAutoSizeAfterHideColumn: true,
+          restoreAutoSizeAfterFrozenColumn: false,
+          restoreAutoSizeAfterMoveColumn: true,
+          restoreAutoSizeAfterInsertColumn: false,
+          restoreAutoSizeAfterRemoveColumn: false,
+        );
 
-      const sizeB = TrinaGridColumnSizeConfig(
-        autoSizeMode: TrinaAutoSizeMode.scale,
-        resizeMode: TrinaResizeMode.none,
-        restoreAutoSizeAfterHideColumn: true,
-        restoreAutoSizeAfterFrozenColumn: false,
-        restoreAutoSizeAfterMoveColumn: true,
-        restoreAutoSizeAfterInsertColumn: false,
-        restoreAutoSizeAfterRemoveColumn: false,
-      );
+        const sizeB = TrinaGridColumnSizeConfig(
+          autoSizeMode: TrinaAutoSizeMode.scale,
+          resizeMode: TrinaResizeMode.none,
+          restoreAutoSizeAfterHideColumn: true,
+          restoreAutoSizeAfterFrozenColumn: false,
+          restoreAutoSizeAfterMoveColumn: true,
+          restoreAutoSizeAfterInsertColumn: false,
+          restoreAutoSizeAfterRemoveColumn: false,
+        );
 
-      expect(sizeA == sizeB, true);
-    });
-
-    test(
-        'When the properties of TrinaGridColumnSizeConfig are the same, the comparison should be true.',
-        () {
-      const sizeA = TrinaGridColumnSizeConfig(
-        autoSizeMode: TrinaAutoSizeMode.scale,
-        resizeMode: TrinaResizeMode.none,
-        restoreAutoSizeAfterHideColumn: true,
-        restoreAutoSizeAfterFrozenColumn: false,
-        restoreAutoSizeAfterMoveColumn: true,
-        restoreAutoSizeAfterInsertColumn: false,
-        restoreAutoSizeAfterRemoveColumn: false,
-      );
-
-      const sizeB = TrinaGridColumnSizeConfig(
-        autoSizeMode: TrinaAutoSizeMode.scale,
-        resizeMode: TrinaResizeMode.none,
-        restoreAutoSizeAfterHideColumn: true,
-        restoreAutoSizeAfterFrozenColumn: false,
-        restoreAutoSizeAfterMoveColumn: true,
-        restoreAutoSizeAfterInsertColumn: false,
-        restoreAutoSizeAfterRemoveColumn: false,
-      );
-
-      expect(sizeA.hashCode == sizeB.hashCode, true);
-    });
+        expect(sizeA == sizeB, true);
+      },
+    );
 
     test(
-        'When the properties of TrinaGridColumnSizeConfig are different, the comparison should be false.',
-        () {
-      const sizeA = TrinaGridColumnSizeConfig(
-        autoSizeMode: TrinaAutoSizeMode.scale,
-        resizeMode: TrinaResizeMode.none,
-        restoreAutoSizeAfterHideColumn: true,
-        restoreAutoSizeAfterFrozenColumn: false,
-        restoreAutoSizeAfterMoveColumn: true,
-        restoreAutoSizeAfterInsertColumn: false,
-        restoreAutoSizeAfterRemoveColumn: false,
-      );
+      'When the properties of TrinaGridColumnSizeConfig are the same, the comparison should be true.',
+      () {
+        const sizeA = TrinaGridColumnSizeConfig(
+          autoSizeMode: TrinaAutoSizeMode.scale,
+          resizeMode: TrinaResizeMode.none,
+          restoreAutoSizeAfterHideColumn: true,
+          restoreAutoSizeAfterFrozenColumn: false,
+          restoreAutoSizeAfterMoveColumn: true,
+          restoreAutoSizeAfterInsertColumn: false,
+          restoreAutoSizeAfterRemoveColumn: false,
+        );
 
-      const sizeB = TrinaGridColumnSizeConfig(
-        autoSizeMode: TrinaAutoSizeMode.scale,
-        resizeMode: TrinaResizeMode.none,
-        restoreAutoSizeAfterHideColumn: true,
-        restoreAutoSizeAfterFrozenColumn: false,
-        restoreAutoSizeAfterMoveColumn: true,
-        restoreAutoSizeAfterInsertColumn: false,
-        restoreAutoSizeAfterRemoveColumn: true,
-      );
+        const sizeB = TrinaGridColumnSizeConfig(
+          autoSizeMode: TrinaAutoSizeMode.scale,
+          resizeMode: TrinaResizeMode.none,
+          restoreAutoSizeAfterHideColumn: true,
+          restoreAutoSizeAfterFrozenColumn: false,
+          restoreAutoSizeAfterMoveColumn: true,
+          restoreAutoSizeAfterInsertColumn: false,
+          restoreAutoSizeAfterRemoveColumn: false,
+        );
 
-      expect(sizeA == sizeB, false);
-    });
+        expect(sizeA.hashCode == sizeB.hashCode, true);
+      },
+    );
+
+    test(
+      'When the properties of TrinaGridColumnSizeConfig are different, the comparison should be false.',
+      () {
+        const sizeA = TrinaGridColumnSizeConfig(
+          autoSizeMode: TrinaAutoSizeMode.scale,
+          resizeMode: TrinaResizeMode.none,
+          restoreAutoSizeAfterHideColumn: true,
+          restoreAutoSizeAfterFrozenColumn: false,
+          restoreAutoSizeAfterMoveColumn: true,
+          restoreAutoSizeAfterInsertColumn: false,
+          restoreAutoSizeAfterRemoveColumn: false,
+        );
+
+        const sizeB = TrinaGridColumnSizeConfig(
+          autoSizeMode: TrinaAutoSizeMode.scale,
+          resizeMode: TrinaResizeMode.none,
+          restoreAutoSizeAfterHideColumn: true,
+          restoreAutoSizeAfterFrozenColumn: false,
+          restoreAutoSizeAfterMoveColumn: true,
+          restoreAutoSizeAfterInsertColumn: false,
+          restoreAutoSizeAfterRemoveColumn: true,
+        );
+
+        expect(sizeA == sizeB, false);
+      },
+    );
   });
 
   group('locale', () {
     test(
-        'When the values of locale A and B are the same, the comparison should be true.',
-        () {
-      const localeA = TrinaGridLocaleText(
-        unfreezeColumn: 'Unfreeze',
-        filterContains: 'Contains',
-        loadingText: 'Loading',
-      );
+      'When the values of locale A and B are the same, the comparison should be true.',
+      () {
+        const localeA = TrinaGridLocaleText(
+          unfreezeColumn: 'Unfreeze',
+          filterContains: 'Contains',
+          loadingText: 'Loading',
+        );
 
-      const localeB = TrinaGridLocaleText(
-        unfreezeColumn: 'Unfreeze',
-        filterContains: 'Contains',
-        loadingText: 'Loading',
-      );
+        const localeB = TrinaGridLocaleText(
+          unfreezeColumn: 'Unfreeze',
+          filterContains: 'Contains',
+          loadingText: 'Loading',
+        );
 
-      expect(localeA == localeB, true);
-    });
-
-    test(
-        'When the values of locale A and B are the same, the comparison should be true.',
-        () {
-      const localeA = TrinaGridLocaleText(
-        unfreezeColumn: 'Unfreeze',
-        filterContains: 'Contains',
-        loadingText: 'Loading',
-      );
-
-      const localeB = TrinaGridLocaleText(
-        unfreezeColumn: 'Unfreeze',
-        filterContains: 'Contains',
-        loadingText: 'Loading',
-      );
-
-      expect(localeA.hashCode == localeB.hashCode, true);
-    });
+        expect(localeA == localeB, true);
+      },
+    );
 
     test(
-        'When the values of locale A and B are different, the comparison should be false.',
-        () {
-      const localeA = TrinaGridLocaleText(
-        unfreezeColumn: 'Unfreeze',
-        filterContains: 'Contains',
-        loadingText: 'Loading',
-      );
+      'When the values of locale A and B are the same, the comparison should be true.',
+      () {
+        const localeA = TrinaGridLocaleText(
+          unfreezeColumn: 'Unfreeze',
+          filterContains: 'Contains',
+          loadingText: 'Loading',
+        );
 
-      const localeB = TrinaGridLocaleText(
-        unfreezeColumn: 'Unfreeze',
-        filterContains: 'Contains',
-        loadingText: 'Loading',
-      );
+        const localeB = TrinaGridLocaleText(
+          unfreezeColumn: 'Unfreeze',
+          filterContains: 'Contains',
+          loadingText: 'Loading',
+        );
 
-      expect(localeA == localeB, false);
-    });
+        expect(localeA.hashCode == localeB.hashCode, true);
+      },
+    );
+
+    test(
+      'When the values of locale A and B are different, the comparison should be false.',
+      () {
+        const localeA = TrinaGridLocaleText(
+          unfreezeColumn: 'Unfreeze',
+          filterContains: 'Contains',
+          loadingText: 'Loading',
+        );
+
+        const localeB = TrinaGridLocaleText(
+          unfreezeColumn: 'Unfreeze',
+          filterContains: 'Contains',
+          loadingText: 'Loading',
+        );
+
+        expect(localeA == localeB, false);
+      },
+    );
 
     test('When the locale is called, the value should be correct.', () {
       const locale = TrinaGridLocaleText.china();
