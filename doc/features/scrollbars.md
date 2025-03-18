@@ -6,6 +6,8 @@ TrinaGrid provides extensive customization options for scrollbars, allowing you 
 
 Scrollbars in TrinaGrid can be customized through the `scrollbar` property in `TrinaGridConfiguration`, which provides a comprehensive set of options to control scrollbar appearance and behavior.
 
+![scrollbars](https://raw.githubusercontent.com/doonfrs/trina_grid/refs/heads/main/doc/assets/scrollbars.gif)
+
 ## Basic Usage
 
 By default, TrinaGrid shows scrollbars when needed, but they can be configured to always be visible:
