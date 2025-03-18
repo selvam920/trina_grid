@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.6.0] - 2025. 03. 18
+
+* Refactor scrollbars to be more efficient, support more styling & draggable, add example & documentation
+* Add filter to the demo screen to make it easier to find a feature demo code.
+* Add some gif images to the documentation, document more features
+* add onLazyFetchCompleted event
+* add initial export service to export grid data to csv, excel, pdf, json ( under development )
+* Update the documentation for boolean columns
+* Add scrollbar thumb hover color
+
 ## [1.5.3] - 2025. 03. 17
 
 * Implemented functionality to display and customize scrollbars

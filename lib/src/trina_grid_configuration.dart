@@ -791,8 +791,15 @@ class TrinaGridStyleConfig {
 
 /// Allows to customise scrollbars "look and feel"
 /// The general feature is making vertical scrollbar draggable and therefore more useful
-/// for desktop systems. Set [draggableScrollbar] to true to achieve this behavior. Also
+/// for desktop systems. Set [isDraggable] to true to achieve this behavior. Also
 /// changing [isAlwaysShown] to true is recommended for more usability at desktops.
+///
+/// The appearance can be customized with:
+/// - [thickness] - The width of the scrollbar
+/// - [minThumbLength] - The minimum size of the thumb
+/// - [radius] - The corner radius of the scrollbar thumb and track
+/// - [thumbColor] and [trackColor] - Colors for normal state
+/// - [thumbHoverColor] and [trackHoverColor] - Colors for hover state
 class TrinaGridScrollbarConfig {
   const TrinaGridScrollbarConfig({
     // Basic scrollbar behavior settings
@@ -807,6 +814,7 @@ class TrinaGridScrollbarConfig {
     this.showVertical = true,
     this.thickness = 8.0,
     this.minThumbLength = 40.0,
+    this.radius,
     this.thumbColor,
     this.trackColor,
     this.thumbHoverColor,
@@ -840,6 +848,9 @@ class TrinaGridScrollbarConfig {
   /// Minimum length of the scrollbar thumb
   final double minThumbLength;
 
+  /// Radius of the scrollbar thumb and track (defaults to thickness/2 if not specified)
+  final double? radius;
+
   /// Color of the scrollbar thumb
   final Color? thumbColor;
 
@@ -858,14 +869,17 @@ class TrinaGridScrollbarConfig {
 
   /// Get effective thumb hover color
   Color get effectiveThumbHoverColor =>
-      thumbHoverColor ?? effectiveThumbColor.withAlpha(220);
+      thumbHoverColor ?? effectiveThumbColor.withAlpha(200);
 
   /// Get effective track color
   Color get effectiveTrackColor => trackColor ?? Colors.grey.withAlpha(51);
 
   /// Get effective track hover color
   Color get effectiveTrackHoverColor =>
-      trackHoverColor ?? effectiveTrackColor.withAlpha(100);
+      trackHoverColor ?? effectiveTrackColor.withAlpha(80);
+
+  /// Get effective radius for the scrollbar
+  double get effectiveRadius => radius ?? thickness / 2;
 
   @override
   bool operator ==(covariant Object other) {
@@ -881,8 +895,11 @@ class TrinaGridScrollbarConfig {
             showVertical == other.showVertical &&
             thickness == other.thickness &&
             minThumbLength == other.minThumbLength &&
+            radius == other.radius &&
             thumbColor == other.thumbColor &&
-            trackColor == other.trackColor;
+            trackColor == other.trackColor &&
+            thumbHoverColor == other.thumbHoverColor &&
+            trackHoverColor == other.trackHoverColor;
   }
 
   @override
@@ -896,8 +913,11 @@ class TrinaGridScrollbarConfig {
     showVertical,
     thickness,
     minThumbLength,
+    radius,
     thumbColor,
     trackColor,
+    thumbHoverColor,
+    trackHoverColor,
   ]);
 }
 

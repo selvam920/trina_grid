@@ -204,6 +204,7 @@ TrinaGrid offers a comprehensive set of features for handling tabular data:
 
 - **Themes**: Light and dark mode support
 - **Custom Styling**: Customize colors, borders, and text styles
+- **Enhanced Scrollbars**: Draggable scrollbars with hover effects, custom colors, and improved desktop experience
 - **RTL Support**: Right-to-left language support
 - **Responsive Design**: Works on all screen sizes
 
@@ -248,6 +249,15 @@ This powerful feature enables:
 - Conditional styling for individual cells
 
 Cell renderers take precedence over column renderers, giving you fine-grained control over your grid's appearance.
+
+## New Feature: Enhanced Scrollbars
+
+TrinaGrid now includes enhanced scrollbar functionality, particularly useful for desktop applications:
+
+- **Draggable Scrollbars**: Quickly navigate large datasets by dragging the scrollbar thumb
+- **Hover Effects**: Visual feedback when hovering over scrollbars for better user experience
+- **Customizable Appearance**: Control the colors, thickness, and behavior of scrollbars
+- **Desktop Optimized**: Enhanced interaction model ideal for desktop applications
 
 ## Documentation
 

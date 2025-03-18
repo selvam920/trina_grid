@@ -231,7 +231,7 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                               .effectiveTrackHoverColor
                                           : scrollConfig.effectiveTrackColor,
                                   borderRadius: BorderRadius.circular(
-                                    scrollConfig.thickness / 2,
+                                    scrollConfig.effectiveRadius,
                                   ),
                                 ),
                               ),
@@ -243,7 +243,10 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                     thumbHeight.isNaN
                                         ? widget.height
                                         : thumbHeight.clamp(
-                                          scrollConfig.minThumbLength,
+                                          scrollConfig.minThumbLength >
+                                                  widget.height
+                                              ? widget.height
+                                              : scrollConfig.minThumbLength,
                                           widget.height,
                                         ),
                                 width: scrollConfig.thickness,
@@ -251,14 +254,18 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                 child: MouseRegion(
                                   cursor: SystemMouseCursors.grab,
                                   onEnter: (_) {
-                                    setState(() {
-                                      _isThumbHovered = true;
-                                    });
+                                    if (!_isThumbHovered) {
+                                      setState(() {
+                                        _isThumbHovered = true;
+                                      });
+                                    }
                                   },
                                   onExit: (_) {
-                                    setState(() {
-                                      _isThumbHovered = false;
-                                    });
+                                    if (_isThumbHovered) {
+                                      setState(() {
+                                        _isThumbHovered = false;
+                                      });
+                                    }
                                   },
                                   child: GestureDetector(
                                     onVerticalDragStart:
@@ -333,7 +340,7 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                                 : scrollConfig
                                                     .effectiveThumbColor,
                                         borderRadius: BorderRadius.circular(
-                                          scrollConfig.thickness / 2,
+                                          scrollConfig.effectiveRadius,
                                         ),
                                       ),
                                     ),

@@ -25,10 +25,14 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
   bool showTrack = true;
   bool showHorizontal = true;
   bool showVertical = true;
-  double thickness = 8.0;
+  bool isDraggable = true;
+  double thickness = 12;
   double minThumbLength = 40.0;
+  double radius = 6.0; // Default radius (half of thickness)
   Color? thumbColor;
   Color? trackColor;
+  Color? thumbHoverColor;
+  Color? trackHoverColor;
 
   @override
   void initState() {
@@ -54,6 +58,10 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
         minThumbLength: minThumbLength,
         thumbColor: thumbColor,
         trackColor: trackColor,
+        thumbHoverColor: thumbHoverColor,
+        trackHoverColor: trackHoverColor,
+        radius: radius,
+        isDraggable: isDraggable,
       ),
     );
 
@@ -86,7 +94,6 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
               rows: rows,
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 stateManager = event.stateManager;
-                _updateScrollbarConfig();
               },
               configuration: TrinaGridConfiguration(
                 columnSize: const TrinaGridColumnSizeConfig(
@@ -100,8 +107,12 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                   showVertical: showVertical,
                   thickness: thickness,
                   minThumbLength: minThumbLength,
+                  radius: radius,
                   thumbColor: thumbColor,
                   trackColor: trackColor,
+                  isDraggable: isDraggable,
+                  thumbHoverColor: thumbHoverColor,
+                  trackHoverColor: trackHoverColor,
                 ),
               ),
             ),
@@ -113,12 +124,12 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
 
   Widget _buildControls() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(4),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Card(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -134,6 +145,7 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                     _buildSwitchControl('Always Show', isAlwaysShown, (value) {
                       setState(() {
                         isAlwaysShown = value;
+
                         _updateScrollbarConfig();
                       });
                     }),
@@ -141,6 +153,7 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                     _buildSwitchControl('Thumb Visible', thumbVisible, (value) {
                       setState(() {
                         thumbVisible = value;
+
                         _updateScrollbarConfig();
                       });
                     }),
@@ -148,6 +161,7 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                     _buildSwitchControl('Show Track', showTrack, (value) {
                       setState(() {
                         showTrack = value;
+
                         _updateScrollbarConfig();
                       });
                     }),
@@ -162,6 +176,7 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                         (value) {
                       setState(() {
                         showHorizontal = value;
+
                         _updateScrollbarConfig();
                       });
                     }),
@@ -169,6 +184,15 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                     _buildSwitchControl('Show Vertical', showVertical, (value) {
                       setState(() {
                         showVertical = value;
+
+                        _updateScrollbarConfig();
+                      });
+                    }),
+                    const SizedBox(width: 16),
+                    _buildSwitchControl('Is Draggable', isDraggable, (value) {
+                      setState(() {
+                        isDraggable = value;
+
                         _updateScrollbarConfig();
                       });
                     }),
@@ -179,48 +203,79 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                 // Size controls
                 Row(
                   children: [
-                    const Text('Thickness:'),
-                    const SizedBox(width: 8),
-                    SizedBox(
-                      width: 200,
-                      child: Slider(
-                        value: thickness,
-                        min: 1,
-                        max: 20,
-                        divisions: 19,
-                        label: thickness.round().toString(),
-                        onChanged: (value) {
-                          setState(() {
-                            thickness = value;
-                            _updateScrollbarConfig();
-                          });
-                        },
-                      ),
+                    Row(
+                      children: [
+                        const Text('Thickness:'),
+                        const SizedBox(width: 8),
+                        SizedBox(
+                          width: 200,
+                          child: Slider(
+                            value: thickness,
+                            min: 1,
+                            max: 20,
+                            divisions: 19,
+                            label: thickness.round().toString(),
+                            onChanged: (value) {
+                              setState(() {
+                                thickness = value;
+
+                                _updateScrollbarConfig();
+                              });
+                            },
+                          ),
+                        ),
+                        Text('${thickness.round()} px'),
+                      ],
                     ),
-                    Text('${thickness.round()} px'),
+                    Row(
+                      children: [
+                        const Text('Min Thumb Length:'),
+                        const SizedBox(width: 8),
+                        SizedBox(
+                          width: 200,
+                          child: Slider(
+                            value: minThumbLength,
+                            min: 20,
+                            max: 100,
+                            divisions: 16,
+                            label: minThumbLength.round().toString(),
+                            onChanged: (value) {
+                              setState(() {
+                                minThumbLength = value;
+
+                                _updateScrollbarConfig();
+                              });
+                            },
+                          ),
+                        ),
+                        Text('${minThumbLength.round()} px'),
+                      ],
+                    ),
                   ],
                 ),
+
                 Row(
                   children: [
-                    const Text('Min Thumb Length:'),
+                    const Text('Radius:'),
                     const SizedBox(width: 8),
                     SizedBox(
                       width: 200,
                       child: Slider(
-                        value: minThumbLength,
-                        min: 20,
-                        max: 100,
-                        divisions: 16,
-                        label: minThumbLength.round().toString(),
+                        value: radius,
+                        min: 0,
+                        max: 20,
+                        divisions: 20,
+                        label: radius.round().toString(),
                         onChanged: (value) {
                           setState(() {
-                            minThumbLength = value;
+                            radius = value;
+
                             _updateScrollbarConfig();
                           });
                         },
                       ),
                     ),
-                    Text('${minThumbLength.round()} px'),
+                    Text('${radius.round()} px'),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -234,7 +289,9 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                       children: [
                         const Text('Thumb Color:'),
                         const SizedBox(height: 4),
-                        Row(
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
                           children: [
                             _buildColorButton(
                               null,
@@ -242,47 +299,44 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                               thumbColor == null,
                               () => _setThumbColor(null),
                             ),
-                            const SizedBox(width: 8),
                             _buildColorButton(
-                              Colors.blue.withAlpha((0.6 * 255).toInt()),
+                              Colors.blue,
                               'Blue',
-                              thumbColor ==
-                                  Colors.blue.withAlpha((0.6 * 255).toInt()),
-                              () => _setThumbColor(
-                                  Colors.blue.withAlpha((0.6 * 255).toInt())),
+                              thumbColor == Colors.blue,
+                              () => _setThumbColor(Colors.blue),
                             ),
-                            const SizedBox(width: 8),
                             _buildColorButton(
-                              Colors.purple.withAlpha((0.6 * 255).toInt()),
+                              Colors.red,
+                              'Red',
+                              thumbColor == Colors.red,
+                              () => _setThumbColor(Colors.red),
+                            ),
+                            _buildColorButton(
+                              Colors.green,
+                              'Green',
+                              thumbColor == Colors.green,
+                              () => _setThumbColor(Colors.green),
+                            ),
+                            _buildColorButton(
+                              Colors.purple,
                               'Purple',
-                              thumbColor ==
-                                  Colors.purple.withAlpha((0.6 * 255).toInt()),
-                              () => _setThumbColor(
-                                  Colors.purple.withAlpha((0.6 * 255).toInt())),
-                            ),
-                            const SizedBox(width: 8),
-                            _buildColorButton(
-                              Colors.orange.withAlpha((0.6 * 255).toInt()),
-                              'Orange',
-                              thumbColor ==
-                                  Colors.orange.withAlpha((0.6 * 255).toInt()),
-                              () => _setThumbColor(
-                                  Colors.orange.withAlpha((0.6 * 255).toInt())),
+                              thumbColor == Colors.purple,
+                              () => _setThumbColor(Colors.purple),
                             ),
                           ],
                         ),
                       ],
                     ),
-
-                    const SizedBox(width: 24),
-
+                    const SizedBox(width: 32),
                     // Track color
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text('Track Color:'),
                         const SizedBox(height: 4),
-                        Row(
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
                           children: [
                             _buildColorButton(
                               null,
@@ -290,32 +344,133 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                               trackColor == null,
                               () => _setTrackColor(null),
                             ),
-                            const SizedBox(width: 8),
                             _buildColorButton(
-                              Colors.grey.withAlpha((0.2 * 255).toInt()),
-                              'Grey',
-                              trackColor ==
-                                  Colors.grey.withAlpha((0.2 * 255).toInt()),
-                              () => _setTrackColor(
-                                  Colors.grey.withAlpha((0.2 * 255).toInt())),
+                              Colors.grey.withAlpha(50),
+                              'Light Grey',
+                              trackColor == Colors.grey.withAlpha(50),
+                              () => _setTrackColor(Colors.grey.withAlpha(50)),
                             ),
-                            const SizedBox(width: 8),
                             _buildColorButton(
-                              Colors.teal.withAlpha((0.2 * 255).toInt()),
-                              'Teal',
-                              trackColor ==
-                                  Colors.teal.withAlpha((0.2 * 255).toInt()),
+                              Colors.lightBlue.withAlpha(50),
+                              'Light Blue',
+                              trackColor == Colors.lightBlue.withAlpha(50),
                               () => _setTrackColor(
-                                  Colors.teal.withAlpha((0.2 * 255).toInt())),
+                                  Colors.lightBlue.withAlpha(50)),
                             ),
-                            const SizedBox(width: 8),
                             _buildColorButton(
-                              Colors.amber.withAlpha((0.2 * 255).toInt()),
+                              Colors.pink.withAlpha(50),
+                              'Pink',
+                              trackColor == Colors.pink.withAlpha(50),
+                              () => _setTrackColor(Colors.pink.withAlpha(50)),
+                            ),
+                            _buildColorButton(
+                              Colors.amber.withAlpha(50),
                               'Amber',
-                              trackColor ==
-                                  Colors.amber.withAlpha((0.2 * 255).toInt()),
-                              () => _setTrackColor(
-                                  Colors.amber.withAlpha((0.2 * 255).toInt())),
+                              trackColor == Colors.amber.withAlpha(50),
+                              () => _setTrackColor(Colors.amber.withAlpha(50)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+
+                // Hover Colors
+                Row(
+                  children: [
+                    // Thumb hover color
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Thumb Hover Color:'),
+                        const SizedBox(height: 4),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            _buildColorButton(
+                              null,
+                              'Default',
+                              thumbHoverColor == null,
+                              () => _setThumbHoverColor(null),
+                            ),
+                            _buildColorButton(
+                              Colors.blue.shade700,
+                              'Dark Blue',
+                              thumbHoverColor == Colors.blue.shade700,
+                              () => _setThumbHoverColor(Colors.blue.shade700),
+                            ),
+                            _buildColorButton(
+                              Colors.red.shade700,
+                              'Dark Red',
+                              thumbHoverColor == Colors.red.shade700,
+                              () => _setThumbHoverColor(Colors.red.shade700),
+                            ),
+                            _buildColorButton(
+                              Colors.orange.shade700,
+                              'Dark Orange',
+                              thumbHoverColor == Colors.orange.shade700,
+                              () => _setThumbHoverColor(Colors.orange.shade700),
+                            ),
+                            _buildColorButton(
+                              Colors.deepPurple.shade700,
+                              'Deep Purple',
+                              thumbHoverColor == Colors.deepPurple.shade700,
+                              () => _setThumbHoverColor(
+                                  Colors.deepPurple.shade700),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 32),
+                    // Track hover color
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Track Hover Color:'),
+                        const SizedBox(height: 4),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            _buildColorButton(
+                              null,
+                              'Default',
+                              trackHoverColor == null,
+                              () => _setTrackHoverColor(null),
+                            ),
+                            _buildColorButton(
+                              Colors.grey.withAlpha(100),
+                              'Grey',
+                              trackHoverColor == Colors.grey.withAlpha(100),
+                              () => _setTrackHoverColor(
+                                  Colors.grey.withAlpha(100)),
+                            ),
+                            _buildColorButton(
+                              Colors.lightBlue.withAlpha(100),
+                              'Light Blue',
+                              trackHoverColor ==
+                                  Colors.lightBlue.withAlpha(100),
+                              () => _setTrackHoverColor(
+                                  Colors.lightBlue.withAlpha(100)),
+                            ),
+                            _buildColorButton(
+                              Colors.pink.withAlpha(100),
+                              'Pink',
+                              trackHoverColor == Colors.pink.withAlpha(100),
+                              () => _setTrackHoverColor(
+                                  Colors.pink.withAlpha(100)),
+                            ),
+                            _buildColorButton(
+                              Colors.amber.withAlpha(100),
+                              'Amber',
+                              trackHoverColor == Colors.amber.withAlpha(100),
+                              () => _setTrackHoverColor(
+                                  Colors.amber.withAlpha(100)),
                             ),
                           ],
                         ),
@@ -347,17 +502,24 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
 
   Widget _buildColorButton(
       Color? color, String label, bool isSelected, VoidCallback onPressed) {
+    color = color ?? Colors.grey.shade300;
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: color ?? Colors.grey.shade300,
-        elevation: isSelected ? 4 : 1,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        backgroundColor: color,
+        foregroundColor: (color.computeLuminance() > 0.5 || color.a < 0.4)
+            ? Colors.black
+            : Colors.white,
+        elevation: isSelected ? 4 : 0,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        side: isSelected ? BorderSide(color: Colors.black45, width: 1) : null,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
       ),
       onPressed: onPressed,
       child: Text(
         label,
         style: TextStyle(
-          color: color != null && color.a > 125 ? Colors.white : Colors.black,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),
       ),
@@ -374,6 +536,20 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
   void _setTrackColor(Color? color) {
     setState(() {
       trackColor = color;
+      _updateScrollbarConfig();
+    });
+  }
+
+  void _setThumbHoverColor(Color? color) {
+    setState(() {
+      thumbHoverColor = color;
+      _updateScrollbarConfig();
+    });
+  }
+
+  void _setTrackHoverColor(Color? color) {
+    setState(() {
+      trackHoverColor = color;
       _updateScrollbarConfig();
     });
   }

@@ -81,7 +81,8 @@ class TrinaExampleScreen extends StatelessWidget {
                 constraints: const BoxConstraints(
                   minHeight: 750,
                 ),
-                padding: const EdgeInsets.all(30),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                 child: Column(
                   children: [
                     TrinaExpansionTile(
