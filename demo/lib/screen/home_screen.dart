@@ -184,7 +184,14 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class TrinaFeatures extends StatelessWidget {
+class TrinaFeatures extends StatefulWidget {
+  const TrinaFeatures({super.key});
+
+  @override
+  State<TrinaFeatures> createState() => _TrinaFeaturesState();
+}
+
+class _TrinaFeaturesState extends State<TrinaFeatures> {
   final Icon newIcon = const Icon(
     Icons.fiber_new,
     color: Colors.deepOrange,
@@ -195,366 +202,423 @@ class TrinaFeatures extends StatelessWidget {
     color: Colors.deepOrange,
   );
 
-  const TrinaFeatures({super.key});
+  String _searchQuery = '';
+
+  List<Widget> _buildFeatureItems(BuildContext context) {
+    final List<Widget> allItems = [
+      TrinaListTile(
+        title: 'Change Tracking',
+        description:
+            'Track changes in cells and highlight dirty cells. You can commit or revert changes.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ChangeTrackingScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Boolean type column',
+        description:
+            'A column to enter a boolean value. You can select from a list of options.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, BooleanTypeColumnScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Column moving',
+        description:
+            'Dragging the column heading left or right moves the column left and right.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnMovingScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column freezing',
+        description: 'Freeze the column to the left or right.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnFreezingScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column group',
+        description: 'Group columns by the desired depth.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnGroupScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column resizing',
+        description:
+            'Dragging the icon to the right of the column title left or right changes the width of the column.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnResizingScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column sorting',
+        description:
+            'Ascending or Descending by clicking on the column heading.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnSortingScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column filtering',
+        description: 'Filter rows by setting filters on columns.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnFilteringScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column hiding',
+        description: 'Hide or un-hide the column.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnHidingScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column menu',
+        description: 'Customize the menu on the right side of the column.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnMenuScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column footer',
+        description:
+            'Display each column fixed at the bottom. (For outputting data sum, average, etc.)',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnFooterScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Text type column',
+        description: 'A column to enter a character value.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, TextTypeColumnScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Number type column',
+        description: 'A column to enter a number value.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, NumberTypeColumnScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Currency type column',
+        description: 'A column to enter a number as currency value.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CurrencyTypeColumnScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Date type column',
+        description: 'A column to enter a date value.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, DateTypeColumnScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Time type column',
+        description: 'A column to enter a time value.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, TimeTypeColumnScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Selection type column',
+        description: 'A column to enter a selection value.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, SelectionTypeColumnScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Value formatter',
+        description: 'Formatter for display of cell values.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ValueFormatterScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Row color',
+        description: 'Dynamically change the background color of row.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RowColorScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Row selection',
+        description:
+            'In Row selection mode, Shift + tap or long tap and then move or Control + tap to select a row.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RowSelectionScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Row moving',
+        description: 'You can move the row by dragging it.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RowMovingScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Row pagination',
+        description: 'You can paginate the rows.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RowPaginationScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Row lazy pagination',
+        description:
+            'Implement pagination in the form of fetching data from the server.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RowLazyPaginationScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Row infinity scroll',
+        description: 'Add a new row when scrolling reaches the bottom end.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RowInfinityScrollScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Row group',
+        description: 'Grouping rows in a column or tree structure.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RowGroupScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Grid Export',
+        description: 'Export grid data in various formats (PDF, CSV, JSON).',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, GridExportScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Row with checkbox',
+        description: 'You can select rows with checkbox.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RowWithCheckboxScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Frozen Rows',
+        description:
+            'Demonstrates rows frozen at top and bottom with pagination',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, FrozenRowsScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Add rows asynchronously',
+        description: 'Adds or sets rows asynchronously.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(
+            context,
+            AddRowsAsynchronouslyScreen.routeName,
+          );
+        },
+      ),
+      TrinaListTile(
+        title: 'Cell selection',
+        description:
+            'In cell selection mode, Shift + tap or long tap and then move to select cells.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CellSelectionScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column renderer',
+        description:
+            'You can change the widget of the column through the renderer.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnRendererScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Cell renderer',
+        description:
+            'You can customize individual cells with cell-level renderers.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CellRendererScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Copy and Paste',
+        description:
+            'Copy and paste are operated depending on the cell and row selection status.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CopyAndPasteScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Moving',
+        description:
+            'Change the current cell position with the arrow keys, enter key, and tab key.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, MovingScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Editing state',
+        description: 'Controls the editing state of a cell.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, EditingStateScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Edit Cell Renderer',
+        description: 'Customize the appearance of cells in edit mode.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, EditCellRendererScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'RTL - TextDirection.',
+        description: 'Activate Right-To-Left which is a TextDirection.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RTLScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Add and Remove Columns, Rows',
+        description: 'You can add or delete columns, rows.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, AddAndRemoveColumnRowScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Dual mode',
+        description:
+            'Place the grid on the left and right and move or edit with the keyboard.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, DualModeScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Grid as Popup',
+        description: 'You can call the grid by popping up with the TextField.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, GridAsPopupScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Listing mode',
+        description: 'Listing mode to open or navigate to the Detail page.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ListingModeScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Pages list',
+        description: 'A list of pages to test various functions.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, PagesListScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Check visible columns',
+        description: 'Check visible columns.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(
+            context,
+            CheckVisibleColumnsScreen.routeName,
+          );
+        },
+      ),
+      TrinaListTile.dark(
+        title: 'Dark mode',
+        description: 'Change the entire theme of the grid to Dark.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, DarkModeScreen.routeName);
+        },
+      ),
+      TrinaListTile.amber(
+        title: 'Empty',
+        description:
+            'This screen is used during development, this is a template to test issues',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, EmptyScreen.routeName);
+        },
+      ),
+    ];
+    return allItems;
+  }
+
+  Container _filterInput() {
+    return Container(
+      constraints: const BoxConstraints(
+        minWidth: 300,
+        maxWidth: 300,
+      ),
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Card(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: 'Filter features...',
+              prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey.shade500,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey.shade500,
+                ),
+              ),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value.trim().toLowerCase();
+              });
+            },
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Wrap(
-        spacing: 10,
-        runSpacing: 10,
-        children: [
-          TrinaListTile(
-            title: 'Change Tracking',
-            description:
-                'Track changes in cells and highlight dirty cells. You can commit or revert changes.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ChangeTrackingScreen.routeName);
-            },
-            trailing: newIcon,
+    final items = _buildFeatureItems(context);
+    final filteredItems = _searchQuery.isEmpty
+        ? items
+        : items.where((widget) {
+            if (widget is! TrinaListTile) {
+              return true;
+            }
+            final title = widget.title.toLowerCase();
+            final description = widget.description?.toLowerCase() ?? '';
+            _searchQuery = _searchQuery.toLowerCase();
+            return title.contains(_searchQuery) ||
+                description.contains(_searchQuery);
+          }).toList();
+
+    return Column(
+      children: [
+        _filterInput(),
+        Center(
+          child: Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: filteredItems,
           ),
-          TrinaListTile(
-            title: 'Boolean type column',
-            description:
-                'A column to enter a boolean value. You can select from a list of options.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, BooleanTypeColumnScreen.routeName);
-            },
-            trailing: newIcon,
-          ),
-          TrinaListTile(
-            title: 'Column moving',
-            description:
-                'Dragging the column heading left or right moves the column left and right.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ColumnMovingScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Column freezing',
-            description: 'Freeze the column to the left or right.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ColumnFreezingScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Column group',
-            description: 'Group columns by the desired depth.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ColumnGroupScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Column resizing',
-            description:
-                'Dragging the icon to the right of the column title left or right changes the width of the column.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ColumnResizingScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Column sorting',
-            description:
-                'Ascending or Descending by clicking on the column heading.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ColumnSortingScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Column filtering',
-            description: 'Filter rows by setting filters on columns.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ColumnFilteringScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Column hiding',
-            description: 'Hide or un-hide the column.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ColumnHidingScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Column menu',
-            description: 'Customize the menu on the right side of the column.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ColumnMenuScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Column footer',
-            description:
-                'Display each column fixed at the bottom. (For outputting data sum, average, etc.)',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ColumnFooterScreen.routeName);
-            },
-            trailing: newIcon,
-          ),
-          TrinaListTile(
-            title: 'Text type column',
-            description: 'A column to enter a character value.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, TextTypeColumnScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Number type column',
-            description: 'A column to enter a number value.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, NumberTypeColumnScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Currency type column',
-            description: 'A column to enter a number as currency value.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, CurrencyTypeColumnScreen.routeName);
-            },
-            trailing: newIcon,
-          ),
-          TrinaListTile(
-            title: 'Date type column',
-            description: 'A column to enter a date value.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, DateTypeColumnScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Time type column',
-            description: 'A column to enter a time value.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, TimeTypeColumnScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Selection type column',
-            description: 'A column to enter a selection value.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, SelectionTypeColumnScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Value formatter',
-            description: 'Formatter for display of cell values.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ValueFormatterScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Row color',
-            description: 'Dynamically change the background color of row.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, RowColorScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Row selection',
-            description:
-                'In Row selection mode, Shift + tap or long tap and then move or Control + tap to select a row.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, RowSelectionScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Row moving',
-            description: 'You can move the row by dragging it.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, RowMovingScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Row pagination',
-            description: 'You can paginate the rows.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, RowPaginationScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Row lazy pagination',
-            description:
-                'Implement pagination in the form of fetching data from the server.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, RowLazyPaginationScreen.routeName);
-            },
-            trailing: newIcon,
-          ),
-          TrinaListTile(
-            title: 'Row infinity scroll',
-            description:
-                'Add a new row when scrolling reaches the bottom end.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, RowInfinityScrollScreen.routeName);
-            },
-            trailing: newIcon,
-          ),
-          TrinaListTile(
-            title: 'Row group',
-            description: 'Grouping rows in a column or tree structure.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, RowGroupScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Grid Export',
-            description:
-                'Export grid data in various formats (PDF, CSV, JSON).',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, GridExportScreen.routeName);
-            },
-            trailing: newIcon,
-          ),
-          TrinaListTile(
-            title: 'Row with checkbox',
-            description: 'You can select rows with checkbox.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, RowWithCheckboxScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Frozen Rows',
-            description:
-                'Demonstrates rows frozen at top and bottom with pagination',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, FrozenRowsScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Add rows asynchronously',
-            description: 'Adds or sets rows asynchronously.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(
-                context,
-                AddRowsAsynchronouslyScreen.routeName,
-              );
-            },
-          ),
-          TrinaListTile(
-            title: 'Cell selection',
-            description:
-                'In cell selection mode, Shift + tap or long tap and then move to select cells.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, CellSelectionScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Column renderer',
-            description:
-                'You can change the widget of the column through the renderer.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ColumnRendererScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Cell renderer',
-            description:
-                'You can customize individual cells with cell-level renderers.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, CellRendererScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Copy and Paste',
-            description:
-                'Copy and paste are operated depending on the cell and row selection status.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, CopyAndPasteScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Moving',
-            description:
-                'Change the current cell position with the arrow keys, enter key, and tab key.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, MovingScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Editing state',
-            description: 'Controls the editing state of a cell.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, EditingStateScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Edit Cell Renderer',
-            description: 'Customize the appearance of cells in edit mode.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, EditCellRendererScreen.routeName);
-            },
-            trailing: newIcon,
-          ),
-          TrinaListTile(
-            title: 'RTL - TextDirection.',
-            description: 'Activate Right-To-Left which is a TextDirection.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, RTLScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Add and Remove Columns, Rows',
-            description: 'You can add or delete columns, rows.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(
-                  context, AddAndRemoveColumnRowScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Dual mode',
-            description:
-                'Place the grid on the left and right and move or edit with the keyboard.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, DualModeScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Grid as Popup',
-            description:
-                'You can call the grid by popping up with the TextField.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, GridAsPopupScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Listing mode',
-            description: 'Listing mode to open or navigate to the Detail page.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, ListingModeScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Pages list',
-            description: 'A list of pages to test various functions.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, PagesListScreen.routeName);
-            },
-          ),
-          TrinaListTile(
-            title: 'Check visible columns',
-            description: 'Check visible columns.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(
-                context,
-                CheckVisibleColumnsScreen.routeName,
-              );
-            },
-          ),
-          TrinaListTile.dark(
-            title: 'Dark mode',
-            description: 'Change the entire theme of the grid to Dark.',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, DarkModeScreen.routeName);
-            },
-          ),
-          TrinaListTile.amber(
-            title: 'Empty',
-            description:
-                'This screen is used during development, this is a template to test issues',
-            onTapLiveDemo: () {
-              Navigator.pushNamed(context, EmptyScreen.routeName);
-            },
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
