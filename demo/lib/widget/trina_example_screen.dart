@@ -55,6 +55,20 @@ class TrinaExampleScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('$title - TrinaGrid'),
+        actions: [
+          ElevatedButton.icon(
+            label: const Text('Report'),
+            icon: const FaIcon(
+              FontAwesomeIcons.exclamation,
+            ),
+            onPressed: () {
+              showDialog<void>(
+                context: context,
+                builder: reportingDialog,
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: LayoutBuilder(
@@ -86,19 +100,6 @@ class TrinaExampleScreen extends StatelessWidget {
               ),
             );
           },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog<void>(
-            context: context,
-            builder: reportingDialog,
-          );
-        },
-        backgroundColor: const Color(0xFF33BDE5),
-        child: const FaIcon(
-          FontAwesomeIcons.exclamation,
-          color: Colors.white,
         ),
       ),
     );

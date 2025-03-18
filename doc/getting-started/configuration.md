@@ -71,11 +71,11 @@ Configure the scrollbars with the `scrollbar` property:
 TrinaGridConfiguration(
   scrollbar: TrinaGridScrollbarConfig(
     // Visibility settings
-    isAlwaysShown: true,
-    thumbVisible: true,
-    showTrack: true,
-    showHorizontal: true,
-    showVertical: true,
+    isAlwaysShown: true,      // Prevents scrollbars from fading out after scrolling stops
+    thumbVisible: true,       // Whether the scrollbar thumb is visible at all
+    showTrack: true,          // Whether to show the scrollbar track
+    showHorizontal: true,     // Whether to show the horizontal scrollbar
+    showVertical: true,       // Whether to show the vertical scrollbar
     
     // Appearance settings
     thickness: 8.0,
@@ -90,15 +90,15 @@ The `TrinaGridScrollbarConfig` provides the following options:
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `isAlwaysShown` | `bool` | `false` | Whether the scrollbar is always visible |
-| `thumbVisible` | `bool` | `true` | Whether the scrollbar thumb is visible |
-| `showTrack` | `bool` | `true` | Whether to show the scrollbar track |
-| `showHorizontal` | `bool` | `true` | Whether to show the horizontal scrollbar |
-| `showVertical` | `bool` | `true` | Whether to show the vertical scrollbar |
-| `thickness` | `double` | `8.0` | Thickness of the scrollbar |
-| `minThumbLength` | `double` | `40.0` | Minimum length of the scrollbar thumb |
-| `thumbColor` | `Color?` | `null` | Color of the scrollbar thumb |
-| `trackColor` | `Color?` | `null` | Color of the scrollbar track |
+| `isAlwaysShown` | `bool` | `false` | If true, scrollbars remain visible all the time. If false, they appear during scrolling and fade out after about 3 seconds of inactivity. |
+| `thumbVisible` | `bool` | `true` | Whether the scrollbar thumb is visible at all. If false, scrollbars won't show even during scrolling. |
+| `showTrack` | `bool` | `true` | Whether to show the scrollbar track background. |
+| `showHorizontal` | `bool` | `true` | Whether to show the horizontal scrollbar. |
+| `showVertical` | `bool` | `true` | Whether to show the vertical scrollbar. |
+| `thickness` | `double` | `8.0` | Thickness of the scrollbar. |
+| `minThumbLength` | `double` | `40.0` | Minimum length of the scrollbar thumb. |
+| `thumbColor` | `Color?` | `null` | Color of the scrollbar thumb. |
+| `trackColor` | `Color?` | `null` | Color of the scrollbar track. |
 
 For more detailed information about scrollbar customization, see the [Scrollbars](../features/scrollbars.md) feature documentation.
 
@@ -291,13 +291,13 @@ TrinaGrid(
     
     // Scrollbar configuration
     scrollbar: TrinaGridScrollbarConfig(
-      isAlwaysShown: true,
-      thickness: 8.0,
-      minThumbLength: 40.0,
-      thumbVisible: true,
-      showTrack: true,
-      thumbColor: Colors.blue.withOpacity(0.6),
-      trackColor: Colors.grey.withOpacity(0.2),
+      isAlwaysShown: true,         // Always show scrollbars
+      thumbVisible: true,          // Show scrollbar thumbs
+      showTrack: true,             // Show scrollbar tracks
+      thickness: 8.0,              // Scrollbar thickness
+      minThumbLength: 40.0,        // Minimum thumb length
+      thumbColor: Colors.blue.withOpacity(0.6),  // Thumb color
+      trackColor: Colors.grey.withOpacity(0.2),  // Track color
     ),
     
     // Column configuration
