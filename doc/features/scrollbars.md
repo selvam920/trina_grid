@@ -69,24 +69,6 @@ The `TrinaGridScrollbarConfig` class provides the following key options for scro
 | `thumbColor` | `Color?` | `null` | Color of the scrollbar thumb (defaults to semi-transparent gray if null). |
 | `trackColor` | `Color?` | `null` | Color of the scrollbar track (defaults to light gray if null). |
 
-There are additional properties available for advanced customization:
-
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `onlyDraggingThumb` | `bool` | `true` | If false, scrolling can be done by dragging the track area. |
-| `enableScrollAfterDragEnd` | `bool` | `true` | Whether scrolling continues with momentum after releasing the scrollbar. |
-| `scrollbarThickness` | `double` | `3.0` | Legacy thickness setting (prefer using `thickness` instead). |
-| `scrollbarThicknessWhileDragging` | `double` | `8.0` | Thickness while dragging (only effective in certain scenarios). |
-| `hoverWidth` | `double` | `12.0` | Width of the hover area. |
-| `mainAxisMargin` | `double?` | `null` | Margin along the main axis. |
-| `crossAxisMargin` | `double?` | `null` | Margin along the cross axis. |
-| `scrollBarColor` | `Color?` | `null` | Deprecated: Use `thumbColor` instead. |
-| `scrollBarTrackColor` | `Color?` | `null` | Deprecated: Use `trackColor` instead. |
-| `scrollbarRadius` | `Radius` | `Radius.zero` | Radius of scrollbar corners. |
-| `scrollbarRadiusWhileDragging` | `Radius` | `Radius.zero` | Radius of scrollbar corners while dragging. |
-| `longPressDuration` | `Duration?` | `null` | Duration for long press detection. |
-| `dragDevices` | `Set<PointerDeviceKind>?` | `null` | Set of devices that can drag the scrollbar. |
-
 ## Examples
 
 ### Always Visible Scrollbars

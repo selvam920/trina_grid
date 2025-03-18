@@ -51,7 +51,6 @@ export './src/trina_grid_events.dart';
 export './src/widgets/trina_linked_scroll_controller.dart';
 export './src/widgets/trina_loading.dart';
 export './src/widgets/trina_scaled_checkbox.dart';
-export './src/widgets/trina_scrollbar.dart';
 export './src/widgets/trina_shadow_container.dart';
 export './src/widgets/trina_shadow_line.dart';
 export './src/model/trina_column_type_extension.dart';
