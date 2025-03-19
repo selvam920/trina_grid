@@ -35,8 +35,6 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
   double _lastScrollOffset = 0;
 
   // Variables for drag functionality
-  double _dragStartPosition = 0.0;
-  double _dragStartScrollOffset = 0.0;
 
   @override
   void initState() {
@@ -271,10 +269,6 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                     onVerticalDragStart:
                                         scrollConfig.isDraggable
                                             ? (details) {
-                                              _dragStartPosition =
-                                                  details.localPosition.dy;
-                                              _dragStartScrollOffset =
-                                                  scrollOffset;
                                               setState(() {
                                                 _isDragging = true;
                                               });
@@ -283,28 +277,31 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                     onVerticalDragUpdate:
                                         scrollConfig.isDraggable
                                             ? (details) {
-                                              final double dragPosition =
-                                                  details.localPosition.dy;
-                                              final double dragDistance =
-                                                  dragPosition -
-                                                  _dragStartPosition;
+                                              // Direct thumb manipulation approach
+                                              final double dragDelta =
+                                                  details.delta.dy;
 
-                                              // Calculate the scroll position based on the drag movement
-                                              final double scrollDistanceRatio =
-                                                  widget.height / scrollExtent;
+                                              // Calculate how much to scroll based on thumb movement
+                                              // The available space for the thumb to move is (widget.height - thumbHeight)
+                                              // The total scrollable content is scrollExtent
+                                              final double scrollableRatio =
+                                                  scrollExtent /
+                                                  (widget.height - thumbHeight);
                                               final double scrollDelta =
-                                                  dragDistance /
-                                                  scrollDistanceRatio;
+                                                  dragDelta * scrollableRatio;
 
-                                              // Update the scroll position
+                                              // Get the scroll controller
                                               final scrollController =
                                                   widget
                                                       .stateManager
                                                       .scroll
                                                       .bodyRowsVertical;
                                               if (scrollController != null) {
+                                                // Apply the scroll by adding delta to current position
+                                                final currentOffset =
+                                                    scrollController.offset;
                                                 final newOffset =
-                                                    (_dragStartScrollOffset +
+                                                    (currentOffset +
                                                             scrollDelta)
                                                         .clamp(
                                                           0.0,
@@ -312,6 +309,8 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                                               .position
                                                               .maxScrollExtent,
                                                         );
+
+                                                // Jump to the new position
                                                 scrollController.jumpTo(
                                                   newOffset,
                                                 );

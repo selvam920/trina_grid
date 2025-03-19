@@ -35,10 +35,6 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
   // Track the last scroll position to detect scrolling
   double _lastScrollOffset = 0;
 
-  // Variables for drag functionality
-  double _dragStartPosition = 0.0;
-  double _dragStartScrollOffset = 0.0;
-
   @override
   void initState() {
     super.initState();
@@ -270,10 +266,6 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                     onHorizontalDragStart:
                                         scrollConfig.isDraggable
                                             ? (details) {
-                                              _dragStartPosition =
-                                                  details.localPosition.dx;
-                                              _dragStartScrollOffset =
-                                                  scrollOffset;
                                               setState(() {
                                                 _isDragging = true;
                                               });
@@ -282,28 +274,31 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                     onHorizontalDragUpdate:
                                         scrollConfig.isDraggable
                                             ? (details) {
-                                              final double dragPosition =
-                                                  details.localPosition.dx;
-                                              final double dragDistance =
-                                                  dragPosition -
-                                                  _dragStartPosition;
+                                              // Direct thumb manipulation approach
+                                              final double dragDelta =
+                                                  details.delta.dx;
 
-                                              // Calculate the scroll position based on the drag movement
-                                              final double scrollDistanceRatio =
-                                                  widget.width / scrollExtent;
+                                              // Calculate how much to scroll based on thumb movement
+                                              // The available space for the thumb to move is (widget.width - thumbWidth)
+                                              // The total scrollable content is scrollExtent
+                                              final double scrollableRatio =
+                                                  scrollExtent /
+                                                  (widget.width - thumbWidth);
                                               final double scrollDelta =
-                                                  dragDistance /
-                                                  scrollDistanceRatio;
+                                                  dragDelta * scrollableRatio;
 
-                                              // Update the scroll position
+                                              // Get the scroll controller
                                               final scrollController =
                                                   widget
                                                       .stateManager
                                                       .scroll
                                                       .bodyRowsHorizontal;
                                               if (scrollController != null) {
+                                                // Apply the scroll by adding delta to current position
+                                                final currentOffset =
+                                                    scrollController.offset;
                                                 final newOffset =
-                                                    (_dragStartScrollOffset +
+                                                    (currentOffset +
                                                             scrollDelta)
                                                         .clamp(
                                                           0.0,
@@ -311,6 +306,8 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                                               .position
                                                               .maxScrollExtent,
                                                         );
+
+                                                // Jump to the new position
                                                 scrollController.jumpTo(
                                                   newOffset,
                                                 );
