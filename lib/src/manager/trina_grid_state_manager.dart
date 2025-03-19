@@ -353,14 +353,16 @@ class TrinaGridStateManager extends TrinaGridStateChangeNotifier {
   }
 
   /// Returns a list of columns that are currently visible in the viewport
-  List<TrinaColumn> getVisibleColumns() {
+  List<TrinaColumn> getViewPortVisibleColumns() {
     if (refColumns.isEmpty) return [];
 
-    return refColumns.where((column) => isColumnVisible(column)).toList();
+    return refColumns
+        .where((column) => isColumnVisibleInViewport(column))
+        .toList();
   }
 
   /// Checks if a specific column is currently visible in the viewport
-  bool isColumnVisible(TrinaColumn column) {
+  bool isColumnVisibleInViewport(TrinaColumn column) {
     if (column.hide) return false;
 
     final RenderBox? gridRenderBox =

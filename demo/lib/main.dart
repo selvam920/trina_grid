@@ -1,6 +1,6 @@
 import 'package:demo/screen/feature/boolean_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
-import 'package:demo/screen/feature/check_visible_columns_screen.dart';
+import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/grid_export_screen.dart';
 import 'package:demo/screen/feature/scrollbars.dart';
@@ -75,8 +75,8 @@ class MyApp extends StatelessWidget {
             const ChangeTrackingScreen(),
         BooleanTypeColumnScreen.routeName: (context) =>
             const BooleanTypeColumnScreen(),
-        CheckVisibleColumnsScreen.routeName: (context) =>
-            const CheckVisibleColumnsScreen(),
+        CheckViewPortVisibleColumnsScreen.routeName: (context) =>
+            const CheckViewPortVisibleColumnsScreen(),
         EditCellRendererScreen.routeName: (context) =>
             const EditCellRendererScreen(),
         RTLScreen.routeName: (context) => const RTLScreen(),

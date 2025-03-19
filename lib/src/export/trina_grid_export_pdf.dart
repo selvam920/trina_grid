@@ -57,7 +57,7 @@ class TrinaGridExportPdf implements TrinaGridExport {
   }) {
     if (columnNames == null || columnNames.isEmpty) {
       // If no columns specified, use all visible columns
-      return stateManager.getVisibleColumns();
+      return stateManager.columns;
     } else {
       // Filter columns by the provided column names
       return stateManager.refColumns

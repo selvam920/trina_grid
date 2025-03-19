@@ -5,17 +5,18 @@ import 'package:trina_grid/trina_grid.dart';
 
 import '../../widget/trina_example_screen.dart';
 
-class CheckVisibleColumnsScreen extends StatefulWidget {
-  static const routeName = 'check-visible-columns';
+class CheckViewPortVisibleColumnsScreen extends StatefulWidget {
+  static const routeName = 'check-view-port-visible-columns';
 
-  const CheckVisibleColumnsScreen({super.key});
+  const CheckViewPortVisibleColumnsScreen({super.key});
 
   @override
-  _CheckVisibleColumnsScreenState createState() =>
-      _CheckVisibleColumnsScreenState();
+  _CheckViewPortVisibleColumnsScreenState createState() =>
+      _CheckViewPortVisibleColumnsScreenState();
 }
 
-class _CheckVisibleColumnsScreenState extends State<CheckVisibleColumnsScreen> {
+class _CheckViewPortVisibleColumnsScreenState
+    extends State<CheckViewPortVisibleColumnsScreen> {
   final List<TrinaColumn> columns = [];
 
   final List<TrinaRow> rows = [];
@@ -47,10 +48,10 @@ class _CheckVisibleColumnsScreenState extends State<CheckVisibleColumnsScreen> {
   @override
   Widget build(BuildContext context) {
     return TrinaExampleScreen(
-      title: 'Check visible columns',
-      topTitle: 'Check visible columns',
+      title: 'Check view port visible columns',
+      topTitle: 'Check view port visible columns',
       topContents: const [
-        Text('You can check visible columns.'),
+        Text('You can check view port visible columns.'),
       ],
       body: TrinaGrid(
         columns: columns,
@@ -83,13 +84,14 @@ class _HeaderState extends State<_Header> {
     super.initState();
   }
 
-  void _showVisibleColumns() {
+  void _showViewPortVisibleColumns() {
     showDialog(
         context: context,
         builder: (context) => SimpleDialog(
-              title: const Text('Visible columns'),
+              title: const Text('View port visible columns'),
               children: [
-                for (var element in widget.stateManager.getVisibleColumns())
+                for (var element
+                    in widget.stateManager.getViewPortVisibleColumns())
                   SimpleDialogOption(
                     onPressed: () {},
                     child: Text(element.title),
@@ -98,7 +100,7 @@ class _HeaderState extends State<_Header> {
             ));
   }
 
-  void _isColumnVisible() {
+  void _isColumnVisibleInViewport() {
     int? columnIndex;
 
     showDialog(
@@ -137,7 +139,7 @@ class _HeaderState extends State<_Header> {
                   ),
                   const SizedBox(height: 20),
                   if (columnIndex != null)
-                    Text(widget.stateManager.isColumnVisible(
+                    Text(widget.stateManager.isColumnVisibleInViewport(
                             widget.stateManager.refColumns[columnIndex!])
                         ? 'Visible'
                         : 'Hidden')
@@ -157,10 +159,10 @@ class _HeaderState extends State<_Header> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             ElevatedButton(
-                onPressed: _showVisibleColumns,
-                child: const Text('Show visible columns')),
+                onPressed: _showViewPortVisibleColumns,
+                child: const Text('Show view port visible columns')),
             ElevatedButton(
-                onPressed: _isColumnVisible,
+                onPressed: _isColumnVisibleInViewport,
                 child: const Text('Is column visible?')),
           ],
         ),

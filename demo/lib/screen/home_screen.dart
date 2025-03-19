@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:demo/screen/empty_screen.dart';
 import 'package:demo/screen/feature/boolean_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
-import 'package:demo/screen/feature/check_visible_columns_screen.dart';
+import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/frozen_rows_screen.dart';
 import 'package:demo/screen/feature/grid_export_screen.dart';
@@ -536,12 +536,12 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         },
       ),
       TrinaListTile(
-        title: 'Check visible columns',
-        description: 'Check visible columns.',
+        title: 'Check view port visible columns',
+        description: 'Check view port visible columns.',
         onTapLiveDemo: () {
           Navigator.pushNamed(
             context,
-            CheckVisibleColumnsScreen.routeName,
+            CheckViewPortVisibleColumnsScreen.routeName,
           );
         },
       ),

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.2] - 2025. 03. 19
+
+* Enhance Export, fix bug with visible columns
+* Change getVisibleColumns to getViewPortVisibleColumns
+* Add documentation for view port visible columns, gotoColumn
+
 ## [1.6.1] - 2025. 03. 19
 
 * Fix scrollbar drag performance issue

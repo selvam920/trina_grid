@@ -27,6 +27,7 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 - [Column Groups](features/column-groups.md)
 - [Column Renderers](features/column-renderer.md)
 - [Column Footer](features/column-footer.md)
+- [Column Viewport Visibility](features/column-visibility.md)
 
 ### Row Features
 
