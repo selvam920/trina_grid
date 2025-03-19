@@ -289,6 +289,7 @@ Contributions are welcome! If you'd like to help improve TrinaGrid, here's how y
 - **Submit pull requests** to fix issues or add functionality
 - **Improve documentation** to help other users
 - **Share the package** with others who might find it useful
+- **Sponsor the project** to support its development Buy me a coffee [Buy Me A Coffee](https://buymeacoffee.com/doonfrs)
 
 I'm committed to maintaining and improving this package, and your contributions help make it better for everyone. Feel free to reach out if you have any questions or ideas!
 
