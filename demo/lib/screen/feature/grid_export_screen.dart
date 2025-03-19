@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,6 +26,15 @@ class _GridExportScreenState extends State<GridExportScreen> {
 
   bool isExporting = false;
   String exportStatus = '';
+
+  // Column selection and export options
+  final Map<String, bool> selectedColumns = {};
+  bool includeHeaders = true;
+  bool showColumnSelection = false;
+
+  static const String formatCsv = 'csv';
+  static const String formatJson = 'json';
+  static const String formatPdf = 'pdf';
 
   @override
   void initState() {
@@ -104,40 +116,197 @@ class _GridExportScreenState extends State<GridExportScreen> {
 
     // Initialize rows with dummy data
     rows.addAll(DummyData.generateEmployeeData(30));
+
+    // Initialize column selection (all selected by default)
+    for (var column in columns) {
+      selectedColumns[column.title] = true;
+    }
   }
 
-  Future<void> _exportGrid(TrinaGridExportFormat format,
+  void _showExportOptionsDialog(String formatName) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text('Export as $formatName'),
+              content: SizedBox(
+                width: 400,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Include headers option
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: includeHeaders,
+                          onChanged: (value) {
+                            setDialogState(() {
+                              includeHeaders = value ?? true;
+                            });
+                          },
+                        ),
+                        const Text('Include column headers'),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Column selection
+                    const Text('Select columns to export:'),
+                    const SizedBox(height: 8),
+
+                    // Select/Deselect all buttons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            setDialogState(() {
+                              for (var key in selectedColumns.keys) {
+                                selectedColumns[key] = true;
+                              }
+                            });
+                          },
+                          child: const Text('Select All'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setDialogState(() {
+                              for (var key in selectedColumns.keys) {
+                                selectedColumns[key] = false;
+                              }
+                            });
+                          },
+                          child: const Text('Deselect All'),
+                        ),
+                      ],
+                    ),
+
+                    // Column checkboxes
+                    Container(
+                      height: 300,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: ListView.builder(
+                        itemCount: columns.length,
+                        itemBuilder: (context, index) {
+                          final column = columns[index];
+                          return CheckboxListTile(
+                            title: Text(column.title),
+                            value: selectedColumns[column.title] ?? false,
+                            onChanged: (value) {
+                              setDialogState(() {
+                                selectedColumns[column.title] = value ?? false;
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Get selected columns
+                    final List<String> columnsToExport = selectedColumns.entries
+                        .where((entry) => entry.value)
+                        .map((entry) => entry.key)
+                        .toList();
+
+                    // Close dialog
+                    Navigator.of(context).pop();
+
+                    // Export grid with selected columns
+                    _exportGrid(formatName, selectedColumns: columnsToExport);
+                  },
+                  child: const Text('Export'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _exportGrid(String formatName,
       {List<String>? selectedColumns}) async {
     setState(() {
       isExporting = true;
-      exportStatus = 'Exporting as ${format.name.toUpperCase()}...';
+      exportStatus = 'Exporting as $formatName...';
     });
 
+    String fileName = 'grid_export_${DateTime.now().millisecondsSinceEpoch}';
+    String saveFilePath = '';
     try {
-      final result = await TrinaGridExportService.export(
-        format: format,
-        stateManager: stateManager,
-        columns: selectedColumns,
-      );
+      // For CSV, generate and download the file
+      if (formatName == formatCsv) {
+        final content = await TrinaGridExportCsv().export(
+          stateManager: stateManager,
+          columns: selectedColumns,
+          includeHeaders: includeHeaders,
+        );
+        saveFilePath = await FileSaver.instance.saveFile(
+          name: fileName,
+          bytes: Uint8List.fromList(content.codeUnits),
+          ext: formatName,
+          mimeType: MimeType.csv,
+        );
+      } else if (formatName == formatJson) {
+        final content = await TrinaGridExportJson().export(
+          stateManager: stateManager,
+          columns: selectedColumns,
+          includeHeaders: includeHeaders,
+        );
+        saveFilePath = await FileSaver.instance.saveFile(
+          name: fileName,
+          bytes: Uint8List.fromList(content.codeUnits),
+          ext: formatName,
+          mimeType: MimeType.json,
+        );
+      } else if (formatName == formatPdf) {
+        final content = await TrinaGridExportPdf().export(
+          stateManager: stateManager,
+          columns: selectedColumns,
+          includeHeaders: includeHeaders,
+        );
+        saveFilePath = await FileSaver.instance.saveFile(
+          name: fileName,
+          bytes: content,
+          ext: formatName,
+          mimeType: MimeType.pdf,
+        );
+      } else {
+        throw Exception('Unsupported format: $formatName');
+      }
 
-      // In a real app, you would save the result to a file or display it
       setState(() {
-        exportStatus = 'Successfully exported as ${format.name.toUpperCase()}';
+        exportStatus = 'Successfully exported as $formatName';
         isExporting = false;
       });
 
-      // Show success snackbar
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content:
-              Text('Successfully exported as ${format.name.toUpperCase()}'),
-          backgroundColor: Colors.green,
-        ),
-      );
-
-      // For demonstration purposes, print the result to console
-      print('Export result: $result');
+      if (!mounted) {
+        return;
+      }
+      if (saveFilePath.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('File saved to $saveFilePath'),
+          ),
+        );
+      }
     } catch (e) {
       setState(() {
         exportStatus = 'Export failed: $e';
@@ -161,7 +330,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
       title: 'Grid Export',
       topTitle: 'Grid Export',
       topContents: const [
-        Text('Coming soon...'),
+        Text('CSV Export with column selection and headers option'),
         SizedBox(height: 10),
         Text(
             'Export grid data as PDF, CSV, Excel, or JSON. You can export all visible columns or select specific columns to export.'),
@@ -183,28 +352,21 @@ class _GridExportScreenState extends State<GridExportScreen> {
                   'Export as PDF',
                   FontAwesomeIcons.filePdf,
                   Colors.red,
-                  () => _exportGrid(TrinaGridExportFormat.pdf),
+                  () => _showExportOptionsDialog(formatPdf),
                 ),
                 const SizedBox(width: 16),
                 _buildExportButton(
                   'Export as CSV',
                   FontAwesomeIcons.fileExcel,
                   Colors.green,
-                  () => _exportGrid(TrinaGridExportFormat.csv),
+                  () => _showExportOptionsDialog(formatCsv),
                 ),
                 const SizedBox(width: 16),
                 _buildExportButton(
                   'Export as JSON',
                   FontAwesomeIcons.fileCode,
                   Colors.blue,
-                  () => _exportGrid(TrinaGridExportFormat.json),
-                ),
-                const SizedBox(width: 16),
-                _buildExportButton(
-                  'Export as Excel',
-                  FontAwesomeIcons.fileExcel,
-                  Colors.blue,
-                  () => _exportGrid(TrinaGridExportFormat.excel),
+                  () => _showExportOptionsDialog(formatJson),
                 ),
               ],
             ),

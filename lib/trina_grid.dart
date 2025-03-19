@@ -65,7 +65,6 @@ export 'src/model/column_types/trina_column_type_text.dart';
 
 // Export grid export functionality
 export './src/export/trina_grid_export.dart';
-export './src/export/trina_grid_export_service.dart';
 export './src/export/trina_grid_export_pdf.dart';
 export './src/export/trina_grid_export_csv.dart';
 export './src/export/trina_grid_export_json.dart';

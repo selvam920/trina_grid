@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:trina_grid/src/export/trina_grid_export.dart';
 import 'package:trina_grid/src/manager/trina_grid_state_manager.dart';
 import 'package:trina_grid/src/model/trina_column.dart';
@@ -10,51 +9,47 @@ class TrinaGridExportCsv implements TrinaGridExport {
   Future<String> export({
     required TrinaGridStateManager stateManager,
     List<String>? columns,
+    bool includeHeaders = true,
   }) async {
-    try {
-      // Get visible columns if no specific columns are requested
-      final List<TrinaColumn> visibleColumns =
-          columns != null
-              ? stateManager.refColumns
-                  .where((column) => columns.contains(column.title))
-                  .toList()
-              : stateManager.getVisibleColumns();
+    // Get visible columns if no specific columns are requested
+    final List<TrinaColumn> visibleColumns =
+        columns != null
+            ? stateManager.refColumns
+                .where((column) => columns.contains(column.title))
+                .toList()
+            : stateManager.getVisibleColumns();
 
-      if (visibleColumns.isEmpty) {
-        throw Exception('No columns to export');
-      }
+    if (visibleColumns.isEmpty) {
+      throw Exception('No columns to export');
+    }
 
-      // Get rows
-      final List<TrinaRow> rows = stateManager.refRows;
+    // Get rows
+    final List<TrinaRow> rows = stateManager.refRows;
 
-      // Create CSV content
-      final StringBuffer csvContent = StringBuffer();
+    // Create CSV content
+    final StringBuffer csvContent = StringBuffer();
 
-      // Add header row
+    // Add header row if requested
+    if (includeHeaders) {
       final List<String> headers =
           visibleColumns
               .map((column) => _escapeCsvField(column.title))
               .toList();
       csvContent.writeln(headers.join(','));
-
-      // Add data rows
-      for (final row in rows) {
-        final List<String> rowData = [];
-        for (final column in visibleColumns) {
-          final cell = row.cells[column.field];
-          final value = cell?.value?.toString() ?? '';
-          rowData.add(_escapeCsvField(value));
-        }
-        csvContent.writeln(rowData.join(','));
-      }
-
-      return csvContent.toString();
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error exporting to CSV: $e');
-      }
-      rethrow;
     }
+
+    // Add data rows
+    for (final row in rows) {
+      final List<String> rowData = [];
+      for (final column in visibleColumns) {
+        final cell = row.cells[column.field];
+        final value = cell?.value?.toString() ?? '';
+        rowData.add(_escapeCsvField(value));
+      }
+      csvContent.writeln(rowData.join(','));
+    }
+
+    return csvContent.toString();
   }
 
   /// Escapes a field for CSV format
