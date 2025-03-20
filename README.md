@@ -6,21 +6,22 @@
 > ⭐ **Please star this repository to support the project!** ⭐
 >
 
-## Support This Project
-
-If you find TrinaGrid useful, please consider supporting its development:
-
-[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://buymeacoffee.com/doonfrs)
-
-You can also become a GitHub sponsor: [Sponsor @doonfrs](https://github.com/sponsors/doonfrs)
-
-Your support will encourage me to dedicate more time to keeping this useful package updated and well-documented.
-
 TrinaGrid is a powerful data grid for Flutter that provides a wide range of features for displaying, editing, and managing tabular data. It works seamlessly on all platforms including web, desktop, and mobile.
 
 ![TrinaGrid Demo](https://raw.githubusercontent.com/doonfrs/trina_grid/master/screenshots/demo.gif)
 
 > TrinaGrid is a maintained and enhanced version of the original PlutoGrid package. I'm [Feras](https://github.com/doonfrs), the current maintainer, and I'm actively working on adding new features and keeping this great package rich and up-to-date. I continued the development after the original package [PlutoGrid](https://github.com/bosskmk/pluto_grid) was no longer being maintained.
+
+## Support This Project
+
+If you find TrinaGrid useful, please consider supporting its development:
+
+[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="150" alt="Buy Me A Coffee">](https://buymeacoffee.com/doonfrs)
+
+You can also become a GitHub sponsor: [Sponsor @doonfrs](https://github.com/sponsors/doonfrs)
+
+Your support will encourage me to dedicate more time to keeping this useful package updated and well-documented.
+
 
 ## Migration from PlutoGrid
 
