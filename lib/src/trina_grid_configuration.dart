@@ -601,6 +601,8 @@ class TrinaGridStyleConfig {
     BorderRadiusGeometry? gridPopupBorderRadius,
     double? gridPadding,
     double? gridBorderWidth,
+    Color? filterHeaderColor,
+    Color? filterHeaderIconColor,
   }) {
     return TrinaGridStyleConfig(
       enableGridBorderShadow:
@@ -675,8 +677,9 @@ class TrinaGridStyleConfig {
           gridPopupBorderRadius ?? this.gridPopupBorderRadius,
       gridPadding: gridPadding ?? this.gridPadding,
       gridBorderWidth: gridBorderWidth ?? this.gridBorderWidth,
-      filterHeaderColor: filterHeaderColor ?? filterHeaderColor,
-      filterHeaderIconColor: filterHeaderIconColor ?? filterHeaderIconColor,
+      filterHeaderColor: filterHeaderColor ?? this.filterHeaderColor,
+      filterHeaderIconColor:
+          filterHeaderIconColor ?? this.filterHeaderIconColor,
     );
   }
 
@@ -786,6 +789,8 @@ class TrinaGridStyleConfig {
     gridPopupBorderRadius,
     gridPadding,
     gridBorderWidth,
+    filterHeaderColor,
+    filterHeaderIconColor,
   ]);
 }
 
