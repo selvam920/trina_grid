@@ -17,11 +17,20 @@ abstract class TrinaColumnMenuDelegate<T> {
 }
 
 class TrinaColumnMenuDelegateDefault
-    implements TrinaColumnMenuDelegate<TrinaGridColumnMenuItem> {
+    implements TrinaColumnMenuDelegate<String> {
   const TrinaColumnMenuDelegateDefault();
 
+  static const String defaultMenuUnfreeze = 'unfreeze';
+  static const String defaultMenuFreezeToStart = 'freezeToStart';
+  static const String defaultMenuFreezeToEnd = 'freezeToEnd';
+  static const String defaultMenuHideColumn = 'hideColumn';
+  static const String defaultMenuSetColumns = 'setColumns';
+  static const String defaultMenuAutoFit = 'autoFit';
+  static const String defaultMenuSetFilter = 'setFilter';
+  static const String defaultMenuResetFilter = 'resetFilter';
+
   @override
-  List<PopupMenuEntry<TrinaGridColumnMenuItem>> buildMenuItems({
+  List<PopupMenuEntry<String>> buildMenuItems({
     required TrinaGridStateManager stateManager,
     required TrinaColumn column,
   }) {
@@ -37,35 +46,35 @@ class TrinaColumnMenuDelegateDefault
     required TrinaGridStateManager stateManager,
     required TrinaColumn column,
     required bool mounted,
-    required TrinaGridColumnMenuItem? selected,
+    required String? selected,
   }) {
     switch (selected) {
-      case TrinaGridColumnMenuItem.unfreeze:
+      case defaultMenuUnfreeze:
         stateManager.toggleFrozenColumn(column, TrinaColumnFrozen.none);
         break;
-      case TrinaGridColumnMenuItem.freezeToStart:
+      case defaultMenuFreezeToStart:
         stateManager.toggleFrozenColumn(column, TrinaColumnFrozen.start);
         break;
-      case TrinaGridColumnMenuItem.freezeToEnd:
+      case defaultMenuFreezeToEnd:
         stateManager.toggleFrozenColumn(column, TrinaColumnFrozen.end);
         break;
-      case TrinaGridColumnMenuItem.autoFit:
+      case defaultMenuAutoFit:
         if (!mounted) return;
         stateManager.autoFitColumn(context, column);
         stateManager.notifyResizingListeners();
         break;
-      case TrinaGridColumnMenuItem.hideColumn:
+      case defaultMenuHideColumn:
         stateManager.hideColumn(column, true);
         break;
-      case TrinaGridColumnMenuItem.setColumns:
+      case defaultMenuSetColumns:
         if (!mounted) return;
         stateManager.showSetColumnsPopup(context);
         break;
-      case TrinaGridColumnMenuItem.setFilter:
+      case defaultMenuSetFilter:
         if (!mounted) return;
         stateManager.showFilterPopup(context, calledColumn: column);
         break;
-      case TrinaGridColumnMenuItem.resetFilter:
+      case defaultMenuResetFilter:
         stateManager.setFilter(null);
         break;
       default:
@@ -98,7 +107,7 @@ Future<T?>? showColumnMenu<T>({
   );
 }
 
-List<PopupMenuEntry<TrinaGridColumnMenuItem>> _getDefaultColumnMenuItems({
+List<PopupMenuEntry<String>> _getDefaultColumnMenuItems({
   required TrinaGridStateManager stateManager,
   required TrinaColumn column,
 }) {
@@ -115,19 +124,19 @@ List<PopupMenuEntry<TrinaGridColumnMenuItem>> _getDefaultColumnMenuItems({
   return [
     if (column.frozen.isFrozen == true)
       _buildMenuItem(
-        value: TrinaGridColumnMenuItem.unfreeze,
+        value: TrinaColumnMenuDelegateDefault.defaultMenuUnfreeze,
         text: localeText.unfreezeColumn,
         textColor: textColor,
       ),
     if (column.frozen.isFrozen != true) ...[
       _buildMenuItem(
-        value: TrinaGridColumnMenuItem.freezeToStart,
+        value: TrinaColumnMenuDelegateDefault.defaultMenuFreezeToStart,
         enabled: enoughFrozenColumnsWidth,
         text: localeText.freezeColumnToStart,
         textColor: enoughFrozenColumnsWidth ? textColor : disableTextColor,
       ),
       _buildMenuItem(
-        value: TrinaGridColumnMenuItem.freezeToEnd,
+        value: TrinaColumnMenuDelegateDefault.defaultMenuFreezeToEnd,
         enabled: enoughFrozenColumnsWidth,
         text: localeText.freezeColumnToEnd,
         textColor: enoughFrozenColumnsWidth ? textColor : disableTextColor,
@@ -135,32 +144,32 @@ List<PopupMenuEntry<TrinaGridColumnMenuItem>> _getDefaultColumnMenuItems({
     ],
     const PopupMenuDivider(),
     _buildMenuItem(
-      value: TrinaGridColumnMenuItem.autoFit,
+      value: TrinaColumnMenuDelegateDefault.defaultMenuAutoFit,
       text: localeText.autoFitColumn,
       textColor: textColor,
     ),
     if (column.enableHideColumnMenuItem == true)
       _buildMenuItem(
-        value: TrinaGridColumnMenuItem.hideColumn,
+        value: TrinaColumnMenuDelegateDefault.defaultMenuHideColumn,
         text: localeText.hideColumn,
         textColor: textColor,
         enabled: stateManager.refColumns.length > 1,
       ),
     if (column.enableSetColumnsMenuItem == true)
       _buildMenuItem(
-        value: TrinaGridColumnMenuItem.setColumns,
+        value: TrinaColumnMenuDelegateDefault.defaultMenuSetColumns,
         text: localeText.setColumns,
         textColor: textColor,
       ),
     if (column.enableFilterMenuItem == true) ...[
       const PopupMenuDivider(),
       _buildMenuItem(
-        value: TrinaGridColumnMenuItem.setFilter,
+        value: TrinaColumnMenuDelegateDefault.defaultMenuSetFilter,
         text: localeText.setFilter,
         textColor: textColor,
       ),
       _buildMenuItem(
-        value: TrinaGridColumnMenuItem.resetFilter,
+        value: TrinaColumnMenuDelegateDefault.defaultMenuResetFilter,
         text: localeText.resetFilter,
         textColor: textColor,
         enabled: stateManager.hasFilter,
@@ -169,13 +178,13 @@ List<PopupMenuEntry<TrinaGridColumnMenuItem>> _getDefaultColumnMenuItems({
   ];
 }
 
-PopupMenuItem<TrinaGridColumnMenuItem> _buildMenuItem<TrinaGridColumnMenuItem>({
+PopupMenuItem<String> _buildMenuItem({
   required String text,
   required Color? textColor,
   bool enabled = true,
-  TrinaGridColumnMenuItem? value,
+  String? value,
 }) {
-  return PopupMenuItem<TrinaGridColumnMenuItem>(
+  return PopupMenuItem<String>(
     value: value,
     height: 36,
     enabled: enabled,
@@ -187,16 +196,4 @@ PopupMenuItem<TrinaGridColumnMenuItem> _buildMenuItem<TrinaGridColumnMenuItem>({
       ),
     ),
   );
-}
-
-/// Items in the context menu on the right side of the column
-enum TrinaGridColumnMenuItem {
-  unfreeze,
-  freezeToStart,
-  freezeToEnd,
-  hideColumn,
-  setColumns,
-  autoFit,
-  setFilter,
-  resetFilter,
 }

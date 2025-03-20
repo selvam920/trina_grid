@@ -38,6 +38,8 @@ class _ColumnMenuScreenState extends State<ColumnMenuScreen> {
       topContents: const [
         Text('You can customize the menu on the right side of the column.'),
         Text('A different menu can be displayed for each column.'),
+        Text(
+            'You can also customize the menu items. For example, you can remove the from the default menu.'),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -74,6 +76,15 @@ class UserColumnMenuDelegate implements TrinaColumnMenuDelegate<dynamic> {
       stateManager: stateManager,
       column: column,
     );
+
+    //remove the unfreeze item
+    defaultItems.removeWhere((element) {
+      if (element is PopupMenuItem<String>) {
+        return element.value ==
+            TrinaColumnMenuDelegateDefault.defaultMenuFreezeToStart;
+      }
+      return false;
+    });
 
     // Add custom menu items (with a divider if there are default items)
     return [
@@ -124,17 +135,13 @@ class UserColumnMenuDelegate implements TrinaColumnMenuDelegate<dynamic> {
         stateManager.moveColumn(column: column, targetColumn: targetColumn);
         break;
       default:
-        // Pass anything else to the default delegate
-        if (selected is TrinaGridColumnMenuItem) {
-          _defaultDelegate.onSelected(
-            context: context,
-            stateManager: stateManager,
-            column: column,
-            mounted: mounted,
-            selected: selected,
-          );
-        }
-        break;
+        _defaultDelegate.onSelected(
+          context: context,
+          stateManager: stateManager,
+          column: column,
+          mounted: mounted,
+          selected: selected,
+        );
     }
   }
 }
