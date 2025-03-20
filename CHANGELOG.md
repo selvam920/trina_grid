@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.6.3] - 2025. 03. 20
+
+* Fix selected row style
+* Include current row with currentSelectedRows list in case of grid selection mode is row.
+
 ## [1.6.2] - 2025. 03. 19
 
 * Enhance Export, fix bug with visible columns
