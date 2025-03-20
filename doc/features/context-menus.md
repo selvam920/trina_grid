@@ -2,6 +2,8 @@
 
 Context menus in TrinaGrid provide an intuitive way for users to access column-specific actions and settings. These menus enhance the user experience by offering quick access to common operations like column freezing, resizing, filtering, and visibility controls.
 
+![Context Menus Demo](https://raw.githubusercontent.com/doonfrs/trina_grid/master/doc/assets/context-menus.gif)
+
 ## Overview
 
 TrinaGrid's context menu system allows users to interact with columns through a popup menu that appears when clicking on a context icon in the column header. The menu provides access to various column operations, and developers can customize both the appearance and functionality of these menus.
@@ -118,6 +120,221 @@ TrinaGrid(
   rows: rows,
   columnMenuDelegate: CustomColumnMenu(),
 )
+```
+
+### Extending the Default Menu
+
+If you want to keep the default menu items and add your own custom items, you can extend the default menu using the following pattern:
+
+```dart
+class ExtendedColumnMenuDelegate implements TrinaColumnMenuDelegate<String> {
+  // Custom menu item keys
+  static const String customAction1 = 'custom_action_1';
+  static const String customAction2 = 'custom_action_2';
+
+  // Default delegate to handle standard menu items
+  final TrinaColumnMenuDelegateDefault _defaultDelegate = 
+      const TrinaColumnMenuDelegateDefault();
+
+  @override
+  List<PopupMenuEntry<String>> buildMenuItems({
+    required TrinaGridStateManager stateManager,
+    required TrinaColumn column,
+  }) {
+    // Get default menu items
+    final defaultItems = _defaultDelegate.buildMenuItems(
+      stateManager: stateManager,
+      column: column,
+    );
+    
+    // Add custom menu items with a divider
+    return [
+      ...defaultItems,
+      const PopupMenuDivider(),
+      // Custom menu items
+      PopupMenuItem<String>(
+        value: customAction1,
+        height: 36,
+        enabled: true,
+        child: Text('Custom Action 1'),
+      ),
+      PopupMenuItem<String>(
+        value: customAction2,
+        height: 36,
+        enabled: true,
+        child: Text('Custom Action 2'),
+      ),
+    ];
+  }
+
+  @override
+  void onSelected({
+    required BuildContext context,
+    required TrinaGridStateManager stateManager,
+    required TrinaColumn column,
+    required bool mounted,
+    required dynamic selected,
+  }) {
+    // Handle custom menu items first
+    switch (selected) {
+      case customAction1:
+        // Handle custom action 1
+        break;
+      case customAction2:
+        // Handle custom action 2
+        break;
+      default:
+        // Pass anything else to the default delegate
+        if (selected is TrinaGridColumnMenuItem) {
+          _defaultDelegate.onSelected(
+            context: context,
+            stateManager: stateManager,
+            column: column,
+            mounted: mounted,
+            selected: selected,
+          );
+        }
+        break;
+    }
+  }
+}
+```
+
+You can also selectively remove or modify default menu items before adding your custom ones:
+
+```dart
+@override
+List<PopupMenuEntry<dynamic>> buildMenuItems({
+  required TrinaGridStateManager stateManager,
+  required TrinaColumn column,
+}) {
+  // Get default menu items
+  final defaultItems = _defaultDelegate.buildMenuItems(
+    stateManager: stateManager,
+    column: column,
+  );
+  
+  // Remove specific default items if needed
+  defaultItems.removeWhere((element) {
+    if (element is PopupMenuItem && element.value is TrinaGridColumnMenuItem) {
+      return element.value == TrinaGridColumnMenuItem.freezeToStart;
+    }
+    return false;
+  });
+  
+  // Add custom menu items
+  return [
+    ...defaultItems,
+    const PopupMenuDivider(),
+    // Your custom menu items...
+  ];
+}
+```
+
+### Column-Specific Menu Items
+
+You can display different menu items for specific columns by checking the column properties in your `buildMenuItems` method:
+
+```dart
+@override
+List<PopupMenuEntry<String>> buildMenuItems({
+  required TrinaGridStateManager stateManager,
+  required TrinaColumn column,
+}) {
+  // Get default menu items
+  final defaultItems = _defaultDelegate.buildMenuItems(
+    stateManager: stateManager,
+    column: column,
+  );
+  
+  // Create a list to hold all menu items
+  final allItems = [...defaultItems];
+  
+  // Add a divider if we have default items
+  if (defaultItems.isNotEmpty) {
+    allItems.add(const PopupMenuDivider());
+  }
+  
+  // Add column-specific menu items
+  if (column.field == '0') {
+    // Special menu items only for the first column
+    allItems.add(
+      PopupMenuItem<String>(
+        value: 'first_column_action',
+        height: 36,
+        enabled: true,
+        child: Container(
+          color: Colors.amber,
+          child: Text('Only show in first column', 
+            style: TextStyle(fontSize: 13)),
+        ),
+      ),
+    );
+  }
+  
+  // Add menu items specific to numeric columns
+  if (column.type.isNumber) {
+    allItems.add(
+      const PopupMenuItem<String>(
+        value: 'sum_column',
+        height: 36,
+        enabled: true,
+        child: Text('Calculate sum', style: TextStyle(fontSize: 13)),
+      ),
+    );
+  }
+  
+  // Add standard custom menu items for all columns
+  if (column.key != stateManager.columns.last.key) {
+    allItems.add(
+      const PopupMenuItem<String>(
+        value: 'move_next',
+        height: 36,
+        enabled: true,
+        child: Text('Move next', style: TextStyle(fontSize: 13)),
+      ),
+    );
+  }
+  
+  return allItems;
+}
+```
+
+Remember to handle these column-specific actions in your `onSelected` method:
+
+```dart
+@override
+void onSelected({
+  required BuildContext context,
+  required TrinaGridStateManager stateManager,
+  required TrinaColumn column,
+  required bool mounted,
+  required dynamic selected,
+}) {
+  switch (selected) {
+    case 'first_column_action':
+      // Handle first column specific action
+      break;
+    case 'sum_column':
+      // Calculate and display sum for numeric column
+      break;
+    case 'move_next':
+      // Move column to next position
+      break;
+    default:
+      // Pass anything else to the default delegate
+      if (selected is TrinaGridColumnMenuItem) {
+        _defaultDelegate.onSelected(
+          context: context,
+          stateManager: stateManager,
+          column: column,
+          mounted: mounted,
+          selected: selected,
+        );
+      }
+      break;
+  }
+}
 ```
 
 ## Styling the Context Menu

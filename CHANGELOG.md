@@ -7,6 +7,7 @@
 * add missing arguments to gridConfiguration.copyWith
 * Update column menu example allow merging with the default menu
 * Simplify the column menu delegate, adding example for removing one of the default menu items
+* Add demo for displaying different menu items for specific columns, update the documentation
 
 ## [1.6.2] - 2025. 03. 19
 

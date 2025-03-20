@@ -57,7 +57,7 @@ class _ColumnMenuScreenState extends State<ColumnMenuScreen> {
 }
 
 /// A delegate that combines default column menu with custom items
-class UserColumnMenuDelegate implements TrinaColumnMenuDelegate<dynamic> {
+class UserColumnMenuDelegate implements TrinaColumnMenuDelegate<String> {
   // Custom menu item keys
   static const String moveNextKey = 'moveNext';
   static const String movePreviousKey = 'movePrevious';
@@ -67,7 +67,7 @@ class UserColumnMenuDelegate implements TrinaColumnMenuDelegate<dynamic> {
       const TrinaColumnMenuDelegateDefault();
 
   @override
-  List<PopupMenuEntry<dynamic>> buildMenuItems({
+  List<PopupMenuEntry<String>> buildMenuItems({
     required TrinaGridStateManager stateManager,
     required TrinaColumn column,
   }) {
@@ -90,6 +90,18 @@ class UserColumnMenuDelegate implements TrinaColumnMenuDelegate<dynamic> {
     return [
       ...defaultItems,
       if (defaultItems.isNotEmpty) const PopupMenuDivider(),
+
+      if (column.field == '0')
+        PopupMenuItem<String>(
+          value: 'Only show in first column',
+          height: 36,
+          enabled: true,
+          child: Container(
+              color: Colors.amber,
+              child: Text('Only show in first column',
+                  style: TextStyle(fontSize: 13))),
+        ),
+
       // Custom menu items
       if (column.key != stateManager.columns.last.key)
         const PopupMenuItem<String>(
