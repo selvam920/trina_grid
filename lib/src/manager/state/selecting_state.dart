@@ -58,10 +58,7 @@ abstract class ISelectingState {
     bool notify = true,
   });
 
-  void setCurrentSelectingPositionByCellKey(
-    Key? cellKey, {
-    bool notify = true,
-  });
+  void setCurrentSelectingPositionByCellKey(Key? cellKey, {bool notify = true});
 
   /// Sets the position of a multi-selected cell.
   void setCurrentSelectingPositionWithOffset(Offset offset);
@@ -133,7 +130,17 @@ mixin SelectingState implements ITrinaGridState {
   bool get hasCurrentSelectingPosition => currentSelectingPosition != null;
 
   @override
-  List<TrinaRow> get currentSelectingRows => _state._currentSelectingRows;
+  List<TrinaRow> get currentSelectingRows {
+    List<TrinaRow> rows = [];
+    rows = _state._currentSelectingRows;
+    if (currentRowIdx != null && selectingMode.isRow) {
+      if (!rows.contains(refRows[currentRowIdx!])) {
+        rows.add(refRows[currentRowIdx!]);
+      }
+      rows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
+    }
+    return rows;
+  }
 
   @override
   String get currentSelectingText {
@@ -287,14 +294,16 @@ mixin SelectingState implements ITrinaGridState {
       return;
     }
 
-    final double gridBodyOffsetDy = gridGlobalOffset!.dy +
+    final double gridBodyOffsetDy =
+        gridGlobalOffset!.dy +
         gridBorderWidth +
         headerHeight +
         columnGroupHeight +
         columnHeight +
         columnFilterHeight;
 
-    double currentCellOffsetDy = (currentRowIdx! * rowTotalHeight) +
+    double currentCellOffsetDy =
+        (currentRowIdx! * rowTotalHeight) +
         gridBodyOffsetDy -
         scroll.vertical!.offset;
 
@@ -302,9 +311,10 @@ mixin SelectingState implements ITrinaGridState {
       return;
     }
 
-    int rowIdx = (((currentCellOffsetDy - offset.dy) / rowTotalHeight).ceil() -
-            currentRowIdx!)
-        .abs();
+    int rowIdx =
+        (((currentCellOffsetDy - offset.dy) / rowTotalHeight).ceil() -
+                currentRowIdx!)
+            .abs();
 
     int? columnIdx;
 
@@ -336,16 +346,16 @@ mixin SelectingState implements ITrinaGridState {
     }
 
     setCurrentSelectingPosition(
-      cellPosition: TrinaGridCellPosition(
-        columnIdx: columnIdx,
-        rowIdx: rowIdx,
-      ),
+      cellPosition: TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),
     );
   }
 
   @override
-  void setCurrentSelectingRowsByRange(int? from, int? to,
-      {bool notify = true}) {
+  void setCurrentSelectingRowsByRange(
+    int? from,
+    int? to, {
+    bool notify = true,
+  }) {
     if (!selectingMode.isRow) {
       return;
     }
@@ -432,7 +442,8 @@ mixin SelectingState implements ITrinaGridState {
     }
 
     if (selectingMode.isCell) {
-      final bool inRangeOfRows = min(
+      final bool inRangeOfRows =
+          min(
                 currentCellPosition!.rowIdx as num,
                 currentSelectingPosition!.rowIdx as num,
               ) <=
@@ -453,7 +464,8 @@ mixin SelectingState implements ITrinaGridState {
         return false;
       }
 
-      final bool inRangeOfColumns = min(
+      final bool inRangeOfColumns =
+          min(
                 currentCellPosition!.columnIdx as num,
                 currentSelectingPosition!.columnIdx as num,
               ) <=
@@ -547,25 +559,30 @@ mixin SelectingState implements ITrinaGridState {
     final columnIndexes = columnIndexesByShowFrozen;
 
     int columnStartIdx = min(
-        currentCellPosition!.columnIdx!, currentSelectingPosition!.columnIdx!);
+      currentCellPosition!.columnIdx!,
+      currentSelectingPosition!.columnIdx!,
+    );
 
     int columnEndIdx = max(
-        currentCellPosition!.columnIdx!, currentSelectingPosition!.columnIdx!);
+      currentCellPosition!.columnIdx!,
+      currentSelectingPosition!.columnIdx!,
+    );
 
-    int rowStartIdx =
-        min(currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
+    int rowStartIdx = min(
+      currentCellPosition!.rowIdx!,
+      currentSelectingPosition!.rowIdx!,
+    );
 
-    int rowEndIdx =
-        max(currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
+    int rowEndIdx = max(
+      currentCellPosition!.rowIdx!,
+      currentSelectingPosition!.rowIdx!,
+    );
 
     for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
       for (int j = columnStartIdx; j <= columnEndIdx; j += 1) {
         final String field = refColumns[columnIndexes[j]].field;
 
-        positions.add(TrinaGridSelectingCellPosition(
-          rowIdx: i,
-          field: field,
-        ));
+        positions.add(TrinaGridSelectingCellPosition(rowIdx: i, field: field));
       }
     }
 
@@ -577,8 +594,8 @@ mixin SelectingState implements ITrinaGridState {
 
     final columnIndexes = columnIndexesByShowFrozen;
 
-    final bool firstCurrent = currentCellPosition!.rowIdx! <
-            currentSelectingPosition!.rowIdx! ||
+    final bool firstCurrent =
+        currentCellPosition!.rowIdx! < currentSelectingPosition!.rowIdx! ||
         (currentCellPosition!.rowIdx! == currentSelectingPosition!.rowIdx! &&
             currentCellPosition!.columnIdx! <=
                 currentSelectingPosition!.columnIdx!);
@@ -607,10 +624,7 @@ mixin SelectingState implements ITrinaGridState {
 
         final String field = refColumns[columnIndexes[j]].field;
 
-        positions.add(TrinaGridSelectingCellPosition(
-          rowIdx: i,
-          field: field,
-        ));
+        positions.add(TrinaGridSelectingCellPosition(rowIdx: i, field: field));
 
         if (i == rowEndIdx && j == columnEndIdx) {
           break;
@@ -647,16 +661,24 @@ mixin SelectingState implements ITrinaGridState {
     List<String> rowText = [];
 
     int columnStartIdx = min(
-        currentCellPosition!.columnIdx!, currentSelectingPosition!.columnIdx!);
+      currentCellPosition!.columnIdx!,
+      currentSelectingPosition!.columnIdx!,
+    );
 
     int columnEndIdx = max(
-        currentCellPosition!.columnIdx!, currentSelectingPosition!.columnIdx!);
+      currentCellPosition!.columnIdx!,
+      currentSelectingPosition!.columnIdx!,
+    );
 
-    int rowStartIdx =
-        min(currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
+    int rowStartIdx = min(
+      currentCellPosition!.rowIdx!,
+      currentSelectingPosition!.rowIdx!,
+    );
 
-    int rowEndIdx =
-        max(currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
+    int rowEndIdx = max(
+      currentCellPosition!.rowIdx!,
+      currentSelectingPosition!.rowIdx!,
+    );
 
     for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
       List<String> columnText = [];
