@@ -30,6 +30,8 @@ class _GridExportScreenState extends State<GridExportScreen> {
   // Column selection and export options
   final Map<String, bool> selectedColumns = {};
   bool includeHeaders = true;
+  bool ignoreFixedRows = false;
+  String csvSeparator = ',';
   bool showColumnSelection = false;
 
   static const String formatCsv = 'csv';
@@ -117,6 +119,17 @@ class _GridExportScreenState extends State<GridExportScreen> {
     // Initialize rows with dummy data
     rows.addAll(DummyData.generateEmployeeData(30));
 
+    // Make the first 3 rows frozen to demonstrate ignoreFixedRows feature
+    for (var i = 0; i < 3 && i < rows.length; i++) {
+      // Create a new row with frozen property set to start (top)
+      final cells = rows[i].cells;
+      final newRow = TrinaRow(
+        cells: cells,
+        frozen: TrinaRowFrozen.start,
+      );
+      rows[i] = newRow;
+    }
+
     // Initialize column selection (all selected by default)
     for (var column in columns) {
       selectedColumns[column.title] = true;
@@ -151,6 +164,64 @@ class _GridExportScreenState extends State<GridExportScreen> {
                         const Text('Include column headers'),
                       ],
                     ),
+
+                    // Ignore fixed rows option
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: ignoreFixedRows,
+                          onChanged: (value) {
+                            setDialogState(() {
+                              ignoreFixedRows = value ?? false;
+                            });
+                          },
+                        ),
+                        const Text('Ignore frozen/fixed rows'),
+                      ],
+                    ),
+
+                    // CSV specific options
+                    if (formatName == formatCsv) ...[
+                      const SizedBox(height: 8),
+                      const Text('CSV Separator:'),
+                      Row(
+                        children: [
+                          Radio<String>(
+                            value: ',',
+                            groupValue: csvSeparator,
+                            onChanged: (value) {
+                              setDialogState(() {
+                                csvSeparator = value!;
+                              });
+                            },
+                          ),
+                          const Text('Comma (,)'),
+                          const SizedBox(width: 10),
+                          Radio<String>(
+                            value: ';',
+                            groupValue: csvSeparator,
+                            onChanged: (value) {
+                              setDialogState(() {
+                                csvSeparator = value!;
+                              });
+                            },
+                          ),
+                          const Text('Semicolon (;)'),
+                          const SizedBox(width: 10),
+                          Radio<String>(
+                            value: '\t',
+                            groupValue: csvSeparator,
+                            onChanged: (value) {
+                              setDialogState(() {
+                                csvSeparator = value!;
+                              });
+                            },
+                          ),
+                          const Text('Tab'),
+                        ],
+                      ),
+                    ],
+
                     const SizedBox(height: 16),
 
                     // Column selection
@@ -257,6 +328,8 @@ class _GridExportScreenState extends State<GridExportScreen> {
           stateManager: stateManager,
           columns: selectedColumns,
           includeHeaders: includeHeaders,
+          ignoreFixedRows: ignoreFixedRows,
+          separator: csvSeparator,
         );
         saveFilePath = await FileSaver.instance.saveFile(
           name: fileName,
@@ -269,6 +342,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
           stateManager: stateManager,
           columns: selectedColumns,
           includeHeaders: includeHeaders,
+          ignoreFixedRows: ignoreFixedRows,
         );
         saveFilePath = await FileSaver.instance.saveFile(
           name: fileName,
@@ -281,6 +355,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
           stateManager: stateManager,
           columns: selectedColumns,
           includeHeaders: includeHeaders,
+          ignoreFixedRows: ignoreFixedRows,
         );
         saveFilePath = await FileSaver.instance.saveFile(
           name: fileName,
@@ -397,6 +472,23 @@ class _GridExportScreenState extends State<GridExportScreen> {
                 ],
               ),
             ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Note: The first 3 rows are frozen (fixed at the top).',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+                const Text(
+                  'Use the "Ignore frozen/fixed rows" option to exclude them from exports.',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
           Expanded(
             child: TrinaGrid(
               columns: columns,

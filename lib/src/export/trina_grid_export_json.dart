@@ -11,6 +11,7 @@ class TrinaGridExportJson implements TrinaGridExport {
     required TrinaGridStateManager stateManager,
     List<String>? columns,
     bool includeHeaders = true,
+    bool ignoreFixedRows = false,
   }) async {
     // Get columns to export
     final List<TrinaColumn> columnsToExport = _getColumnsToExport(
@@ -38,6 +39,9 @@ class TrinaGridExportJson implements TrinaGridExport {
 
     // Add data rows
     for (final row in rows) {
+      if (ignoreFixedRows && row.frozen != TrinaRowFrozen.none) {
+        continue;
+      }
       final Map<String, dynamic> rowData = {};
       for (final column in columnsToExport) {
         final cell = row.cells[column.field];

@@ -3,6 +3,7 @@
 ## [1.6.4] - 2025. 03. 20
 
 * Use dynamic for column menu delegate, instead of String, update the documentation
+* Add ignoreFixedRows option to CSV, JSON, and PDF exports for better data handling
 
 ## [1.6.3] - 2025. 03. 20
 

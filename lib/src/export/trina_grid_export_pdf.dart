@@ -14,6 +14,7 @@ class TrinaGridExportPdf implements TrinaGridExport {
     required TrinaGridStateManager stateManager,
     List<String>? columns,
     bool includeHeaders = true,
+    bool ignoreFixedRows = false,
     String? title,
     String? creator,
     String? format,
@@ -29,8 +30,12 @@ class TrinaGridExportPdf implements TrinaGridExport {
         header: title != null ? (context) => _getHeader(title: title) : null,
         footer: (context) => _getFooter(context),
         build:
-            (pw.Context context) =>
-                _exportInternal(context, stateManager, columns),
+            (pw.Context context) => _exportInternal(
+              context,
+              stateManager,
+              columns,
+              ignoreFixedRows,
+            ),
       ),
     );
     return await doc.save();
@@ -40,13 +45,14 @@ class TrinaGridExportPdf implements TrinaGridExport {
     pw.Context context,
     TrinaGridStateManager stateManager,
     List<String>? columns,
+    bool ignoreFixedRows,
   ) {
     final columnsToExport = _getColumnsToExport(
       stateManager: stateManager,
       columnNames: columns,
     );
     final rows = stateManager.refRows;
-    return [_table(columnsToExport, rows)];
+    return [_table(columnsToExport, rows, ignoreFixedRows)];
   }
 
   /// Helper method to get the columns to export based on provided column names
@@ -85,7 +91,11 @@ class TrinaGridExportPdf implements TrinaGridExport {
     );
   }
 
-  pw.Widget _table(List<TrinaColumn> columns, List<TrinaRow> rows) {
+  pw.Widget _table(
+    List<TrinaColumn> columns,
+    List<TrinaRow> rows,
+    bool ignoreFixedRows,
+  ) {
     return pw.TableHelper.fromTextArray(
       border: null,
       cellAlignment: pw.Alignment.center,
@@ -106,6 +116,9 @@ class TrinaGridExportPdf implements TrinaGridExport {
       headers: columns.map((column) => column.title).toList(),
       data:
           rows
+              .where(
+                (row) => !ignoreFixedRows || row.frozen == TrinaRowFrozen.none,
+              )
               .map(
                 (row) =>
                     row.cells.entries

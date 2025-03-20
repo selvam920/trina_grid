@@ -10,6 +10,8 @@ class TrinaGridExportCsv implements TrinaGridExport {
     required TrinaGridStateManager stateManager,
     List<String>? columns,
     bool includeHeaders = true,
+    String separator = ',',
+    bool ignoreFixedRows = false,
   }) async {
     // Get visible columns if no specific columns are requested
     final List<TrinaColumn> visibleColumns =
@@ -35,11 +37,14 @@ class TrinaGridExportCsv implements TrinaGridExport {
           visibleColumns
               .map((column) => _escapeCsvField(column.title))
               .toList();
-      csvContent.writeln(headers.join(','));
+      csvContent.writeln(headers.join(separator));
     }
 
     // Add data rows
     for (final row in rows) {
+      if (ignoreFixedRows && row.frozen != TrinaRowFrozen.none) {
+        continue;
+      }
       final List<String> rowData = [];
       for (final column in visibleColumns) {
         final cell = row.cells[column.field];

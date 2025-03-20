@@ -2,6 +2,8 @@
 
 Trina Grid provides multiple export options to convert grid data into different formats for download, sharing, or further processing.
 
+![Export Demo](https://raw.githubusercontent.com/doonfrs/trina_grid/master/doc/assets/export.gif)
+
 ## Available Export Formats
 
 Currently, Trina Grid supports the following export formats:
@@ -19,6 +21,7 @@ Future<dynamic> export({
   required TrinaGridStateManager stateManager,
   List<String>? columns,
   bool includeHeaders = true,
+  bool ignoreFixedRows = false,
   // Additional format-specific options may be available
 });
 ```
@@ -28,6 +31,7 @@ Future<dynamic> export({
 - **stateManager**: Required. The grid's state manager containing data to be exported
 - **columns**: Optional. List of specific column titles to include (if null, exports all visible columns)
 - **includeHeaders**: Optional. Whether to include column headers in the export (default: true)
+- **ignoreFixedRows**: Optional. Whether to exclude frozen/fixed rows from the export (default: false)
 
 ## CSV Export
 
@@ -39,6 +43,8 @@ final String csvData = await csvExport.export(
   stateManager: gridStateManager,
   columns: ['Column A', 'Column B'], // Optional
   includeHeaders: true, // Optional
+  ignoreFixedRows: false, // Optional
+  separator: ',', // Optional - Can be changed to ';', '\t', etc.
 );
 ```
 
@@ -46,6 +52,8 @@ The CSV export:
 
 - Properly escapes fields containing commas, quotes, or newlines
 - Returns a String containing the CSV data
+- Can optionally exclude frozen rows from export
+- Supports custom separators (default is comma, but can be semicolon, tab, etc.)
 
 ## JSON Export
 
@@ -57,6 +65,7 @@ final String jsonData = await jsonExport.export(
   stateManager: gridStateManager,
   columns: ['Column A', 'Column B'], // Optional
   includeHeaders: true, // Optional
+  ignoreFixedRows: false, // Optional
 );
 ```
 
@@ -65,6 +74,7 @@ The JSON export:
 - Returns data as a string containing a JSON array
 - Each row is represented as a JSON object with field names as keys
 - If `includeHeaders` is true, the first object contains header information
+- Can optionally exclude frozen rows from export
 
 ## PDF Export
 
@@ -76,6 +86,7 @@ final Uint8List pdfData = await pdfExport.export(
   stateManager: gridStateManager,
   columns: ['Column A', 'Column B'], // Optional
   includeHeaders: true, // Optional
+  ignoreFixedRows: false, // Optional
   title: 'Grid Export', // Optional
   creator: 'Application Name', // Optional
   format: 'a4', // Optional
@@ -90,6 +101,7 @@ The PDF export:
   - **creator**: Optional. Creator metadata in the PDF
   - **format**: Optional. Page format (defaults to A4 portrait)
 - Includes styled headers and footers with page numbers and timestamps
+- Can optionally exclude frozen rows from export
 
 ## Example Usage
 
@@ -99,17 +111,24 @@ final stateManager = myGrid.stateManager;
 
 // Export to CSV
 final csvExport = TrinaGridExportCsv();
-final String csvData = await csvExport.export(stateManager: stateManager);
+final String csvData = await csvExport.export(
+  stateManager: stateManager,
+  ignoreFixedRows: true, // Exclude frozen rows
+);
 
 // Export to JSON
 final jsonExport = TrinaGridExportJson();
-final String jsonData = await jsonExport.export(stateManager: stateManager);
+final String jsonData = await jsonExport.export(
+  stateManager: stateManager,
+  ignoreFixedRows: true, // Exclude frozen rows
+);
 
 // Export to PDF
 final pdfExport = TrinaGridExportPdf();
 final Uint8List pdfData = await pdfExport.export(
   stateManager: stateManager,
   title: 'My Grid Export',
+  ignoreFixedRows: true, // Exclude frozen rows
 );
 ```
 
