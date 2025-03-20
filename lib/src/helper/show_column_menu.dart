@@ -17,7 +17,7 @@ abstract class TrinaColumnMenuDelegate<T> {
 }
 
 class TrinaColumnMenuDelegateDefault
-    implements TrinaColumnMenuDelegate<String> {
+    implements TrinaColumnMenuDelegate<dynamic> {
   const TrinaColumnMenuDelegateDefault();
 
   static const String defaultMenuUnfreeze = 'unfreeze';
@@ -30,7 +30,7 @@ class TrinaColumnMenuDelegateDefault
   static const String defaultMenuResetFilter = 'resetFilter';
 
   @override
-  List<PopupMenuEntry<String>> buildMenuItems({
+  List<PopupMenuEntry<dynamic>> buildMenuItems({
     required TrinaGridStateManager stateManager,
     required TrinaColumn column,
   }) {
@@ -46,7 +46,7 @@ class TrinaColumnMenuDelegateDefault
     required TrinaGridStateManager stateManager,
     required TrinaColumn column,
     required bool mounted,
-    required String? selected,
+    required dynamic selected,
   }) {
     switch (selected) {
       case defaultMenuUnfreeze:
@@ -107,7 +107,7 @@ Future<T?>? showColumnMenu<T>({
   );
 }
 
-List<PopupMenuEntry<String>> _getDefaultColumnMenuItems({
+List<PopupMenuEntry<dynamic>> _getDefaultColumnMenuItems({
   required TrinaGridStateManager stateManager,
   required TrinaColumn column,
 }) {

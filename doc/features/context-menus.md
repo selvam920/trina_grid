@@ -83,9 +83,9 @@ TrinaColumn(
 TrinaGrid allows you to fully customize the context menu by implementing your own `TrinaColumnMenuDelegate`:
 
 ```dart
-class CustomColumnMenu implements TrinaColumnMenuDelegate<String> {
+class CustomColumnMenu implements TrinaColumnMenuDelegate<dynamic> {
   @override
-  List<PopupMenuEntry<String>> buildMenuItems({
+  List<PopupMenuEntry<dynamic>> buildMenuItems({
     required TrinaGridStateManager stateManager,
     required TrinaColumn column,
   }) {
@@ -127,7 +127,7 @@ TrinaGrid(
 If you want to keep the default menu items and add your own custom items, you can extend the default menu using the following pattern:
 
 ```dart
-class ExtendedColumnMenuDelegate implements TrinaColumnMenuDelegate<String> {
+class ExtendedColumnMenuDelegate implements TrinaColumnMenuDelegate<dynamic> {
   // Custom menu item keys
   static const String customAction1 = 'custom_action_1';
   static const String customAction2 = 'custom_action_2';
@@ -137,7 +137,7 @@ class ExtendedColumnMenuDelegate implements TrinaColumnMenuDelegate<String> {
       const TrinaColumnMenuDelegateDefault();
 
   @override
-  List<PopupMenuEntry<String>> buildMenuItems({
+  List<PopupMenuEntry<dynamic>> buildMenuItems({
     required TrinaGridStateManager stateManager,
     required TrinaColumn column,
   }) {
@@ -237,7 +237,7 @@ You can display different menu items for specific columns by checking the column
 
 ```dart
 @override
-List<PopupMenuEntry<String>> buildMenuItems({
+List<PopupMenuEntry<dynamic>> buildMenuItems({
   required TrinaGridStateManager stateManager,
   required TrinaColumn column,
 }) {

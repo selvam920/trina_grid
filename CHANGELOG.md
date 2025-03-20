@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.6.4] - 2025. 03. 20
+
+* Use dynamic for column menu delegate, instead of String, update the documentation
+
 ## [1.6.3] - 2025. 03. 20
 
 * Fix selected row style

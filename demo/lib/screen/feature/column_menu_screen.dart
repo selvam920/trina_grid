@@ -57,7 +57,7 @@ class _ColumnMenuScreenState extends State<ColumnMenuScreen> {
 }
 
 /// A delegate that combines default column menu with custom items
-class UserColumnMenuDelegate implements TrinaColumnMenuDelegate<String> {
+class UserColumnMenuDelegate implements TrinaColumnMenuDelegate<dynamic> {
   // Custom menu item keys
   static const String moveNextKey = 'moveNext';
   static const String movePreviousKey = 'movePrevious';
@@ -67,7 +67,7 @@ class UserColumnMenuDelegate implements TrinaColumnMenuDelegate<String> {
       const TrinaColumnMenuDelegateDefault();
 
   @override
-  List<PopupMenuEntry<String>> buildMenuItems({
+  List<PopupMenuEntry<dynamic>> buildMenuItems({
     required TrinaGridStateManager stateManager,
     required TrinaColumn column,
   }) {
