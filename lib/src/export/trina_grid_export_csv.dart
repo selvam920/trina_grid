@@ -51,7 +51,7 @@ class TrinaGridExportCsv implements TrinaGridExport {
         final value = cell?.value?.toString() ?? '';
         rowData.add(_escapeCsvField(value));
       }
-      csvContent.writeln(rowData.join(','));
+      csvContent.writeln(rowData.join(separator));
     }
 
     return csvContent.toString();
