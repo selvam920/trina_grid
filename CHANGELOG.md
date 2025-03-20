@@ -4,6 +4,7 @@
 
 * Fix selected row style
 * Include current row with currentSelectedRows list in case of grid selection mode is row.
+* add missing arguments to gridConfiguration.copyWith
 
 ## [1.6.2] - 2025. 03. 19
 
