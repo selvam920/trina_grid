@@ -48,29 +48,48 @@ class _ColumnMenuScreenState extends State<ColumnMenuScreen> {
       body: TrinaGrid(
         columns: columns,
         rows: rows,
-        columnMenuDelegate: _UserColumnMenu(),
+        columnMenuDelegate: UserColumnMenuDelegate(),
       ),
     );
   }
 }
 
-class _UserColumnMenu implements TrinaColumnMenuDelegate<_UserColumnMenuItem> {
+/// A delegate that combines default column menu with custom items
+class UserColumnMenuDelegate implements TrinaColumnMenuDelegate<dynamic> {
+  // Custom menu item keys
+  static const String moveNextKey = 'moveNext';
+  static const String movePreviousKey = 'movePrevious';
+
+  // Default delegate to handle standard menu items
+  final TrinaColumnMenuDelegateDefault _defaultDelegate =
+      const TrinaColumnMenuDelegateDefault();
+
   @override
-  List<PopupMenuEntry<_UserColumnMenuItem>> buildMenuItems({
+  List<PopupMenuEntry<dynamic>> buildMenuItems({
     required TrinaGridStateManager stateManager,
     required TrinaColumn column,
   }) {
+    // Get default menu items
+    final defaultItems = _defaultDelegate.buildMenuItems(
+      stateManager: stateManager,
+      column: column,
+    );
+
+    // Add custom menu items (with a divider if there are default items)
     return [
+      ...defaultItems,
+      if (defaultItems.isNotEmpty) const PopupMenuDivider(),
+      // Custom menu items
       if (column.key != stateManager.columns.last.key)
-        const PopupMenuItem<_UserColumnMenuItem>(
-          value: _UserColumnMenuItem.moveNext,
+        const PopupMenuItem<String>(
+          value: moveNextKey,
           height: 36,
           enabled: true,
           child: Text('Move next', style: TextStyle(fontSize: 13)),
         ),
       if (column.key != stateManager.columns.first.key)
-        const PopupMenuItem<_UserColumnMenuItem>(
-          value: _UserColumnMenuItem.movePrevious,
+        const PopupMenuItem<String>(
+          value: movePreviousKey,
           height: 36,
           enabled: true,
           child: Text('Move previous', style: TextStyle(fontSize: 13)),
@@ -84,10 +103,11 @@ class _UserColumnMenu implements TrinaColumnMenuDelegate<_UserColumnMenuItem> {
     required TrinaGridStateManager stateManager,
     required TrinaColumn column,
     required bool mounted,
-    required _UserColumnMenuItem? selected,
+    required dynamic selected,
   }) {
+    // Handle custom menu items first
     switch (selected) {
-      case _UserColumnMenuItem.moveNext:
+      case moveNextKey:
         final targetColumn = stateManager.columns
             .skipWhile((value) => value.key != column.key)
             .skip(1)
@@ -95,7 +115,7 @@ class _UserColumnMenu implements TrinaColumnMenuDelegate<_UserColumnMenuItem> {
 
         stateManager.moveColumn(column: column, targetColumn: targetColumn);
         break;
-      case _UserColumnMenuItem.movePrevious:
+      case movePreviousKey:
         final targetColumn = stateManager.columns.reversed
             .skipWhile((value) => value.key != column.key)
             .skip(1)
@@ -103,13 +123,18 @@ class _UserColumnMenu implements TrinaColumnMenuDelegate<_UserColumnMenuItem> {
 
         stateManager.moveColumn(column: column, targetColumn: targetColumn);
         break;
-      case null:
+      default:
+        // Pass anything else to the default delegate
+        if (selected is TrinaGridColumnMenuItem) {
+          _defaultDelegate.onSelected(
+            context: context,
+            stateManager: stateManager,
+            column: column,
+            mounted: mounted,
+            selected: selected,
+          );
+        }
         break;
     }
   }
-}
-
-enum _UserColumnMenuItem {
-  moveNext,
-  movePrevious,
 }
