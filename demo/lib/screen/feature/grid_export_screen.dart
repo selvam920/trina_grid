@@ -4,6 +4,8 @@ import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import '../../widget/trina_example_button.dart';
 import '../../widget/trina_example_screen.dart';
@@ -33,6 +35,13 @@ class _GridExportScreenState extends State<GridExportScreen> {
   bool ignoreFixedRows = false;
   String csvSeparator = ',';
   bool showColumnSelection = false;
+
+  // PDF specific options
+  String pdfTitle = 'Trina Grid Export';
+  String pdfCreator = 'Trina Grid Demo';
+  bool pdfLandscape = false;
+  Color headerColor = Colors.blue;
+  Color textColor = Colors.black;
 
   static const String formatCsv = 'csv';
   static const String formatJson = 'json';
@@ -137,6 +146,12 @@ class _GridExportScreenState extends State<GridExportScreen> {
   }
 
   void _showExportOptionsDialog(String formatName) {
+    // Create text controllers with initial values
+    final titleController = TextEditingController(text: pdfTitle);
+    final creatorController = TextEditingController(text: pdfCreator);
+
+    // Function to convert Flutter Color to PdfColor
+
     showDialog(
       context: context,
       builder: (context) {
@@ -146,139 +161,354 @@ class _GridExportScreenState extends State<GridExportScreen> {
               title: Text('Export as $formatName'),
               content: SizedBox(
                 width: 400,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Include headers option
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: includeHeaders,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CheckboxListTile(
+                        title: const Text('Include headers'),
+                        value: includeHeaders,
+                        onChanged: (value) {
+                          setDialogState(() {
+                            includeHeaders = value ?? true;
+                          });
+                        },
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      CheckboxListTile(
+                        title: const Text('Ignore frozen/fixed rows'),
+                        value: ignoreFixedRows,
+                        onChanged: (value) {
+                          setDialogState(() {
+                            ignoreFixedRows = value ?? false;
+                          });
+                        },
+                        contentPadding: EdgeInsets.zero,
+                      ),
+
+                      if (formatName == formatCsv) ...[
+                        const SizedBox(height: 8),
+                        const Text('CSV Separator:'),
+                        Row(
+                          children: [
+                            Radio<String>(
+                              value: ',',
+                              groupValue: csvSeparator,
+                              onChanged: (value) {
+                                setDialogState(() {
+                                  csvSeparator = value!;
+                                });
+                              },
+                            ),
+                            const Text('Comma (,)'),
+                            const SizedBox(width: 10),
+                            Radio<String>(
+                              value: ';',
+                              groupValue: csvSeparator,
+                              onChanged: (value) {
+                                setDialogState(() {
+                                  csvSeparator = value!;
+                                });
+                              },
+                            ),
+                            const Text('Semicolon (;)'),
+                            const SizedBox(width: 10),
+                            Radio<String>(
+                              value: '\t',
+                              groupValue: csvSeparator,
+                              onChanged: (value) {
+                                setDialogState(() {
+                                  csvSeparator = value!;
+                                });
+                              },
+                            ),
+                            const Text('Tab'),
+                          ],
+                        ),
+                      ],
+
+                      if (formatName == formatPdf) ...[
+                        const SizedBox(height: 16),
+                        const Text('PDF Options:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        TextField(
+                          decoration: const InputDecoration(
+                            labelText: 'Title',
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: titleController,
                           onChanged: (value) {
                             setDialogState(() {
-                              includeHeaders = value ?? true;
+                              pdfTitle = value;
                             });
                           },
                         ),
-                        const Text('Include column headers'),
-                      ],
-                    ),
-
-                    // Ignore fixed rows option
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: ignoreFixedRows,
+                        const SizedBox(height: 8),
+                        TextField(
+                          decoration: const InputDecoration(
+                            labelText: 'Creator',
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: creatorController,
                           onChanged: (value) {
                             setDialogState(() {
-                              ignoreFixedRows = value ?? false;
+                              pdfCreator = value;
                             });
                           },
                         ),
-                        const Text('Ignore frozen/fixed rows'),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: pdfLandscape,
+                              onChanged: (value) {
+                                setDialogState(() {
+                                  pdfLandscape = value ?? false;
+                                });
+                              },
+                            ),
+                            const Text('Landscape orientation'),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        const Text('Theme Options:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Text('Header Color: '),
+                            const SizedBox(width: 8),
+                            InkWell(
+                              onTap: () async {
+                                final selectedColor = await showDialog<Color>(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('Pick a header color'),
+                                    content: SingleChildScrollView(
+                                      child: Material(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            for (final colorGroup in [
+                                              Colors.primaries,
+                                              [
+                                                Colors.black,
+                                              ]
+                                            ])
+                                              Wrap(
+                                                children: [
+                                                  for (final color
+                                                      in colorGroup)
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4.0),
+                                                      child: InkWell(
+                                                        onTap: () =>
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(color),
+                                                        child: Container(
+                                                          width: 32,
+                                                          height: 32,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: color,
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .grey),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                if (selectedColor != null) {
+                                  setDialogState(() {
+                                    headerColor = selectedColor;
+                                  });
+                                }
+                              },
+                              child: Container(
+                                width: 40,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  color: headerColor,
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Text('Text Color: '),
+                            const SizedBox(width: 16),
+                            InkWell(
+                              onTap: () async {
+                                final selectedColor = await showDialog<Color>(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('Pick a text color'),
+                                    content: SingleChildScrollView(
+                                      child: Material(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            for (final colorGroup in [
+                                              Colors.primaries,
+                                              [
+                                                Colors.black,
+                                              ]
+                                            ])
+                                              Wrap(
+                                                children: [
+                                                  for (final color
+                                                      in colorGroup)
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4.0),
+                                                      child: InkWell(
+                                                        onTap: () =>
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(color),
+                                                        child: Container(
+                                                          width: 32,
+                                                          height: 32,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: color,
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .grey),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                if (selectedColor != null) {
+                                  setDialogState(() {
+                                    textColor = selectedColor;
+                                  });
+                                }
+                              },
+                              child: Container(
+                                width: 40,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  color: textColor,
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
-                    ),
 
-                    // CSV specific options
-                    if (formatName == formatCsv) ...[
+                      const SizedBox(height: 16),
+
+                      // Column selection
+                      const Text('Select columns to export:'),
                       const SizedBox(height: 8),
-                      const Text('CSV Separator:'),
+
+                      // Select/Deselect all buttons
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Radio<String>(
-                            value: ',',
-                            groupValue: csvSeparator,
-                            onChanged: (value) {
+                          TextButton(
+                            onPressed: () {
                               setDialogState(() {
-                                csvSeparator = value!;
+                                for (var key in selectedColumns.keys) {
+                                  selectedColumns[key] = true;
+                                }
                               });
                             },
+                            child: const Text('Select All'),
                           ),
-                          const Text('Comma (,)'),
-                          const SizedBox(width: 10),
-                          Radio<String>(
-                            value: ';',
-                            groupValue: csvSeparator,
-                            onChanged: (value) {
+                          TextButton(
+                            onPressed: () {
                               setDialogState(() {
-                                csvSeparator = value!;
+                                for (var key in selectedColumns.keys) {
+                                  selectedColumns[key] = false;
+                                }
                               });
                             },
+                            child: const Text('Deselect All'),
                           ),
-                          const Text('Semicolon (;)'),
-                          const SizedBox(width: 10),
-                          Radio<String>(
-                            value: '\t',
-                            groupValue: csvSeparator,
-                            onChanged: (value) {
-                              setDialogState(() {
-                                csvSeparator = value!;
-                              });
-                            },
-                          ),
-                          const Text('Tab'),
                         ],
                       ),
+
+                      // Column checkboxes
+                      Container(
+                        height: 300,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: ListView.builder(
+                          itemCount: columns.length,
+                          itemBuilder: (context, index) {
+                            final column = columns[index];
+                            return CheckboxListTile(
+                              title: Text(column.title),
+                              value: selectedColumns[column.title] ?? false,
+                              onChanged: (value) {
+                                setDialogState(() {
+                                  selectedColumns[column.title] =
+                                      value ?? false;
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      ),
                     ],
-
-                    const SizedBox(height: 16),
-
-                    // Column selection
-                    const Text('Select columns to export:'),
-                    const SizedBox(height: 8),
-
-                    // Select/Deselect all buttons
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            setDialogState(() {
-                              for (var key in selectedColumns.keys) {
-                                selectedColumns[key] = true;
-                              }
-                            });
-                          },
-                          child: const Text('Select All'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setDialogState(() {
-                              for (var key in selectedColumns.keys) {
-                                selectedColumns[key] = false;
-                              }
-                            });
-                          },
-                          child: const Text('Deselect All'),
-                        ),
-                      ],
-                    ),
-
-                    // Column checkboxes
-                    Container(
-                      height: 300,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: ListView.builder(
-                        itemCount: columns.length,
-                        itemBuilder: (context, index) {
-                          final column = columns[index];
-                          return CheckboxListTile(
-                            title: Text(column.title),
-                            value: selectedColumns[column.title] ?? false,
-                            onChanged: (value) {
-                              setDialogState(() {
-                                selectedColumns[column.title] = value ?? false;
-                              });
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
               actions: [
@@ -351,12 +581,63 @@ class _GridExportScreenState extends State<GridExportScreen> {
           mimeType: MimeType.json,
         );
       } else if (formatName == formatPdf) {
-        final content = await TrinaGridExportPdf().export(
-          stateManager: stateManager,
-          columns: selectedColumns,
-          includeHeaders: includeHeaders,
-          ignoreFixedRows: ignoreFixedRows,
+        // Create page format based on orientation
+        final format =
+            pdfLandscape ? PdfPageFormat.a4.landscape : PdfPageFormat.a4;
+
+        // Function to convert Flutter Color to PdfColor
+        PdfColor flutterToPdfColor(Color color) {
+          return PdfColor.fromInt(color.toARGB32());
+        }
+
+        // Create theme data
+        final themeData = pw.ThemeData(
+          tableHeader: pw.TextStyle(
+            color: flutterToPdfColor(headerColor),
+          ),
+          defaultTextStyle: pw.TextStyle(
+            color: flutterToPdfColor(textColor),
+            fontSize: 12,
+          ),
         );
+
+        final content = await TrinaGridExportPdf().export(
+            stateManager: stateManager,
+            columns: selectedColumns,
+            includeHeaders: includeHeaders,
+            ignoreFixedRows: ignoreFixedRows,
+            title: pdfTitle,
+            creator: pdfCreator,
+            pdfSettings: TrinaGridExportPdfSettings(
+              pageTheme: pw.PageTheme(
+                pageFormat: format,
+                theme: themeData,
+              ),
+              cellStyle: pw.TextStyle(
+                color: flutterToPdfColor(textColor),
+                fontSize: 12,
+              ),
+              cellDecoration: (index, data, rowNum) {
+                return pw.BoxDecoration(
+                  border: pw.Border.all(
+                    color: PdfColor.fromInt(0x000000),
+                    width: 0.5,
+                  ),
+                );
+              },
+              headerCellDecoration: pw.BoxDecoration(
+                border: pw.Border.all(
+                  color: PdfColor.fromInt(0x000000),
+                  width: 0.5,
+                ),
+              ),
+              headerStyle: pw.TextStyle(
+                color: flutterToPdfColor(Colors.white),
+              ),
+              headerDecoration: pw.BoxDecoration(
+                color: flutterToPdfColor(headerColor),
+              ),
+            ));
         saveFilePath = await FileSaver.instance.saveFile(
           name: fileName,
           bytes: content,

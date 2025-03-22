@@ -68,3 +68,5 @@ export './src/export/trina_grid_export.dart';
 export './src/export/trina_grid_export_pdf.dart';
 export './src/export/trina_grid_export_csv.dart';
 export './src/export/trina_grid_export_json.dart';
+// Export pdf package types needed for export
+export 'package:pdf/pdf.dart' show PdfPageFormat;

@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.6.5] - 2025. 03. 22
+
+* Add PDF export functionality with customizable options
+* Introduced PDF export capabilities in the grid export feature, allowing users to export data in PDF format.
+* Added options for customizing PDF title, creator, orientation, header and text colors, and styling through a new `TrinaGridExportPdfSettings` class.
+* Updated the export dialog to include PDF-specific settings and improved the user interface for selecting columns to export.
+* Enhanced documentation to reflect new PDF export features and usage examples.
+
+
 ## [1.6.4] - 2025. 03. 20
 
 * Use dynamic for column menu delegate, instead of String, update the documentation

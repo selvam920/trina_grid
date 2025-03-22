@@ -89,7 +89,16 @@ final Uint8List pdfData = await pdfExport.export(
   ignoreFixedRows: false, // Optional
   title: 'Grid Export', // Optional
   creator: 'Application Name', // Optional
-  format: 'a4', // Optional
+  pdfSettings: TrinaGridExportPdfSettings( // Optional - for styling
+    pageTheme: pw.PageTheme(
+      pageFormat: PdfPageFormat.a4.landscape, // Page orientation
+      theme: pw.ThemeData(...), // Theme for the PDF
+    ),
+    headerStyle: pw.TextStyle(...), // Header text style
+    headerDecoration: pw.BoxDecoration(...), // Header cell decoration
+    cellStyle: pw.TextStyle(...), // Cell text style
+    cellDecoration: (index, data, rowNum) => pw.BoxDecoration(...), // Cell decoration
+  ),
 );
 ```
 
@@ -99,9 +108,74 @@ The PDF export:
 - Supports additional PDF-specific parameters:
   - **title**: Optional. Title displayed in the PDF header
   - **creator**: Optional. Creator metadata in the PDF
-  - **format**: Optional. Page format (defaults to A4 portrait)
-- Includes styled headers and footers with page numbers and timestamps
-- Can optionally exclude frozen rows from export
+  - **pdfSettings**: Optional. Advanced styling and layout options:
+    - **pageTheme**: Set page format (A4, Letter, etc.) and orientation (portrait/landscape)
+    - **headerStyle**: Customize the text style for header cells
+    - **headerDecoration**: Customize the background and borders for header cells
+    - **cellStyle**: Customize the text style for data cells
+    - **cellDecoration**: Customize the background and borders for data cells (function based on row/column)
+
+### PDF Styling Example
+
+Here's an example of customizing PDF export with custom colors and styling:
+
+```dart
+// Function to convert Flutter Color to PdfColor
+PdfColor flutterToPdfColor(Color color) {
+  return PdfColor.fromInt(color.toARGB32());
+}
+
+// Create a custom theme
+final themeData = pw.ThemeData(
+  tableHeader: pw.TextStyle(
+    color: flutterToPdfColor(Colors.white),
+  ),
+  defaultTextStyle: pw.TextStyle(
+    color: flutterToPdfColor(Colors.black),
+    fontSize: 12,
+  ),
+);
+
+// Export with custom styling
+final headerColor = Colors.blue;
+final textColor = Colors.black;
+final pdfLandscape = true;
+
+final pdfExport = TrinaGridExportPdf();
+final pdfData = await pdfExport.export(
+  stateManager: stateManager,
+  title: 'My Grid Export',
+  creator: 'Trina Grid Demo',
+  pdfSettings: TrinaGridExportPdfSettings(
+    pageTheme: pw.PageTheme(
+      pageFormat: pdfLandscape ? PdfPageFormat.a4.landscape : PdfPageFormat.a4,
+      theme: themeData,
+    ),
+    cellStyle: pw.TextStyle(
+      color: flutterToPdfColor(textColor),
+      fontSize: 12,
+    ),
+    cellDecoration: (index, data, rowNum) {
+      return pw.BoxDecoration(
+        border: pw.Border.all(
+          color: PdfColor.fromInt(0x000000),
+          width: 0.5,
+        ),
+      );
+    },
+    headerStyle: pw.TextStyle(
+      color: flutterToPdfColor(Colors.white),
+    ),
+    headerDecoration: pw.BoxDecoration(
+      color: flutterToPdfColor(headerColor),
+      border: pw.Border.all(
+        color: PdfColor.fromInt(0x000000),
+        width: 0.5,
+      ),
+    ),
+  ),
+);
+```
 
 ## Example Usage
 
@@ -154,5 +228,31 @@ await FileSaver.instance.saveFile(
   ext: 'csv',
   mimeType: MimeType.csv,
 );
-
 ```
+
+## Column Selection for Export
+
+Trina Grid allows users to select specific columns for export. This is useful when you want to export only certain columns from your grid:
+
+```dart
+// Get selected columns from a UI selection mechanism
+final Map<String, bool> selectedColumns = {
+  'Column A': true,
+  'Column B': false,
+  'Column C': true,
+};
+
+// Extract selected column titles
+final List<String> columnsToExport = selectedColumns.entries
+    .where((entry) => entry.value)
+    .map((entry) => entry.key)
+    .toList();
+
+// Use selected columns in export
+final exportData = await csvExport.export(
+  stateManager: stateManager,
+  columns: columnsToExport,
+);
+```
+
+This approach allows for flexible export options that can be easily integrated with UI components like checkboxes or selection dialogs.
