@@ -35,7 +35,7 @@ class TrinaGridExportCsv implements TrinaGridExport {
     if (includeHeaders) {
       final List<String> headers =
           visibleColumns
-              .map((column) => _escapeCsvField(column.title))
+              .map((column) => _escapeCsvField(column.title, separator))
               .toList();
       csvContent.writeln(headers.join(separator));
     }
@@ -49,7 +49,7 @@ class TrinaGridExportCsv implements TrinaGridExport {
       for (final column in visibleColumns) {
         final cell = row.cells[column.field];
         final value = cell?.value?.toString() ?? '';
-        rowData.add(_escapeCsvField(value));
+        rowData.add(_escapeCsvField(value, separator));
       }
       csvContent.writeln(rowData.join(separator));
     }
@@ -58,10 +58,12 @@ class TrinaGridExportCsv implements TrinaGridExport {
   }
 
   /// Escapes a field for CSV format
-  /// - If the field contains commas, newlines, or double quotes, it is enclosed in double quotes
+  /// - If the field contains the separator, newlines, or double quotes, it is enclosed in double quotes
   /// - Double quotes within the field are escaped by doubling them
-  String _escapeCsvField(String field) {
-    if (field.contains(',') || field.contains('\n') || field.contains('"')) {
+  String _escapeCsvField(String field, String separator) {
+    if (field.contains(separator) ||
+        field.contains('\n') ||
+        field.contains('"')) {
       // Replace double quotes with two double quotes
       final escaped = field.replaceAll('"', '""');
       // Enclose in double quotes
