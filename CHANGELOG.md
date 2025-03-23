@@ -7,6 +7,7 @@
 * Added options for customizing PDF title, creator, orientation, header and text colors, and styling through a new `TrinaGridExportPdfSettings` class.
 * Updated the export dialog to include PDF-specific settings and improved the user interface for selecting columns to export.
 * Enhanced documentation to reflect new PDF export features and usage examples.
+* Export TrinaColumnTypeHasFormat
 
 
 ## [1.6.4] - 2025. 03. 20
