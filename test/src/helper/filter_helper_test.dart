@@ -12,7 +12,8 @@ import '../../mock/shared_mocks.mocks.dart';
 
 void main() {
   group('createFilterRow', () {
-    test('When called without arguments,'
+    test(
+        'When called without arguments,'
         'Should be returned a row filled with default values.', () {
       var row = FilterHelper.createFilterRow();
 
@@ -31,7 +32,8 @@ void main() {
       expect(row.cells[FilterHelper.filterFieldValue]!.value, '');
     });
 
-    test('When called with arguments,'
+    test(
+        'When called with arguments,'
         'Should be returned a row filled with arguments.', () {
       var filter = const TrinaFilterTypeEndsWith();
 
@@ -55,7 +57,8 @@ void main() {
   });
 
   group('convertRowsToFilter', () {
-    test('When called with empty rows, '
+    test(
+        'When called with empty rows, '
         'Should be returned null.', () {
       expect(FilterHelper.convertRowsToFilter([], []), isNull);
     });
@@ -77,7 +80,8 @@ void main() {
         );
       });
 
-      test('filterFieldColumn : All, '
+      test(
+          'filterFieldColumn : All, '
           'filterFieldType : Contains, '
           'filterFieldValue : column1, '
           'true', () {
@@ -93,7 +97,8 @@ void main() {
         );
       });
 
-      test('filterFieldColumn : column2, '
+      test(
+          'filterFieldColumn : column2, '
           'filterFieldType : Contains, '
           'filterFieldValue : column1, '
           'false', () {
@@ -114,7 +119,8 @@ void main() {
         );
       });
 
-      test('filterFieldColumn : column1, '
+      test(
+          'filterFieldColumn : column1, '
           'filterFieldType : StartsWith, '
           'filterFieldValue : column1, '
           'true', () {
@@ -136,7 +142,8 @@ void main() {
         );
       });
 
-      test('When column1 does not exist in enabledFilterColumns, '
+      test(
+          'When column1 does not exist in enabledFilterColumns, '
           'filterFieldColumn : column1, '
           'filterFieldType : Contains, '
           'filterFieldValue : column1, '
@@ -161,7 +168,8 @@ void main() {
         );
       });
 
-      test('filterFieldColumn : All, '
+      test(
+          'filterFieldColumn : All, '
           'filterFieldType : StartsWith, '
           'filterFieldValue : column1, '
           'enabledFilterColumnFields : [column3]'
@@ -225,7 +233,8 @@ void main() {
       );
     });
 
-    test('When filterRows has duplicate column conditions, '
+    test(
+        'When filterRows has duplicate column conditions, '
         'the map should be returned with values.', () {
       final List<TrinaRow> filterRows = [
         TrinaRow(
@@ -258,19 +267,20 @@ void main() {
             return value.keys.contains('column') &&
                 value['column']!.length == 2 &&
                 value['column']![0].keys.contains(
-                  TrinaFilterTypeContains.name,
-                ) &&
+                      TrinaFilterTypeContains.name,
+                    ) &&
                 value['column']![0].values.contains('123') &&
                 value['column']![1].keys.contains(
-                  TrinaFilterTypeEndsWith.name,
-                ) &&
+                      TrinaFilterTypeEndsWith.name,
+                    ) &&
                 value['column']![1].values.contains('456');
           },
         ),
       );
     });
 
-    test('When all columns are included in the filtering conditions, '
+    test(
+        'When all columns are included in the filtering conditions, '
         'the map should be returned with default value all.', () {
       final List<TrinaRow> filterRows = [
         TrinaRow(
@@ -308,7 +318,8 @@ void main() {
       );
     });
 
-    test('When allField is changed to allColumns, '
+    test(
+        'When allField is changed to allColumns, '
         'the map should be returned with default value allColumns.', () {
       final List<TrinaRow> filterRows = [
         TrinaRow(
@@ -351,7 +362,8 @@ void main() {
   });
 
   group('isFilteredColumn', () {
-    test('filterRows : null, empty, '
+    test(
+        'filterRows : null, empty, '
         'Should be returned false.', () {
       expect(
         FilterHelper.isFilteredColumn(
@@ -378,7 +390,8 @@ void main() {
       );
     });
 
-    test('filterRows : [All columns], '
+    test(
+        'filterRows : [All columns], '
         'Should be returned true.', () {
       expect(
         FilterHelper.isFilteredColumn(
@@ -393,7 +406,8 @@ void main() {
       );
     });
 
-    test('filterRows : [column], '
+    test(
+        'filterRows : [column], '
         'Should be returned true.', () {
       expect(
         FilterHelper.isFilteredColumn(
@@ -408,7 +422,8 @@ void main() {
       );
     });
 
-    test('filterRows : [non_exists_column], '
+    test(
+        'filterRows : [non_exists_column], '
         'Should be returned false.', () {
       expect(
         FilterHelper.isFilteredColumn(
@@ -428,8 +443,7 @@ void main() {
     late bool Function(dynamic a, dynamic b) Function(
       TrinaFilterType filterType, {
       TrinaColumn? column,
-    })
-    makeCompareFunction;
+    }) makeCompareFunction;
 
     setUp(() {
       makeCompareFunction = (
@@ -660,10 +674,9 @@ void main() {
             columns: columns,
             filterRows: [
               FilterHelper.createFilterRow(
-                columnField:
-                    columns[0].enableFilterMenuItem
-                        ? columns[0].field
-                        : FilterHelper.filterFieldAllColumns,
+                columnField: columns[0].enableFilterMenuItem
+                    ? columns[0].field
+                    : FilterHelper.filterFieldAllColumns,
                 filterType: columns[0].defaultFilter,
               ),
             ],
@@ -932,7 +945,8 @@ void main() {
       },
     );
 
-    testWidgets('When currentSelectingRows is empty, '
+    testWidgets(
+        'When currentSelectingRows is empty, '
         'tapping the remove icon should call removeCurrentRow.', (
       tester,
     ) async {
@@ -966,7 +980,8 @@ void main() {
       verify(stateManager.removeCurrentRow()).called(1);
     });
 
-    testWidgets('When currentSelectingRows is not empty, '
+    testWidgets(
+        'When currentSelectingRows is not empty, '
         'tapping the remove icon should call removeRows.', (tester) async {
       final stateManager = MockTrinaGridStateManager();
       const configuration = TrinaGridConfiguration();

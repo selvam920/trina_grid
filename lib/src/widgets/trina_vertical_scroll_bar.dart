@@ -201,14 +201,14 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                 builder: (context, viewportExtent, _) {
                   final double thumbHeight =
                       (viewportExtent / (viewportExtent + scrollExtent)) *
-                      widget.height;
+                          widget.height;
 
                   return ValueListenableBuilder<double>(
                     valueListenable: widget.verticalScrollOffsetNotifier,
                     builder: (context, scrollOffset, _) {
                       final double thumbPosition =
                           (scrollOffset / scrollExtent) *
-                          (widget.height - thumbHeight);
+                              (widget.height - thumbHeight);
 
                       return SizedBox(
                         width: scrollConfig.thickness + 4, // Add padding
@@ -223,11 +223,9 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                   horizontal: 2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color:
-                                      _hovering
-                                          ? scrollConfig
-                                              .effectiveTrackHoverColor
-                                          : scrollConfig.effectiveTrackColor,
+                                  color: _hovering
+                                      ? scrollConfig.effectiveTrackHoverColor
+                                      : scrollConfig.effectiveTrackColor,
                                   borderRadius: BorderRadius.circular(
                                     scrollConfig.effectiveRadius,
                                   ),
@@ -237,16 +235,15 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                             if (scrollConfig.thumbVisible)
                               Positioned(
                                 top: thumbPosition.isNaN ? 0 : thumbPosition,
-                                height:
-                                    thumbHeight.isNaN
-                                        ? widget.height
-                                        : thumbHeight.clamp(
-                                          scrollConfig.minThumbLength >
-                                                  widget.height
-                                              ? widget.height
-                                              : scrollConfig.minThumbLength,
-                                          widget.height,
-                                        ),
+                                height: thumbHeight.isNaN
+                                    ? widget.height
+                                    : thumbHeight.clamp(
+                                        scrollConfig.minThumbLength >
+                                                widget.height
+                                            ? widget.height
+                                            : scrollConfig.minThumbLength,
+                                        widget.height,
+                                      ),
                                 width: scrollConfig.thickness,
                                 right: 2,
                                 child: MouseRegion(
@@ -269,75 +266,69 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                     onVerticalDragStart:
                                         scrollConfig.isDraggable
                                             ? (details) {
-                                              setState(() {
-                                                _isDragging = true;
-                                              });
-                                            }
-                                            : null,
-                                    onVerticalDragUpdate:
-                                        scrollConfig.isDraggable
-                                            ? (details) {
-                                              // Direct thumb manipulation approach
-                                              final double dragDelta =
-                                                  details.delta.dy;
-
-                                              // Calculate how much to scroll based on thumb movement
-                                              // The available space for the thumb to move is (widget.height - thumbHeight)
-                                              // The total scrollable content is scrollExtent
-                                              final double scrollableRatio =
-                                                  scrollExtent /
-                                                  (widget.height - thumbHeight);
-                                              final double scrollDelta =
-                                                  dragDelta * scrollableRatio;
-
-                                              // Get the scroll controller
-                                              final scrollController =
-                                                  widget
-                                                      .stateManager
-                                                      .scroll
-                                                      .bodyRowsVertical;
-                                              if (scrollController != null) {
-                                                // Apply the scroll by adding delta to current position
-                                                final currentOffset =
-                                                    scrollController.offset;
-                                                final newOffset =
-                                                    (currentOffset +
-                                                            scrollDelta)
-                                                        .clamp(
-                                                          0.0,
-                                                          scrollController
-                                                              .position
-                                                              .maxScrollExtent,
-                                                        );
-
-                                                // Jump to the new position
-                                                scrollController.jumpTo(
-                                                  newOffset,
-                                                );
+                                                setState(() {
+                                                  _isDragging = true;
+                                                });
                                               }
-                                            }
                                             : null,
-                                    onVerticalDragEnd:
-                                        scrollConfig.isDraggable
-                                            ? (_) {
-                                              setState(() {
-                                                _isDragging = false;
-                                                if (!scrollConfig
-                                                        .isAlwaysShown &&
-                                                    !_hovering) {
-                                                  _fadeController.reverse();
-                                                }
-                                              });
+                                    onVerticalDragUpdate: scrollConfig
+                                            .isDraggable
+                                        ? (details) {
+                                            // Direct thumb manipulation approach
+                                            final double dragDelta =
+                                                details.delta.dy;
+
+                                            // Calculate how much to scroll based on thumb movement
+                                            // The available space for the thumb to move is (widget.height - thumbHeight)
+                                            // The total scrollable content is scrollExtent
+                                            final double scrollableRatio =
+                                                scrollExtent /
+                                                    (widget.height -
+                                                        thumbHeight);
+                                            final double scrollDelta =
+                                                dragDelta * scrollableRatio;
+
+                                            // Get the scroll controller
+                                            final scrollController = widget
+                                                .stateManager
+                                                .scroll
+                                                .bodyRowsVertical;
+                                            if (scrollController != null) {
+                                              // Apply the scroll by adding delta to current position
+                                              final currentOffset =
+                                                  scrollController.offset;
+                                              final newOffset =
+                                                  (currentOffset + scrollDelta)
+                                                      .clamp(
+                                                0.0,
+                                                scrollController
+                                                    .position.maxScrollExtent,
+                                              );
+
+                                              // Jump to the new position
+                                              scrollController.jumpTo(
+                                                newOffset,
+                                              );
                                             }
-                                            : null,
+                                          }
+                                        : null,
+                                    onVerticalDragEnd: scrollConfig.isDraggable
+                                        ? (_) {
+                                            setState(() {
+                                              _isDragging = false;
+                                              if (!scrollConfig.isAlwaysShown &&
+                                                  !_hovering) {
+                                                _fadeController.reverse();
+                                              }
+                                            });
+                                          }
+                                        : null,
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color:
-                                            _isThumbHovered || _isDragging
-                                                ? scrollConfig
-                                                    .effectiveThumbHoverColor
-                                                : scrollConfig
-                                                    .effectiveThumbColor,
+                                        color: _isThumbHovered || _isDragging
+                                            ? scrollConfig
+                                                .effectiveThumbHoverColor
+                                            : scrollConfig.effectiveThumbColor,
                                         borderRadius: BorderRadius.circular(
                                           scrollConfig.effectiveRadius,
                                         ),

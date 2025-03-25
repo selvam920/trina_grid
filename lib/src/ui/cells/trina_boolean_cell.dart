@@ -52,8 +52,7 @@ class TrinaBooleanCellState extends State<TrinaBooleanCell>
 
     final rowsHeight = _items.length * widget.stateManager.rowTotalHeight;
 
-    popupHeight =
-        widget.stateManager.configuration.style.columnHeight +
+    popupHeight = widget.stateManager.configuration.style.columnHeight +
         rowsHeight +
         TrinaGridSettings.gridInnerSpacing +
         widget.stateManager.configuration.style.gridBorderWidth;
@@ -72,30 +71,28 @@ class TrinaBooleanCellState extends State<TrinaBooleanCell>
         enableFilterMenuItem: false,
         enableHideColumnMenuItem: false,
         enableSetColumnsMenuItem: false,
-        renderer:
-            widget.column.type.boolean.builder == null
-                ? (rendererContext) {
-                  switch (rendererContext.cell.value) {
-                    case true:
-                      return Text(widget.column.type.boolean.trueText);
-                    case false:
-                      return Text(widget.column.type.boolean.falseText);
-                    default:
-                      return const SizedBox.shrink();
-                  }
+        renderer: widget.column.type.boolean.builder == null
+            ? (rendererContext) {
+                switch (rendererContext.cell.value) {
+                  case true:
+                    return Text(widget.column.type.boolean.trueText);
+                  case false:
+                    return Text(widget.column.type.boolean.falseText);
+                  default:
+                    return const SizedBox.shrink();
                 }
-                : (rendererContext) {
-                  var item = _items[rendererContext.rowIdx];
+              }
+            : (rendererContext) {
+                var item = _items[rendererContext.rowIdx];
 
-                  return widget.column.type.boolean.builder!(item);
-                },
+                return widget.column.type.boolean.builder!(item);
+              },
       ),
     ];
 
-    popupRows =
-        _items.map((dynamic item) {
-          return TrinaRow(cells: {widget.column.title: TrinaCell(value: item)});
-        }).toList();
+    popupRows = _items.map((dynamic item) {
+      return TrinaRow(cells: {widget.column.title: TrinaCell(value: item)});
+    }).toList();
   }
 
   @override

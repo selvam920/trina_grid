@@ -47,17 +47,14 @@ class TrinaSelectCellState extends State<TrinaSelectCell>
 
     enableColumnFilter = widget.column.type.select.enableColumnFilter;
 
-    final columnFilterHeight =
-        enableColumnFilter
-            ? widget.stateManager.configuration.style.columnFilterHeight
-            : 0;
+    final columnFilterHeight = enableColumnFilter
+        ? widget.stateManager.configuration.style.columnFilterHeight
+        : 0;
 
-    final rowsHeight =
-        widget.column.type.select.items.length *
+    final rowsHeight = widget.column.type.select.items.length *
         widget.stateManager.rowTotalHeight;
 
-    popupHeight =
-        widget.stateManager.configuration.style.columnHeight +
+    popupHeight = widget.stateManager.configuration.style.columnHeight +
         columnFilterHeight +
         rowsHeight +
         TrinaGridSettings.gridInnerSpacing +
@@ -76,22 +73,20 @@ class TrinaSelectCellState extends State<TrinaSelectCell>
         enableFilterMenuItem: enableColumnFilter,
         enableHideColumnMenuItem: false,
         enableSetColumnsMenuItem: false,
-        renderer:
-            widget.column.type.select.builder == null
-                ? null
-                : (rendererContext) {
-                  var item =
-                      widget.column.type.select.items[rendererContext.rowIdx];
+        renderer: widget.column.type.select.builder == null
+            ? null
+            : (rendererContext) {
+                var item =
+                    widget.column.type.select.items[rendererContext.rowIdx];
 
-                  return widget.column.type.select.builder!(item);
-                },
+                return widget.column.type.select.builder!(item);
+              },
       ),
     ];
 
-    popupRows =
-        widget.column.type.select.items.map((dynamic item) {
-          return TrinaRow(cells: {widget.column.title: TrinaCell(value: item)});
-        }).toList();
+    popupRows = widget.column.type.select.items.map((dynamic item) {
+      return TrinaRow(cells: {widget.column.title: TrinaCell(value: item)});
+    }).toList();
   }
 
   @override

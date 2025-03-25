@@ -11,7 +11,7 @@ import '../ui/ui.dart';
 /// using the [TrinaLazyPagination] or [TrinaInfinityScrollRows] widgets.
 class TrinaPagination extends TrinaStatefulWidget {
   const TrinaPagination(this.stateManager, {this.pageSizeToMove, super.key})
-    : assert(pageSizeToMove == null || pageSizeToMove > 0);
+      : assert(pageSizeToMove == null || pageSizeToMove > 0);
 
   final TrinaGridStateManager stateManager;
 
@@ -165,10 +165,9 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
     return TextStyle(
       fontSize:
           isCurrentIndex ? stateManager.configuration.style.iconSize : null,
-      color:
-          isCurrentIndex
-              ? stateManager.configuration.style.activatedBorderColor
-              : stateManager.configuration.style.iconColor,
+      color: isCurrentIndex
+          ? stateManager.configuration.style.activatedBorderColor
+          : stateManager.configuration.style.iconColor,
     );
   }
 
@@ -215,10 +214,9 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
                     color: iconColor,
                     disabledColor: disabledIconColor,
                     splashRadius: _iconSplashRadius,
-                    mouseCursor:
-                        _isFirstPage
-                            ? SystemMouseCursors.basic
-                            : SystemMouseCursors.click,
+                    mouseCursor: _isFirstPage
+                        ? SystemMouseCursors.basic
+                        : SystemMouseCursors.click,
                   ),
                   IconButton(
                     onPressed: _isFirstPage ? null : _beforePage,
@@ -226,10 +224,9 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
                     color: iconColor,
                     disabledColor: disabledIconColor,
                     splashRadius: _iconSplashRadius,
-                    mouseCursor:
-                        _isFirstPage
-                            ? SystemMouseCursors.basic
-                            : SystemMouseCursors.click,
+                    mouseCursor: _isFirstPage
+                        ? SystemMouseCursors.basic
+                        : SystemMouseCursors.click,
                   ),
                   ..._pageNumbers.map(_makeNumberButton),
                   IconButton(
@@ -238,10 +235,9 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
                     color: iconColor,
                     disabledColor: disabledIconColor,
                     splashRadius: _iconSplashRadius,
-                    mouseCursor:
-                        _isLastPage
-                            ? SystemMouseCursors.basic
-                            : SystemMouseCursors.click,
+                    mouseCursor: _isLastPage
+                        ? SystemMouseCursors.basic
+                        : SystemMouseCursors.click,
                   ),
                   IconButton(
                     onPressed: _isLastPage ? null : _lastPage,
@@ -249,10 +245,9 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
                     color: iconColor,
                     disabledColor: disabledIconColor,
                     splashRadius: _iconSplashRadius,
-                    mouseCursor:
-                        _isLastPage
-                            ? SystemMouseCursors.basic
-                            : SystemMouseCursors.click,
+                    mouseCursor: _isLastPage
+                        ? SystemMouseCursors.basic
+                        : SystemMouseCursors.click,
                   ),
                 ],
               ),

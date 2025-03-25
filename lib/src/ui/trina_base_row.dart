@@ -46,10 +46,9 @@ class TrinaBaseRow extends StatelessWidget {
   }
 
   void _handleOnAccept(DragTargetDetails<TrinaRow> draggingRow) async {
-    final draggingRows =
-        stateManager.currentSelectingRows.isNotEmpty
-            ? stateManager.currentSelectingRows
-            : [draggingRow.data];
+    final draggingRows = stateManager.currentSelectingRows.isNotEmpty
+        ? stateManager.currentSelectingRows
+        : [draggingRow.data];
 
     stateManager.eventManager!.addEvent(
       TrinaGridDragRowsEvent(rows: draggingRows, targetIdx: rowIdx),
@@ -78,28 +77,27 @@ class TrinaBaseRow extends StatelessWidget {
       enableRowColorAnimation:
           stateManager.configuration.style.enableRowColorAnimation,
       key: ValueKey('rowContainer_${row.key}'),
-      child:
-          visibilityLayout
-              ? TrinaVisibilityLayout(
-                key: ValueKey('rowContainer_${row.key}_row'),
-                delegate: _RowCellsLayoutDelegate(
-                  stateManager: stateManager,
-                  columns: columns,
-                  textDirection: stateManager.textDirection,
-                ),
-                scrollController: stateManager.scroll.bodyRowsHorizontal!,
-                initialViewportDimension: MediaQuery.of(dragContext).size.width,
-                children: columns.map(_makeCell).toList(growable: false),
-              )
-              : CustomMultiChildLayout(
-                key: ValueKey('rowContainer_${row.key}_row'),
-                delegate: _RowCellsLayoutDelegate(
-                  stateManager: stateManager,
-                  columns: columns,
-                  textDirection: stateManager.textDirection,
-                ),
-                children: columns.map(_makeCell).toList(growable: false),
+      child: visibilityLayout
+          ? TrinaVisibilityLayout(
+              key: ValueKey('rowContainer_${row.key}_row'),
+              delegate: _RowCellsLayoutDelegate(
+                stateManager: stateManager,
+                columns: columns,
+                textDirection: stateManager.textDirection,
               ),
+              scrollController: stateManager.scroll.bodyRowsHorizontal!,
+              initialViewportDimension: MediaQuery.of(dragContext).size.width,
+              children: columns.map(_makeCell).toList(growable: false),
+            )
+          : CustomMultiChildLayout(
+              key: ValueKey('rowContainer_${row.key}_row'),
+              delegate: _RowCellsLayoutDelegate(
+                stateManager: stateManager,
+                columns: columns,
+                textDirection: stateManager.textDirection,
+              ),
+              children: columns.map(_makeCell).toList(growable: false),
+            ),
     );
   }
 
@@ -215,10 +213,9 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
 
   BoxDecoration _decoration = const BoxDecoration();
 
-  Color get _oddRowColor =>
-      stateManager.configuration.style.oddRowColor == null
-          ? stateManager.configuration.style.rowColor
-          : stateManager.configuration.style.oddRowColor!;
+  Color get _oddRowColor => stateManager.configuration.style.oddRowColor == null
+      ? stateManager.configuration.style.rowColor
+      : stateManager.configuration.style.oddRowColor!;
 
   Color get _evenRowColor =>
       stateManager.configuration.style.evenRowColor == null
@@ -285,48 +282,41 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
       rowColor = stateManager.configuration.style.rowHoveredColor;
     }
 
-    final frozenBorder =
-        widget.row.frozen != TrinaRowFrozen.none
-            ? Border(
-              top: BorderSide(
-                width: TrinaGridSettings.rowBorderWidth,
-                color: stateManager.configuration.style.frozenRowBorderColor,
-              ),
-              bottom: BorderSide(
-                width: TrinaGridSettings.rowBorderWidth,
-                color: stateManager.configuration.style.frozenRowBorderColor,
-              ),
-            )
-            : null;
+    final frozenBorder = widget.row.frozen != TrinaRowFrozen.none
+        ? Border(
+            top: BorderSide(
+              width: TrinaGridSettings.rowBorderWidth,
+              color: stateManager.configuration.style.frozenRowBorderColor,
+            ),
+            bottom: BorderSide(
+              width: TrinaGridSettings.rowBorderWidth,
+              color: stateManager.configuration.style.frozenRowBorderColor,
+            ),
+          )
+        : null;
 
     return BoxDecoration(
       color: rowColor,
-      border:
-          frozenBorder ??
+      border: frozenBorder ??
           Border(
-            top:
-                isTopDragTarget
+            top: isTopDragTarget
+                ? BorderSide(
+                    width: TrinaGridSettings.rowBorderWidth,
+                    color:
+                        stateManager.configuration.style.activatedBorderColor,
+                  )
+                : BorderSide.none,
+            bottom: isBottomDragTarget
+                ? BorderSide(
+                    width: TrinaGridSettings.rowBorderWidth,
+                    color:
+                        stateManager.configuration.style.activatedBorderColor,
+                  )
+                : stateManager.configuration.style.enableCellBorderHorizontal
                     ? BorderSide(
-                      width: TrinaGridSettings.rowBorderWidth,
-                      color:
-                          stateManager.configuration.style.activatedBorderColor,
-                    )
-                    : BorderSide.none,
-            bottom:
-                isBottomDragTarget
-                    ? BorderSide(
-                      width: TrinaGridSettings.rowBorderWidth,
-                      color:
-                          stateManager.configuration.style.activatedBorderColor,
-                    )
-                    : stateManager
-                        .configuration
-                        .style
-                        .enableCellBorderHorizontal
-                    ? BorderSide(
-                      width: TrinaGridSettings.rowBorderWidth,
-                      color: stateManager.configuration.style.borderColor,
-                    )
+                        width: TrinaGridSettings.rowBorderWidth,
+                        color: stateManager.configuration.style.borderColor,
+                      )
                     : BorderSide.none,
           ),
     );
@@ -361,10 +351,10 @@ class _AnimatedOrNormalContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return enable
         ? AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          decoration: decoration,
-          child: child,
-        )
+            duration: const Duration(milliseconds: 300),
+            decoration: decoration,
+            child: child,
+          )
         : DecoratedBox(decoration: decoration, child: child);
   }
 }

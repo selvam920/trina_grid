@@ -34,14 +34,13 @@ class TrinaGridExportPdf implements TrinaGridExport {
         mainAxisAlignment: pw.MainAxisAlignment.start,
         header: title != null ? (context) => _getHeader(title: title) : null,
         footer: (context) => _getFooter(context),
-        build:
-            (pw.Context context) => _exportInternal(
-              context,
-              stateManager,
-              columns,
-              ignoreFixedRows,
-              pdfSettings,
-            ),
+        build: (pw.Context context) => _exportInternal(
+          context,
+          stateManager,
+          columns,
+          ignoreFixedRows,
+          pdfSettings,
+        ),
       ),
     );
     return await doc.save();
@@ -105,11 +104,11 @@ class TrinaGridExportPdf implements TrinaGridExport {
       cellHeight: pdfSettings?.cellHeight ?? 20,
       headerAlignment: pdfSettings?.headerAlignment ?? pw.Alignment.center,
       cellPadding: pdfSettings?.cellPadding ?? const pw.EdgeInsets.all(1),
-      cellDecoration:
-          pdfSettings?.cellDecoration ??
+      cellDecoration: pdfSettings?.cellDecoration ??
           (index, data, rowNum) => pw.BoxDecoration(
-            border: pw.Border.all(color: PdfColor.fromInt(0x000000), width: .5),
-          ),
+                border:
+                    pw.Border.all(color: PdfColor.fromInt(0x000000), width: .5),
+              ),
       cellAlignments: pdfSettings?.cellAlignments,
       cellStyle: pdfSettings?.cellStyle,
       oddCellStyle: pdfSettings?.oddCellStyle,
@@ -119,8 +118,7 @@ class TrinaGridExportPdf implements TrinaGridExport {
       headerStyle: pdfSettings?.headerStyle,
       headerFormat: pdfSettings?.headerFormat,
       headerCount: pdfSettings?.headerCount ?? 1,
-      headerDecoration:
-          pdfSettings?.headerDecoration ??
+      headerDecoration: pdfSettings?.headerDecoration ??
           pw.BoxDecoration(
             border: pw.Border.all(
               color: PdfColor.fromInt(0x000000),
@@ -139,19 +137,17 @@ class TrinaGridExportPdf implements TrinaGridExport {
       cellBuilder: pdfSettings?.cellBuilder,
       textStyleBuilder: pdfSettings?.textStyleBuilder,
       headers: columns.map((column) => column.title).toList(),
-      data:
-          rows
-              .where(
-                (row) => !ignoreFixedRows || row.frozen == TrinaRowFrozen.none,
-              )
-              .map(
-                (row) =>
-                    columns.map((column) {
-                      final cell = row.cells[column.field];
-                      return cell?.value?.toString() ?? '';
-                    }).toList(),
-              )
-              .toList(),
+      data: rows
+          .where(
+            (row) => !ignoreFixedRows || row.frozen == TrinaRowFrozen.none,
+          )
+          .map(
+            (row) => columns.map((column) {
+              final cell = row.cells[column.field];
+              return cell?.value?.toString() ?? '';
+            }).toList(),
+          )
+          .toList(),
     );
   }
 

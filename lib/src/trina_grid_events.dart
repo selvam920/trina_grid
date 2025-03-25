@@ -128,7 +128,7 @@ class TrinaGridOnRowCheckedOneEvent extends TrinaGridOnRowCheckedEvent {
 /// Argument of [TrinaGrid.onRowChecked] callback when all checkboxes of the column are tapped.
 class TrinaGridOnRowCheckedAllEvent extends TrinaGridOnRowCheckedEvent {
   const TrinaGridOnRowCheckedAllEvent({super.isChecked})
-    : super(row: null, rowIdx: null);
+      : super(row: null, rowIdx: null);
 }
 
 /// The argument of the [TrinaGrid.onRowDoubleTap] callback

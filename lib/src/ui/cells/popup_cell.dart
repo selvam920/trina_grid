@@ -58,11 +58,10 @@ mixin PopupCellState<T extends PopupCell> on State<T>
   void initState() {
     super.initState();
 
-    textController =
-        TextEditingController()
-          ..text = widget.column.formattedValueForDisplayInEditing(
-            widget.cell.value,
-          );
+    textController = TextEditingController()
+      ..text = widget.column.formattedValueForDisplayInEditing(
+        widget.cell.value,
+      );
 
     textFocus = FocusNode(onKeyEvent: _handleKeyboardFocusOnKey);
   }
@@ -90,8 +89,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       onSelected: onSelected,
       columns: popupColumns,
       rows: popupRows,
-      width:
-          popupColumns.fold<double>(0, (previous, column) {
+      width: popupColumns.fold<double>(0, (previous, column) {
             return previous + column.width;
           }) +
           1,
@@ -226,15 +224,14 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       decoration: InputDecoration(
         border: const OutlineInputBorder(borderSide: BorderSide.none),
         contentPadding: EdgeInsets.zero,
-        suffixIcon:
-            icon == null
-                ? null
-                : IconButton(
-                  icon: Icon(icon),
-                  color: widget.stateManager.configuration.style.iconColor,
-                  iconSize: widget.stateManager.configuration.style.iconSize,
-                  onPressed: openPopup,
-                ),
+        suffixIcon: icon == null
+            ? null
+            : IconButton(
+                icon: Icon(icon),
+                color: widget.stateManager.configuration.style.iconColor,
+                iconSize: widget.stateManager.configuration.style.iconSize,
+                onPressed: openPopup,
+              ),
       ),
       maxLines: 1,
       textAlignVertical: TextAlignVertical.center,

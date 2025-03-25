@@ -115,14 +115,12 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
     _columns = _getColumns();
 
     // Get frozen rows from the original list to keep them across pagination
-    _frozenTopRows =
-        stateManager.refRows.originalList
-            .where((row) => row.frozen == TrinaRowFrozen.start)
-            .toList();
-    _frozenBottomRows =
-        stateManager.refRows.originalList
-            .where((row) => row.frozen == TrinaRowFrozen.end)
-            .toList();
+    _frozenTopRows = stateManager.refRows.originalList
+        .where((row) => row.frozen == TrinaRowFrozen.start)
+        .toList();
+    _frozenBottomRows = stateManager.refRows.originalList
+        .where((row) => row.frozen == TrinaRowFrozen.end)
+        .toList();
 
     // Get non-frozen rows from the current page
     _rows = stateManager.refRows;
@@ -193,15 +191,13 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                           // Frozen top rows
                           if (_frozenTopRows.isNotEmpty)
                             Column(
-                              children:
-                                  _frozenTopRows
-                                      .asMap()
-                                      .entries
-                                      .map(
-                                        (e) =>
-                                            _buildRow(context, e.value, e.key),
-                                      )
-                                      .toList(),
+                              children: _frozenTopRows
+                                  .asMap()
+                                  .entries
+                                  .map(
+                                    (e) => _buildRow(context, e.value, e.key),
+                                  )
+                                  .toList(),
                             ),
                           // Scrollable rows
                           Expanded(
@@ -210,36 +206,33 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                               scrollDirection: Axis.vertical,
                               physics: const ClampingScrollPhysics(),
                               itemCount: _scrollableRows.length,
-                              itemExtent:
-                                  stateManager.rowWrapper != null
-                                      ? null
-                                      : stateManager.rowTotalHeight,
+                              itemExtent: stateManager.rowWrapper != null
+                                  ? null
+                                  : stateManager.rowTotalHeight,
                               addRepaintBoundaries: false,
-                              itemBuilder:
-                                  (ctx, i) => _buildRow(
-                                    context,
-                                    _scrollableRows[i],
-                                    i + _frozenTopRows.length,
-                                  ),
+                              itemBuilder: (ctx, i) => _buildRow(
+                                context,
+                                _scrollableRows[i],
+                                i + _frozenTopRows.length,
+                              ),
                             ),
                           ),
                           // Frozen bottom rows
                           if (_frozenBottomRows.isNotEmpty)
                             Column(
-                              children:
-                                  _frozenBottomRows
-                                      .asMap()
-                                      .entries
-                                      .map(
-                                        (e) => _buildRow(
-                                          context,
-                                          e.value,
-                                          e.key +
-                                              _frozenTopRows.length +
-                                              _scrollableRows.length,
-                                        ),
-                                      )
-                                      .toList(),
+                              children: _frozenBottomRows
+                                  .asMap()
+                                  .entries
+                                  .map(
+                                    (e) => _buildRow(
+                                      context,
+                                      e.value,
+                                      e.key +
+                                          _frozenTopRows.length +
+                                          _scrollableRows.length,
+                                    ),
+                                  )
+                                  .toList(),
                             ),
                         ],
                       ),
@@ -297,7 +290,7 @@ class ListResizeDelegate extends SingleChildLayoutDelegate {
   List<TrinaColumn> columns;
 
   ListResizeDelegate(this.stateManager, this.columns)
-    : super(relayout: stateManager.resizingChangeNotifier);
+      : super(relayout: stateManager.resizingChangeNotifier);
 
   @override
   bool shouldRelayout(covariant SingleChildLayoutDelegate oldDelegate) {

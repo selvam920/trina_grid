@@ -152,10 +152,9 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void _handleOnChanged(String value) {
-    _cellEditingStatus =
-        formattedValue != value.toString()
-            ? _CellEditingStatus.changed
-            : _initialCellValue.toString() == value.toString()
+    _cellEditingStatus = formattedValue != value.toString()
+        ? _CellEditingStatus.changed
+        : _initialCellValue.toString() == value.toString()
             ? _CellEditingStatus.init
             : _CellEditingStatus.updated;
   }
@@ -180,13 +179,12 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return KeyEventResult.handled;
     }
 
-    final skip =
-        !(keyManager.isVertical ||
-            _moveHorizontal(keyManager) ||
-            keyManager.isEsc ||
-            keyManager.isTab ||
-            keyManager.isF3 ||
-            keyManager.isEnter);
+    final skip = !(keyManager.isVertical ||
+        _moveHorizontal(keyManager) ||
+        keyManager.isEsc ||
+        keyManager.isTab ||
+        keyManager.isF3 ||
+        keyManager.isEnter);
 
     // Movement and enter key, non-editable cell left and right movement, etc. key input is propagated to text field.
     if (skip) {

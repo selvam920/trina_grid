@@ -298,10 +298,10 @@ mixin CellState implements ITrinaGridState {
         );
 
         return TrinaDateTimeHelper.isValidRange(
-              date: parseNewValue,
-              start: column.type.date.startDate,
-              end: column.type.date.endDate,
-            )
+          date: parseNewValue,
+          start: column.type.date.startDate,
+          end: column.type.date.endDate,
+        )
             ? column.type.date.dateFormat.format(parseNewValue)
             : oldValue;
       } catch (e) {

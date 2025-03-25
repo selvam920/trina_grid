@@ -210,28 +210,25 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
 
     final isCurrentCell = renderContext.stateManager.isCurrentCell(cell);
 
-    final cellColor =
-        isCurrentCell && renderContext.stateManager.hasFocus
-            ? widget.stateManager.style.activatedBorderColor
-            : widget.stateManager.style.gridBackgroundColor;
+    final cellColor = isCurrentCell && renderContext.stateManager.hasFocus
+        ? widget.stateManager.style.activatedBorderColor
+        : widget.stateManager.style.gridBackgroundColor;
 
-    final textColor =
-        isCurrentCell && renderContext.stateManager.hasFocus
-            ? widget.stateManager.style.gridBackgroundColor
-            : widget.stateManager.style.cellTextStyle.color;
+    final textColor = isCurrentCell && renderContext.stateManager.hasFocus
+        ? widget.stateManager.style.gridBackgroundColor
+        : widget.stateManager.style.cellTextStyle.color;
 
     return DecoratedBox(
       decoration: BoxDecoration(
         color: cellColor,
         shape: BoxShape.circle,
-        border:
-            !isCurrentCell
-                ? null
-                : !renderContext.stateManager.hasFocus
+        border: !isCurrentCell
+            ? null
+            : !renderContext.stateManager.hasFocus
                 ? Border.all(
-                  color: widget.stateManager.style.activatedBorderColor,
-                  width: 1,
-                )
+                    color: widget.stateManager.style.activatedBorderColor,
+                    width: 1,
+                  )
                 : null,
       ),
       child: Padding(

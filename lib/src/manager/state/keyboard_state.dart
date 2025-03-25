@@ -256,8 +256,7 @@ mixin KeyboardState implements ITrinaGridState {
 
     setCurrentSelectingPosition(
       cellPosition: TrinaGridCellPosition(
-        columnIdx:
-            cellPosition!.columnIdx! +
+        columnIdx: cellPosition!.columnIdx! +
             (direction.horizontal ? direction.offset : 0),
         rowIdx:
             cellPosition.rowIdx! + (direction.vertical ? direction.offset : 0),
@@ -291,10 +290,9 @@ mixin KeyboardState implements ITrinaGridState {
 
     final int columnIdx = direction.isLeft ? 0 : refColumns.length - 1;
 
-    final int? rowIdx =
-        hasCurrentSelectingPosition
-            ? currentSelectingPosition!.rowIdx
-            : currentCellPosition!.rowIdx;
+    final int? rowIdx = hasCurrentSelectingPosition
+        ? currentSelectingPosition!.rowIdx
+        : currentCellPosition!.rowIdx;
 
     setCurrentSelectingPosition(
       cellPosition: TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),
@@ -324,10 +322,9 @@ mixin KeyboardState implements ITrinaGridState {
       return;
     }
 
-    final columnIdx =
-        hasCurrentSelectingPosition
-            ? currentSelectingPosition!.columnIdx
-            : currentCellPosition!.columnIdx;
+    final columnIdx = hasCurrentSelectingPosition
+        ? currentSelectingPosition!.columnIdx
+        : currentCellPosition!.columnIdx;
 
     final int rowIdx = direction.isUp ? 0 : refRows.length - 1;
 
@@ -359,10 +356,9 @@ mixin KeyboardState implements ITrinaGridState {
       return;
     }
 
-    int? columnIdx =
-        hasCurrentSelectingPosition
-            ? currentSelectingPosition!.columnIdx
-            : currentCellPosition!.columnIdx;
+    int? columnIdx = hasCurrentSelectingPosition
+        ? currentSelectingPosition!.columnIdx
+        : currentCellPosition!.columnIdx;
 
     setCurrentSelectingPosition(
       cellPosition: TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),

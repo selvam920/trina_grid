@@ -14,12 +14,11 @@ class TrinaGridExportCsv implements TrinaGridExport {
     bool ignoreFixedRows = false,
   }) async {
     // Get visible columns if no specific columns are requested
-    final List<TrinaColumn> visibleColumns =
-        columns != null
-            ? stateManager.refColumns
-                .where((column) => columns.contains(column.title))
-                .toList()
-            : stateManager.columns;
+    final List<TrinaColumn> visibleColumns = columns != null
+        ? stateManager.refColumns
+            .where((column) => columns.contains(column.title))
+            .toList()
+        : stateManager.columns;
 
     if (visibleColumns.isEmpty) {
       throw Exception('No columns to export');
@@ -33,10 +32,9 @@ class TrinaGridExportCsv implements TrinaGridExport {
 
     // Add header row if requested
     if (includeHeaders) {
-      final List<String> headers =
-          visibleColumns
-              .map((column) => _escapeCsvField(column.title, separator))
-              .toList();
+      final List<String> headers = visibleColumns
+          .map((column) => _escapeCsvField(column.title, separator))
+          .toList();
       csvContent.writeln(headers.join(separator));
     }
 

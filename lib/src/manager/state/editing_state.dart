@@ -23,8 +23,7 @@ abstract class IEditingState {
     TextEditingController controller,
     FocusNode focusNode,
     Function(dynamic value)? handleSelected,
-  )?
-  get editCellRenderer;
+  )? get editCellRenderer;
 
   bool isEditableCell(TrinaCell cell);
 
@@ -73,8 +72,7 @@ mixin EditingState implements ITrinaGridState {
     TextEditingController controller,
     FocusNode focusNode,
     Function(dynamic value)? handleSelected,
-  )?
-  get editCellRenderer;
+  )? get editCellRenderer;
 
   @override
   bool get isEditing => _state._isEditing;
@@ -394,11 +392,9 @@ mixin EditingState implements ITrinaGridState {
         textRowIdx = 0;
       }
 
-      for (
-        int columnIdx = columnStartIdx!;
-        columnIdx <= columnEndIdx!;
-        columnIdx += 1
-      ) {
+      for (int columnIdx = columnStartIdx!;
+          columnIdx <= columnEndIdx!;
+          columnIdx += 1) {
         if (columnIdx > columnIndexes.length - 1) {
           break;
         }

@@ -132,8 +132,7 @@ class TrinaBaseCell extends StatelessWidget
         rowIdx: rowIdx,
         row: row,
         column: column,
-        cellPadding:
-            column.cellPadding ??
+        cellPadding: column.cellPadding ??
             stateManager.configuration.style.defaultCellPadding,
         stateManager: stateManager,
         child: _Cell(
@@ -208,8 +207,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
           widget.column,
           widget.rowIdx,
         ),
-        isGroupedRowCell:
-            stateManager.enabledRowGroups &&
+        isGroupedRowCell: stateManager.enabledRowGroups &&
             stateManager.rowGroupDelegate!.isExpandableCell(widget.cell),
         enableCellVerticalBorder: style.enableCellBorderVertical,
         borderColor: style.borderColor,
@@ -270,19 +268,18 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
 
     if (isCurrentCell) {
       return BoxDecoration(
-        color:
-            isDirty
-                ? dirtyColor
-                : _currentCellColor(
-                  hasFocus: hasFocus,
-                  isEditing: isEditing,
-                  readOnly: readOnly,
-                  gridBackgroundColor: gridBackgroundColor,
-                  activatedColor: activatedColor,
-                  cellColorInReadOnlyState: cellColorInReadOnlyState,
-                  cellColorInEditState: cellColorInEditState,
-                  selectingMode: selectingMode,
-                ),
+        color: isDirty
+            ? dirtyColor
+            : _currentCellColor(
+                hasFocus: hasFocus,
+                isEditing: isEditing,
+                readOnly: readOnly,
+                gridBackgroundColor: gridBackgroundColor,
+                activatedColor: activatedColor,
+                cellColorInReadOnlyState: cellColorInReadOnlyState,
+                cellColorInEditState: cellColorInEditState,
+                selectingMode: selectingMode,
+              ),
         border: Border.all(
           color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
           width: 1,
@@ -298,18 +295,16 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
       );
     } else {
       return BoxDecoration(
-        color:
-            isDirty
-                ? dirtyColor
-                : isGroupedRowCell
+        color: isDirty
+            ? dirtyColor
+            : isGroupedRowCell
                 ? cellColorGroupedRow
                 : null,
-        border:
-            enableCellVerticalBorder
-                ? BorderDirectional(
-                  end: BorderSide(color: borderColor, width: 1.0),
-                )
-                : null,
+        border: enableCellVerticalBorder
+            ? BorderDirectional(
+                end: BorderSide(color: borderColor, width: 1.0),
+              )
+            : null,
       );
     }
   }

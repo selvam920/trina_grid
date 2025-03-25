@@ -15,10 +15,9 @@ class TrinaAggregateHelper {
 
     final numberColumn = column.type as TrinaColumnTypeWithNumberFormat;
 
-    final foundItems =
-        filter != null
-            ? rows.where((row) => filter(row.cells[column.field]!))
-            : rows;
+    final foundItems = filter != null
+        ? rows.where((row) => filter(row.cells[column.field]!))
+        : rows;
 
     final Iterable<num> numbers =
         foundItems.map((e) => e.cells[column.field]?.value as num?).nonNulls;
@@ -40,10 +39,9 @@ class TrinaAggregateHelper {
 
     final numberColumn = column.type as TrinaColumnTypeWithNumberFormat;
 
-    final foundItems =
-        filter != null
-            ? rows.where((row) => filter(row.cells[column.field]!))
-            : rows;
+    final foundItems = filter != null
+        ? rows.where((row) => filter(row.cells[column.field]!))
+        : rows;
 
     final Iterable<num> numbers =
         foundItems.map((e) => e.cells[column.field]?.value as num?).nonNulls;
@@ -63,10 +61,9 @@ class TrinaAggregateHelper {
       return null;
     }
 
-    final foundItems =
-        filter != null
-            ? rows.where((row) => filter(row.cells[column.field]!))
-            : rows;
+    final foundItems = filter != null
+        ? rows.where((row) => filter(row.cells[column.field]!))
+        : rows;
 
     final Iterable<num> mapValues = foundItems.map(
       (e) => e.cells[column.field]!.value,
@@ -85,10 +82,9 @@ class TrinaAggregateHelper {
       return null;
     }
 
-    final foundItems =
-        filter != null
-            ? rows.where((row) => filter(row.cells[column.field]!))
-            : rows;
+    final foundItems = filter != null
+        ? rows.where((row) => filter(row.cells[column.field]!))
+        : rows;
 
     final Iterable<num> mapValues = foundItems.map(
       (e) => e.cells[column.field]!.value,
@@ -106,10 +102,9 @@ class TrinaAggregateHelper {
       return 0;
     }
 
-    final foundItems =
-        filter != null
-            ? rows.where((row) => filter(row.cells[column.field]!))
-            : rows;
+    final foundItems = filter != null
+        ? rows.where((row) => filter(row.cells[column.field]!))
+        : rows;
 
     return foundItems.length;
   }
