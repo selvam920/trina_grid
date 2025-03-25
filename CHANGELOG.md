@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.6.6] - 2025. 03. 22
+
+* Fix lazy pagination rebuild issue
+
 ## [1.6.5] - 2025. 03. 22
 
 * Add PDF export functionality with customizable options
