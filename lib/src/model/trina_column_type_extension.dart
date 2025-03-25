@@ -1,4 +1,3 @@
-import 'package:trina_grid/src/model/trina_column_type_has_format.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 extension TrinaColumnTypeExtension on TrinaColumnType {

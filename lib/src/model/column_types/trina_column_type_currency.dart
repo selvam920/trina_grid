@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart' as intl;
-import 'package:trina_grid/src/model/trina_column_type_has_format.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class TrinaColumnTypeCurrency
@@ -38,12 +37,12 @@ class TrinaColumnTypeCurrency
     this.symbol,
     int? decimalDigits,
   }) : numberFormat = intl.NumberFormat.currency(
-         locale: locale,
-         name: name,
-         symbol: symbol,
-         decimalDigits: decimalDigits,
-         customPattern: format,
-       ) {
+          locale: locale,
+          name: name,
+          symbol: symbol,
+          decimalDigits: decimalDigits,
+          customPattern: format,
+        ) {
     decimalPoint = numberFormat.decimalDigits ?? 0;
   }
 

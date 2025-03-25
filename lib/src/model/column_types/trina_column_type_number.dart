@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart' as intl;
-import 'package:trina_grid/src/model/trina_column_type_has_format.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class TrinaColumnTypeNumber
@@ -30,8 +29,8 @@ class TrinaColumnTypeNumber
     required this.applyFormatOnInit,
     required this.allowFirstDot,
     required this.locale,
-  }) : numberFormat = intl.NumberFormat(format, locale),
-       decimalPoint = _getDecimalPoint(format);
+  })  : numberFormat = intl.NumberFormat(format, locale),
+        decimalPoint = _getDecimalPoint(format);
 
   @override
   final intl.NumberFormat numberFormat;

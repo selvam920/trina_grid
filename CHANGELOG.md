@@ -13,7 +13,6 @@
 * Enhanced documentation to reflect new PDF export features and usage examples.
 * Export TrinaColumnTypeHasFormat
 
-
 ## [1.6.4] - 2025. 03. 20
 
 * Use dynamic for column menu delegate, instead of String, update the documentation

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:trina_grid/src/helper/trina_general_helper.dart';
-import 'package:trina_grid/src/model/trina_column_type.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_date_format.dart';
-import 'package:trina_grid/src/model/trina_column_type_has_format.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_popup_icon.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -40,8 +38,8 @@ class TrinaColumnTypeDate
     required this.headerFormat,
     required this.applyFormatOnInit,
     this.popupIcon,
-  }) : dateFormat = intl.DateFormat(format),
-       headerDateFormat = intl.DateFormat(headerFormat);
+  })  : dateFormat = intl.DateFormat(format),
+        headerDateFormat = intl.DateFormat(headerFormat);
 
   @override
   final intl.DateFormat dateFormat;
