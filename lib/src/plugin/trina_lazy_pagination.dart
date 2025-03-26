@@ -252,6 +252,8 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
     if (event is TrinaGridChangeColumnSortEvent ||
         event is TrinaGridSetColumnFilterEvent) {
       setPage(1);
+    } else if (event is TrinaGridChangeLazyPageEvent) {
+      setPage((event.page == null || event.page! < 1) ? _page : event.page!);
     }
   }
 

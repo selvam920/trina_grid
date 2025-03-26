@@ -22,6 +22,7 @@ export './src/manager/event/trina_grid_drag_rows_event.dart';
 export './src/manager/event/trina_grid_event.dart';
 export './src/manager/event/trina_grid_scroll_update_event.dart';
 export './src/manager/event/trina_grid_set_column_filter_event.dart';
+export './src/manager/event/trina_grid_change_lazy_page_event.dart';
 export './src/manager/trina_change_notifier.dart';
 export './src/manager/trina_change_notifier_filter.dart';
 export './src/manager/trina_grid_event_manager.dart';
