@@ -326,10 +326,10 @@ In addition to the UI-based pagination controls, you can also programmatically c
 late TrinaGridStateManager stateManager;
 
 // To change to a specific page
-stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: 3));
+stateManager.eventManager!.addEvent(TrinaGridChangeLazyPageEvent(page: 3));
 
 // To refresh the current page without changing it
-stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: null));
+stateManager.eventManager!.addEvent(TrinaGridChangeLazyPageEvent(page: null));
 ```
 
 ### Example: Custom Pagination Controls
@@ -353,7 +353,7 @@ class CustomPaginationControls extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             // Jump to first page
-            stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: 1));
+            stateManager.eventManager!.addEvent(TrinaGridChangeLazyPageEvent(page: 1));
           },
           child: Text('First'),
         ),
@@ -363,7 +363,7 @@ class CustomPaginationControls extends StatelessWidget {
             // Jump to a specific page
             final currentPage = stateManager.page;
             if (currentPage > 1) {
-              stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: currentPage - 1));
+              stateManager.eventManager!.addEvent(TrinaGridChangeLazyPageEvent(page: currentPage - 1));
             }
           },
           child: Text('Previous'),
@@ -376,16 +376,16 @@ class CustomPaginationControls extends StatelessWidget {
             // Jump to a specific page
             final currentPage = stateManager.page;
             if (currentPage < totalPages) {
-              stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: currentPage + 1));
+              stateManager.eventManager!.addEvent(TrinaGridChangeLazyPageEvent(page: currentPage + 1));
             }
           },
           child: Text('Next'),
         ),
         SizedBox(width: 8),
-        ElevatedButton(
+        ElevatedButton( 
           onPressed: () {
             // Jump to last page
-            stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: totalPages));
+            stateManager.eventManager!.addEvent(TrinaGridChangeLazyPageEvent(page: totalPages));
           },
           child: Text('Last'),
         ),
@@ -393,7 +393,7 @@ class CustomPaginationControls extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             // Refresh current page
-            stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: null));
+            stateManager.eventManager!.addEvent(TrinaGridChangeLazyPageEvent(page: null));
           },
           child: Text('Refresh'),
         ),
