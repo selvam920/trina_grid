@@ -2,14 +2,14 @@ import 'dart:typed_data';
 
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
-import 'package:trina_grid/trina_grid.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:trina_grid/trina_grid.dart';
 
+import '../../dummy_data/dummy_data.dart';
 import '../../widget/trina_example_button.dart';
 import '../../widget/trina_example_screen.dart';
-import '../../dummy_data/dummy_data.dart';
 
 class GridExportScreen extends StatefulWidget {
   static const routeName = 'feature/grid-export';
@@ -587,7 +587,8 @@ class _GridExportScreenState extends State<GridExportScreen> {
 
         // Function to convert Flutter Color to PdfColor
         PdfColor flutterToPdfColor(Color color) {
-          return PdfColor.fromInt(color.toARGB32());
+          return PdfColor.fromInt(
+              color.value); // compatibility with Flutter 3.27
         }
 
         // Create theme data
