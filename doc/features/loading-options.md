@@ -2,7 +2,7 @@
 
 TrinaGrid provides flexible options for displaying loading indicators while data is being processed or loaded. This feature allows you to control both the coverage area of the loading indicator and customize its appearance with your own widgets.
 
-![Loading Options](https://raw.githubusercontent.com/doonfrs/trina_grid/master/screenshots/loading_options.gif)
+![Loading Options Demo](https://raw.githubusercontent.com/doonfrs/trina_grid/master/doc/assets/loading-options.gif)
 
 ## Loading Levels
 
