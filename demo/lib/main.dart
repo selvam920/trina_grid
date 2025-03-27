@@ -1,6 +1,7 @@
 import 'package:demo/screen/feature/boolean_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart';
+import 'package:demo/screen/feature/column_title_renderer_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/grid_export_screen.dart';
 import 'package:demo/screen/feature/scrollbars.dart';
@@ -63,68 +64,70 @@ class MyApp extends StatelessWidget {
       initialRoute: HomeScreen.routeName,
       routes: {
         HomeScreen.routeName: (context) => const HomeScreen(),
-        AddAndRemoveColumnRowScreen.routeName: (context) =>
-            const AddAndRemoveColumnRowScreen(),
-        AddRowsAsynchronouslyScreen.routeName: (context) =>
-            const AddRowsAsynchronouslyScreen(),
-        ColumnRendererScreen.routeName: (context) =>
-            const ColumnRendererScreen(),
+        AddAndRemoveColumnRowScreen.routeName:
+            (context) => const AddAndRemoveColumnRowScreen(),
+        AddRowsAsynchronouslyScreen.routeName:
+            (context) => const AddRowsAsynchronouslyScreen(),
+        ColumnRendererScreen.routeName:
+            (context) => const ColumnRendererScreen(),
+        ColumnTitleRendererScreen.routeName:
+            (context) => const ColumnTitleRendererScreen(),
         CellRendererScreen.routeName: (context) => const CellRendererScreen(),
         CellSelectionScreen.routeName: (context) => const CellSelectionScreen(),
-        ChangeTrackingScreen.routeName: (context) =>
-            const ChangeTrackingScreen(),
-        BooleanTypeColumnScreen.routeName: (context) =>
-            const BooleanTypeColumnScreen(),
-        CheckViewPortVisibleColumnsScreen.routeName: (context) =>
-            const CheckViewPortVisibleColumnsScreen(),
-        EditCellRendererScreen.routeName: (context) =>
-            const EditCellRendererScreen(),
+        ChangeTrackingScreen.routeName:
+            (context) => const ChangeTrackingScreen(),
+        BooleanTypeColumnScreen.routeName:
+            (context) => const BooleanTypeColumnScreen(),
+        CheckViewPortVisibleColumnsScreen.routeName:
+            (context) => const CheckViewPortVisibleColumnsScreen(),
+        EditCellRendererScreen.routeName:
+            (context) => const EditCellRendererScreen(),
         RTLScreen.routeName: (context) => const RTLScreen(),
-        ColumnFilteringScreen.routeName: (context) =>
-            const ColumnFilteringScreen(),
+        ColumnFilteringScreen.routeName:
+            (context) => const ColumnFilteringScreen(),
         ColumnFooterScreen.routeName: (context) => const ColumnFooterScreen(),
-        ColumnFreezingScreen.routeName: (context) =>
-            const ColumnFreezingScreen(),
+        ColumnFreezingScreen.routeName:
+            (context) => const ColumnFreezingScreen(),
         ColumnGroupScreen.routeName: (context) => const ColumnGroupScreen(),
         ColumnHidingScreen.routeName: (context) => const ColumnHidingScreen(),
         ColumnMenuScreen.routeName: (context) => const ColumnMenuScreen(),
         ColumnMovingScreen.routeName: (context) => const ColumnMovingScreen(),
-        ColumnResizingScreen.routeName: (context) =>
-            const ColumnResizingScreen(),
+        ColumnResizingScreen.routeName:
+            (context) => const ColumnResizingScreen(),
         ColumnSortingScreen.routeName: (context) => const ColumnSortingScreen(),
         CopyAndPasteScreen.routeName: (context) => const CopyAndPasteScreen(),
-        CurrencyTypeColumnScreen.routeName: (context) =>
-            const CurrencyTypeColumnScreen(),
+        CurrencyTypeColumnScreen.routeName:
+            (context) => const CurrencyTypeColumnScreen(),
         DarkModeScreen.routeName: (context) => const DarkModeScreen(),
-        DateTypeColumnScreen.routeName: (context) =>
-            const DateTypeColumnScreen(),
+        DateTypeColumnScreen.routeName:
+            (context) => const DateTypeColumnScreen(),
         DualModeScreen.routeName: (context) => const DualModeScreen(),
         EditingStateScreen.routeName: (context) => const EditingStateScreen(),
         GridAsPopupScreen.routeName: (context) => const GridAsPopupScreen(),
         GridExportScreen.routeName: (context) => const GridExportScreen(),
         ListingModeScreen.routeName: (context) => const ListingModeScreen(),
         MovingScreen.routeName: (context) => const MovingScreen(),
-        NumberTypeColumnScreen.routeName: (context) =>
-            const NumberTypeColumnScreen(),
+        NumberTypeColumnScreen.routeName:
+            (context) => const NumberTypeColumnScreen(),
         RowColorScreen.routeName: (context) => const RowColorScreen(),
         RowGroupScreen.routeName: (context) => const RowGroupScreen(),
-        RowInfinityScrollScreen.routeName: (context) =>
-            const RowInfinityScrollScreen(),
-        RowLazyPaginationScreen.routeName: (context) =>
-            const RowLazyPaginationScreen(),
+        RowInfinityScrollScreen.routeName:
+            (context) => const RowInfinityScrollScreen(),
+        RowLazyPaginationScreen.routeName:
+            (context) => const RowLazyPaginationScreen(),
         RowMovingScreen.routeName: (context) => const RowMovingScreen(),
         RowPaginationScreen.routeName: (context) => const RowPaginationScreen(),
         RowSelectionScreen.routeName: (context) => const RowSelectionScreen(),
-        RowWithCheckboxScreen.routeName: (context) =>
-            const RowWithCheckboxScreen(),
-        SelectionTypeColumnScreen.routeName: (context) =>
-            const SelectionTypeColumnScreen(),
-        TextTypeColumnScreen.routeName: (context) =>
-            const TextTypeColumnScreen(),
-        TimeTypeColumnScreen.routeName: (context) =>
-            const TimeTypeColumnScreen(),
-        ValueFormatterScreen.routeName: (context) =>
-            const ValueFormatterScreen(),
+        RowWithCheckboxScreen.routeName:
+            (context) => const RowWithCheckboxScreen(),
+        SelectionTypeColumnScreen.routeName:
+            (context) => const SelectionTypeColumnScreen(),
+        TextTypeColumnScreen.routeName:
+            (context) => const TextTypeColumnScreen(),
+        TimeTypeColumnScreen.routeName:
+            (context) => const TimeTypeColumnScreen(),
+        ValueFormatterScreen.routeName:
+            (context) => const ValueFormatterScreen(),
         // only development
         EmptyScreen.routeName: (context) => const EmptyScreen(),
         PagesListScreen.routeName: (context) => const PagesListScreen(),

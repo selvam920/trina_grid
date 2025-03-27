@@ -52,8 +52,8 @@ class TrinaListTile extends StatelessWidget {
       constraints: const BoxConstraints(
         minWidth: 300,
         maxWidth: 300,
-        minHeight: 180,
-        maxHeight: 180,
+        minHeight: 160,
+        maxHeight: 200,
       ),
       child: Card(
         color: _color,
@@ -64,7 +64,7 @@ class TrinaListTile extends StatelessWidget {
             title: Text(
               title,
               style: const TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 color: Colors.blue,
                 fontWeight: FontWeight.w600,
               ),
@@ -89,13 +89,10 @@ class TrinaListTile extends StatelessWidget {
                     ],
                   ),
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Text(
                     description!,
                     style: TextStyle(
                       color: _fontColor,
-                      fontWeight: FontWeight.w600,
-                      height: 1.6,
                     ),
                   ),
                 ),

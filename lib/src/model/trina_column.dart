@@ -3,11 +3,15 @@ import 'package:trina_grid/trina_grid.dart';
 
 typedef TrinaColumnValueFormatter = String Function(dynamic value);
 
-typedef TrinaColumnRenderer = Widget Function(
-    TrinaColumnRendererContext rendererContext);
+typedef TrinaColumnRenderer =
+    Widget Function(TrinaColumnRendererContext rendererContext);
 
-typedef TrinaColumnFooterRenderer = Widget Function(
-    TrinaColumnFooterRendererContext context);
+typedef TrinaColumnFooterRenderer =
+    Widget Function(TrinaColumnFooterRendererContext context);
+
+/// Renderer for customizing the column title widget
+typedef TrinaColumnTitleRenderer =
+    Widget Function(TrinaColumnTitleRendererContext rendererContext);
 
 /// It dynamically determines whether the cells of the column are in the edit state.
 ///
@@ -203,7 +207,7 @@ class TrinaColumn {
   /// Optional validator function that returns an error message string if validation fails,
   /// or null if validation passes. This is called before the cell value is updated.
   final String? Function(dynamic value, TrinaValidationContext context)?
-      validator;
+  validator;
 
   /// Custom renderer for the edit cell widget.
   /// This allows customizing the edit cell UI for this specific column.
@@ -214,7 +218,67 @@ class TrinaColumn {
     TextEditingController controller,
     FocusNode focusNode,
     Function(dynamic value)? handleSelected,
-  )? editCellRenderer;
+  )?
+  editCellRenderer;
+
+  /// Custom renderer for the column title.
+  /// This allows complete customization of the column title UI.
+  /// If provided, this takes precedence over the title, titleSpan, and other title-related properties.
+  ///
+  /// ```dart
+  /// titleRenderer: (rendererContext) {
+  ///   // Create a custom title with icon, text and using the context menu icon
+  ///   return Container(
+  ///     width: rendererContext.column.width,
+  ///     height: rendererContext.height,
+  ///     decoration: BoxDecoration(
+  ///       gradient: LinearGradient(
+  ///         colors: [Colors.blue.shade200, Colors.blue.shade500],
+  ///         begin: Alignment.topLeft,
+  ///         end: Alignment.bottomRight,
+  ///       ),
+  ///       border: Border(
+  ///         right: BorderSide(
+  ///           color: Colors.grey.shade300,
+  ///           width: 1.0,
+  ///         ),
+  ///       ),
+  ///     ),
+  ///     padding: const EdgeInsets.symmetric(horizontal: 8.0),
+  ///     child: Row(
+  ///       children: [
+  ///         Icon(Icons.star, color: Colors.amber),
+  ///         const SizedBox(width: 4),
+  ///         Expanded(
+  ///           child: Text(
+  ///             rendererContext.column.title,
+  ///             style: TextStyle(
+  ///               fontWeight: FontWeight.bold,
+  ///               color: Colors.white,
+  ///             ),
+  ///             overflow: TextOverflow.ellipsis,
+  ///           ),
+  ///         ),
+  ///         // Show filter icon if column is filtered
+  ///         if (rendererContext.isFiltered)
+  ///           IconButton(
+  ///             icon: Icon(Icons.filter_alt, color: Colors.white),
+  ///             onPressed: () {
+  ///               rendererContext.stateManager.showFilterPopup(
+  ///                 context,
+  ///                 calledColumn: rendererContext.column,
+  ///               );
+  ///             },
+  ///           ),
+  ///         // Use the provided context menu icon if needed
+  ///         if (rendererContext.showContextIcon)
+  ///           rendererContext.contextMenuIcon,
+  ///       ],
+  ///     ),
+  ///   );
+  /// },
+  /// ```
+  TrinaColumnTitleRenderer? titleRenderer;
 
   TrinaColumn({
     required this.title,
@@ -237,6 +301,7 @@ class TrinaColumn {
     this.backgroundColor,
     this.renderer,
     this.footerRenderer,
+    this.titleRenderer,
     this.suppressedAutoSize = false,
     this.enableColumnDrag = true,
     this.enableRowDrag = false,
@@ -257,8 +322,8 @@ class TrinaColumn {
     this.disableRowCheckboxWhen,
     this.validator,
     this.editCellRenderer,
-  })  : _key = UniqueKey(),
-        _checkReadOnly = checkReadOnly;
+  }) : _key = UniqueKey(),
+       _checkReadOnly = checkReadOnly;
 
   final Key _key;
 
@@ -267,6 +332,8 @@ class TrinaColumn {
   Key get key => _key;
 
   bool get hasRenderer => renderer != null;
+
+  bool get hasTitleRenderer => titleRenderer != null;
 
   bool get hasCheckReadOnly => _checkReadOnly != null;
 
@@ -353,12 +420,12 @@ class TrinaColumn {
   String formattedValueForDisplayInEditing(dynamic value) {
     if (type is TrinaColumnTypeWithNumberFormat) {
       return value.toString().replaceFirst(
-            '.',
-            (type as TrinaColumnTypeWithNumberFormat)
-                .numberFormat
-                .symbols
-                .DECIMAL_SEP,
-          );
+        '.',
+        (type as TrinaColumnTypeWithNumberFormat)
+            .numberFormat
+            .symbols
+            .DECIMAL_SEP,
+      );
     } else if (type is TrinaColumnTypeBoolean) {
       switch (value) {
         case true:
@@ -396,12 +463,12 @@ class TrinaFilterColumnWidgetDelegate {
 
   /// If you don't want a custom widget
   const TrinaFilterColumnWidgetDelegate.builder({this.filterWidgetBuilder})
-      : filterSuffixIcon = null,
-        onFilterSuffixTap = null,
-        filterHintText = null,
-        filterHintTextColor = null,
-        clearIcon = const Icon(Icons.clear),
-        onClear = null;
+    : filterSuffixIcon = null,
+      onFilterSuffixTap = null,
+      filterHintText = null,
+      filterHintTextColor = null,
+      clearIcon = const Icon(Icons.clear),
+      onClear = null;
 
   ///Set hint text for filter field
   final String? filterHintText;
@@ -425,7 +492,8 @@ class TrinaFilterColumnWidgetDelegate {
     bool enabled,
     void Function(String changed) handleOnChanged,
     TrinaGridStateManager stateManager,
-  )? onFilterSuffixTap;
+  )?
+  onFilterSuffixTap;
 
   final Widget Function(
     FocusNode focusNode,
@@ -433,7 +501,8 @@ class TrinaFilterColumnWidgetDelegate {
     bool enabled,
     void Function(String changed) handleOnChanged,
     TrinaGridStateManager stateManager,
-  )? filterWidgetBuilder;
+  )?
+  filterWidgetBuilder;
 }
 
 class TrinaColumnRendererContext {
@@ -464,6 +533,40 @@ class TrinaColumnFooterRendererContext {
   TrinaColumnFooterRendererContext({
     required this.column,
     required this.stateManager,
+  });
+}
+
+/// Context provided to the titleRenderer function
+class TrinaColumnTitleRendererContext {
+  /// The column being rendered
+  final TrinaColumn column;
+
+  /// The state manager instance
+  final TrinaGridStateManager stateManager;
+
+  /// The height of the column title
+  final double height;
+
+  /// Whether the context menu icon should be shown
+  final bool showContextIcon;
+
+  /// The default context menu icon widget, provided for convenience
+  final Widget contextMenuIcon;
+
+  /// Whether the column is filtered
+  final bool isFiltered;
+
+  /// Function to show the context menu
+  final void Function(BuildContext context, Offset position)? showContextMenu;
+
+  TrinaColumnTitleRendererContext({
+    required this.column,
+    required this.stateManager,
+    required this.height,
+    required this.showContextIcon,
+    required this.contextMenuIcon,
+    required this.isFiltered,
+    this.showContextMenu,
   });
 }
 

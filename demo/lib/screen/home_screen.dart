@@ -4,6 +4,7 @@ import 'package:demo/screen/empty_screen.dart';
 import 'package:demo/screen/feature/boolean_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart';
+import 'package:demo/screen/feature/column_title_renderer_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/frozen_rows_screen.dart';
 import 'package:demo/screen/feature/grid_export_screen.dart';
@@ -79,10 +80,7 @@ class HomeScreen extends StatelessWidget {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xFF2E4370),
-                          Color(0xFF33C1E8),
-                        ],
+                        colors: [Color(0xFF2E4370), Color(0xFF33C1E8)],
                       ),
                     ),
                     child: SingleChildScrollView(
@@ -90,12 +88,7 @@ class HomeScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              30,
-                              100,
-                              30,
-                              0,
-                            ),
+                            padding: const EdgeInsets.fromLTRB(30, 100, 30, 0),
                             child: Align(
                               alignment: Alignment.center,
                               child: TrinaGridTitle(
@@ -104,17 +97,13 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 30,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: const TrinaTextColorAnimation(
                               text: 'The DataGrid for Flutter.',
                               fontSize: 20,
                             ),
                           ),
-                          const SizedBox(
-                            height: 50,
-                          ),
+                          const SizedBox(height: 50),
                           Center(
                             child: Column(
                               children: [
@@ -123,7 +112,8 @@ class HomeScreen extends StatelessWidget {
                                   color: Colors.white,
                                   onPressed: () {
                                     launchUrl(
-                                        'https://pub.dev/packages/trina_grid');
+                                      'https://pub.dev/packages/trina_grid',
+                                    );
                                   },
                                 ),
                                 const Text(
@@ -144,9 +134,7 @@ class HomeScreen extends StatelessWidget {
                             fontColor: Colors.white,
                             child: TrinaContributors(),
                           ),
-                          const SizedBox(
-                            height: 50,
-                          ),
+                          const SizedBox(height: 50),
                           Center(
                             child: Column(
                               children: [
@@ -155,7 +143,8 @@ class HomeScreen extends StatelessWidget {
                                   color: Colors.white,
                                   onPressed: () {
                                     launchUrl(
-                                        'https://github.com/doonfrs/trina_grid');
+                                      'https://github.com/doonfrs/trina_grid',
+                                    );
                                   },
                                 ),
                                 const Text(
@@ -165,12 +154,8 @@ class HomeScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          const SizedBox(
-                            height: 100,
-                          ),
+                          const SizedBox(height: 50),
+                          const SizedBox(height: 100),
                         ],
                       ),
                     ),
@@ -193,20 +178,23 @@ class TrinaFeatures extends StatefulWidget {
 }
 
 class _TrinaFeaturesState extends State<TrinaFeatures> {
-  final Icon newIcon = const Icon(
-    Icons.fiber_new,
-    color: Colors.deepOrange,
-  );
+  final Icon newIcon = const Icon(Icons.fiber_new, color: Colors.deepOrange);
 
-  final Icon updateIcon = const Icon(
-    Icons.update,
-    color: Colors.deepOrange,
-  );
+  final Icon updateIcon = const Icon(Icons.update, color: Colors.deepOrange);
 
   String _searchQuery = '';
 
   List<Widget> _buildFeatureItems(BuildContext context) {
     final List<Widget> allItems = [
+      TrinaListTile(
+        title: 'Column Title Renderer',
+        description:
+            'Fully customize column titles with your own widgets while preserving all column functionality.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnTitleRendererScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
       TrinaListTile(
         title: 'Change Tracking',
         description:
@@ -431,10 +419,7 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         title: 'Add rows asynchronously',
         description: 'Adds or sets rows asynchronously.',
         onTapLiveDemo: () {
-          Navigator.pushNamed(
-            context,
-            AddRowsAsynchronouslyScreen.routeName,
-          );
+          Navigator.pushNamed(context, AddRowsAsynchronouslyScreen.routeName);
         },
       ),
       TrinaListTile(
@@ -566,10 +551,7 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
 
   Container _filterInput() {
     return Container(
-      constraints: const BoxConstraints(
-        minWidth: 300,
-        maxWidth: 300,
-      ),
+      constraints: const BoxConstraints(minWidth: 300, maxWidth: 300),
       margin: const EdgeInsets.only(bottom: 10),
       child: Card(
         color: Colors.white,
@@ -580,14 +562,10 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
               hintText: 'Filter features...',
               prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.grey.shade500,
-                ),
+                borderSide: BorderSide(color: Colors.grey.shade500),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.grey.shade500,
-                ),
+                borderSide: BorderSide(color: Colors.grey.shade500),
               ),
             ),
             onChanged: (value) {
@@ -621,11 +599,7 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
       children: [
         _filterInput(),
         Center(
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: filteredItems,
-          ),
+          child: Wrap(spacing: 10, runSpacing: 10, children: filteredItems),
         ),
       ],
     );

@@ -2,7 +2,11 @@
 
 ## [1.6.6] - 2025. 03. 22
 
-* Fix lazy pagination rebuild issue
+* Fix lazy pagination rebuild issue for simple pagination & refresh
+* Add TrinaGridChangeLazyPageEvent ( by @slavap )
+* Flutter 3.27 compatibility ( by @slavap )
+* Introduce TitleRenderer for customizable column titles ( by @doonfrs )
+
 
 ## [1.6.5] - 2025. 03. 22
 
