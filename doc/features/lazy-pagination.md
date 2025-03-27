@@ -180,6 +180,7 @@ class _MyDataGridState extends State<MyDataGrid> {
 ## Related Features
 
 - For tracking lazy pagination events, see [Lazy Pagination Events](lazy-pagination-events.md)
+- For programmatically changing pages with events, see [Lazy Pagination Events - Programmatically Changing Pages](lazy-pagination-events.md#programmatically-changing-pages-with-events)
 - For client-side pagination, see [Client-Side Pagination](pagination-client.md)
 - For infinite scrolling, see [Infinity Scroll](infinity-scroll.md)
 

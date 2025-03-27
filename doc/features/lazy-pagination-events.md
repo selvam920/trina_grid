@@ -311,6 +311,98 @@ class _LazyPaginationEventExampleState extends State<LazyPaginationEventExample>
 }
 ```
 
+## Programmatically Changing Pages with Events
+
+In addition to the UI-based pagination controls, you can also programmatically change the current page using the `TrinaGridChangeLazyPageEvent`. This is useful when you need to:
+
+- Jump to a specific page based on user actions outside the grid
+- Refresh the current page without rebuilding the grid
+- Implement custom pagination controls
+
+### Using TrinaGridChangeLazyPageEvent
+
+```dart
+// Get a reference to the state manager (typically from onLoaded event)
+late TrinaGridStateManager stateManager;
+
+// To change to a specific page
+stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: 3));
+
+// To refresh the current page without changing it
+stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: null));
+```
+
+### Example: Custom Pagination Controls
+
+```dart
+class CustomPaginationControls extends StatelessWidget {
+  final TrinaGridStateManager stateManager;
+  final int totalPages;
+
+  const CustomPaginationControls({
+    required this.stateManager,
+    required this.totalPages,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            // Jump to first page
+            stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: 1));
+          },
+          child: Text('First'),
+        ),
+        SizedBox(width: 8),
+        ElevatedButton(
+          onPressed: () {
+            // Jump to a specific page
+            final currentPage = stateManager.page;
+            if (currentPage > 1) {
+              stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: currentPage - 1));
+            }
+          },
+          child: Text('Previous'),
+        ),
+        SizedBox(width: 8),
+        Text('Page ${stateManager.page} of $totalPages'),
+        SizedBox(width: 8),
+        ElevatedButton(
+          onPressed: () {
+            // Jump to a specific page
+            final currentPage = stateManager.page;
+            if (currentPage < totalPages) {
+              stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: currentPage + 1));
+            }
+          },
+          child: Text('Next'),
+        ),
+        SizedBox(width: 8),
+        ElevatedButton(
+          onPressed: () {
+            // Jump to last page
+            stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: totalPages));
+          },
+          child: Text('Last'),
+        ),
+        SizedBox(width: 16),
+        ElevatedButton(
+          onPressed: () {
+            // Refresh current page
+            stateManager.addEvent(TrinaGridChangeLazyPageEvent(page: null));
+          },
+          child: Text('Refresh'),
+        ),
+      ],
+    );
+  }
+}
+```
+
 ## Related Features
 
 - For basic Lazy Pagination implementation, see [Lazy Pagination](lazy-pagination.md)

@@ -8,5 +8,8 @@ class TrinaGridChangeLazyPageEvent extends TrinaGridEvent {
   TrinaGridChangeLazyPageEvent({required this.page});
 
   @override
-  void handler(TrinaGridStateManager stateManager) {}
+  void handler(TrinaGridStateManager stateManager) {
+    // This event is handled by TrinaLazyPagination plugin
+    // No need to implement handler here
+  }
 }
