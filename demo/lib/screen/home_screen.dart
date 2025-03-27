@@ -5,6 +5,7 @@ import 'package:demo/screen/feature/boolean_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart';
 import 'package:demo/screen/feature/column_title_renderer_screen.dart';
+import 'package:demo/screen/feature/loading_options_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/frozen_rows_screen.dart';
 import 'package:demo/screen/feature/grid_export_screen.dart';
@@ -544,6 +545,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, EmptyScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'Loading Options',
+        description:
+            'Configure loading displays with different levels and custom loading widgets.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, LoadingOptionsScreen.routeName);
+        },
+        trailing: newIcon,
       ),
     ];
     return allItems;

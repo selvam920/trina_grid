@@ -6,7 +6,7 @@
 * Add TrinaGridChangeLazyPageEvent ( by @slavap )
 * Flutter 3.27 compatibility ( by @slavap )
 * Introduce TitleRenderer for customizable column titles ( by @doonfrs )
-
+* Implement custom loading widget support and add Loading Options feature to documentation and demo ( by @doonfrs )
 
 ## [1.6.5] - 2025. 03. 22
 

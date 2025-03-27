@@ -43,6 +43,10 @@ abstract class ILayoutState {
 
   TrinaGridLoadingLevel get loadingLevel;
 
+  /// Custom widget to display when loading is enabled.
+  /// If provided, this takes precedence over the default loading widget.
+  Widget? get customLoadingWidget;
+
   bool get hasLeftFrozenColumns;
 
   bool get hasRightFrozenColumns;
@@ -110,8 +114,8 @@ abstract class ILayoutState {
 
   void setShowLoading(
     bool flag, {
-    TrinaGridLoadingLevel level = TrinaGridLoadingLevel.grid,
-    bool notify = true,
+    TrinaGridLoadingLevel? level,
+    Widget? customLoadingWidget,
   });
 
   void resetShowFrozenColumn();
@@ -152,6 +156,8 @@ class _State {
   bool? _showColumnFilter;
 
   bool? _showLoading;
+
+  Widget? _customLoadingWidget;
 
   TrinaGridLoadingLevel _loadingLevel = TrinaGridLoadingLevel.grid;
 
@@ -257,10 +263,13 @@ mixin LayoutState implements ITrinaGridState {
   bool get showFooter => createFooter != null;
 
   @override
-  bool get showLoading => _state._showLoading == true;
+  bool get showLoading => _state._showLoading ?? false;
 
   @override
   TrinaGridLoadingLevel get loadingLevel => _state._loadingLevel;
+
+  @override
+  Widget? get customLoadingWidget => _state._customLoadingWidget;
 
   @override
   bool get hasLeftFrozenColumns =>
@@ -459,21 +468,31 @@ mixin LayoutState implements ITrinaGridState {
     notifyListeners(notify, setShowColumnFilter.hashCode);
   }
 
+  /// Show or hide loading indicator
+  /// [customLoadingWidget] optional custom widget to display instead of the default loading indicator
   @override
   void setShowLoading(
     bool flag, {
-    TrinaGridLoadingLevel level = TrinaGridLoadingLevel.grid,
-    bool notify = true,
+    TrinaGridLoadingLevel? level,
+    Widget? customLoadingWidget,
   }) {
-    if (showLoading == flag) {
+    // Early return if nothing changed
+    if (flag == _state._showLoading &&
+        level == _state._loadingLevel &&
+        customLoadingWidget == _state._customLoadingWidget) {
       return;
     }
 
+    // When custom loading widget is provided, always use grid level regardless of the level parameter
+    final effectiveLevel = customLoadingWidget != null
+        ? TrinaGridLoadingLevel.grid
+        : (level ?? _state._loadingLevel ?? TrinaGridLoadingLevel.grid);
+
     _state._showLoading = flag;
+    _state._loadingLevel = effectiveLevel;
+    _state._customLoadingWidget = customLoadingWidget;
 
-    _state._loadingLevel = level;
-
-    notifyListeners(notify, setShowLoading.hashCode);
+    notifyListeners(true, setShowLoading.hashCode);
   }
 
   @override

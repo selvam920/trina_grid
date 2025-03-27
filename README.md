@@ -16,12 +16,11 @@ TrinaGrid is a powerful data grid for Flutter that provides a wide range of feat
 
 If you find TrinaGrid useful, please consider supporting its development:
 
-[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="150" alt="Buy Me A Coffee">](https://buymeacoffee.com/doonfrs)
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://buymeacoffee.com/doonfrs)
 
 You can also become a GitHub sponsor: [Sponsor @doonfrs](https://github.com/sponsors/doonfrs)
 
 Your support will encourage me to dedicate more time to keeping this useful package updated and well-documented.
-
 
 ## Migration from PlutoGrid
 

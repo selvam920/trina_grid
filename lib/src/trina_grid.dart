@@ -838,13 +838,14 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
                 if (_stateManager.showLoading)
                   LayoutId(
                     id: _StackName.loading,
-                    child: TrinaLoading(
-                      level: _stateManager.loadingLevel,
-                      backgroundColor: style.gridBackgroundColor,
-                      indicatorColor: style.activatedBorderColor,
-                      text: _stateManager.localeText.loadingText,
-                      textStyle: style.cellTextStyle,
-                    ),
+                    child: _stateManager.customLoadingWidget ??
+                        TrinaLoading(
+                          level: _stateManager.loadingLevel,
+                          backgroundColor: style.gridBackgroundColor,
+                          indicatorColor: style.activatedBorderColor,
+                          text: _stateManager.localeText.loadingText,
+                          textStyle: style.cellTextStyle,
+                        ),
                   ),
 
                 /// NoRows

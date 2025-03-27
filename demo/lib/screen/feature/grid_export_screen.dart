@@ -588,6 +588,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
         // Function to convert Flutter Color to PdfColor
         PdfColor flutterToPdfColor(Color color) {
           return PdfColor.fromInt(
+              // ignore: deprecated_member_use
               color.value); // compatibility with Flutter 3.27
         }
 

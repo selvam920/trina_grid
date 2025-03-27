@@ -88,12 +88,10 @@ class TrinaListTile extends StatelessWidget {
                         ),
                     ],
                   ),
-                Container(
-                  child: Text(
-                    description!,
-                    style: TextStyle(
-                      color: _fontColor,
-                    ),
+                Text(
+                  description!,
+                  style: TextStyle(
+                    color: _fontColor,
                   ),
                 ),
               ],

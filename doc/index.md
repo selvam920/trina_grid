@@ -61,6 +61,7 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 
 - [Themes](features/themes.md)
 - [Custom Styling](features/custom-styling.md)
+- [Loading Options](features/loading-options.md)
 - [Scrollbars](features/scrollbars.md)
 - [RTL Support](features/rtl-support.md)
 
