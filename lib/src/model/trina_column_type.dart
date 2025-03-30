@@ -81,6 +81,45 @@ abstract class TrinaColumnType {
     );
   }
 
+  /// Set to percentage column.
+  ///
+  /// [decimalDigits] Number of decimal places to display.
+  ///
+  /// [showSymbol] Whether to show the % symbol.
+  ///
+  /// [symbolPosition] Position of % symbol (before/after).
+  ///
+  /// [negative] Allow negative numbers.
+  ///
+  /// [applyFormatOnInit] When the editor loads, it resets the value to the format.
+  ///
+  /// [allowFirstDot] When accepting negative numbers, a dot is allowed at the beginning.
+  /// This option is required on devices where the .- symbol works with one button.
+  ///
+  /// [locale] Specifies the numeric locale of the column.
+  /// If not specified, the default locale is used.
+  factory TrinaColumnType.percentage({
+    dynamic defaultValue = 0,
+    int decimalDigits = 2,
+    bool showSymbol = true,
+    PercentageSymbolPosition symbolPosition = PercentageSymbolPosition.after,
+    bool negative = true,
+    bool applyFormatOnInit = true,
+    bool allowFirstDot = false,
+    String? locale,
+  }) {
+    return TrinaColumnTypePercentage(
+      defaultValue: defaultValue,
+      decimalDigits: decimalDigits,
+      showSymbol: showSymbol,
+      symbolPosition: symbolPosition,
+      negative: negative,
+      applyFormatOnInit: applyFormatOnInit,
+      allowFirstDot: allowFirstDot,
+      locale: locale,
+    );
+  }
+
   /// Provides a selection list and sets it as a selection column.
   ///
   /// If [enableColumnFilter] is true, column filtering is enabled in the selection popup.

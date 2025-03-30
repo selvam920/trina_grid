@@ -9,6 +9,7 @@ import 'package:demo/screen/feature/loading_options_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/frozen_rows_screen.dart';
 import 'package:demo/screen/feature/grid_export_screen.dart';
+import 'package:demo/screen/feature/percentage_type_column_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -295,6 +296,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, NumberTypeColumnScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'Percentage type column',
+        description: 'A column to display and edit percentage values.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, PercentageTypeColumnScreen.routeName);
+        },
+        trailing: newIcon,
       ),
       TrinaListTile(
         title: 'Currency type column',

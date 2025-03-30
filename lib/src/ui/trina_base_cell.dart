@@ -379,6 +379,13 @@ class _CellState extends TrinaStateWithChange<_Cell> {
           column: widget.column,
           row: widget.row,
         );
+      } else if (widget.column.type.isPercentage) {
+        return TrinaPercentageCell(
+          stateManager: stateManager,
+          cell: widget.cell,
+          column: widget.column,
+          row: widget.row,
+        );
       } else if (widget.column.type.isDate) {
         return TrinaDateCell(
           stateManager: stateManager,

@@ -15,6 +15,8 @@ extension TrinaColumnTypeExtension on TrinaColumnType {
 
   bool get isBoolean => this is TrinaColumnTypeBoolean;
 
+  bool get isPercentage => this is TrinaColumnTypePercentage;
+
   TrinaColumnTypeText get text {
     if (this is! TrinaColumnTypeText) {
       throw TypeError();
@@ -62,6 +64,13 @@ extension TrinaColumnTypeExtension on TrinaColumnType {
       throw TypeError();
     }
     return this as TrinaColumnTypeTime;
+  }
+
+  TrinaColumnTypePercentage get percentage {
+    if (this is! TrinaColumnTypePercentage) {
+      throw TypeError();
+    }
+    return this as TrinaColumnTypePercentage;
   }
 
   bool get hasFormat => this is TrinaColumnTypeHasFormat;

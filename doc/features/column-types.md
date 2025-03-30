@@ -244,10 +244,14 @@ TrinaColumn(
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `decimalDigits` | `int` | Number of decimal places |
-| `showSymbol` | `bool` | Whether to show the % symbol |
-| `symbolPosition` | `PercentageSymbolPosition` | Position of % symbol (before/after) |
-| `inputAsDecimal` | `bool` | Whether to input as decimal (0.5) or percentage (50) |
+| `defaultValue` | `dynamic` | Default value for new cells (defaults to `0`) |
+| `decimalDigits` | `int` | Number of decimal places (defaults to `2`) |
+| `showSymbol` | `bool` | Whether to show the % symbol (defaults to `true`) |
+| `symbolPosition` | `PercentageSymbolPosition` | Position of % symbol (before/after, defaults to `after`) |
+| `negative` | `bool` | Whether to allow negative values (defaults to `true`) |
+| `applyFormatOnInit` | `bool` | When the editor loads, it resets the value to formatted value (defaults to `true`) |
+| `allowFirstDot` | `bool` | Allow a dot at the beginning when accepting negative numbers (defaults to `false`) |
+| `locale` | `String?` | Specifies the numeric locale of the column (if not specified, uses default locale) |
 
 ### Custom Column
 
@@ -362,6 +366,15 @@ List<TrinaColumn> columns = [
       decimalDigits: 2,
     ),
     width: 120,
+  ),
+  TrinaColumn(
+    title: 'Completion',
+    field: 'completion',
+    type: TrinaColumnType.percentage(
+      decimalDigits: 1,
+      showSymbol: true,
+    ),
+    width: 100,
   ),
   TrinaColumn(
     title: 'Active',

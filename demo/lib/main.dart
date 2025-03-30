@@ -2,6 +2,7 @@ import 'package:demo/screen/feature/boolean_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart';
 import 'package:demo/screen/feature/column_title_renderer_screen.dart';
+import 'package:demo/screen/feature/percentage_type_column_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'constants/trina_grid_example_colors.dart';
@@ -110,6 +111,8 @@ class MyApp extends StatelessWidget {
         MovingScreen.routeName: (context) => const MovingScreen(),
         NumberTypeColumnScreen.routeName: (context) =>
             const NumberTypeColumnScreen(),
+        PercentageTypeColumnScreen.routeName: (context) =>
+            const PercentageTypeColumnScreen(),
         RowColorScreen.routeName: (context) => const RowColorScreen(),
         RowGroupScreen.routeName: (context) => const RowGroupScreen(),
         RowInfinityScrollScreen.routeName: (context) =>
