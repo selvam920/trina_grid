@@ -42,10 +42,11 @@ class TrinaColumnTypePercentage
     this.allowFirstDot = false,
     this.locale,
     this.decimalInput = false,
-  })  : format = '#,##0.${'0' * decimalDigits}',
+  })  : format = decimalDigits > 0 ? '#,##0.${'0' * decimalDigits}' : '#,##0',
         // Create a NumberFormat WITHOUT the % symbol to avoid automatic multiplication
-        numberFormat =
-            intl.NumberFormat('#,##0.${'0' * decimalDigits}', locale),
+        numberFormat = decimalDigits > 0
+            ? intl.NumberFormat('#,##0.${'0' * decimalDigits}', locale)
+            : intl.NumberFormat('#,##0', locale),
         decimalPoint = decimalDigits;
 
   @override

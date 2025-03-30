@@ -66,15 +66,15 @@ class TrinaPercentageCellState extends State<TrinaPercentageCell>
 
     inputFormatters = [
       DecimalTextInputFormatter(
-        decimalRange: decimalRange,
+        decimalRange: decimalRange > 0 ? decimalRange : 2,
         activatedNegativeValues: activatedNegative,
-        allowFirstDot: allowFirstDot,
+        allowFirstDot: true,
         decimalSeparator: decimalSeparator,
       ),
     ];
 
     keyboardType = TextInputType.numberWithOptions(
-      decimal: decimalRange > 0,
+      decimal: true,
       signed: activatedNegative,
     );
   }
