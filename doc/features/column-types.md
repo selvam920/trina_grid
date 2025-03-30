@@ -27,7 +27,7 @@ TrinaColumn(
 )
 ```
 
-#### Properties
+#### Text Column Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -52,7 +52,7 @@ TrinaColumn(
 )
 ```
 
-#### Properties
+#### Number Column Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -71,22 +71,23 @@ For displaying and editing date values.
 
 ```dart
 TrinaColumn(
-  title: 'Birth Date',
-  field: 'birthDate',
+  title: 'Birthday',
+  field: 'birthday',
   type: TrinaColumnType.date(
     format: 'yyyy-MM-dd',
   ),
 )
 ```
 
-#### Properties
+#### Date Column Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
 | `format` | `String` | Date format pattern |
 | `startDate` | `DateTime?` | Minimum selectable date |
 | `endDate` | `DateTime?` | Maximum selectable date |
-| `datePickerTheme` | `DatePickerThemeData?` | Theme for the date picker |
+| `firstDate` | `DateTime?` | First date visible in calendar |
+| `lastDate` | `DateTime?` | Last date visible in calendar |
 
 ### Time Column
 
@@ -102,7 +103,7 @@ TrinaColumn(
 )
 ```
 
-#### Properties
+#### Time Column Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -125,7 +126,7 @@ TrinaColumn(
 )
 ```
 
-#### Properties
+#### DateTime Column Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -154,7 +155,7 @@ TrinaColumn(
 )
 ```
 
-#### Properties
+#### Select Column Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -186,7 +187,7 @@ TrinaColumn(
 )
 ```
 
-#### Properties
+#### Boolean Column Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -214,7 +215,7 @@ TrinaColumn(
 )
 ```
 
-#### Properties
+#### Currency Column Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -240,7 +241,7 @@ TrinaColumn(
 )
 ```
 
-#### Properties
+#### Percentage Column Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -252,6 +253,33 @@ TrinaColumn(
 | `applyFormatOnInit` | `bool` | When the editor loads, it resets the value to formatted value (defaults to `true`) |
 | `allowFirstDot` | `bool` | Allow a dot at the beginning when accepting negative numbers (defaults to `false`) |
 | `locale` | `String?` | Specifies the numeric locale of the column (if not specified, uses default locale) |
+| `decimalInput` | `bool` | When true, users can input direct percentage values (42 for 42%) rather than decimal values (0.42) (defaults to `false`) |
+
+#### Using `decimalInput`
+
+When `decimalInput` is set to `true`, the column will:
+
+1. Accept direct percentage values as input (e.g., 42 for 42%)
+2. Display values as percentages (e.g., 42.0%)
+3. Store values internally as percentages (not as decimals)
+
+```dart
+// Example of a column with decimalInput enabled
+TrinaColumn(
+  title: 'Percentage',
+  field: 'percentage',
+  type: TrinaColumnType.percentage(
+    decimalInput: true,
+    decimalDigits: 1,
+  ),
+)
+
+// Usage with decimalInput: true
+TrinaCell(value: 42)  // Displays as "42.0%"
+
+// Regular percentage column (decimalInput: false)
+TrinaCell(value: 0.42)  // Displays as "42.00%"
+```
 
 ### Custom Column
 
@@ -277,7 +305,7 @@ TrinaColumn(
 )
 ```
 
-#### Properties
+#### Custom Column Properties
 
 | Property | Type | Description |
 |----------|------|-------------|

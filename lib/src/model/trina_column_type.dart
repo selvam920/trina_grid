@@ -98,6 +98,8 @@ abstract class TrinaColumnType {
   ///
   /// [locale] Specifies the numeric locale of the column.
   /// If not specified, the default locale is used.
+  ///
+  /// [decimalInput] When true, the user can input values like 50 instead of 0.5 for 50%.
   factory TrinaColumnType.percentage({
     dynamic defaultValue = 0,
     int decimalDigits = 2,
@@ -107,6 +109,7 @@ abstract class TrinaColumnType {
     bool applyFormatOnInit = true,
     bool allowFirstDot = false,
     String? locale,
+    bool decimalInput = false,
   }) {
     return TrinaColumnTypePercentage(
       defaultValue: defaultValue,
@@ -117,6 +120,7 @@ abstract class TrinaColumnType {
       applyFormatOnInit: applyFormatOnInit,
       allowFirstDot: allowFirstDot,
       locale: locale,
+      decimalInput: decimalInput,
     );
   }
 

@@ -40,6 +40,8 @@ class TrinaPercentageCellState extends State<TrinaPercentageCell>
 
   late final String decimalSeparator;
 
+  late final bool decimalInput;
+
   @override
   late final TextInputType keyboardType;
 
@@ -59,6 +61,8 @@ class TrinaPercentageCellState extends State<TrinaPercentageCell>
     allowFirstDot = percentageColumn.allowFirstDot;
 
     decimalSeparator = percentageColumn.numberFormat.symbols.DECIMAL_SEP;
+
+    decimalInput = percentageColumn.decimalInput;
 
     inputFormatters = [
       DecimalTextInputFormatter(

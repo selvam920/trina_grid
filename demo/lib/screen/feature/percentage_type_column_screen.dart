@@ -73,6 +73,14 @@ class _PercentageTypeColumnScreenState
           locale: 'da_DK',
         ),
       ),
+      TrinaColumn(
+        title: 'Decimal Input',
+        field: 'decimal_input',
+        type: TrinaColumnType.percentage(
+          decimalInput: true,
+          decimalDigits: 1,
+        ),
+      ),
     ]);
 
     rows.addAll([
@@ -85,6 +93,7 @@ class _PercentageTypeColumnScreenState
           'no_symbol': TrinaCell(value: 0.95),
           'negative': TrinaCell(value: -0.12),
           'denmark_locale': TrinaCell(value: 0.485),
+          'decimal_input': TrinaCell(value: 42),
         },
       ),
       TrinaRow(
@@ -96,6 +105,7 @@ class _PercentageTypeColumnScreenState
           'no_symbol': TrinaCell(value: 0.33),
           'negative': TrinaCell(value: -0.32),
           'denmark_locale': TrinaCell(value: 0.749),
+          'decimal_input': TrinaCell(value: 5),
         },
       ),
       TrinaRow(
@@ -107,6 +117,7 @@ class _PercentageTypeColumnScreenState
           'no_symbol': TrinaCell(value: 0.64),
           'negative': TrinaCell(value: -0.05),
           'denmark_locale': TrinaCell(value: 0.332),
+          'decimal_input': TrinaCell(value: 100),
         },
       ),
     ]);
@@ -120,6 +131,10 @@ class _PercentageTypeColumnScreenState
       topContents: const [
         Text('A column to display and edit percentage values.'),
         Text('You can customize decimal places, symbol position, and more.'),
+        Text(
+            'With decimalInput=true, the column internally stores values as decimals (0.42)'),
+        Text(
+            'but allows users to input and view values as whole percentages (42%).'),
       ],
       topButtons: [
         TrinaExampleButton(
