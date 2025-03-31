@@ -9,6 +9,7 @@
 * Implement custom loading widget support and add Loading Options feature to documentation and demo ( by @doonfrs )
 * Introduce Percentage Column Type ( by @doonfrs )
 * add decimalInput option to percentage column type ( by @doonfrs )
+* fix unit tests, all tests working, remove skipped tests, translate Korean comments to English ( by @doonfrs )
 
 ## [1.6.5] - 2025. 03. 22
 
