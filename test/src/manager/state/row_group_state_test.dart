@@ -205,7 +205,7 @@ void main() {
   ///     - 004
   ///   - 2
   ///     - 005
-  group('2개의 컬럼으로 그룹핑 - TrinaRowGroupByColumnDelegate.', () {
+  group('Grouping by 2 columns - TrinaRowGroupByColumnDelegate.', () {
     late List<TrinaColumn> columns;
 
     late List<TrinaRow> rows;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:trina_grid/src/widgets/trina_horizontal_scroll_bar.dart';
 import 'package:trina_grid/src/widgets/trina_vertical_scroll_bar.dart';
 import 'package:trina_grid/trina_grid.dart';
@@ -24,6 +25,10 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
 
   late final ScrollController _verticalScroll;
   late final ScrollController _horizontalScroll;
+
+  // Timers for scroll update
+  Timer? _verticalScrollTimer;
+  Timer? _horizontalScrollTimer;
 
   // Value notifiers for scroll info to avoid rebuilding the entire widget
   final ValueNotifier<double> _verticalScrollOffsetNotifier =
@@ -97,6 +102,11 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
   void dispose() {
     _verticalScroll.removeListener(_updateVerticalScrollInfo);
     _horizontalScroll.removeListener(_updateHorizontalScrollInfo);
+
+    // Cancel pending timers
+    _verticalScrollTimer?.cancel();
+    _horizontalScrollTimer?.cancel();
+
     _verticalScroll.dispose();
     _horizontalScroll.dispose();
     _verticalScrollOffsetNotifier.dispose();
@@ -127,16 +137,29 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
     _scrollableRows =
         _rows.where((row) => row.frozen == TrinaRowFrozen.none).toList();
 
+    // Cancel existing timers before creating new ones
+    _verticalScrollTimer?.cancel();
+    _horizontalScrollTimer?.cancel();
+
     if (_verticalScroll.hasClients) {
-      Future.delayed(const Duration(milliseconds: 100), () {
-        _updateVerticalScrollInfo();
-      });
+      // Use a sync update if possible, otherwise schedule a short timer
+      if (mounted) {
+        _verticalScrollTimer = Timer(const Duration(milliseconds: 100), () {
+          if (mounted) {
+            _updateVerticalScrollInfo();
+          }
+        });
+      }
     }
 
     if (_horizontalScroll.hasClients) {
-      Future.delayed(const Duration(milliseconds: 100), () {
-        _updateHorizontalScrollInfo();
-      });
+      if (mounted) {
+        _horizontalScrollTimer = Timer(const Duration(milliseconds: 100), () {
+          if (mounted) {
+            _updateHorizontalScrollInfo();
+          }
+        });
+      }
     }
   }
 
