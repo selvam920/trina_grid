@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
-abstract class TrinaColumnType {
+abstract interface class TrinaColumnType {
   dynamic get defaultValue;
 
   /// Set as a string column.
@@ -231,4 +231,13 @@ abstract class TrinaColumnType {
   int compare(dynamic a, dynamic b);
 
   dynamic makeCompareValue(dynamic v);
+
+  /// If returns (true, correctedValue) then the correctedValue will be applied to the cell,
+  /// see EditingState.changeCellValue() and CellState.filteredCellValue()
+  (bool, dynamic) filteredValue({dynamic newValue, dynamic oldValue});
+}
+
+mixin TrinaColumnTypeDefaultMixin {
+  (bool, dynamic) filteredValue({dynamic newValue, dynamic oldValue}) =>
+      (false, newValue);
 }
