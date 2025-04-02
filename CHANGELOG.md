@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.6.7] - 2025. 04. 02
+
+* Introduce date time column type, add example & documentation ( by @doonfrs )
+
 ## [1.6.6] - 2025. 03. 22
 
 * Fix lazy pagination rebuild issue for simple pagination & refresh

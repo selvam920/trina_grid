@@ -58,6 +58,7 @@ import 'feature/time_type_column_screen.dart';
 import 'feature/value_formatter_screen.dart';
 import 'feature/pages_list_screen.dart';
 import 'feature/scrollbars.dart';
+import 'feature/date_time_column_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/';
@@ -319,6 +320,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, DateTypeColumnScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'DateTime type column',
+        description:
+            'A column to enter both date and time values in a single field.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, DateTimeColumnScreen.routeName);
+        },
+        trailing: newIcon,
       ),
       TrinaListTile(
         title: 'Time type column',

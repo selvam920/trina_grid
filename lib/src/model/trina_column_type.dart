@@ -199,6 +199,41 @@ abstract interface class TrinaColumnType {
     );
   }
 
+  /// Set as a datetime column combining date and time.
+  ///
+  /// [startDate] Range start date (If there is no value, Can select the date without limit)
+  ///
+  /// [endDate] Range end date
+  ///
+  /// [format] 'yyyy-MM-dd HH:mm' (2020-01-01 15:30)
+  ///
+  /// [headerFormat] 'yyyy-MM' (2020-01)
+  /// Display year and month in header in date picker popup.
+  ///
+  /// [applyFormatOnInit] When the editor loads, it resets the value to [format].
+  ///
+  /// Set the suffixIcon in the [popupIcon] cell. Tap this icon to open the date & time selection popup.
+  /// The default icon is displayed, and if this value is set to null , the icon does not appear.
+  factory TrinaColumnType.dateTime({
+    dynamic defaultValue = '',
+    DateTime? startDate,
+    DateTime? endDate,
+    String format = 'yyyy-MM-dd HH:mm',
+    String headerFormat = 'yyyy-MM',
+    bool applyFormatOnInit = true,
+    IconData? popupIcon = Icons.event_available,
+  }) {
+    return TrinaColumnTypeDateTime(
+      defaultValue: defaultValue,
+      startDate: startDate,
+      endDate: endDate,
+      format: format,
+      headerFormat: headerFormat,
+      applyFormatOnInit: applyFormatOnInit,
+      popupIcon: popupIcon,
+    );
+  }
+
   /// Set to boolean column.
   ///
   /// [allowEmpty] determines if null/empty values are allowed

@@ -61,6 +61,7 @@ export './src/model/trina_column_type_with_number_format.dart';
 export 'src/model/column_types/trina_column_type_boolean.dart';
 export 'src/model/column_types/trina_column_type_currency.dart';
 export 'src/model/column_types/trina_column_type_date.dart';
+export 'src/model/column_types/trina_column_type_date_time.dart';
 export 'src/model/column_types/trina_column_type_number.dart';
 export 'src/model/column_types/trina_column_type_percentage.dart';
 export 'src/model/column_types/trina_column_type_text.dart';

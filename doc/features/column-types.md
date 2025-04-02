@@ -113,15 +113,18 @@ TrinaColumn(
 
 ### DateTime Column
 
-Combines date and time functionality.
+For displaying and editing both date and time values in a single field.
 
 ```dart
 TrinaColumn(
   title: 'Created At',
   field: 'createdAt',
   type: TrinaColumnType.dateTime(
-    dateFormat: 'yyyy-MM-dd',
-    timeFormat: 'HH:mm:ss',
+    format: 'yyyy-MM-dd HH:mm',
+    headerFormat: 'MMMM yyyy',
+    startDate: DateTime(2023, 1, 1),
+    endDate: DateTime(2025, 12, 31),
+    popupIcon: Icons.event_available,
   ),
 )
 ```
@@ -130,11 +133,22 @@ TrinaColumn(
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `dateFormat` | `String` | Date format pattern |
-| `timeFormat` | `String` | Time format pattern |
-| `startDate` | `DateTime?` | Minimum selectable date |
-| `endDate` | `DateTime?` | Maximum selectable date |
-| `use24HourFormat` | `bool` | Whether to use 24-hour format |
+| `format` | `String` | DateTime format pattern (defaults to 'yyyy-MM-dd HH:mm') |
+| `headerFormat` | `String` | Format for the header in date picker (defaults to 'yyyy-MM') |
+| `startDate` | `DateTime?` | Minimum selectable date (optional) |
+| `endDate` | `DateTime?` | Maximum selectable date (optional) |
+| `applyFormatOnInit` | `bool` | Whether to apply format when initializing (defaults to `true`) |
+| `popupIcon` | `IconData?` | Custom icon for the popup button (defaults to calendar icon) |
+
+#### DateTime Selection Process
+
+The DateTime column opens a two-step selection process:
+
+1. First, a date picker appears where the user can select a date
+2. After selecting a date, a time picker appears with hour and minute selection
+3. The combined date and time value is then set in the cell
+
+This approach provides a more intuitive way to select both date and time components compared to separate columns.
 
 ### Select Column
 
@@ -385,6 +399,14 @@ List<TrinaColumn> columns = [
     field: 'birthDate',
     type: TrinaColumnType.date(format: 'yyyy-MM-dd'),
     width: 120,
+  ),
+  TrinaColumn(
+    title: 'Created At',
+    field: 'createdAt',
+    type: TrinaColumnType.dateTime(
+      format: 'yyyy-MM-dd HH:mm',
+    ),
+    width: 150,
   ),
   TrinaColumn(
     title: 'Salary',
