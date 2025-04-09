@@ -225,6 +225,8 @@ TrinaColumn(
   enableRowChecked: false,
   enableEditingMode: true,
   readOnly: false,
+  // Override Enter key behavior for this column's filter
+  filterEnterKeyAction: TrinaGridEnterKeyAction.none,
 )
 ```
 
@@ -331,6 +333,8 @@ TrinaGrid(
   ),
 )
 ```
+
+> **Note:** While most keyboard behavior is configured at the grid level with `enterKeyAction`, you can override the Enter key behavior for specific column filters using the `filterEnterKeyAction` property on individual columns. See [Column Filtering](../features/column-filtering.md#controlling-keyboard-navigation-in-column-filters) for more details.
 
 ## Next Steps
 

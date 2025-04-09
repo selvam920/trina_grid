@@ -151,13 +151,32 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
       event: event,
     );
 
+    // Check if column has a specific filter enter key action
+    final enterKeyAction = widget.column.filterEnterKeyAction ??
+        stateManager.configuration.enterKeyAction;
+
+    if (enterKeyAction.isNone) {
+      return stateManager.keyManager!.eventResult.skip(
+        KeyEventResult.ignored,
+      );
+    }
+
     if (keyManager.isKeyUpEvent) {
       return KeyEventResult.handled;
     }
+    // If it's Enter key and the action is none, handle it here
+    if (keyManager.isEnter && enterKeyAction.isNone) {
+      return stateManager.keyManager!.eventResult.skip(
+        KeyEventResult.ignored,
+      );
 
-    final handleMoveDown =
-        (keyManager.isDown || keyManager.isEnter || keyManager.isEsc) &&
-            stateManager.refRows.isNotEmpty;
+      return KeyEventResult.handled;
+    }
+
+    final handleMoveDown = (keyManager.isDown ||
+            (keyManager.isEnter && !enterKeyAction.isNone) ||
+            keyManager.isEsc) &&
+        stateManager.refRows.isNotEmpty;
 
     final handleMoveHorizontal = keyManager.isTab ||
         (_controller.text.isEmpty && keyManager.isHorizontal);

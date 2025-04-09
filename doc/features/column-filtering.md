@@ -347,6 +347,71 @@ class _ColumnFilteringExampleState extends State<ColumnFilteringExample> {
 }
 ```
 
+## Controlling Keyboard Navigation in Column Filters
+
+By default, when users press the Enter key in a column filter, the focus moves to the next field (usually the grid cell below). This behavior follows the grid's global `enterKeyAction` configuration.
+
+However, in some scenarios you might want to prevent this behavior for specific columns. For example, when a column filter needs to capture the Enter key for submitting a search or when working with multi-line filters.
+
+### Column-Specific Enter Key Behavior
+
+TrinaGrid allows you to override the default Enter key behavior for individual column filters using the `filterEnterKeyAction` property:
+
+```dart
+TrinaColumn(
+  title: 'Description',
+  field: 'description',
+  type: TrinaColumnType.text(),
+  // Prevent Enter key from moving focus in this column's filter
+  filterEnterKeyAction: TrinaGridEnterKeyAction.none,
+)
+```
+
+### Available Options
+
+The `filterEnterKeyAction` property accepts the same values as the grid-level `enterKeyAction` configuration:
+
+- **`TrinaGridEnterKeyAction.editingAndMoveDown`**: (Default) Moves focus to the cell below when Enter is pressed
+- **`TrinaGridEnterKeyAction.editingAndMoveRight`**: Moves focus to the cell to the right when Enter is pressed
+- **`TrinaGridEnterKeyAction.toggleEditing`**: Toggles editing state without moving focus
+- **`TrinaGridEnterKeyAction.none`**: Disables Enter key navigation, allowing the key press to be handled by other listeners
+
+### Example: Preventing Enter Key Navigation for a Specific Column
+
+```dart
+List<TrinaColumn> columns = [
+  TrinaColumn(
+    title: 'ID',
+    field: 'id',
+    type: TrinaColumnType.number(),
+    // Uses the default Enter key behavior from grid configuration
+  ),
+  TrinaColumn(
+    title: 'Name',
+    field: 'name',
+    type: TrinaColumnType.text(),
+    // Uses the default Enter key behavior from grid configuration
+  ),
+  TrinaColumn(
+    title: 'Description',
+    field: 'description',
+    type: TrinaColumnType.text(),
+    // Override Enter key behavior for this column's filter only
+    filterEnterKeyAction: TrinaGridEnterKeyAction.none,
+    // This allows the filter to handle the Enter key internally
+    // without moving focus to the next field
+  ),
+];
+
+// Grid configuration with default Enter key behavior
+TrinaGridConfiguration configuration = TrinaGridConfiguration(
+  enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveDown,
+  // Other configuration options...
+);
+```
+
+In this example, pressing Enter in the ID or Name column filters will move focus to the cell below, following the grid's default configuration. However, pressing Enter in the Description column filter will not move focus, allowing for custom handling of the Enter key.
+
 ## Best Practices
 
 1. **Enable Filtering Selectively**: Only enable filtering for columns where it makes sense. For action columns or columns with complex widgets, filtering may not be relevant.
