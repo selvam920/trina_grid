@@ -170,7 +170,6 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
         KeyEventResult.ignored,
       );
 
-      return KeyEventResult.handled;
     }
 
     final handleMoveDown = (keyManager.isDown ||
