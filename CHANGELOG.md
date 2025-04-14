@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.6.7] - 2025. 04. 02
+## [1.6.7] - 2025. 04. 14
 
 * Introduce date time column type, add example & documentation ( by @doonfrs )
 * Add filterEnterKeyAction to TrinaColumn for controlling keyboard navigation in column filters ( by @doonfrs )
