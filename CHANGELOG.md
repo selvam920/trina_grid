@@ -5,6 +5,7 @@
 * Introduce date time column type, add example & documentation ( by @doonfrs )
 * Add filterEnterKeyAction to TrinaColumn for controlling keyboard navigation in column filters ( by @doonfrs )
 * Update row color example ( by @doonfrs )
+* Fix horizontal scrollbar calculation issue for the header & footer ( by @doonfrs )
 
 ## [1.6.6] - 2025. 03. 22
 
