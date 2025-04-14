@@ -5,6 +5,7 @@ import 'package:demo/screen/feature/boolean_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart';
 import 'package:demo/screen/feature/column_title_renderer_screen.dart';
+import 'package:demo/screen/feature/filter_icon_customization_screen.dart';
 import 'package:demo/screen/feature/loading_options_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/frozen_rows_screen.dart';
@@ -255,10 +256,28 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         },
       ),
       TrinaListTile(
-        title: 'Column filtering',
-        description: 'Filter rows by setting filters on columns.',
+        title: 'Column Filtering',
+        description: 'Column filtering allows to filter all data.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, ColumnFilteringScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Filter Icon Customization',
+        description:
+            'Customize or hide the filter icon that appears in column titles after filtering.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, FilterIconCustomizationScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Column Footer',
+        description: 'Column footer allows to display footer cell. '
+            'The default built-in footer is aggregate. '
+            'But you can also customize it.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnFooterScreen.routeName);
         },
       ),
       TrinaListTile(
@@ -274,15 +293,6 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, ColumnMenuScreen.routeName);
         },
-      ),
-      TrinaListTile(
-        title: 'Column footer',
-        description:
-            'Display each column fixed at the bottom. (For outputting data sum, average, etc.)',
-        onTapLiveDemo: () {
-          Navigator.pushNamed(context, ColumnFooterScreen.routeName);
-        },
-        trailing: newIcon,
       ),
       TrinaListTile(
         title: 'Text type column',

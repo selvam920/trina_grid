@@ -70,34 +70,36 @@ Users can apply multiple filters to different columns simultaneously. When multi
 You can customize the column filtering behavior through the `columnFilter` configuration:
 
 ```dart
-TrinaGrid(
-  columns: columns,
-  rows: rows,
-  configuration: TrinaGridConfiguration(
-    columnFilter: TrinaGridColumnFilterConfig(
-      // Specify which filter types are available
-      filters: const [
-        ...FilterHelper.defaultFilters,
-        // Add custom filters if needed
-        CustomFilter(),
-      ],
-      // Set default filter types for specific columns
-      resolveDefaultColumnFilter: (column, resolver) {
-        if (column.field == 'text') {
-          return resolver<TrinaFilterTypeContains>() as TrinaFilterType;
-        } else if (column.field == 'number') {
-          return resolver<TrinaFilterTypeGreaterThan>() as TrinaFilterType;
-        } else if (column.field == 'date') {
-          return resolver<TrinaFilterTypeLessThan>() as TrinaFilterType;
-        }
-        
-        // Default filter type for other columns
-        return resolver<TrinaFilterTypeContains>() as TrinaFilterType;
-      },
-    ),
+TrinaGridConfiguration(
+  columnFilter: TrinaGridColumnFilterConfig(
+    // Configuration options for filtering
+  ),
+  style: TrinaGridStyleConfig(
+    // Control visibility and appearance of filter icons
+    filterIcon: Icon(Icons.filter_list), // Custom filter icon
+    // or
+    filterIcon: null, // Hide filter icons
   ),
 )
 ```
+
+### Filter Icon Customization
+
+By default, when a filter is applied to a column, a filter icon appears next to the column title. You can customize or hide this icon with the `filterIcon` property in the style configuration:
+
+```dart
+TrinaGridConfiguration(
+  style: TrinaGridStyleConfig(
+    // Use a custom icon
+    filterIcon: Icon(Icons.search),
+    
+    // Or hide filter icons completely
+    filterIcon: null,
+  ),
+)
+```
+
+When `filterIcon` is set to `null`, filter icons will not be displayed in column titles, even when filters are applied. You can also provide a custom icon to change the appearance.
 
 ### Disabling Filtering for Specific Columns
 

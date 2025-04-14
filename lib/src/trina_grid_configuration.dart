@@ -219,6 +219,7 @@ class TrinaGridStyleConfig {
     this.enableCellBorderHorizontal = true,
     this.enableRowColorAnimation = false,
     this.enableRowHoverColor = false,
+    this.filterIcon = const Icon(Icons.filter_alt_outlined),
     this.gridBackgroundColor = Colors.white,
     this.rowColor = Colors.white,
     this.oddRowColor,
@@ -292,6 +293,7 @@ class TrinaGridStyleConfig {
     this.enableCellBorderHorizontal = true,
     this.enableRowColorAnimation = false,
     this.enableRowHoverColor = false,
+    this.filterIcon = const Icon(Icons.filter_alt_outlined),
     this.gridBackgroundColor = const Color(0xFF111111),
     this.rowColor = const Color(0xFF111111),
     this.oddRowColor,
@@ -383,6 +385,10 @@ class TrinaGridStyleConfig {
   /// the background color of the row is the same as [rowColor].
   /// [rowHoveredColor] is therefore not used.
   final bool enableRowHoverColor;
+
+  /// Filter icon shown in column titles when columns are filtered.
+  /// Set to null to hide filter icons. Customize by providing a different icon.
+  final Icon? filterIcon;
 
   final Color gridBackgroundColor;
 
@@ -559,6 +565,7 @@ class TrinaGridStyleConfig {
     bool? enableCellBorderVertical,
     bool? enableCellBorderHorizontal,
     bool? enableRowColorAnimation,
+    Icon? filterIcon,
     Color? gridBackgroundColor,
     Color? rowColor,
     TrinaOptional<Color?>? oddRowColor,
@@ -617,6 +624,7 @@ class TrinaGridStyleConfig {
           enableCellBorderHorizontal ?? this.enableCellBorderHorizontal,
       enableRowColorAnimation:
           enableRowColorAnimation ?? this.enableRowColorAnimation,
+      filterIcon: filterIcon ?? this.filterIcon,
       gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
       rowColor: rowColor ?? this.rowColor,
       oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
@@ -692,6 +700,7 @@ class TrinaGridStyleConfig {
             enableCellBorderVertical == other.enableCellBorderVertical &&
             enableCellBorderHorizontal == other.enableCellBorderHorizontal &&
             enableRowColorAnimation == other.enableRowColorAnimation &&
+            filterIcon == other.filterIcon &&
             gridBackgroundColor == other.gridBackgroundColor &&
             rowColor == other.rowColor &&
             oddRowColor == other.oddRowColor &&
@@ -744,6 +753,7 @@ class TrinaGridStyleConfig {
         enableCellBorderVertical,
         enableCellBorderHorizontal,
         enableRowColorAnimation,
+        filterIcon,
         gridBackgroundColor,
         rowColor,
         oddRowColor,

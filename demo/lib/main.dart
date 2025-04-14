@@ -29,6 +29,7 @@ import 'screen/feature/date_type_column_screen.dart';
 import 'screen/feature/dual_mode_screen.dart';
 import 'screen/feature/edit_cell_renderer_screen.dart';
 import 'screen/feature/editing_state_screen.dart';
+import 'screen/feature/filter_icon_customization_screen.dart';
 import 'screen/feature/grid_as_popup_screen.dart';
 import 'screen/feature/grid_export_screen.dart';
 import 'screen/feature/loading_options_screen.dart';
@@ -108,6 +109,8 @@ class MyApp extends StatelessWidget {
             const DateTypeColumnScreen(),
         DualModeScreen.routeName: (context) => const DualModeScreen(),
         EditingStateScreen.routeName: (context) => const EditingStateScreen(),
+        FilterIconCustomizationScreen.routeName: (context) =>
+            const FilterIconCustomizationScreen(),
         GridAsPopupScreen.routeName: (context) => const GridAsPopupScreen(),
         GridExportScreen.routeName: (context) => const GridExportScreen(),
         ListingModeScreen.routeName: (context) => const ListingModeScreen(),
