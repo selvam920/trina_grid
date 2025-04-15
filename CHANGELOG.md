@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.6.8] - 2025. 04. 15
+
+* Fix focus issue when header is a TextField or TextFormField ( by @doonfrs )
+
 ## [1.6.7] - 2025. 04. 14
 
 * Introduce date time column type, add example & documentation ( by @doonfrs )

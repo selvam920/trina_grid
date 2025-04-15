@@ -677,6 +677,19 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
   }
 
   KeyEventResult _handleGridFocusOnKey(FocusNode focusNode, KeyEvent event) {
+    // Check if the focus is within a header widget - if so, don't capture the keyboard event
+    if (_header != null) {
+      // Get the current primary focus
+      final FocusNode? primaryFocus = FocusManager.instance.primaryFocus;
+
+      // If the primary focus is not the grid's focus node, don't handle the event
+      // This allows TextFields and other input widgets in the header to receive keyboard events
+      if (primaryFocus != null && primaryFocus != _stateManager.gridFocusNode) {
+        // Skip handling this event if it's not focused on the grid
+        return KeyEventResult.ignored;
+      }
+    }
+
     if (_keyManager.eventResult.isSkip == false) {
       _keyManager.subject.add(
         TrinaKeyManagerEvent(focusNode: focusNode, event: event),
