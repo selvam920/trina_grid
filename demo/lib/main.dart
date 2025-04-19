@@ -53,6 +53,7 @@ import 'screen/home_screen.dart';
 import 'screen/feature/pages_list_screen.dart';
 import 'screen/feature/frozen_rows_screen.dart';
 import 'screen/feature/scrollbars.dart';
+import 'screen/feature/row_wrapper_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -145,6 +146,7 @@ class MyApp extends StatelessWidget {
         ScrollbarsScreen.routeName: (context) => const ScrollbarsScreen(),
         LoadingOptionsScreen.routeName: (context) =>
             const LoadingOptionsScreen(),
+        RowWrapperScreen.routeName: (context) => const RowWrapperScreen(),
       },
       theme: ThemeData(
         primaryColor: TrinaGridExampleColors.primaryColor,

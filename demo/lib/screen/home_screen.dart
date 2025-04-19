@@ -60,6 +60,7 @@ import 'feature/value_formatter_screen.dart';
 import 'feature/pages_list_screen.dart';
 import 'feature/scrollbars.dart';
 import 'feature/date_time_column_screen.dart';
+import 'feature/row_wrapper_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/';
@@ -581,6 +582,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
             'Configure loading displays with different levels and custom loading widgets.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, LoadingOptionsScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Row Wrapper',
+        description:
+            'Wrap each row with your own widget for custom styling or interactivity.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RowWrapperScreen.routeName);
         },
         trailing: newIcon,
       ),
