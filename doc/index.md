@@ -35,6 +35,7 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 - [Row Selection](features/row-selection.md)
 - [Row Moving](features/row-moving.md)
 - [Row Coloring](features/row-color.md)
+- [Row Wrapper](features/row-wrapper.md)
 - [Row Checking](features/row-checking.md)
 - [Row Groups](features/row-groups.md)
 - [Frozen Rows](features/frozen-rows.md)
