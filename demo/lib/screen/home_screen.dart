@@ -61,6 +61,7 @@ import 'feature/pages_list_screen.dart';
 import 'feature/scrollbars.dart';
 import 'feature/date_time_column_screen.dart';
 import 'feature/row_wrapper_screen.dart';
+import 'feature/multiitems_delegate_demo_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/';
@@ -593,6 +594,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
           Navigator.pushNamed(context, RowWrapperScreen.routeName);
         },
         trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'MultiItems Filter Delegate',
+        description:
+            'Demonstrates the use of TrinaFilterColumnWidgetDelegate.multiItems for multi-line or multi-item column filtering.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, MultiItemsDelegateDemoScreen.routeName);
+        },
       ),
     ];
     return allItems;

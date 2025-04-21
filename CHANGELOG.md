@@ -4,6 +4,7 @@
 
 * Fix focus issue when header is a TextField or TextFormField ( by @doonfrs )
 * Add RowWrapperScreen to navigation and home screen; update demo with new feature tile ( by @doonfrs )
+* Introduce Multi-Items Filter ( by @doonfrs )
 
 ## [1.6.7] - 2025. 04. 14
 

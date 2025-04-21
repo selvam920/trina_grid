@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:trina_grid/src/widgets/multi_line_column_filter.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import '../ui.dart';
@@ -169,7 +170,6 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
       return stateManager.keyManager!.eventResult.skip(
         KeyEventResult.ignored,
       );
-
     }
 
     final handleMoveDown = (keyManager.isDown ||
@@ -304,6 +304,41 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
       }
     }
 
+    Widget? w = filterDelegate?.filterWidgetBuilder?.call(
+        _focusNode, _controller, _enabled, _handleOnChanged, stateManager);
+
+    if (filterDelegate?.isMultiItems == true) {
+      w = MultiLineColumnFilter(
+        focusNode: _focusNode,
+        controller: _controller,
+        handleOnChanged: _handleOnChanged,
+        stateManager: stateManager,
+      );
+    } else {
+      w ??= TextField(
+        focusNode: _focusNode,
+        controller: _controller,
+        enabled: _enabled,
+        style: style.cellTextStyle,
+        onTap: _handleOnTap,
+        onChanged: _handleOnChanged,
+        onEditingComplete: _handleOnEditingComplete,
+        decoration: InputDecoration(
+          suffixIcon: suffixIcon,
+          hintText: filterDelegate?.filterHintText ??
+              (_enabled ? widget.column.defaultFilter.title : ''),
+          filled: true,
+          hintStyle: TextStyle(color: filterDelegate?.filterHintTextColor),
+          fillColor: _textFieldColor,
+          border: _border,
+          enabledBorder: _border,
+          disabledBorder: _disabledBorder,
+          focusedBorder: _enabledBorder,
+          contentPadding: const EdgeInsets.all(5),
+        ),
+      );
+    }
+
     return SizedBox(
       height: stateManager.columnFilterHeight,
       child: DecoratedBox(
@@ -315,34 +350,7 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
                 : BorderSide.none,
           ),
         ),
-        child: Padding(
-          padding: _padding,
-          child: filterDelegate?.filterWidgetBuilder?.call(_focusNode,
-                  _controller, _enabled, _handleOnChanged, stateManager) ??
-              TextField(
-                focusNode: _focusNode,
-                controller: _controller,
-                enabled: _enabled,
-                style: style.cellTextStyle,
-                onTap: _handleOnTap,
-                onChanged: _handleOnChanged,
-                onEditingComplete: _handleOnEditingComplete,
-                decoration: InputDecoration(
-                  suffixIcon: suffixIcon,
-                  hintText: filterDelegate?.filterHintText ??
-                      (_enabled ? widget.column.defaultFilter.title : ''),
-                  filled: true,
-                  hintStyle:
-                      TextStyle(color: filterDelegate?.filterHintTextColor),
-                  fillColor: _textFieldColor,
-                  border: _border,
-                  enabledBorder: _border,
-                  disabledBorder: _disabledBorder,
-                  focusedBorder: _enabledBorder,
-                  contentPadding: const EdgeInsets.all(5),
-                ),
-              ),
-        ),
+        child: Padding(padding: _padding, child: w),
       ),
     );
   }

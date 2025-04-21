@@ -140,6 +140,67 @@ class CustomFilter implements TrinaFilterType {
 
 Then add your custom filter to the `filters` list in the `columnFilter` configuration.
 
+## Multi-Items Filter (Multi-line/Comma-separated)
+
+![Multi-Items Filter Demo](https://raw.githubusercontent.com/doonfrs/trina_grid/master/doc/assets/multi-items-filter.gif)
+
+TrinaGrid provides a built-in multi-items filter type for columns, allowing users to filter rows by matching any value from a list of items. This is useful for scenarios where you want to filter by multiple possible values at once, using either comma-separated or multi-line input.
+
+- **Filter type:** `TrinaFilterTypeMultiItems`
+- **Widget delegate:** `TrinaFilterColumnWidgetDelegate.multiItems`
+- **Case sensitivity:** Configurable (default: true)
+
+### How it works
+
+- The filter value is split by commas or newlines.
+- Each item is trimmed.
+- The cell value is compared to each item (case-sensitive by default).
+- If any item matches, the row is included.
+
+### Example: Case-insensitive multi-items filter
+
+```dart
+TrinaColumn(
+  title: 'Tags',
+  field: 'tags',
+  type: TrinaColumnType.text(),
+  filterWidgetDelegate: const TrinaFilterColumnWidgetDelegate.multiItems(caseSensitive: false),
+)
+
+// In your grid configuration:
+TrinaGridConfiguration(
+  columnFilter: TrinaGridColumnFilterConfig(
+    filters: const [
+      ...FilterHelper.defaultFilters,
+      TrinaFilterTypeMultiItems(caseSensitive: false),
+    ],
+    resolveDefaultColumnFilter: (column, resolver) {
+      if (column.field == 'tags') {
+        return const TrinaFilterTypeMultiItems(caseSensitive: false);
+      }
+      return resolver<TrinaFilterTypeContains>();
+    },
+  ),
+)
+```
+
+### Setting case sensitivity
+
+- Pass `caseSensitive: false` to make the filter ignore case.
+- The option is available both in the filter type and the widget delegate.
+
+### UI
+
+- The multi-items filter uses a multi-line text field by default.
+- Users can enter values separated by commas or new lines.
+
+### When to use
+
+- When you want to allow users to filter by multiple possible values in a single column.
+- For tag, category, or label columns, or any scenario where multi-value matching is needed.
+
+See also: [Column Types](column-types.md), [Custom Filters](#custom-filters)
+
 ## Programmatic Filtering
 
 You can programmatically apply filters using the state manager:

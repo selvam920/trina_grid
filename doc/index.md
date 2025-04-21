@@ -24,6 +24,7 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 - [Column Hiding](features/column-hiding.md)
 - [Column Sorting](features/column-sorting.md)
 - [Column Filtering](features/column-filtering.md)
+  - [Multi-Items Filter](features/column-filtering.md#multi-items-filter-multi-linecomma-separated)
 - [Column Groups](features/column-groups.md)
 - [Column Renderers](features/column-renderer.md)
 - [Column Title Renderer](features/column-title-renderer.md)

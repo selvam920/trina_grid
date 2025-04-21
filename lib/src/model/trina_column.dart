@@ -455,7 +455,6 @@ class TrinaColumn {
 }
 
 class TrinaFilterColumnWidgetDelegate {
-  /// This is the default filter widget delegate
   const TrinaFilterColumnWidgetDelegate.textField({
     this.filterHintText,
     this.filterHintTextColor,
@@ -463,16 +462,29 @@ class TrinaFilterColumnWidgetDelegate {
     this.onFilterSuffixTap,
     this.clearIcon = const Icon(Icons.clear),
     this.onClear,
-  }) : filterWidgetBuilder = null;
+  })  : filterWidgetBuilder = null,
+        caseSensitive = null,
+        isMultiItems = false;
 
-  /// If you don't want a custom widget
   const TrinaFilterColumnWidgetDelegate.builder({this.filterWidgetBuilder})
       : filterSuffixIcon = null,
         onFilterSuffixTap = null,
         filterHintText = null,
         filterHintTextColor = null,
         clearIcon = const Icon(Icons.clear),
-        onClear = null;
+        onClear = null,
+        caseSensitive = null,
+        isMultiItems = false;
+
+  const TrinaFilterColumnWidgetDelegate.multiItems({this.caseSensitive = true})
+      : filterSuffixIcon = null,
+        onFilterSuffixTap = null,
+        filterHintText = null,
+        filterHintTextColor = null,
+        filterWidgetBuilder = null,
+        clearIcon = const Icon(Icons.clear),
+        onClear = null,
+        isMultiItems = true;
 
   ///Set hint text for filter field
   final String? filterHintText;
@@ -505,6 +517,10 @@ class TrinaFilterColumnWidgetDelegate {
     void Function(String changed) handleOnChanged,
     TrinaGridStateManager stateManager,
   )? filterWidgetBuilder;
+
+  final bool? isMultiItems;
+
+  final bool? caseSensitive;
 }
 
 class TrinaColumnRendererContext {
