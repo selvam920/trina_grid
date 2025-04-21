@@ -58,7 +58,8 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
             border: _border,
             enabledBorder: _border,
             focusedBorder: _enabledBorder,
-            hintText: 'Filter',
+            hintText: widget
+                .stateManager.configuration.localeText.multiLineFilterHint,
             contentPadding: const EdgeInsets.all(5),
             suffixIcon: Row(
               mainAxisSize: MainAxisSize.min,
@@ -74,7 +75,11 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
                           widget.controller.clear();
                           widget.handleOnChanged('');
                         },
-                        icon: const Icon(Icons.clear),
+                        icon: Icon(
+                          Icons.clear,
+                          color:
+                              widget.stateManager.configuration.style.iconColor,
+                        ),
                       ),
                     ),
                   ),
@@ -88,7 +93,8 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: Text('Edit Filter'),
+                            title: Text(widget.stateManager.configuration
+                                .localeText.multiLineFilterEditTitle),
                             content: Material(
                               child: TextField(
                                 controller: widget.controller,
@@ -104,13 +110,18 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
                                   );
                                   Navigator.pop(context);
                                 },
-                                child: const Text('Ok'),
+                                child: Text(widget.stateManager.configuration
+                                    .localeText.multiLineFilterOkButton),
                               ),
                             ],
                           ),
                         );
                       },
-                      icon: const Icon(Icons.edit),
+                      icon: Icon(
+                        Icons.edit,
+                        color:
+                            widget.stateManager.configuration.style.iconColor,
+                      ),
                     ),
                   ),
                 ),

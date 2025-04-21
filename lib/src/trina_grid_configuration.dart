@@ -1199,6 +1199,10 @@ class TrinaGridLocaleText {
   // Common
   final String loadingText;
 
+  final String multiLineFilterHint;
+  final String multiLineFilterEditTitle;
+  final String multiLineFilterOkButton;
+
   const TrinaGridLocaleText({
     // Column menu
     this.unfreezeColumn = 'Unfreeze',
@@ -1237,6 +1241,9 @@ class TrinaGridLocaleText {
     this.minute = 'Minute',
     // Common
     this.loadingText = 'Loading',
+    this.multiLineFilterHint = 'Filter',
+    this.multiLineFilterEditTitle = 'Edit Filter',
+    this.multiLineFilterOkButton = 'Ok',
   });
 
   const TrinaGridLocaleText.french({
@@ -1277,6 +1284,9 @@ class TrinaGridLocaleText {
     this.minute = 'Minute',
     // Common
     this.loadingText = 'Chargement',
+    this.multiLineFilterHint = 'Filtrer',
+    this.multiLineFilterEditTitle = 'Modifier le filtre',
+    this.multiLineFilterOkButton = 'Ok',
   });
 
   const TrinaGridLocaleText.china({
@@ -1317,6 +1327,9 @@ class TrinaGridLocaleText {
     this.minute = '分',
     // Common
     this.loadingText = '加载中',
+    this.multiLineFilterHint = '筛选',
+    this.multiLineFilterEditTitle = '编辑筛选',
+    this.multiLineFilterOkButton = '确定',
   });
 
   const TrinaGridLocaleText.korean({
@@ -1357,6 +1370,9 @@ class TrinaGridLocaleText {
     this.minute = '분',
     // Common
     this.loadingText = '로딩중',
+    this.multiLineFilterHint = '필터',
+    this.multiLineFilterEditTitle = '필터 편집',
+    this.multiLineFilterOkButton = '확인',
   });
 
   const TrinaGridLocaleText.russian({
@@ -1397,6 +1413,9 @@ class TrinaGridLocaleText {
     this.minute = 'Минуты',
     // Common
     this.loadingText = 'Загрузка',
+    this.multiLineFilterHint = 'Фильтр',
+    this.multiLineFilterEditTitle = 'Редактировать фильтр',
+    this.multiLineFilterOkButton = 'Ок',
   });
 
   const TrinaGridLocaleText.czech({
@@ -1437,6 +1456,9 @@ class TrinaGridLocaleText {
     this.minute = 'Minuta',
     // Common
     this.loadingText = 'Načítání',
+    this.multiLineFilterHint = 'Filtr',
+    this.multiLineFilterEditTitle = 'Upravit filtr',
+    this.multiLineFilterOkButton = 'Ok',
   });
 
   const TrinaGridLocaleText.brazilianPortuguese({
@@ -1477,6 +1499,9 @@ class TrinaGridLocaleText {
     this.minute = 'Minuto',
     // Common
     this.loadingText = 'Carregando',
+    this.multiLineFilterHint = 'Filtro',
+    this.multiLineFilterEditTitle = 'Editar filtro',
+    this.multiLineFilterOkButton = 'Ok',
   });
 
   const TrinaGridLocaleText.spanish({
@@ -1517,6 +1542,9 @@ class TrinaGridLocaleText {
     this.minute = 'Minuto',
     // Common
     this.loadingText = 'Cargando',
+    this.multiLineFilterHint = 'Filtro',
+    this.multiLineFilterEditTitle = 'Editar filtro',
+    this.multiLineFilterOkButton = 'Ok',
   });
 
   const TrinaGridLocaleText.persian({
@@ -1557,6 +1585,9 @@ class TrinaGridLocaleText {
     this.minute = 'دقیقه',
     // Common
     this.loadingText = 'در حال بارگیری',
+    this.multiLineFilterHint = 'فیلتر',
+    this.multiLineFilterEditTitle = 'ویرایش فیلتر',
+    this.multiLineFilterOkButton = 'تأیید',
   });
 
   const TrinaGridLocaleText.arabic({
@@ -1597,6 +1628,9 @@ class TrinaGridLocaleText {
     this.minute = 'دقيقي',
     // Common
     this.loadingText = 'جاري التحميل',
+    this.multiLineFilterHint = 'تصفية',
+    this.multiLineFilterEditTitle = 'تعديل التصفية',
+    this.multiLineFilterOkButton = 'موافق',
   });
 
   const TrinaGridLocaleText.norway({
@@ -1637,6 +1671,9 @@ class TrinaGridLocaleText {
     this.minute = 'Minutt',
     // Common
     this.loadingText = 'Laster',
+    this.multiLineFilterHint = 'Filter',
+    this.multiLineFilterEditTitle = 'Rediger filter',
+    this.multiLineFilterOkButton = 'Ok',
   });
 
   const TrinaGridLocaleText.german({
@@ -1677,6 +1714,9 @@ class TrinaGridLocaleText {
     this.minute = 'Minute',
     // Common
     this.loadingText = 'Lädt',
+    this.multiLineFilterHint = 'Filter',
+    this.multiLineFilterEditTitle = 'Filter bearbeiten',
+    this.multiLineFilterOkButton = 'Ok',
   });
 
   const TrinaGridLocaleText.turkish({
@@ -1717,6 +1757,9 @@ class TrinaGridLocaleText {
     this.minute = 'Dakika',
     // Common
     this.loadingText = 'Yükleniyor',
+    this.multiLineFilterHint = 'Filtre',
+    this.multiLineFilterEditTitle = 'Filtreyi Düzenle',
+    this.multiLineFilterOkButton = 'Tamam',
   });
 
   const TrinaGridLocaleText.japanese({
@@ -1757,6 +1800,9 @@ class TrinaGridLocaleText {
     this.minute = '分',
     // Common
     this.loadingText = 'にゃ〜',
+    this.multiLineFilterHint = 'フィルター',
+    this.multiLineFilterEditTitle = 'フィルターを編集',
+    this.multiLineFilterOkButton = 'OK',
   });
 
   @override
@@ -1794,7 +1840,10 @@ class TrinaGridLocaleText {
             saturday == other.saturday &&
             hour == other.hour &&
             minute == other.minute &&
-            loadingText == other.loadingText;
+            loadingText == other.loadingText &&
+            multiLineFilterHint == other.multiLineFilterHint &&
+            multiLineFilterEditTitle == other.multiLineFilterEditTitle &&
+            multiLineFilterOkButton == other.multiLineFilterOkButton;
   }
 
   @override
@@ -1830,6 +1879,9 @@ class TrinaGridLocaleText {
         hour,
         minute,
         loadingText,
+        multiLineFilterHint,
+        multiLineFilterEditTitle,
+        multiLineFilterOkButton,
       ]);
 }
 
