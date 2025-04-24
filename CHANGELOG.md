@@ -5,6 +5,7 @@
 * Fix focus issue when header is a TextField or TextFormField ( by @doonfrs )
 * Add RowWrapperScreen to navigation and home screen; update demo with new feature tile ( by @doonfrs )
 * Introduce Multi-Items Filter ( by @doonfrs )
+* Enhance moving to next row when enter key action is editingAndMoveRight ( by @doonfrs )
 
 ## [1.6.7] - 2025. 04. 14
 
