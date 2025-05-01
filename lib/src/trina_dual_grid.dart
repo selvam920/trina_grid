@@ -100,7 +100,7 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
 
   late final StreamSubscription<TrinaGridEvent> _streamB;
 
-  late final bool isVertical;
+  late bool isVertical;
 
   @override
   void initState() {
@@ -117,6 +117,16 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
     _streamB.cancel();
 
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant TrinaDualGrid oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isVertical != oldWidget.isVertical) {
+      setState(() {
+        isVertical = widget.isVertical ?? false;
+      });
+    }
   }
 
   Widget _buildGrid({
