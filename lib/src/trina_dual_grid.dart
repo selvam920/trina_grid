@@ -470,7 +470,6 @@ class TrinaDualGridLayoutDelegate extends MultiChildLayoutDelegate {
       } else {
         positionChild(_TrinaDualGridId.divider, Offset(posX, 0));
       }
-      positionChild(_TrinaDualGridId.divider, Offset(posX, 0));
     }
 
     if (hasChild(_TrinaDualGridId.gridB)) {
@@ -489,8 +488,6 @@ class TrinaDualGridLayoutDelegate extends MultiChildLayoutDelegate {
       } else {
         positionChild(_TrinaDualGridId.gridB, Offset(posX, 0));
       }
-
-      positionChild(_TrinaDualGridId.gridB, Offset(posX, 0));
     }
   }
 

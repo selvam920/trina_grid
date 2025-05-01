@@ -146,6 +146,7 @@ class _DualModeScreenState extends State<DualModeScreen> {
         ),
       ],
       body: TrinaDualGrid(
+        isVertical: true,
         gridPropsA: TrinaDualGridProps(
           columns: gridAColumns,
           rows: gridARows,
