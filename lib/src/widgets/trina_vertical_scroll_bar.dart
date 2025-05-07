@@ -266,7 +266,8 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                         widget.height,
                                       ),
                                 width: scrollConfig.thickness,
-                                right: 2,
+                                left: widget.stateManager.isRTL ? 2 : null,
+                                right: widget.stateManager.isRTL ? null : 2,
                                 child: MouseRegion(
                                   cursor: SystemMouseCursors.grab,
                                   onEnter: (_) {

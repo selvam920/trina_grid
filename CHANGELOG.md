@@ -6,6 +6,7 @@
 * Add RowWrapperScreen to navigation and home screen; update demo with new feature tile ( by @doonfrs )
 * Introduce Multi-Items Filter ( by @doonfrs )
 * Enhance moving to next row when enter key action is editingAndMoveRight ( by @doonfrs )
+* Enhance RTL support by fixing scrollbar positioning and adding RTL scrollbar demo ( by @doonfrs )
 
 ## [1.6.7] - 2025. 04. 14
 

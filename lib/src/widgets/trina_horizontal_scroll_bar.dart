@@ -230,6 +230,12 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                           (scrollOffset / scrollExtent) *
                               (widget.width - thumbWidth);
 
+                      // For RTL languages, we need to flip the thumb position calculation
+                      final double adjustedThumbPosition =
+                          widget.stateManager.isRTL
+                              ? widget.width - thumbWidth - thumbPosition
+                              : thumbPosition;
+
                       return SizedBox(
                         width: widget.width,
                         height: scrollConfig.thickness + 4, // Add padding
@@ -252,7 +258,9 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                             // Thumb
                             if (scrollConfig.thumbVisible)
                               Positioned(
-                                left: thumbPosition.isNaN ? 0 : thumbPosition,
+                                left: adjustedThumbPosition.isNaN
+                                    ? 0
+                                    : adjustedThumbPosition,
                                 width: thumbWidth.isNaN
                                     ? widget.width
                                     : thumbWidth.clamp(

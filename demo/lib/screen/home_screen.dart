@@ -11,6 +11,7 @@ import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/frozen_rows_screen.dart';
 import 'package:demo/screen/feature/grid_export_screen.dart';
 import 'package:demo/screen/feature/percentage_type_column_screen.dart';
+import 'package:demo/screen/feature/rtl_scrollbar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -515,6 +516,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, RTLScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'RTL Scrollbar Demo',
+        description:
+            'Demo showing proper scrollbar positioning in RTL mode for Arabic and other RTL languages.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RTLScrollbarScreen.routeName);
+        },
+        trailing: newIcon,
       ),
       TrinaListTile(
         title: 'Add and Remove Columns, Rows',

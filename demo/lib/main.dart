@@ -4,6 +4,7 @@ import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart'
 import 'package:demo/screen/feature/column_title_renderer_screen.dart';
 import 'package:demo/screen/feature/date_time_column_screen.dart';
 import 'package:demo/screen/feature/percentage_type_column_screen.dart';
+import 'package:demo/screen/feature/rtl_scrollbar_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'constants/trina_grid_example_colors.dart';
@@ -150,6 +151,7 @@ class MyApp extends StatelessWidget {
         RowWrapperScreen.routeName: (context) => const RowWrapperScreen(),
         MultiItemsDelegateDemoScreen.routeName: (context) =>
             const MultiItemsDelegateDemoScreen(),
+        RTLScrollbarScreen.routeName: (context) => const RTLScrollbarScreen(),
       },
       theme: ThemeData(
         primaryColor: TrinaGridExampleColors.primaryColor,
