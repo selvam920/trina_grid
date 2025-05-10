@@ -53,6 +53,18 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     cellFocus = FocusNode(onKeyEvent: _handleOnKey);
 
+    cellFocus.addListener(() {
+      if (!cellFocus.hasFocus) {
+        print('onEditingComplete has focus - ${_textController.text}');
+        _handleOnComplete();
+      }
+
+      if (!cellFocus.hasPrimaryFocus) {
+        print('onEditingComplete has primary focus - ${_textController.text}');
+        _handleOnComplete();
+      }
+    });
+
     widget.stateManager.setTextEditingController(_textController);
 
     _textController.text = formattedValue;
@@ -63,10 +75,14 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     _textController.addListener(() {
       _handleOnChanged(_textController.text.toString());
-    });
 
-    _textController.addListener(() {
       if (!cellFocus.hasFocus) {
+        print('onEditingComplete _textController has focus - ${_textController.text}');
+        _handleOnComplete();
+      }
+
+      if (!cellFocus.hasPrimaryFocus) {
+        print('onEditingComplete _textController has primary focus - ${_textController.text}');
         _handleOnComplete();
       }
     });
