@@ -55,12 +55,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     cellFocus.addListener(() {
       if (!cellFocus.hasFocus) {
-        print('onEditingComplete has focus - ${_textController.text}');
-        _handleOnComplete();
-      }
-
-      if (!cellFocus.hasPrimaryFocus) {
-        print('onEditingComplete has primary focus - ${_textController.text}');
         _handleOnComplete();
       }
     });
@@ -75,16 +69,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     _textController.addListener(() {
       _handleOnChanged(_textController.text.toString());
-
-      if (!cellFocus.hasFocus) {
-        print('onEditingComplete _textController has focus - ${_textController.text}');
-        _handleOnComplete();
-      }
-
-      if (!cellFocus.hasPrimaryFocus) {
-        print('onEditingComplete _textController has primary focus - ${_textController.text}');
-        _handleOnComplete();
-      }
     });
   }
 
