@@ -4,8 +4,8 @@
 
 * Fix text input bug where the first character is replaced when typing the second character ( by @doonfrs )
 * Add enableAutoSelectFirstRow option to automatically select the first row when in selection mode ( by @doonfrs )
-
 * Add TrinaFilterTypeRegex for filtering using regular expressions (#64) ( by @doonfrs )
+* Fix row color bug when activatedColor is transparent ( by @doonfrs )
 
 ## [1.6.8] - 2025. 04. 15
 
