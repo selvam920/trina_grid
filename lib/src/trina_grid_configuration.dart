@@ -11,6 +11,9 @@ class TrinaGridConfiguration {
   /// Moves the current cell when focus reaches the left or right edge in the edit state.
   final bool enableMoveHorizontalInEditing;
 
+  /// Automatically selects the first row when in selection mode.
+  final bool enableAutoSelectFirstRow;
+
   /// [TrinaGridRowSelectionCheckBoxBehavior.none]
   /// Selecting a row does nothing to its checkbox
   ///
@@ -94,6 +97,7 @@ class TrinaGridConfiguration {
   const TrinaGridConfiguration({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
+    this.enableAutoSelectFirstRow = true,
     this.rowSelectionCheckBoxBehavior =
         TrinaGridRowSelectionCheckBoxBehavior.none,
     this.enterKeyAction = TrinaGridEnterKeyAction.editingAndMoveDown,
@@ -109,6 +113,7 @@ class TrinaGridConfiguration {
   const TrinaGridConfiguration.dark({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
+    this.enableAutoSelectFirstRow = true,
     this.rowSelectionCheckBoxBehavior =
         TrinaGridRowSelectionCheckBoxBehavior.none,
     this.enterKeyAction = TrinaGridEnterKeyAction.editingAndMoveDown,
@@ -151,6 +156,8 @@ class TrinaGridConfiguration {
   TrinaGridConfiguration copyWith({
     bool? enableMoveDownAfterSelecting,
     bool? enableMoveHorizontalInEditing,
+    bool? enableAutoSelectFirstRow,
+    TrinaGridRowSelectionCheckBoxBehavior? rowSelectionCheckBoxBehavior,
     TrinaGridEnterKeyAction? enterKeyAction,
     TrinaGridTabKeyAction? tabKeyAction,
     TrinaGridShortcut? shortcut,
@@ -165,6 +172,10 @@ class TrinaGridConfiguration {
           enableMoveDownAfterSelecting ?? this.enableMoveDownAfterSelecting,
       enableMoveHorizontalInEditing:
           enableMoveHorizontalInEditing ?? this.enableMoveHorizontalInEditing,
+      enableAutoSelectFirstRow:
+          enableAutoSelectFirstRow ?? this.enableAutoSelectFirstRow,
+      rowSelectionCheckBoxBehavior:
+          rowSelectionCheckBoxBehavior ?? this.rowSelectionCheckBoxBehavior,
       enterKeyAction: enterKeyAction ?? this.enterKeyAction,
       tabKeyAction: tabKeyAction ?? this.tabKeyAction,
       shortcut: shortcut ?? this.shortcut,
@@ -185,6 +196,9 @@ class TrinaGridConfiguration {
                 other.enableMoveDownAfterSelecting &&
             enableMoveHorizontalInEditing ==
                 other.enableMoveHorizontalInEditing &&
+            enableAutoSelectFirstRow == other.enableAutoSelectFirstRow &&
+            rowSelectionCheckBoxBehavior ==
+                other.rowSelectionCheckBoxBehavior &&
             enterKeyAction == other.enterKeyAction &&
             tabKeyAction == other.tabKeyAction &&
             shortcut == other.shortcut &&
@@ -199,6 +213,8 @@ class TrinaGridConfiguration {
   int get hashCode => Object.hash(
         enableMoveDownAfterSelecting,
         enableMoveHorizontalInEditing,
+        enableAutoSelectFirstRow,
+        rowSelectionCheckBoxBehavior,
         enterKeyAction,
         tabKeyAction,
         shortcut,
