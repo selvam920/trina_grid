@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.6.9] - 2025. 05. 21
+
+* Fix text input bug where the first character is replaced when typing the second character ( by @doonfrs )
+
 ## [1.6.8] - 2025. 04. 15
 
 * Fix focus issue when header is a TextField or TextFormField ( by @doonfrs )
