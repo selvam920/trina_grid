@@ -866,6 +866,7 @@ class TrinaGridScrollbarConfig {
     this.thumbHoverColor,
     this.trackHoverColor,
     this.columnShowScrollWidth = true,
+    this.smoothScrolling = false,
   });
 
   /// Whether the scrollbar is always visible
@@ -913,6 +914,10 @@ class TrinaGridScrollbarConfig {
   /// Whether to show the scrollbar width in the column header
   final bool columnShowScrollWidth;
 
+  /// Whether the scrollbar should animate when scrolling instead of
+  /// snapping to the next position
+  final bool smoothScrolling;
+
   /// Get effective thumb color
   Color get effectiveThumbColor =>
       thumbColor ?? Colors.grey.withAlpha((153).toInt());
@@ -950,7 +955,8 @@ class TrinaGridScrollbarConfig {
             trackColor == other.trackColor &&
             thumbHoverColor == other.thumbHoverColor &&
             trackHoverColor == other.trackHoverColor &&
-            columnShowScrollWidth == other.columnShowScrollWidth;
+            columnShowScrollWidth == other.columnShowScrollWidth &&
+            smoothScrolling == other.smoothScrolling;
   }
 
   @override
@@ -970,6 +976,7 @@ class TrinaGridScrollbarConfig {
         thumbHoverColor,
         trackHoverColor,
         columnShowScrollWidth,
+        smoothScrolling,
       ]);
 }
 
