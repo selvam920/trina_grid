@@ -225,6 +225,7 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                           // Scrollable rows
                           Expanded(
                             child: ListView.builder(
+                              cacheExtent: stateManager.rowsCacheExtent,
                               controller: _verticalScroll,
                               scrollDirection: Axis.vertical,
                               physics: const ClampingScrollPhysics(),
