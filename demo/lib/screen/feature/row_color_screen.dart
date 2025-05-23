@@ -17,7 +17,7 @@ class RowColorScreen extends StatefulWidget {
 class _RowColorScreenState extends State<RowColorScreen> {
   final List<TrinaColumn> columns = [];
   final List<TrinaRow> rows = [];
-  late TrinaGridStateManager stateManager;
+  TrinaGridStateManager? stateManager;
 
   // Define color options with names for identification - using more subtle material colors
   final List<Map<String, dynamic>> colorOptions = [
@@ -43,6 +43,7 @@ class _RowColorScreenState extends State<RowColorScreen> {
     {'name': 'Red', 'color': Colors.red[200]!},
     {'name': 'Grey', 'color': Colors.grey[300]!},
     {'name': 'Indigo', 'color': Colors.indigo[200]!},
+    {'name': 'Transparent', 'color': Colors.transparent},
   ];
 
   // Color selections
@@ -50,6 +51,7 @@ class _RowColorScreenState extends State<RowColorScreen> {
   int twoValueColorIndex = 1; // Teal
   int defaultRowColorIndex = 6; // Grey
   int selectionColorIndex = 0; // Blue selection color
+  int activatedBorderColorIndex = 0; // Blue activated border color
 
   Color get oneValueColor => colorOptions[oneValueColorIndex]['color'] as Color;
   Color get twoValueColor => colorOptions[twoValueColorIndex]['color'] as Color;
@@ -57,6 +59,8 @@ class _RowColorScreenState extends State<RowColorScreen> {
       colorOptions[defaultRowColorIndex]['color'] as Color;
   Color get selectionColor =>
       selectionColorOptions[selectionColorIndex]['color'] as Color;
+  Color get activatedBorderColor =>
+      selectionColorOptions[activatedBorderColorIndex]['color'] as Color;
 
   @override
   void initState() {
@@ -96,11 +100,11 @@ class _RowColorScreenState extends State<RowColorScreen> {
 
                   // Update grid if selection color changed and grid is initialized
                   if (label == 'Selection Color') {
-                    final newStyle = stateManager.configuration.style.copyWith(
+                    final newStyle = stateManager!.configuration.style.copyWith(
                       activatedColor: selectionColor,
                     );
-                    stateManager
-                        .setConfiguration(stateManager.configuration.copyWith(
+                    stateManager!
+                        .setConfiguration(stateManager!.configuration.copyWith(
                       style: newStyle,
                     ));
                   }
@@ -144,6 +148,8 @@ class _RowColorScreenState extends State<RowColorScreen> {
             'If you change the value of the 5th column, the background color is dynamically changed according to the value.'),
         Text(
             'Use the controls below to customize the row colors and selection color.'),
+        Text(
+            'This example uses transparent activatedColor and TrinaGridMode.selectWithOneTap to demonstrate row color overlay.'),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -189,6 +195,22 @@ class _RowColorScreenState extends State<RowColorScreen> {
                             selectionColorIndex,
                             (index) => selectionColorIndex = index,
                             selectionColorOptions),
+                        _buildColorDropdown(
+                            'Border Color', activatedBorderColorIndex, (index) {
+                          setState(() {
+                            activatedBorderColorIndex = index;
+                            if (stateManager != null) {
+                              final newStyle =
+                                  stateManager!.configuration.style.copyWith(
+                                activatedBorderColor: activatedBorderColor,
+                              );
+                              stateManager!.setConfiguration(
+                                  stateManager!.configuration.copyWith(
+                                style: newStyle,
+                              ));
+                            }
+                          });
+                        }, selectionColorOptions),
                       ],
                     ),
                   ],
@@ -203,7 +225,10 @@ class _RowColorScreenState extends State<RowColorScreen> {
               rows: rows,
               configuration: TrinaGridConfiguration(
                 style: TrinaGridStyleConfig(
+                  // Start with transparent activated color to demonstrate the fix
                   activatedColor: selectionColor,
+                  // Set initial border color
+                  activatedBorderColor: activatedBorderColor,
                 ),
               ),
               onChanged: (TrinaGridOnChangedEvent event) {
@@ -211,8 +236,12 @@ class _RowColorScreenState extends State<RowColorScreen> {
               },
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 event.stateManager.setSelectingMode(TrinaGridSelectingMode.row);
-                stateManager = event.stateManager;
+                setState(() {
+                  stateManager = event.stateManager;
+                });
               },
+              // Use selectWithOneTap mode to test the bug scenario
+              mode: TrinaGridMode.selectWithOneTap,
               rowColorCallback: (rowColorContext) {
                 if (rowColorContext.row.cells.entries
                         .elementAt(4)
@@ -228,6 +257,9 @@ class _RowColorScreenState extends State<RowColorScreen> {
                   return twoValueColor;
                 }
                 return defaultRowColor;
+              },
+              onSelected: (TrinaGridOnSelectedEvent event) {
+                print('Row selected: ${event.rowIdx}');
               },
             ),
           ),

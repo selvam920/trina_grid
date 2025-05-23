@@ -33,6 +33,25 @@ TrinaGrid includes several built-in filter types that can be used to filter data
 - **Equals** (`TrinaFilterTypeEquals`): Matches rows where the cell value exactly matches the search text
 - **Starts With** (`TrinaFilterTypeStartsWith`): Matches rows where the cell value starts with the search text
 - **Ends With** (`TrinaFilterTypeEndsWith`): Matches rows where the cell value ends with the search text
+- **Regex** (`TrinaFilterTypeRegex`): Matches rows where the cell value matches the regular expression pattern
+
+#### Regular Expression (Regex) Filter Example
+
+The Regex filter allows more advanced pattern matching:
+
+```dart
+// Example: Filter for email addresses
+// Pattern: .+@.+\..+
+// Matches: user@example.com, info@domain.co.uk
+
+// Example: Filter for numbers
+// Pattern: ^\d+$
+// Matches: 123, 456789
+
+// Example: Filter for specific patterns like product codes
+// Pattern: ^[A-Z]{3}\d{4}$
+// Matches: ABC1234, XYZ5678
+```
 
 ### Numeric Filters
 

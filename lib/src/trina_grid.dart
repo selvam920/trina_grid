@@ -658,7 +658,8 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
     if (!widget.mode.isSelectMode) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_stateManager.currentCell == null) {
+      if (_stateManager.configuration.enableAutoSelectFirstRow &&
+          _stateManager.currentCell == null) {
         _stateManager.setCurrentCell(_stateManager.firstCell, 0);
       }
 
