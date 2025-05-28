@@ -4,9 +4,6 @@ import 'package:trina_grid/src/widgets/trina_horizontal_scroll_bar.dart';
 import 'package:trina_grid/src/widgets/trina_vertical_scroll_bar.dart';
 import 'package:trina_grid/trina_grid.dart';
 
-import 'scrolls/trina_single_child_smooth_scroll_view.dart'
-    show TrinaSingleChildSmoothScrollView;
-import 'scrolls/trina_smooth_list_view.dart' show TrinaSmoothListView;
 import 'ui.dart';
 
 class TrinaBodyRows extends TrinaStatefulWidget {
@@ -206,9 +203,7 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
               children: [
                 // Main grid content
                 Expanded(
-                  child: (scrollConfig.smoothScrolling
-                      ? TrinaSingleChildSmoothScrollView.new
-                      : SingleChildScrollView.new)(
+                  child: SingleChildScrollView(
                     controller: _horizontalScroll,
                     scrollDirection: Axis.horizontal,
                     physics: const ClampingScrollPhysics(),
@@ -229,9 +224,7 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                             ),
                           // Scrollable rows
                           Expanded(
-                            child: (scrollConfig.smoothScrolling
-                                ? TrinaSmoothListView.builder
-                                : ListView.builder)(
+                            child: ListView.builder(
                               cacheExtent: stateManager.rowsCacheExtent,
                               controller: _verticalScroll,
                               scrollDirection: Axis.vertical,
