@@ -6,6 +6,8 @@
 * Add enableAutoSelectFirstRow option to automatically select the first row when in selection mode ( by @doonfrs )
 * Add TrinaFilterTypeRegex for filtering using regular expressions (#64) ( by @doonfrs )
 * Fix row color bug when activatedColor is transparent ( by @doonfrs )
+* Add expandAllRowGroups and collapseAllRowGroups methods to TrinaGridStateManager ( by @doonfrs )
+* Add expand flag to toggleExpandedRowGroup method ( by @doonfrs )
 
 ## [1.6.8] - 2025. 04. 15
 
