@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.6.9] - 2025. 05. 21
+## [1.6.9] - 2025. 05. 28
 
 * Fix text input bug where the first character is replaced when typing the second character ( by @doonfrs )
 * Add enableAutoSelectFirstRow option to automatically select the first row when in selection mode ( by @doonfrs )
@@ -8,6 +8,7 @@
 * Fix row color bug when activatedColor is transparent ( by @doonfrs )
 * Add expandAllRowGroups and collapseAllRowGroups methods to TrinaGridStateManager ( by @doonfrs )
 * Add expand flag to toggleExpandedRowGroup method ( by @doonfrs )
+* Remove Smooth scrolling, it is not ready in the flutter stable version yet ( by @doonfrs )
 
 ## [1.6.8] - 2025. 04. 15
 
