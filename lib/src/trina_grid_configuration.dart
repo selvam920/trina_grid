@@ -227,6 +227,12 @@ class TrinaGridConfiguration {
 }
 
 class TrinaGridStyleConfig {
+  static const TextStyle defaultLightCellTextStyle =
+      TextStyle(fontSize: 14, color: Colors.black);
+
+  static const TextStyle defaultDarkCellTextStyle =
+      TextStyle(fontSize: 14, color: Colors.white);
+
   const TrinaGridStyleConfig({
     this.enableGridBorderShadow = false,
     this.enableColumnBorderVertical = true,
@@ -278,7 +284,7 @@ class TrinaGridStyleConfig {
     Color? columnActiveColor,
     Color? cellUnselectedColor,
     Color? cellActiveColor,
-    this.cellTextStyle = const TextStyle(color: Colors.black, fontSize: 14),
+    this.cellTextStyle = defaultLightCellTextStyle,
     this.columnContextIcon = Icons.dehaze,
     this.columnResizeIcon = Icons.code_sharp,
     this.columnAscendingIcon,
@@ -301,7 +307,8 @@ class TrinaGridStyleConfig {
         columnUnselectedColor = (columnUnselectedColor ?? iconColor),
         columnActiveColor = (columnActiveColor ?? activatedBorderColor),
         cellUnselectedColor = (cellUnselectedColor ?? iconColor),
-        cellActiveColor = (cellActiveColor ?? activatedBorderColor);
+        cellActiveColor = (cellActiveColor ?? activatedBorderColor),
+        isDarkStyle = false;
 
   const TrinaGridStyleConfig.dark({
     this.enableGridBorderShadow = false,
@@ -354,7 +361,7 @@ class TrinaGridStyleConfig {
     Color? columnActiveColor,
     Color? cellUnselectedColor,
     Color? cellActiveColor,
-    this.cellTextStyle = const TextStyle(color: Colors.white, fontSize: 14),
+    this.cellTextStyle = defaultDarkCellTextStyle,
     this.columnContextIcon = Icons.dehaze,
     this.columnResizeIcon = Icons.code_sharp,
     this.columnAscendingIcon,
@@ -377,7 +384,8 @@ class TrinaGridStyleConfig {
         columnUnselectedColor = (columnUnselectedColor ?? iconColor),
         columnActiveColor = (columnActiveColor ?? activatedBorderColor),
         cellUnselectedColor = (cellUnselectedColor ?? iconColor),
-        cellActiveColor = (cellActiveColor ?? activatedBorderColor);
+        cellActiveColor = (cellActiveColor ?? activatedBorderColor),
+        isDarkStyle = true;
 
   /// Enable borderShadow in [TrinaGrid].
   final bool enableGridBorderShadow;
@@ -584,6 +592,9 @@ class TrinaGridStyleConfig {
   /// Set color of filter popup header icon
   final Color? filterHeaderIconColor;
 
+  /// A flag indicating whether the style is dark or not
+  final bool isDarkStyle;
+
   TrinaGridStyleConfig copyWith({
     bool? enableGridBorderShadow,
     bool? enableColumnBorderVertical,
@@ -774,7 +785,8 @@ class TrinaGridStyleConfig {
             gridBorderRadius == other.gridBorderRadius &&
             gridPopupBorderRadius == other.gridPopupBorderRadius &&
             gridPadding == other.gridPadding &&
-            gridBorderWidth == other.gridBorderWidth;
+            gridBorderWidth == other.gridBorderWidth &&
+            isDarkStyle == other.isDarkStyle;
   }
 
   @override
@@ -832,6 +844,7 @@ class TrinaGridStyleConfig {
         gridBorderWidth,
         filterHeaderColor,
         filterHeaderIconColor,
+        isDarkStyle
       ]);
 }
 
