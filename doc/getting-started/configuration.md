@@ -133,6 +133,17 @@ TrinaGridConfiguration(
 )
 ```
 
+The available selection modes are:
+
+- `TrinaGridSelectingMode.cell`: Allows selection of individual cells or ranges of cells
+- `TrinaGridSelectingMode.row`: Selects entire rows when clicking on any cell  
+- `TrinaGridSelectingMode.none`: Disables selection functionality
+
+Note: This setting may be overridden by the grid mode:
+
+- In `TrinaGridMode.select` or `TrinaGridMode.selectWithOneTap`, it's forced to `TrinaGridSelectingMode.none`
+- In `TrinaGridMode.multiSelect`, it's forced to `TrinaGridSelectingMode.row`
+
 ### Editing Configuration
 
 Control editing behavior:
@@ -320,7 +331,6 @@ TrinaGrid(
     // Behavior configuration
     enableMoveDownAfterSelecting: true,
     enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveDown,
-    enableEditingMode: true,
     selectingMode: TrinaGridSelectingMode.cell,
     
     // Keyboard shortcuts

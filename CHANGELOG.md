@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.6.10] - 2025. 06. 01
+
+* Add selecting mode configuration to TrinaGrid
+
 ## [1.6.9] - 2025. 05. 28
 
 * Fix text input bug where the first character is replaced when typing the second character ( by @doonfrs )

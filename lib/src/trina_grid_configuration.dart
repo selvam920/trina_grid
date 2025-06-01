@@ -54,6 +54,18 @@ class TrinaGridConfiguration {
   /// {@macro trina_grid_tab_key_action_moveToNextOnEdge}
   final TrinaGridTabKeyAction tabKeyAction;
 
+  /// Set the mode to select cells or rows.
+  ///
+  /// [TrinaGridSelectingMode.cell] selects each cell.
+  /// [TrinaGridSelectingMode.row] selects row by row.
+  /// [TrinaGridSelectingMode.none] does nothing.
+  ///
+  /// Note: This setting may be overridden by the grid mode:
+  /// - In [TrinaGridMode.select] or [TrinaGridMode.selectWithOneTap],
+  ///   it's forced to [TrinaGridSelectingMode.none]
+  /// - In [TrinaGridMode.multiSelect], it's forced to [TrinaGridSelectingMode.row]
+  final TrinaGridSelectingMode selectingMode;
+
   /// Set custom shortcut keys.
   ///
   /// Refer to the code below to redefine the action of a specific key
@@ -102,6 +114,7 @@ class TrinaGridConfiguration {
         TrinaGridRowSelectionCheckBoxBehavior.none,
     this.enterKeyAction = TrinaGridEnterKeyAction.editingAndMoveDown,
     this.tabKeyAction = TrinaGridTabKeyAction.normal,
+    this.selectingMode = TrinaGridSelectingMode.cell,
     this.shortcut = const TrinaGridShortcut(),
     this.style = const TrinaGridStyleConfig(),
     this.scrollbar = const TrinaGridScrollbarConfig(),
@@ -118,6 +131,7 @@ class TrinaGridConfiguration {
         TrinaGridRowSelectionCheckBoxBehavior.none,
     this.enterKeyAction = TrinaGridEnterKeyAction.editingAndMoveDown,
     this.tabKeyAction = TrinaGridTabKeyAction.normal,
+    this.selectingMode = TrinaGridSelectingMode.cell,
     this.shortcut = const TrinaGridShortcut(),
     this.style = const TrinaGridStyleConfig.dark(),
     this.scrollbar = const TrinaGridScrollbarConfig(),
@@ -160,6 +174,7 @@ class TrinaGridConfiguration {
     TrinaGridRowSelectionCheckBoxBehavior? rowSelectionCheckBoxBehavior,
     TrinaGridEnterKeyAction? enterKeyAction,
     TrinaGridTabKeyAction? tabKeyAction,
+    TrinaGridSelectingMode? selectingMode,
     TrinaGridShortcut? shortcut,
     TrinaGridStyleConfig? style,
     TrinaGridScrollbarConfig? scrollbar,
@@ -178,6 +193,7 @@ class TrinaGridConfiguration {
           rowSelectionCheckBoxBehavior ?? this.rowSelectionCheckBoxBehavior,
       enterKeyAction: enterKeyAction ?? this.enterKeyAction,
       tabKeyAction: tabKeyAction ?? this.tabKeyAction,
+      selectingMode: selectingMode ?? this.selectingMode,
       shortcut: shortcut ?? this.shortcut,
       style: style ?? this.style,
       scrollbar: scrollbar ?? this.scrollbar,
@@ -201,6 +217,7 @@ class TrinaGridConfiguration {
                 other.rowSelectionCheckBoxBehavior &&
             enterKeyAction == other.enterKeyAction &&
             tabKeyAction == other.tabKeyAction &&
+            selectingMode == other.selectingMode &&
             shortcut == other.shortcut &&
             style == other.style &&
             scrollbar == other.scrollbar &&
@@ -217,6 +234,7 @@ class TrinaGridConfiguration {
         rowSelectionCheckBoxBehavior,
         enterKeyAction,
         tabKeyAction,
+        selectingMode,
         shortcut,
         style,
         scrollbar,
