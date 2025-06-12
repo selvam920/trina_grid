@@ -128,7 +128,7 @@ class TrinaColumn {
   ///   return TrinaAggregateColumnFooter(
   ///     rendererContext: rendererContext,
   ///     type: TrinaAggregateColumnType.count,
-  ///     format: 'Checked : #,###.###',
+  ///     numberFormat: NumberFormat('Checked : #,###.###'),
   ///     filter: (cell) => cell.row.checked == true,
   ///     alignment: Alignment.center,
   ///   );
