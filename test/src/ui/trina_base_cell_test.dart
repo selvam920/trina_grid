@@ -14,6 +14,7 @@ void main() {
   late MockTrinaGridStateManager stateManager;
   MockTrinaGridEventManager? eventManager;
   PublishSubject<TrinaNotifierEvent> streamNotifier;
+  final resizingNotifier = ChangeNotifier();
 
   setUp(() {
     const configuration = TrinaGridConfiguration();
@@ -22,6 +23,7 @@ void main() {
     streamNotifier = PublishSubject<TrinaNotifierEvent>();
     when(stateManager.streamNotifier).thenAnswer((_) => streamNotifier);
     when(stateManager.eventManager).thenReturn(eventManager);
+    when(stateManager.resizingChangeNotifier).thenReturn(resizingNotifier);
     when(stateManager.configuration).thenReturn(configuration);
     when(stateManager.style).thenReturn(configuration.style);
     when(stateManager.keyPressed).thenReturn(TrinaGridKeyPressed());
@@ -659,6 +661,57 @@ void main() {
       });
     }
 
+    aCellInsideTrinaBaseRow(
+      TrinaGridConfiguration configuration, {
+      bool isCurrentCell = true,
+      bool isSelectedCell = false,
+      bool readOnly = false,
+    }) {
+      return TrinaWidgetTestHelper('a cell inside TrinaBaseRow.',
+          (tester) async {
+        when(stateManager.isCurrentCell(any)).thenReturn(isCurrentCell);
+        when(stateManager.isSelectedCell(any, any, any))
+            .thenReturn(isSelectedCell);
+        when(stateManager.style).thenReturn(configuration.style);
+        when(stateManager.hasFocus).thenReturn(true);
+        when(stateManager.isEditing).thenReturn(true);
+
+        cell = TrinaCell(value: 'one');
+
+        column = TrinaColumn(
+          title: 'header',
+          field: 'header',
+          readOnly: readOnly,
+          type: TrinaColumnType.text(),
+        );
+
+        final TrinaRow row = TrinaRow(
+          cells: {
+            'header': cell,
+          },
+        );
+
+        rowIdx = 0;
+
+        when(stateManager.configuration).thenReturn(configuration);
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: TrinaBaseRow(
+                rowIdx: rowIdx,
+                row: row,
+                columns: [column!],
+                stateManager: stateManager,
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+      });
+    }
+
     aCellWithConfiguration(
       const TrinaGridConfiguration(
         style: TrinaGridStyleConfig(
@@ -751,5 +804,32 @@ void main() {
         expect(border, isNull);
       },
     );
+
+    aCellInsideTrinaBaseRow(
+      const TrinaGridConfiguration(
+        style: TrinaGridStyleConfig(enableCellBorderHorizontal: true),
+      ),
+      isCurrentCell: false,
+      isSelectedCell: false,
+    ).test(
+        'When enableCellBorderHorizontal is true, cell height should equal stateManager.rowHeight',
+        (tester) async {
+      final cellFinder = find.byType(TrinaBaseCell).first;
+
+      final size = tester.getSize(cellFinder);
+      expect(size.height, TrinaGridSettings.rowHeight);
+    });
+    aCellInsideTrinaBaseRow(
+      const TrinaGridConfiguration(
+        style: TrinaGridStyleConfig(enableCellBorderHorizontal: false),
+      ),
+    ).test(
+        'When enableCellBorderHorizontal is false, cell height should equal stateManager.rowTotalHeight',
+        (tester) async {
+      final cellFinder = find.byType(TrinaBaseCell).first;
+
+      final size = tester.getSize(cellFinder);
+      expect(size.height, TrinaGridSettings.rowTotalHeight);
+    });
   });
 }
