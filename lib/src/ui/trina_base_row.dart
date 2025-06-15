@@ -164,7 +164,14 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
       if (hasChild(element.field)) {
         layoutChild(
           element.field,
-          BoxConstraints.tightFor(width: width, height: stateManager.rowHeight),
+          BoxConstraints.tightFor(
+            width: width,
+            height: stateManager.style.enableCellBorderHorizontal
+                ? stateManager.rowHeight
+                // we add `rowBorderWidth` to the row height so the cells are not
+                // vertically-separated by the disabled horizontal border
+                : stateManager.rowHeight + TrinaGridSettings.rowBorderWidth,
+          ),
         );
 
         positionChild(element.field, Offset(dx, 0));
