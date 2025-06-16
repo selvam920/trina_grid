@@ -4,9 +4,6 @@ import 'package:trina_grid/trina_grid.dart';
 typedef TrinaCellRenderer = Widget Function(
     TrinaCellRendererContext rendererContext);
 
-/// A unique value to indicate that the cell value is `null`.
-final _nullValue = UniqueKey();
-
 class TrinaCellRendererContext {
   final TrinaColumn column;
 
@@ -48,6 +45,9 @@ class TrinaCell {
 
   /// Stores the old value when change tracking is enabled
   dynamic _oldValue;
+
+  /// Whether or not we are tracking changes
+  bool _isTracking = false;
 
   dynamic _valueForSorting;
 
@@ -106,24 +106,28 @@ class TrinaCell {
 
   /// Returns the old value before the change
   dynamic get oldValue {
-    return _oldValue == _nullValue ? null : _oldValue;
+    return _oldValue;
   }
 
   /// Returns true if the cell has uncommitted changes
   bool get isDirty {
-    return _oldValue != null && _value != _oldValue;
+    // The logic is now simple: are we tracking, and are the values different?
+    return _isTracking && _value != _oldValue;
   }
 
-  /// Commit changes by clearing the old value
+  /// Commit changes by accepting the new value and stopping tracking.
   void commitChanges() {
     _oldValue = null;
+    _isTracking = false;
   }
 
-  /// Revert changes by restoring the old value
+  /// Revert changes by restoring the old value and stopping tracking.
   void revertChanges() {
-    if (_oldValue != null) {
-      _value = _oldValue == _nullValue ? null : _oldValue;
+    if (_isTracking) {
+      // Only revert if a change was being tracked
+      _value = _oldValue;
       _oldValue = null;
+      _isTracking = false;
     }
   }
 
@@ -131,16 +135,15 @@ class TrinaCell {
     if (_value == changed) {
       return;
     }
-    if (changed == _oldValue) {
-      _oldValue = null;
-    }
-
     _value = changed;
   }
 
   /// Helper method to store the old value when change tracking is enabled
   void trackChange() {
-    _oldValue ??= _value ?? _nullValue;
+    if (!_isTracking) {
+      _isTracking = true;
+      _oldValue = _value;
+    }
   }
 
   dynamic get valueForSorting {

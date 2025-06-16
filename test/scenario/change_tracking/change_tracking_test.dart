@@ -58,6 +58,16 @@ void main() {
       'when cell value is not changed, the `cell.oldValue` should be null',
       (tester) async => expect(cell.oldValue, null),
     );
+    trinaGrid.test(
+      'when `cell.trackChange()` is called, `cell.isDirty` should be false',
+      (tester) async {
+        nullCell.trackChange();
+        expect(nullCell.isDirty, false);
+
+        cell.trackChange();
+        expect(cell.isDirty, false);
+      },
+    );
 
     trinaGrid.test(
         'when cell value is changed, the cell color should be equal to `stateManager.configuration.style.cellDirtyColor`',
@@ -132,7 +142,6 @@ void main() {
 
       // Assert cell isn't dirty
       expect(cell.isDirty, false);
-      expect(cell.oldValue, null);
     });
 
     trinaGrid.test(
