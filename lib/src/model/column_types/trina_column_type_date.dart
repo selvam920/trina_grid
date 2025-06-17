@@ -50,7 +50,7 @@ class TrinaColumnTypeDate
 
   @override
   bool isValid(dynamic value) {
-    final parsedDate = DateTime.tryParse(value.toString());
+    final parsedDate = dateFormat.tryParse(value.toString());
 
     if (parsedDate == null) {
       return false;
