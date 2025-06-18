@@ -220,6 +220,8 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
         cellColorInReadOnlyState: style.cellColorInReadOnlyState,
         cellColorGroupedRow: style.cellColorGroupedRow,
         selectingMode: stateManager.selectingMode,
+        cellReadonlyColor: style.cellReadonlyColor,
+        cellDefaultColor: style.cellDefaultColor,
       ),
     );
   }
@@ -261,6 +263,8 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     required Color cellColorInEditState,
     required Color cellColorInReadOnlyState,
     required Color? cellColorGroupedRow,
+    required Color? cellReadonlyColor,
+    required Color? cellDefaultColor,
     required TrinaGridSelectingMode selectingMode,
   }) {
     // Check if the cell has uncommitted changes (is dirty)
@@ -300,7 +304,9 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
             ? dirtyColor
             : isGroupedRowCell
                 ? cellColorGroupedRow
-                : null,
+                : readOnly
+                    ? cellReadonlyColor
+                    : cellDefaultColor,
         border: enableCellVerticalBorder
             ? BorderDirectional(
                 end: BorderSide(color: borderColor, width: 1.0),

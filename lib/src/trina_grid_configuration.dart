@@ -273,6 +273,8 @@ class TrinaGridStyleConfig {
     this.rowHoveredColor = const Color(0xFFB1B3B7),
     this.cellColorInEditState = Colors.white,
     this.cellColorInReadOnlyState = const Color(0xFFDBDBDC),
+    this.cellReadonlyColor = const Color(0xFFDBDBDC),
+    this.cellDefaultColor,
     this.cellColorGroupedRow,
     this.cellDirtyColor = const Color(0xFFFFF9C4),
     this.frozenRowColor = const Color(0xFFF8F8F8),
@@ -350,6 +352,8 @@ class TrinaGridStyleConfig {
     this.rowHoveredColor = const Color(0xFF3D3D3D),
     this.cellColorInEditState = const Color(0xFF666666),
     this.cellColorInReadOnlyState = const Color(0xFF222222),
+    this.cellReadonlyColor = const Color(0xFF222222),
+    this.cellDefaultColor,
     this.cellColorGroupedRow,
     this.cellDirtyColor = const Color(0xFF5D4037),
     this.frozenRowColor = const Color(0xFF222222),
@@ -479,7 +483,7 @@ class TrinaGridStyleConfig {
   /// Cell color in edit state. (only current cell)
   final Color cellColorInEditState;
 
-  /// Cell color in read-only state
+  /// Cell color in read-only state (only current cell)
   final Color cellColorInReadOnlyState;
 
   /// Background color of cells grouped by column.
@@ -487,6 +491,12 @@ class TrinaGridStyleConfig {
 
   /// Background color of cells with uncommitted changes (dirty cells)
   final Color cellDirtyColor;
+
+  /// Background color of readonly cells
+  final Color? cellReadonlyColor;
+
+  /// Default background color of cells
+  final Color? cellDefaultColor;
 
   /// Background color for frozen rows
   final Color frozenRowColor;
