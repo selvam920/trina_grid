@@ -310,7 +310,8 @@ mixin LayoutState implements ITrinaGridState {
   double get rowHeight => configuration.style.rowHeight;
 
   @override
-  double get rowTotalHeight => rowHeight + TrinaGridSettings.rowBorderWidth;
+  double get rowTotalHeight =>
+      rowHeight + configuration.style.cellHorizontalBorderWidth;
 
   @override
   double get gridPadding => configuration.style.gridPadding;

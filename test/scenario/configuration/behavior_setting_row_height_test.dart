@@ -65,11 +65,12 @@ void main() {
     const rowHeight = 90.0;
 
     buildRowsWithSettingRowHeight(rowHeight: rowHeight).test(
-      'When rowHeight is set to 90, rowTotalHeight should be 90 + TrinaDefaultSettings.rowBorderWidth',
+      'When rowHeight is set to 90, rowTotalHeight should be 90 + cellHorizontalBorderWidth',
       (tester) async {
         expect(
           stateManager!.rowTotalHeight,
-          rowHeight + TrinaGridSettings.rowBorderWidth,
+          rowHeight +
+              stateManager!.configuration.style.cellHorizontalBorderWidth,
         );
       },
     );
@@ -114,7 +115,7 @@ void main() {
             .descendant(of: popupGrid, matching: find.byType(TrinaBaseCell))
             .first);
 
-        // Check the height of the select popup 
+        // Check the height of the select popup
         expect(cellPopupSize.height, rowHeight);
       },
     );

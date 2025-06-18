@@ -130,7 +130,7 @@ void main() {
 
       expect(
         rowContainerDecoration.border!.top.width,
-        TrinaGridSettings.rowBorderWidth,
+        stateManager.configuration.style.cellHorizontalBorderWidth,
       );
     },
   );
@@ -153,7 +153,7 @@ void main() {
 
       expect(
         rowContainerDecoration.border!.bottom.width,
-        TrinaGridSettings.rowBorderWidth,
+        stateManager.configuration.style.cellHorizontalBorderWidth,
       );
     },
   );

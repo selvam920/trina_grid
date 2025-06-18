@@ -303,7 +303,10 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
                 : null,
         border: enableCellVerticalBorder
             ? BorderDirectional(
-                end: BorderSide(color: borderColor, width: 1.0),
+                end: BorderSide(
+                  color: borderColor,
+                  width: stateManager.style.cellVerticalBorderWidth,
+                ),
               )
             : null,
       );

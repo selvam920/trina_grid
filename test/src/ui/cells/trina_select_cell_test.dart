@@ -34,10 +34,7 @@ void main() {
       stateManager.configuration.style.columnHeight,
     );
     when(stateManager.rowTotalHeight).thenReturn(
-      RowHelper.resolveRowTotalHeight(
-        stateManager.configuration.style.rowHeight,
-      ),
-    );
+        RowHelper.resolveRowTotalHeight(stateManager.configuration.style));
     when(stateManager.localeText).thenReturn(const TrinaGridLocaleText());
     when(stateManager.keepFocus).thenReturn(true);
     when(stateManager.hasFocus).thenReturn(true);

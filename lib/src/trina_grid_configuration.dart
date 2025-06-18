@@ -318,6 +318,9 @@ class TrinaGridStyleConfig {
     this.gridPopupBorderRadius = BorderRadius.zero,
     this.gridPadding = TrinaGridSettings.gridPadding,
     this.gridBorderWidth = TrinaGridSettings.gridBorderWidth,
+    this.cellVerticalBorderWidth = TrinaGridSettings.cellVerticalBorderWidth,
+    this.cellHorizontalBorderWidth =
+        TrinaGridSettings.cellHorizontalBorderWidth,
     this.filterHeaderColor,
     this.filterHeaderIconColor,
   })  : columnCheckedColor = (columnCheckedColor ?? activatedColor),
@@ -395,6 +398,9 @@ class TrinaGridStyleConfig {
     this.gridPopupBorderRadius = BorderRadius.zero,
     this.gridPadding = TrinaGridSettings.gridPadding,
     this.gridBorderWidth = TrinaGridSettings.gridBorderWidth,
+    this.cellVerticalBorderWidth = TrinaGridSettings.cellVerticalBorderWidth,
+    this.cellHorizontalBorderWidth =
+        TrinaGridSettings.cellHorizontalBorderWidth,
     this.filterHeaderColor,
     this.filterHeaderIconColor,
   })  : columnCheckedColor = (columnCheckedColor ?? activatedColor),
@@ -613,6 +619,12 @@ class TrinaGridStyleConfig {
   /// A flag indicating whether the style is dark or not
   final bool isDarkStyle;
 
+  /// Cell vertical border width
+  final double cellVerticalBorderWidth;
+
+  /// Cell horizontal border width
+  final double cellHorizontalBorderWidth;
+
   TrinaGridStyleConfig copyWith({
     bool? enableGridBorderShadow,
     bool? enableColumnBorderVertical,
@@ -665,10 +677,16 @@ class TrinaGridStyleConfig {
     BorderRadiusGeometry? gridPopupBorderRadius,
     double? gridPadding,
     double? gridBorderWidth,
+    double? cellVerticalBorderWidth,
+    double? cellHorizontalBorderWidth,
     Color? filterHeaderColor,
     Color? filterHeaderIconColor,
   }) {
     return TrinaGridStyleConfig(
+      cellVerticalBorderWidth:
+          cellVerticalBorderWidth ?? this.cellVerticalBorderWidth,
+      cellHorizontalBorderWidth:
+          cellHorizontalBorderWidth ?? this.cellHorizontalBorderWidth,
       enableGridBorderShadow:
           enableGridBorderShadow ?? this.enableGridBorderShadow,
       enableColumnBorderVertical:
@@ -804,6 +822,10 @@ class TrinaGridStyleConfig {
             gridPopupBorderRadius == other.gridPopupBorderRadius &&
             gridPadding == other.gridPadding &&
             gridBorderWidth == other.gridBorderWidth &&
+            cellVerticalBorderWidth == other.cellVerticalBorderWidth &&
+            cellHorizontalBorderWidth == other.cellHorizontalBorderWidth &&
+            filterHeaderColor == other.filterHeaderColor &&
+            filterHeaderIconColor == other.filterHeaderIconColor &&
             isDarkStyle == other.isDarkStyle;
   }
 
@@ -860,6 +882,8 @@ class TrinaGridStyleConfig {
         gridPopupBorderRadius,
         gridPadding,
         gridBorderWidth,
+        cellVerticalBorderWidth,
+        cellHorizontalBorderWidth,
         filterHeaderColor,
         filterHeaderIconColor,
         isDarkStyle
