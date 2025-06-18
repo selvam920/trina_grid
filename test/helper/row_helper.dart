@@ -64,7 +64,7 @@ class RowHelper {
     return TrinaCell(value: Random().nextInt(10000));
   }
 
-  static double resolveRowTotalHeight(double rowHeight) {
-    return rowHeight + TrinaGridSettings.rowBorderWidth;
+  static double resolveRowTotalHeight(TrinaGridStyleConfig style) {
+    return style.rowHeight + style.cellHorizontalBorderWidth;
   }
 }

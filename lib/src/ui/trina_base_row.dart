@@ -74,8 +74,7 @@ class TrinaBaseRow extends StatelessWidget {
       stateManager: stateManager,
       rowIdx: rowIdx,
       row: row,
-      enableRowColorAnimation:
-          stateManager.configuration.style.enableRowColorAnimation,
+      enableRowColorAnimation: stateManager.style.enableRowColorAnimation,
       key: ValueKey('rowContainer_${row.key}'),
       child: visibilityLayout
           ? TrinaVisibilityLayout(
@@ -168,9 +167,10 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
             width: width,
             height: stateManager.style.enableCellBorderHorizontal
                 ? stateManager.rowHeight
-                // we add `rowBorderWidth` to the row height so the cells are not
+                // we add `cellHorizontalBorderWidth` to the row height so the cells are not
                 // vertically-separated by the disabled horizontal border
-                : stateManager.rowHeight + TrinaGridSettings.rowBorderWidth,
+                : stateManager.rowHeight +
+                    stateManager.style.cellHorizontalBorderWidth,
           ),
         );
 
@@ -296,11 +296,11 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
     final frozenBorder = widget.row.frozen != TrinaRowFrozen.none
         ? Border(
             top: BorderSide(
-              width: TrinaGridSettings.rowBorderWidth,
+              width: stateManager.configuration.style.cellHorizontalBorderWidth,
               color: stateManager.configuration.style.frozenRowBorderColor,
             ),
             bottom: BorderSide(
-              width: TrinaGridSettings.rowBorderWidth,
+              width: stateManager.configuration.style.cellHorizontalBorderWidth,
               color: stateManager.configuration.style.frozenRowBorderColor,
             ),
           )
@@ -312,21 +312,20 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
           Border(
             top: isTopDragTarget
                 ? BorderSide(
-                    width: TrinaGridSettings.rowBorderWidth,
+                    width: stateManager.style.cellHorizontalBorderWidth,
                     color:
                         stateManager.configuration.style.activatedBorderColor,
                   )
                 : BorderSide.none,
             bottom: isBottomDragTarget
                 ? BorderSide(
-                    width: TrinaGridSettings.rowBorderWidth,
-                    color:
-                        stateManager.configuration.style.activatedBorderColor,
+                    width: stateManager.style.cellHorizontalBorderWidth,
+                    color: stateManager.style.activatedBorderColor,
                   )
-                : stateManager.configuration.style.enableCellBorderHorizontal
+                : stateManager.style.enableCellBorderHorizontal
                     ? BorderSide(
-                        width: TrinaGridSettings.rowBorderWidth,
-                        color: stateManager.configuration.style.borderColor,
+                        width: stateManager.style.cellHorizontalBorderWidth,
+                        color: stateManager.style.borderColor,
                       )
                     : BorderSide.none,
           ),

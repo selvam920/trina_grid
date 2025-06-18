@@ -574,8 +574,8 @@ class _ColumnTextWidgetState extends TrinaStateWithChange<_ColumnTextWidget> {
               ),
               onPressed: _handleOnPressedFilter,
               constraints: BoxConstraints(
-                maxHeight:
-                    widget.height + (TrinaGridSettings.rowBorderWidth * 2),
+                maxHeight: widget.height +
+                    (widget.stateManager.style.cellHorizontalBorderWidth * 2),
               ),
             ),
           ),

@@ -101,7 +101,7 @@ mixin ScrollState implements ITrinaGridState {
         columnHeight -
         columnFilterHeight -
         columnFooterHeight -
-        TrinaGridSettings.rowBorderWidth;
+        configuration.style.cellHorizontalBorderWidth;
 
     double offsetToMove =
         direction.isUp ? (rowIdx! - 1) * rowSize : (rowIdx! + 1) * rowSize;

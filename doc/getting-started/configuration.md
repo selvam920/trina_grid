@@ -35,6 +35,8 @@ TrinaGridConfiguration(
     // Cell styles
     cellColorInEditState: Colors.white,
     cellColorInReadOnlyState: Colors.grey[200]!,
+    cellHorizontalBorderWidth: 1.0,
+    cellVerticalBorderWidth: 1.0,
     
     // Text styles
     columnTextStyle: TextStyle(
@@ -301,6 +303,8 @@ TrinaGrid(
       iconColor: Colors.blue,
       enableCellBorderHorizontal: true,
       enableCellBorderVertical: true,
+      cellVerticalBorderWidth: 1.0,
+      cellHorizontalBorderWidth: 1.0,
       gridBorderRadius: BorderRadius.circular(8),
       gridPopupBorderRadius: BorderRadius.circular(8),
       enableGridBorderShadow: true,

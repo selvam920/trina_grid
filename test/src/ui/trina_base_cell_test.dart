@@ -5,8 +5,8 @@ import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/ui/ui.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../helper/trina_widget_test_helper.dart';
 import '../../helper/row_helper.dart';
+import '../../helper/trina_widget_test_helper.dart';
 import '../../matcher/trina_object_matcher.dart';
 import '../../mock/shared_mocks.mocks.dart';
 
@@ -37,10 +37,7 @@ void main() {
       stateManager.configuration.style.columnHeight,
     );
     when(stateManager.rowTotalHeight).thenReturn(
-      RowHelper.resolveRowTotalHeight(
-        stateManager.configuration.style.rowHeight,
-      ),
-    );
+        RowHelper.resolveRowTotalHeight(stateManager.configuration.style));
     when(stateManager.localeText).thenReturn(const TrinaGridLocaleText());
     when(stateManager.gridFocusNode).thenReturn(FocusNode());
     when(stateManager.keepFocus).thenReturn(true);
@@ -829,7 +826,7 @@ void main() {
       final cellFinder = find.byType(TrinaBaseCell).first;
 
       final size = tester.getSize(cellFinder);
-      expect(size.height, TrinaGridSettings.rowTotalHeight);
+      expect(size.height, stateManager.rowTotalHeight);
     });
   });
 }

@@ -21,9 +21,7 @@ void main() {
     when(stateManager.configuration).thenReturn(configuration);
     when(stateManager.keyPressed).thenReturn(TrinaGridKeyPressed());
     when(stateManager.rowTotalHeight).thenReturn(
-      RowHelper.resolveRowTotalHeight(
-        stateManager.configuration.style.rowHeight,
-      ),
+      RowHelper.resolveRowTotalHeight(stateManager.configuration.style),
     );
     when(stateManager.localeText).thenReturn(const TrinaGridLocaleText());
     when(stateManager.gridFocusNode).thenReturn(FocusNode());
