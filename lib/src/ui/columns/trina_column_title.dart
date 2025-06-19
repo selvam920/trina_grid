@@ -157,16 +157,25 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
     // If a custom title renderer is provided, use it
     if (widget.column.hasTitleRenderer) {
       final rendererContext = _createTitleRendererContext(contextMenuIcon);
-      final customTitleWidget = widget.column.titleRenderer!(rendererContext);
+      Widget customTitleWidget = widget.column.titleRenderer!(rendererContext);
 
       // Ensure dragging functionality works with custom renderer
-      return widget.column.enableColumnDrag
-          ? _DraggableWidget(
-              stateManager: stateManager,
-              column: widget.column,
-              child: customTitleWidget,
-            )
-          : customTitleWidget;
+      if (widget.column.enableColumnDrag) {
+        customTitleWidget = _DraggableWidget(
+          stateManager: stateManager,
+          column: widget.column,
+          child: customTitleWidget,
+        );
+      }
+      // If enabled, add sorting functionality
+      if (widget.column.enableSorting) {
+        customTitleWidget = _SortableWidget(
+          stateManager: stateManager,
+          column: widget.column,
+          child: customTitleWidget,
+        );
+      }
+      return customTitleWidget;
     }
 
     return Stack(
