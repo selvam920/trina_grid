@@ -893,11 +893,13 @@ void main() {
       );
 
       expect(stateManager.showFrozenColumn, false);
-      expect(stateManager.columns[0].frozen, TrinaColumnFrozen.none);
+      expect(stateManager.columns[0].frozen, TrinaColumnFrozen.start,
+          reason: 'Frozen state should be preserved even when not shown.');
       expect(stateManager.columns[1].frozen, TrinaColumnFrozen.none);
       expect(stateManager.columns[2].frozen, TrinaColumnFrozen.none);
       expect(stateManager.columns[3].frozen, TrinaColumnFrozen.none);
-      expect(stateManager.columns[4].frozen, TrinaColumnFrozen.none);
+      expect(stateManager.columns[4].frozen, TrinaColumnFrozen.end,
+          reason: 'Frozen state should be preserved even when not shown.');
     },
   );
 
