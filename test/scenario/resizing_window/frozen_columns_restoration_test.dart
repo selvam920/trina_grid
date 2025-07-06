@@ -163,4 +163,51 @@ void main() {
               'All frozen columns should be restored after resizing back to wide.');
     },
   );
+
+  testWidgets(
+    'When resizing with hidden frozen columns, state should be preserved.',
+    (tester) async {
+      // Initial build with a wide window
+      await buildGrid(tester);
+      expect(stateManager.showFrozenColumn, isTrue);
+
+      // Hide a frozen column
+      stateManager.hideColumn(columns[0], true);
+      expect(stateManager.refColumns.originalList[0].hide, isTrue);
+      expect(
+        stateManager.refColumns.originalList[0].frozen,
+        TrinaColumnFrozen.start,
+        reason: 'Frozen state should be preserved even when hidden.',
+      );
+
+      // Resize to narrow
+      await TestHelperUtil.changeWidth(tester: tester, width: 150, height: 500);
+      expect(stateManager.showFrozenColumn, isFalse);
+      expect(
+        stateManager.refColumns.originalList[0].frozen,
+        TrinaColumnFrozen.start,
+      );
+
+      // Resize back to wide
+      await TestHelperUtil.changeWidth(tester: tester, width: 800, height: 500);
+      expect(stateManager.showFrozenColumn, isTrue);
+      expect(
+        stateManager.refColumns.originalList[0].frozen,
+        TrinaColumnFrozen.start,
+        reason:
+            'Frozen state of hidden column should be preserved after resizing.',
+      );
+      // unhide the first column
+      stateManager.hideColumn(columns[0], false);
+      // assert showFrozenColumn didn't change
+      expect(stateManager.showFrozenColumn, isTrue);
+      // assert column.frozen didn't change
+      expect(
+        stateManager.refColumns.originalList[0].frozen,
+        TrinaColumnFrozen.start,
+        reason:
+            'Frozen state of hidden column should be preserved after resizing.',
+      );
+    },
+  );
 }
