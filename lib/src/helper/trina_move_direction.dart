@@ -50,4 +50,23 @@ enum TrinaMoveDirection {
   bool get isDown {
     return TrinaMoveDirection.down == this;
   }
+
+  /// Returns the RTL-aware direction.
+  /// In RTL mode, left and right are swapped to match visual expectations.
+  /// Up and down remain unchanged.
+  TrinaMoveDirection getRTLAwareDirection(bool isRTL) {
+    if (!isRTL || !horizontal) {
+      return this;
+    }
+
+    switch (this) {
+      case TrinaMoveDirection.left:
+        return TrinaMoveDirection.right;
+      case TrinaMoveDirection.right:
+        return TrinaMoveDirection.left;
+      case TrinaMoveDirection.up:
+      case TrinaMoveDirection.down:
+        return this;
+    }
+  }
 }

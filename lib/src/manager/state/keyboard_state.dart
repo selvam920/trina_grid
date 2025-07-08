@@ -72,23 +72,31 @@ mixin KeyboardState implements ITrinaGridState {
 
     switch (direction) {
       case TrinaMoveDirection.left:
+        // Move to the previous column in the visual order
+        final currentVisualIndex =
+            columnIndexes.indexOf(cellPosition!.columnIdx!);
+        final newVisualIndex = currentVisualIndex - 1;
         return TrinaGridCellPosition(
-          columnIdx: columnIndexes[cellPosition!.columnIdx! - 1],
+          columnIdx: columnIndexes[newVisualIndex],
           rowIdx: cellPosition.rowIdx,
         );
       case TrinaMoveDirection.right:
+        // Move to the next column in the visual order
+        final currentVisualIndex =
+            columnIndexes.indexOf(cellPosition!.columnIdx!);
+        final newVisualIndex = currentVisualIndex + 1;
         return TrinaGridCellPosition(
-          columnIdx: columnIndexes[cellPosition!.columnIdx! + 1],
+          columnIdx: columnIndexes[newVisualIndex],
           rowIdx: cellPosition.rowIdx,
         );
       case TrinaMoveDirection.up:
         return TrinaGridCellPosition(
-          columnIdx: columnIndexes[cellPosition!.columnIdx!],
+          columnIdx: cellPosition!.columnIdx,
           rowIdx: cellPosition.rowIdx! - 1,
         );
       case TrinaMoveDirection.down:
         return TrinaGridCellPosition(
-          columnIdx: columnIndexes[cellPosition!.columnIdx!],
+          columnIdx: cellPosition!.columnIdx,
           rowIdx: cellPosition.rowIdx! + 1,
         );
     }
@@ -175,6 +183,7 @@ mixin KeyboardState implements ITrinaGridState {
 
     final columnIndexes = columnIndexesByShowFrozen;
 
+    // Move to the appropriate edge based on direction
     final int columnIdx =
         direction.isLeft ? columnIndexes.first : columnIndexes.last;
 
@@ -185,6 +194,7 @@ mixin KeyboardState implements ITrinaGridState {
     setCurrentCell(cellToMove, currentRowIdx, notify: notify);
 
     if (!showFrozenColumn || column.frozen.isFrozen != true) {
+      // Scroll to the appropriate edge based on direction
       direction.isLeft
           ? scroll.horizontal!.jumpTo(0)
           : scroll.horizontal!.jumpTo(scroll.maxScrollHorizontal);
@@ -254,19 +264,16 @@ mixin KeyboardState implements ITrinaGridState {
       return;
     }
 
+    final toMove = cellPositionToMove(cellPosition, direction);
+
     setCurrentSelectingPosition(
-      cellPosition: TrinaGridCellPosition(
-        columnIdx: cellPosition!.columnIdx! +
-            (direction.horizontal ? direction.offset : 0),
-        rowIdx:
-            cellPosition.rowIdx! + (direction.vertical ? direction.offset : 0),
-      ),
+      cellPosition: toMove,
     );
 
     if (direction.horizontal) {
-      moveScrollByColumn(direction, cellPosition.columnIdx);
+      moveScrollByColumn(direction, cellPosition!.columnIdx);
     } else {
-      moveScrollByRow(direction, cellPosition.rowIdx);
+      moveScrollByRow(direction, cellPosition!.rowIdx);
     }
   }
 
@@ -288,7 +295,11 @@ mixin KeyboardState implements ITrinaGridState {
       return;
     }
 
-    final int columnIdx = direction.isLeft ? 0 : refColumns.length - 1;
+    final columnIndexes = columnIndexesByShowFrozen;
+
+    // Move to the appropriate edge based on direction
+    final int columnIdx =
+        direction.isLeft ? columnIndexes.first : columnIndexes.last;
 
     final int? rowIdx = hasCurrentSelectingPosition
         ? currentSelectingPosition!.rowIdx
@@ -299,6 +310,7 @@ mixin KeyboardState implements ITrinaGridState {
       notify: notify,
     );
 
+    // Scroll to the appropriate edge based on direction
     direction.isLeft
         ? scroll.horizontal!.jumpTo(0)
         : scroll.horizontal!.jumpTo(scroll.maxScrollHorizontal);

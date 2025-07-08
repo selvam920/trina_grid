@@ -62,11 +62,6 @@ abstract class TrinaGridShortcutAction {
 }
 
 /// {@template trina_grid_action_move_cell_focus}
-/// Move the current cell focus in the [direction] direction.
-///
-/// If the current cell is not selected, focus the first cell.
-///
-/// If [TrinaGridConfiguration.enableMoveHorizontalInEditing] is true,
 /// Moves to the previous or next cell when the text cursor reaches the left or right edge
 /// while the cell is in edit state.
 /// {@endtemplate}
@@ -88,7 +83,11 @@ class TrinaGridActionMoveCellFocus extends TrinaGridShortcutAction {
       return;
     }
 
-    stateManager.moveCurrentCell(direction, force: force);
+    // Apply RTL-aware direction transformation
+    final rtlAwareDirection =
+        direction.getRTLAwareDirection(stateManager.isRTL);
+
+    stateManager.moveCurrentCell(rtlAwareDirection, force: force);
   }
 }
 
@@ -107,7 +106,11 @@ class TrinaGridActionMoveSelectedCellFocus extends TrinaGridShortcutAction {
   }) {
     if (stateManager.isEditing == true) return;
 
-    stateManager.moveSelectingCell(direction);
+    // Apply RTL-aware direction transformation
+    final rtlAwareDirection =
+        direction.getRTLAwareDirection(stateManager.isRTL);
+
+    stateManager.moveSelectingCell(rtlAwareDirection);
   }
 }
 
@@ -135,7 +138,6 @@ class TrinaGridActionMoveCellFocusByPage extends TrinaGridShortcutAction {
         if (!stateManager.isPaginated) return;
 
         final currentColumn = stateManager.currentColumn;
-
         final previousPosition = stateManager.currentCellPosition;
 
         int toPage =
@@ -262,7 +264,20 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
         stateManager.currentCellPosition, stateManager)) {
       _moveCellToPreviousRow(stateManager);
     } else {
-      stateManager.moveCurrentCell(TrinaMoveDirection.left, force: true);
+      // In tab navigation, "previous" means moving to the visually previous column
+      // In RTL: column0 → column1 → column2, so previous from column1 is column0
+      // In LTR: column0 → column1 → column2, so previous from column1 is column0
+      // This is always moving to the previous index in the visual order
+      final position = stateManager.currentCellPosition;
+      final columnIndexes = stateManager.columnIndexesByShowFrozen;
+      final currentVisualIndex = columnIndexes.indexOf(position!.columnIdx!);
+
+      if (currentVisualIndex > 0) {
+        final targetColumnIdx = columnIndexes[currentVisualIndex - 1];
+        final targetColumn = stateManager.refColumns[targetColumnIdx];
+        final targetCell = stateManager.currentRow!.cells[targetColumn.field];
+        stateManager.setCurrentCell(targetCell, stateManager.currentRowIdx);
+      }
     }
   }
 
@@ -270,7 +285,20 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
     if (_willMoveToNextRow(stateManager.currentCellPosition, stateManager)) {
       _moveCellToNextRow(stateManager);
     } else {
-      stateManager.moveCurrentCell(TrinaMoveDirection.right, force: true);
+      // In tab navigation, "next" means moving to the visually next column
+      // In RTL: column0 → column1 → column2, so next from column0 is column1
+      // In LTR: column0 → column1 → column2, so next from column0 is column1
+      // This is always moving to the next index in the visual order
+      final position = stateManager.currentCellPosition;
+      final columnIndexes = stateManager.columnIndexesByShowFrozen;
+      final currentVisualIndex = columnIndexes.indexOf(position!.columnIdx!);
+
+      if (currentVisualIndex < columnIndexes.length - 1) {
+        final targetColumnIdx = columnIndexes[currentVisualIndex + 1];
+        final targetColumn = stateManager.refColumns[targetColumnIdx];
+        final targetCell = stateManager.currentRow!.cells[targetColumn.field];
+        stateManager.setCurrentCell(targetCell, stateManager.currentRowIdx);
+      }
     }
   }
 
@@ -284,7 +312,10 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
       return false;
     }
 
-    return position.rowIdx! > 0 && position.columnIdx == 0;
+    // Check if we're at the visual first column (rightmost in RTL, leftmost in LTR)
+    final columnIndexes = stateManager.columnIndexesByShowFrozen;
+    final currentVisualIndex = columnIndexes.indexOf(position.columnIdx!);
+    return position.rowIdx! > 0 && currentVisualIndex == 0;
   }
 
   bool _willMoveToNextRow(
@@ -297,8 +328,11 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
       return false;
     }
 
+    // Check if we're at the visual last column (leftmost in RTL, rightmost in LTR)
+    final columnIndexes = stateManager.columnIndexesByShowFrozen;
+    final currentVisualIndex = columnIndexes.indexOf(position.columnIdx!);
     return position.rowIdx! < stateManager.refRows.length - 1 &&
-        position.columnIdx == stateManager.refColumns.length - 1;
+        currentVisualIndex == columnIndexes.length - 1;
   }
 
   void _moveCellToPreviousRow(TrinaGridStateManager stateManager) {
@@ -308,10 +342,12 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
       notify: false,
     );
 
-    stateManager.moveCurrentCellToEdgeOfColumns(
-      TrinaMoveDirection.right,
-      force: true,
-    );
+    // Move to the last column in visual order
+    final columnIndexes = stateManager.columnIndexesByShowFrozen;
+    final targetColumnIdx = columnIndexes.last;
+    final targetColumn = stateManager.refColumns[targetColumnIdx];
+    final targetCell = stateManager.currentRow!.cells[targetColumn.field];
+    stateManager.setCurrentCell(targetCell, stateManager.currentRowIdx);
   }
 
   void _moveCellToNextRow(TrinaGridStateManager stateManager) {
@@ -321,10 +357,12 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
       notify: false,
     );
 
-    stateManager.moveCurrentCellToEdgeOfColumns(
-      TrinaMoveDirection.left,
-      force: true,
-    );
+    // Move to the first column in visual order
+    final columnIndexes = stateManager.columnIndexesByShowFrozen;
+    final targetColumnIdx = columnIndexes.first;
+    final targetColumn = stateManager.refColumns[targetColumnIdx];
+    final targetCell = stateManager.currentRow!.cells[targetColumn.field];
+    stateManager.setCurrentCell(targetCell, stateManager.currentRowIdx);
   }
 }
 
@@ -421,16 +459,27 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
       }
     } else if (enterKeyAction.isEditingAndMoveRight) {
       if (keyEvent.isShiftPressed) {
-        stateManager.moveCurrentCell(
-          TrinaMoveDirection.left,
-          force: true,
-          notify: false,
-        );
-      } else {
-        // Check if we're on the last cell of the row
+        // Move to previous column in visual order
         final position = stateManager.currentCellPosition;
+        final columnIndexes = stateManager.columnIndexesByShowFrozen;
+        final currentVisualIndex = columnIndexes.indexOf(position!.columnIdx!);
+
+        if (currentVisualIndex > 0) {
+          final targetColumnIdx = columnIndexes[currentVisualIndex - 1];
+          final targetColumn = stateManager.refColumns[targetColumnIdx];
+          final targetCell = stateManager.currentRow!.cells[targetColumn.field];
+          stateManager.setCurrentCell(targetCell, stateManager.currentRowIdx,
+              notify: false);
+        }
+      } else {
+        // Check if we're on the last cell of the row (considering visual order)
+        final position = stateManager.currentCellPosition;
+        final columnIndexes = stateManager.columnIndexesByShowFrozen;
+        final currentVisualIndex = columnIndexes.indexOf(position!.columnIdx!);
+        final isAtLastColumn = currentVisualIndex == columnIndexes.length - 1;
+
         if (position != null &&
-            position.columnIdx == stateManager.refColumns.length - 1 &&
+            isAtLastColumn &&
             position.rowIdx! < stateManager.refRows.length - 1) {
           // Move to first cell of next row
           stateManager.moveCurrentCell(
@@ -438,17 +487,22 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
             force: true,
             notify: false,
           );
-          stateManager.moveCurrentCellToEdgeOfColumns(
-            TrinaMoveDirection.left,
-            force: true,
-            notify: false,
-          );
+          // Move to first column in visual order
+          final targetColumnIdx = columnIndexes.first;
+          final targetColumn = stateManager.refColumns[targetColumnIdx];
+          final targetCell = stateManager.currentRow!.cells[targetColumn.field];
+          stateManager.setCurrentCell(targetCell, stateManager.currentRowIdx,
+              notify: false);
         } else {
-          stateManager.moveCurrentCell(
-            TrinaMoveDirection.right,
-            force: true,
-            notify: false,
-          );
+          // Move to next column in visual order
+          if (currentVisualIndex < columnIndexes.length - 1) {
+            final targetColumnIdx = columnIndexes[currentVisualIndex + 1];
+            final targetColumn = stateManager.refColumns[targetColumnIdx];
+            final targetCell =
+                stateManager.currentRow!.cells[targetColumn.field];
+            stateManager.setCurrentCell(targetCell, stateManager.currentRowIdx,
+                notify: false);
+          }
         }
       }
     }
@@ -500,14 +554,18 @@ class TrinaGridActionMoveCellFocusToEdge extends TrinaGridShortcutAction {
     required TrinaKeyManagerEvent keyEvent,
     required TrinaGridStateManager stateManager,
   }) {
-    switch (direction) {
+    // Apply RTL-aware direction transformation
+    final rtlAwareDirection =
+        direction.getRTLAwareDirection(stateManager.isRTL);
+
+    switch (rtlAwareDirection) {
       case TrinaMoveDirection.left:
       case TrinaMoveDirection.right:
-        stateManager.moveCurrentCellToEdgeOfColumns(direction);
+        stateManager.moveCurrentCellToEdgeOfColumns(rtlAwareDirection);
         break;
       case TrinaMoveDirection.up:
       case TrinaMoveDirection.down:
-        stateManager.moveCurrentCellToEdgeOfRows(direction);
+        stateManager.moveCurrentCellToEdgeOfRows(rtlAwareDirection);
         break;
     }
   }
@@ -528,14 +586,18 @@ class TrinaGridActionMoveSelectedCellFocusToEdge
     required TrinaKeyManagerEvent keyEvent,
     required TrinaGridStateManager stateManager,
   }) {
-    switch (direction) {
+    // Apply RTL-aware direction transformation
+    final rtlAwareDirection =
+        direction.getRTLAwareDirection(stateManager.isRTL);
+
+    switch (rtlAwareDirection) {
       case TrinaMoveDirection.left:
       case TrinaMoveDirection.right:
-        stateManager.moveSelectingCellToEdgeOfColumns(direction);
+        stateManager.moveSelectingCellToEdgeOfColumns(rtlAwareDirection);
         break;
       case TrinaMoveDirection.up:
       case TrinaMoveDirection.down:
-        stateManager.moveSelectingCellToEdgeOfRows(direction);
+        stateManager.moveSelectingCellToEdgeOfRows(rtlAwareDirection);
         break;
     }
   }
