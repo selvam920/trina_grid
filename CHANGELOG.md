@@ -1,8 +1,18 @@
 # Changelog
 
-## [1.6.10] - 2025. 06. 01
+## [1.6.10] - 2025. 07. 08
 
-* Add selecting mode configuration to TrinaGrid
+* fix: show_column_menu in scaled screens ( by @WagDevX )
+* Use NumberFormat to format the value of TrinaAggregateColumnFooter ( by @DMouayad )
+* fix: discontinued cells vertical border when enableCellBorderHorizontal is false ( by @DMouayad )
+* fix: change tracking doesn't work when pasting into a cell ( by @DMouayad )
+* fix: change tracking doesn't work when cell initial value is null ( by @DMouayad )
+* fix: validation in TrinaColumnTypeDate by using dateFormat instead of DateTime for parsing ( by @DMouayad )
+* Add configuration for cell border width ( by @DMouayad )
+* fix: column sorting when TrinaColumn.titleRenderer is provided ( by @DMouayad )
+* Implement RTL-aware movement for grid navigation ( by @doonfrs )
+* Fix column freezing not resorted #110 ( by @DMouayad )
+* fix failing tests for cell height in popup grids ( by @DMouayad )
 
 ## [1.6.9] - 2025. 05. 28
 
