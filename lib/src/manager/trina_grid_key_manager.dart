@@ -89,7 +89,7 @@ class TrinaGridKeyManager {
   }
 
   void _handleDefaultActions(TrinaKeyManagerEvent keyEvent) {
-    if (!keyEvent.isModifierPressed && keyEvent.isCharacter) {
+    if (!keyEvent.isAltPressed && keyEvent.isCharacter) {
       _handleCharacter(keyEvent);
       return;
     }
