@@ -87,8 +87,10 @@ class TrinaGridActionMoveCellFocus extends TrinaGridShortcutAction {
       stateManager.setCurrentCell(stateManager.firstCell, 0);
       return;
     }
+    // Apply RTL-aware direction transformation
+    final rtlAwareDirection = direction.asRTLAwareDirection(stateManager.isRTL);
 
-    stateManager.moveCurrentCell(direction, force: force);
+    stateManager.moveCurrentCell(rtlAwareDirection, force: force);
   }
 }
 
@@ -106,8 +108,10 @@ class TrinaGridActionMoveSelectedCellFocus extends TrinaGridShortcutAction {
     required TrinaGridStateManager stateManager,
   }) {
     if (stateManager.isEditing == true) return;
+    // Apply RTL-aware direction transformation
+    final rtlAwareDirection = direction.asRTLAwareDirection(stateManager.isRTL);
 
-    stateManager.moveSelectingCell(direction);
+    stateManager.moveSelectingCell(rtlAwareDirection);
   }
 }
 
