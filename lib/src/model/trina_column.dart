@@ -396,7 +396,9 @@ class TrinaColumn {
   }
 
   String formattedValueForType(dynamic value) {
-    if (type is TrinaColumnTypeWithNumberFormat) {
+    // Use the generic applyFormat method from the extension
+    // This will handle all column types that implement TrinaColumnTypeHasFormat
+    if (type.hasFormat) {
       return type.applyFormat(value);
     }
 
