@@ -275,8 +275,8 @@ class TrinaAggregateColumnFooterState
 
     _numberFormat = widget.numberFormat ??
         (widget.formatAsCurrency
-            ? NumberFormat.simpleCurrency(locale: widget.locale)
-            : NumberFormat(widget.format, widget.locale));
+            ? NumberFormat.simpleCurrency()
+            : NumberFormat("#,###"));
 
     _setAggregator();
 
