@@ -46,8 +46,9 @@ class TrinaBaseRow extends StatelessWidget {
   }
 
   void _handleOnAccept(DragTargetDetails<TrinaRow> draggingRow) async {
-    final draggingRows = stateManager.currentSelectingRows.isNotEmpty
-        ? stateManager.currentSelectingRows
+    // Use the rows that were actually set for dragging during the drag operation
+    final draggingRows = stateManager.dragRows.isNotEmpty
+        ? stateManager.dragRows
         : [draggingRow.data];
 
     stateManager.eventManager!.addEvent(
