@@ -52,21 +52,18 @@ enum TrinaMoveDirection {
   }
 
   /// Returns the RTL-aware direction.
+  ///
   /// In RTL mode, left and right are swapped to match visual expectations.
   /// Up and down remain unchanged.
-  TrinaMoveDirection getRTLAwareDirection(bool isRTL) {
+  TrinaMoveDirection asRTLAwareDirection(bool isRTL) {
     if (!isRTL || !horizontal) {
       return this;
     }
 
-    switch (this) {
-      case TrinaMoveDirection.left:
-        return TrinaMoveDirection.right;
-      case TrinaMoveDirection.right:
-        return TrinaMoveDirection.left;
-      case TrinaMoveDirection.up:
-      case TrinaMoveDirection.down:
-        return this;
-    }
+    return switch (this) {
+      TrinaMoveDirection.left => TrinaMoveDirection.right,
+      TrinaMoveDirection.right => TrinaMoveDirection.left,
+      TrinaMoveDirection.up || TrinaMoveDirection.down => this
+    };
   }
 }

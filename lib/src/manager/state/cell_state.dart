@@ -218,19 +218,11 @@ mixin CellState implements ITrinaGridState {
   ) {
     if (cellPosition == null || !cellPosition.hasPosition) return false;
 
-    final columnIndexes = columnIndexesByShowFrozen;
-
     switch (direction) {
       case TrinaMoveDirection.left:
-        // Check if we can move left in the visual order
-        final currentVisualIndex =
-            columnIndexes.indexOf(cellPosition.columnIdx!);
-        return currentVisualIndex > 0;
+        return cellPosition.columnIdx! > 0;
       case TrinaMoveDirection.right:
-        // Check if we can move right in the visual order
-        final currentVisualIndex =
-            columnIndexes.indexOf(cellPosition.columnIdx!);
-        return currentVisualIndex < columnIndexes.length - 1;
+        return cellPosition.columnIdx! < refColumns.length - 1;
       case TrinaMoveDirection.up:
         return cellPosition.rowIdx! > 0;
       case TrinaMoveDirection.down:
