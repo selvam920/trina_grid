@@ -415,6 +415,7 @@ class _DefaultColumnTitleContent extends StatelessWidget {
       height: height,
       child: Container(
         padding: padding,
+        color: column.backgroundColor,
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
           border: BorderDirectional(
@@ -638,13 +639,7 @@ class _ColumnDragTarget extends StatelessWidget {
               if (hasDragTarget)
                 DecoratedBox(
                   decoration: BoxDecoration(
-                    gradient: column.backgroundGradient,
-                    color: column.backgroundGradient == null
-                        ? (hasDragTarget
-                            ? style.dragTargetColumnColor
-                                .withAlpha((.5 * 255).round())
-                            : column.backgroundColor)
-                        : null,
+                    color: hasDragTarget ? style.dragTargetColumnColor : null,
                     border: Border.all(color: Colors.blue, width: 1.5),
                   ),
                 ),
