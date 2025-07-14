@@ -84,6 +84,7 @@ class TrinaBaseRow extends StatelessWidget {
                 stateManager: stateManager,
                 columns: columns,
                 textDirection: stateManager.textDirection,
+                row: row,
               ),
               scrollController: stateManager.scroll.bodyRowsHorizontal!,
               initialViewportDimension: MediaQuery.of(dragContext).size.width,
@@ -95,6 +96,7 @@ class TrinaBaseRow extends StatelessWidget {
                 stateManager: stateManager,
                 columns: columns,
                 textDirection: stateManager.textDirection,
+                row: row,
               ),
               children: columns.map(_makeCell).toList(growable: false),
             ),
@@ -136,10 +138,13 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
 
   final TextDirection textDirection;
 
+  final TrinaRow row;
+
   _RowCellsLayoutDelegate({
     required this.stateManager,
     required this.columns,
     required this.textDirection,
+    required this.row,
   }) : super(relayout: stateManager.resizingChangeNotifier);
 
   @override
@@ -162,23 +167,62 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
       var width = element.width;
 
       if (hasChild(element.field)) {
-        layoutChild(
-          element.field,
-          BoxConstraints.tightFor(
-            width: width,
-            height: stateManager.style.enableCellBorderHorizontal
-                ? stateManager.rowHeight
-                // we add `cellHorizontalBorderWidth` to the row height so the cells are not
-                // vertically-separated by the disabled horizontal border
-                : stateManager.rowHeight +
-                    stateManager.style.cellHorizontalBorderWidth,
-          ),
-        );
+        // Get the cell to check if it's merged
+        final cell = row.cells[element.field];
 
-        positionChild(element.field, Offset(dx, 0));
+        // Check if this cell should be rendered (not a spanned cell)
+        bool shouldRender = stateManager.cellMergeManager
+            .shouldRenderCell(cell ?? TrinaCell(value: null));
+
+        if (shouldRender) {
+          // If this is a merged cell, calculate the total width
+          if (cell?.merge?.isMainCell == true) {
+            final colIdx = columns.indexOf(element);
+            final colSpan = cell!.merge!.colSpan;
+
+            // Calculate width by summing the widths of spanned columns
+            double totalWidth = 0;
+            for (int i = colIdx;
+                i < colIdx + colSpan && i < columns.length;
+                i++) {
+              totalWidth += columns[i].width;
+            }
+            width = totalWidth;
+          }
+
+          layoutChild(
+            element.field,
+            BoxConstraints.tightFor(
+              width: width,
+              height: stateManager.style.enableCellBorderHorizontal
+                  ? stateManager.rowHeight
+                  // we add `cellHorizontalBorderWidth` to the row height so the cells are not
+                  // vertically-separated by the disabled horizontal border
+                  : stateManager.rowHeight +
+                      stateManager.style.cellHorizontalBorderWidth,
+            ),
+          );
+
+          positionChild(element.field, Offset(dx, 0));
+        } else {
+          // For spanned cells, give them minimal width to show borders but zero height
+          // This preserves the right border while hiding the content
+          layoutChild(
+            element.field,
+            BoxConstraints.tightFor(
+              width: width,
+              height: stateManager.style.enableCellBorderHorizontal
+                  ? stateManager.rowHeight
+                  : stateManager.rowHeight +
+                      stateManager.style.cellHorizontalBorderWidth,
+            ),
+          );
+
+          positionChild(element.field, Offset(dx, 0));
+        }
       }
 
-      dx += width;
+      dx += element.width;
     }
   }
 
@@ -267,6 +311,48 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
     );
   }
 
+  /// Check if this row should hide its bottom border due to vertical merging
+  bool _shouldHideBottomBorder() {
+    final columns = stateManager.refColumns;
+    final rows = stateManager.refRows;
+
+    // Check if any cell in this row is vertically merged and not the last row of the merge
+    for (int colIdx = 0; colIdx < columns.length; colIdx++) {
+      final field = columns[colIdx].field;
+      final cell = widget.row.cells[field];
+
+      if (cell?.merge?.isMainCell == true) {
+        final merge = cell!.merge!;
+        if (merge.rowSpan > 1) {
+          // This is a main cell of a vertical merge, hide bottom border
+          return true;
+        }
+      }
+
+      // Check if this cell is a spanned cell referencing a main cell above
+      if (cell?.merge?.isSpannedCell == true) {
+        final merge = cell!.merge!;
+        final mainRowIdx = merge.mainCellRowIdx;
+        final mainField = merge.mainCellField;
+
+        if (mainRowIdx != null &&
+            mainField != null &&
+            mainRowIdx < rows.length) {
+          final mainCell = rows[mainRowIdx].cells[mainField];
+          if (mainCell?.merge?.isMainCell == true) {
+            final mainMerge = mainCell!.merge!;
+            // Check if this is not the last row of the merge
+            if (widget.rowIdx < mainRowIdx + mainMerge.rowSpan - 1) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
   BoxDecoration _getBoxDecoration() {
     final isCurrentRow = stateManager.currentRowIdx == widget.rowIdx;
     final isCheckedRow = widget.row.checked == true;
@@ -323,7 +409,8 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
                     width: stateManager.style.cellHorizontalBorderWidth,
                     color: stateManager.style.activatedBorderColor,
                   )
-                : stateManager.style.enableCellBorderHorizontal
+                : stateManager.style.enableCellBorderHorizontal &&
+                        !_shouldHideBottomBorder()
                     ? BorderSide(
                         width: stateManager.style.cellHorizontalBorderWidth,
                         color: stateManager.style.borderColor,

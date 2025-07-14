@@ -31,6 +31,7 @@ export './src/manager/trina_grid_state_manager.dart';
 export './src/manager/shortcut/shortcut.dart';
 export './src/model/trina_cell.dart'
     show TrinaCell, TrinaCellRenderer, TrinaCellRendererContext;
+export './src/model/trina_cell_merge.dart';
 export './src/model/trina_column.dart';
 export './src/model/trina_column_group.dart';
 export './src/model/trina_column_type.dart';

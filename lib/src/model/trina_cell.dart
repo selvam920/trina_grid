@@ -31,7 +31,9 @@ class TrinaCell {
   /// The [key] parameter provides a unique identifier for the cell.
   /// The [renderer] parameter allows for custom rendering of the cell.
   /// The [onChanged] parameter allows for cell-level control over value changes.
-  TrinaCell({dynamic value, Key? key, this.renderer, this.onChanged})
+  /// The [merge] parameter contains merge information for this cell.
+  TrinaCell(
+      {dynamic value, Key? key, this.renderer, this.onChanged, this.merge})
       : _key = key ?? UniqueKey(),
         _value = value,
         _originalValue = value,
@@ -58,6 +60,10 @@ class TrinaCell {
   /// Callback that is triggered when this specific cell's value is changed.
   /// This allows for cell-level control over value changes.
   final TrinaOnChangedEventCallback? onChanged;
+
+  /// Merge information for this cell.
+  /// Contains information about row/column spanning and main cell references.
+  final TrinaCellMerge? merge;
 
   /// Returns true if this cell has a custom renderer.
   bool get hasRenderer => renderer != null;

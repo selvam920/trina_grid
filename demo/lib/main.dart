@@ -13,6 +13,7 @@ import 'screen/feature/add_and_remove_column_row_screen.dart';
 import 'screen/feature/add_rows_asynchronously.dart';
 import 'screen/feature/column_renderer_screen.dart';
 import 'screen/feature/cell_renderer_screen.dart';
+import 'screen/feature/cell_merge_screen.dart';
 import 'screen/feature/cell_selection_screen.dart';
 import 'screen/feature/column_filtering_screen.dart';
 import 'screen/feature/column_footer_screen.dart';
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
         ColumnTitleRendererScreen.routeName: (context) =>
             const ColumnTitleRendererScreen(),
         CellRendererScreen.routeName: (context) => const CellRendererScreen(),
+        CellMergeScreen.routeName: (context) => const CellMergeScreen(),
         CellSelectionScreen.routeName: (context) => const CellSelectionScreen(),
         ChangeTrackingScreen.routeName: (context) =>
             const ChangeTrackingScreen(),

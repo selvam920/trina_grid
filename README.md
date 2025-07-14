@@ -211,6 +211,7 @@ TrinaGrid offers a comprehensive set of features for handling tabular data:
 
 - **Cell Selection**: Select individual cells or ranges
 - **Cell Editing**: Edit cell values with appropriate editors
+- **Cell Merging**: Merge adjacent cells horizontally or vertically
 - **Cell Renderers**: Customize individual cell appearance
 - **Cell Validation**: Validate cell values during editing
 

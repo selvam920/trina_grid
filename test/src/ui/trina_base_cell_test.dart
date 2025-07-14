@@ -12,6 +12,7 @@ import '../../mock/shared_mocks.mocks.dart';
 
 void main() {
   late MockTrinaGridStateManager stateManager;
+  late MockTrinaCellMergeManager mockCellMergeManager;
   MockTrinaGridEventManager? eventManager;
   PublishSubject<TrinaNotifierEvent> streamNotifier;
   final resizingNotifier = ChangeNotifier();
@@ -19,6 +20,7 @@ void main() {
   setUp(() {
     const configuration = TrinaGridConfiguration();
     stateManager = MockTrinaGridStateManager();
+    mockCellMergeManager = MockTrinaCellMergeManager();
     eventManager = MockTrinaGridEventManager();
     streamNotifier = PublishSubject<TrinaNotifierEvent>();
     when(stateManager.streamNotifier).thenAnswer((_) => streamNotifier);
@@ -47,6 +49,12 @@ void main() {
     when(stateManager.isSelectedCell(any, any, any)).thenReturn(false);
     when(stateManager.enabledRowGroups).thenReturn(false);
     when(stateManager.rowGroupDelegate).thenReturn(null);
+
+    // Add stubs for cell merge manager
+    when(stateManager.refColumns).thenReturn(FilteredList(initialList: []));
+    when(stateManager.refRows).thenReturn(FilteredList(initialList: []));
+    when(stateManager.cellMergeManager).thenReturn(mockCellMergeManager);
+    when(mockCellMergeManager.shouldRenderCell(any)).thenReturn(true);
   });
 
   Widget buildApp({

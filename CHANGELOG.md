@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.6.11] - TBD
+
+* Add cell merging feature with support for horizontal and vertical merging
+* Add TrinaCellMergeRange class for defining merge areas
+* Add enableCellMerge column property to control merge behavior
+* Add cell merge management methods to TrinaGridStateManager
+* Fix cell border handling for merged cells
+* Fix vertical alignment for merged cell content
+
 ## [1.6.10] - 2025. 07. 08
 
 * fix: show_column_menu in scaled screens ( by @WagDevX )
