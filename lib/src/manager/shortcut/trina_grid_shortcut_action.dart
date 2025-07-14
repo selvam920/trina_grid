@@ -433,8 +433,11 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
       } else {
         // Check if we're on the last cell of the row
         final position = stateManager.currentCellPosition;
-        if (position != null &&
-            position.columnIdx == stateManager.refColumns.length - 1 &&
+        final columnIndexes = stateManager.columnIndexesByShowFrozen;
+        final currentVisualIndex = columnIndexes.indexOf(position!.columnIdx!);
+        final isAtLastColumn = currentVisualIndex == columnIndexes.length - 1;
+
+        if (isAtLastColumn &&
             position.rowIdx! < stateManager.refRows.length - 1) {
           // Move to first cell of next row
           stateManager.moveCurrentCell(
