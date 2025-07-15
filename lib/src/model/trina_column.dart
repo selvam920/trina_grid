@@ -90,6 +90,7 @@ class TrinaColumn {
   /// or the text cannot be directly modified, such as in the form of select popup.
   bool applyFormatterInEditing;
 
+  /// Background color of column title.
   Color? backgroundColor;
 
   /// Customize the widget in the default cell.
@@ -198,8 +199,6 @@ class TrinaColumn {
 
   /// Hide the column.
   bool hide;
-
-  LinearGradient? backgroundGradient;
 
   /// The widget of the filter column, this can be customized with the multiple constructors, defaults to a [TrinaFilterColumnWidgetDelegate.initial()]
   TrinaFilterColumnWidgetDelegate? filterWidgetDelegate;

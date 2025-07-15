@@ -279,7 +279,7 @@ class TrinaGridStyleConfig {
     this.cellDirtyColor = const Color(0xFFFFF9C4),
     this.frozenRowColor = const Color(0xFFF8F8F8),
     this.frozenRowBorderColor = const Color(0xFFE0E0E0),
-    this.dragTargetColumnColor = const Color(0xFFDCF5FF),
+    this.dragTargetColumnColor = const Color.fromARGB(129, 220, 245, 255),
     this.iconColor = Colors.black38,
     this.disabledIconColor = Colors.black12,
     this.menuBackgroundColor = Colors.white,
