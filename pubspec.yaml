@@ -14,6 +14,8 @@ screenshots:
   - description: 'TrinaGrid'
     path: screenshots/trina_grid.png
 
+documentation: https://github.com/doonfrs/trina_grid/blob/main/doc/index.md
+
 environment:
   sdk: ^3.6.1
 
