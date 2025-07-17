@@ -13,27 +13,17 @@
 </p>
 
 <p align="center">
-  <b>✨ <a href="https://doonfrs.github.io/trina_grid/">Try the Live Demo</a> ✨</b>
+  <b style="font-size: 24px">✨ <a href="https://doonfrs.github.io/trina_grid/">Try the Live Demo</a> ✨</b>
 </p>
 
 ---
 
-<blockquote align="center">
-  <b>⭐ Please star this repository to support the project! ⭐</b>
-</blockquote>
+<p align="center">⭐ Please star this repository to support the project! ⭐</p>
 
 ---
 
 <p align="center">
   <b>TrinaGrid is a powerful <span style="color:#1976d2">data grid</span> for Flutter that provides a wide range of features for displaying, editing, and managing tabular data. It works seamlessly on <span style="color:#43a047">all platforms</span> including web, desktop, and mobile.</b>
-</p>
-
----
-
-<p align="center">
-  <a href="https://doonfrs.github.io/trina_grid/">
-    <img src="https://img.shields.io/badge/✨%20Try%20the%20Live%20Demo%20✨-blueviolet?style=for-the-badge" alt="Live Demo"/>
-  </a>
 </p>
 
 ---
