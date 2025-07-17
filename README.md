@@ -14,7 +14,6 @@
 
 <h2 align="center">✨ <a href="https://doonfrs.github.io/trina_grid/">Try the Live Demo</a> ✨</h2>
 
----
 
 <p align="center">⭐ Please star this repository to support the project! ⭐</p>
 
