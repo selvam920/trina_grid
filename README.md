@@ -12,9 +12,7 @@
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License"></a>
 </p>
 
-<p align="center">
-  <b style="font-size: 24px">✨ <a href="https://doonfrs.github.io/trina_grid/">Try the Live Demo</a> ✨</b>
-</p>
+<h2 align="center">✨ <a href="https://doonfrs.github.io/trina_grid/">Try the Live Demo</a> ✨</h2>
 
 ---
 
