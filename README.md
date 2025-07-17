@@ -36,10 +36,6 @@
   </a>
 </p>
 
-> TrinaGrid is a maintained and enhanced version of the original PlutoGrid package.<br>
-> I'm <a href="https://github.com/doonfrs">Feras</a>, the current maintainer, and I'm actively working on adding new features and keeping this great package rich and up-to-date.<br>
-> I continued the development after the original package <a href="https://github.com/bosskmk/pluto_grid">PlutoGrid</a> was no longer being maintained.
-
 ---
 
 ## 📑 Table of Contents
@@ -66,6 +62,10 @@
 ---
 
 ## 💖 Support This Project
+
+> TrinaGrid is a maintained and enhanced version of the original PlutoGrid package.<br>
+> I'm <a href="https://github.com/doonfrs">Feras</a>, the current maintainer, and I'm actively working on adding new features and keeping this great package rich and up-to-date.<br>
+> I continued the development after the original package <a href="https://github.com/bosskmk/pluto_grid">PlutoGrid</a> was no longer being maintained.
 
 If you find TrinaGrid useful, please consider supporting its development:
 
