@@ -1,28 +1,73 @@
-# TrinaGrid
+<!-- WOW README for TrinaGrid: visually enhanced, content unchanged -->
 
-[![Pub Version](https://img.shields.io/pub/v/trina_grid.svg)](https://pub.dev/packages/trina_grid)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/doonfrs/trina_grid/master/screenshots/demo.gif" alt="TrinaGrid Demo" width="600"/>
+</p>
 
-> ⭐ **Please star this repository to support the project!** ⭐
->
+<h1 align="center">✨ TrinaGrid ✨</h1>
 
-TrinaGrid is a powerful data grid for Flutter that provides a wide range of features for displaying, editing, and managing tabular data. It works seamlessly on all platforms including web, desktop, and mobile.
+<p align="center">
+  <a href="https://pub.dev/packages/trina_grid"><img src="https://img.shields.io/pub/v/trina_grid.svg" alt="Pub Version"></a>
+    <a href="https://buymeacoffee.com/doonfrs"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-%23FFDD00.svg?&style=flat&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License"></a>
+</p>
 
-![TrinaGrid Demo](https://raw.githubusercontent.com/doonfrs/trina_grid/master/screenshots/demo.gif)
+<h2 align="center">🚀 <a href="https://doonfrs.github.io/trina_grid/">Try the Live Demo</a> 🚀</h2>
 
-> TrinaGrid is a maintained and enhanced version of the original PlutoGrid package. I'm [Feras](https://github.com/doonfrs), the current maintainer, and I'm actively working on adding new features and keeping this great package rich and up-to-date. I continued the development after the original package [PlutoGrid](https://github.com/bosskmk/pluto_grid) was no longer being maintained.
 
-## Support This Project
+<p align="center">⭐ Please star this repository to support the project! ⭐</p>
+
+---
+
+<p align="center">
+  <b>TrinaGrid is a powerful <span style="color:#1976d2">data grid</span> for Flutter that provides a wide range of features for displaying, editing, and managing tabular data. It works seamlessly on <span style="color:#43a047">all platforms</span> including web, desktop, and mobile.</b>
+</p>
+
+---
+
+## 📑 Table of Contents
+
+- [✨ TrinaGrid](#-trinagrid)
+- [💖 Support This Project](#-support-this-project)
+- [🚀 Migration from PlutoGrid](#-migration-from-plutogrid)
+- [📦 Installation](#-installation)
+- [🏁 Basic Usage](#-basic-usage)
+- [🦄 Features](#-features)
+  - [🏷️ Column Features](#-column-features)
+  - [🧑‍🤝‍🧑 Row Features](#-row-features)
+  - [🔲 Cell Features](#-cell-features)
+  - [📊 Data Management](#-data-management)
+  - [🎨 UI Customization](#-ui-customization)
+  - [⚡ Other Features](#-other-features)
+- [🆕 New Feature: Cell-Level Renderers](#-new-feature-cell-level-renderers)
+- [🆕 New Feature: Enhanced Scrollbars](#-new-feature-enhanced-scrollbars)
+- [📚 Documentation](#-documentation)
+- [🧑‍💻 Examples](#-examples)
+- [🤝 Contributing](#-contributing)
+- [📝 License](#license)
+
+---
+
+## 💖 Support This Project
+
+> TrinaGrid is a maintained and enhanced version of the original PlutoGrid package.<br>
+> I'm <a href="https://github.com/doonfrs">Feras</a>, the current maintainer, and I'm actively working on adding new features and keeping this great package rich and up-to-date.<br>
+> I continued the development after the original package <a href="https://github.com/bosskmk/pluto_grid">PlutoGrid</a> was no longer being maintained.
 
 If you find TrinaGrid useful, please consider supporting its development:
 
-[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://buymeacoffee.com/doonfrs)
+<p align="center">
+  <a href="https://buymeacoffee.com/doonfrs"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="200" alt="Buy Me A Coffee"></a>
+</p>
 
-You can also become a GitHub sponsor: [Sponsor @doonfrs](https://github.com/sponsors/doonfrs)
+- Become a GitHub sponsor: [Sponsor @doonfrs](https://github.com/sponsors/doonfrs)
+- Your support will encourage me to dedicate more time to keeping this useful package updated and well-documented.
 
-Your support will encourage me to dedicate more time to keeping this useful package updated and well-documented.
+---
 
-## Migration from PlutoGrid
+## 🚀 Migration from PlutoGrid
+
+> **Automatic migration tool included!**
 
 If you're migrating from PlutoGrid, we've included a migration tool to help you automatically update your codebase:
 
@@ -49,7 +94,9 @@ The migration tool will automatically replace all PlutoGrid references with thei
 
 See [Migration Tool Documentation](tool/README.md) for more details.
 
-## Installation
+---
+
+## 📦 Installation
 
 Add the following dependency to your `pubspec.yaml` file:
 
@@ -64,7 +111,9 @@ Then run:
 flutter pub get
 ```
 
-## Basic Usage
+---
+
+## 🏁 Basic Usage
 
 ```dart
 import 'package:flutter/material.dart';
@@ -181,11 +230,13 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 ```
 
-## Features
+---
+
+## 🦄 Features
 
 TrinaGrid offers a comprehensive set of features for handling tabular data:
 
-### Column Features
+### 🏷️ Column Features
 
 - **Column Types**: Support for various data types (text, number, select, date, time, currency, percentage)
 - **Column Freezing**: Freeze columns to the left or right
@@ -198,7 +249,7 @@ TrinaGrid offers a comprehensive set of features for handling tabular data:
 - **Column Renderers**: Customize column appearance with custom widgets
 - **Column Footer**: Display aggregate values at the bottom of columns
 
-### Row Features
+### 🧑‍🤝‍🧑 Row Features
 
 - **Row Selection**: Select single or multiple rows
 - **Row Moving**: Reorder rows by drag and drop
@@ -207,7 +258,7 @@ TrinaGrid offers a comprehensive set of features for handling tabular data:
 - **Row Groups**: Group related rows together
 - **Frozen Rows**: Keep specific rows visible while scrolling
 
-### Cell Features
+### 🔲 Cell Features
 
 - **Cell Selection**: Select individual cells or ranges
 - **Cell Editing**: Edit cell values with appropriate editors
@@ -215,14 +266,14 @@ TrinaGrid offers a comprehensive set of features for handling tabular data:
 - **Cell Renderers**: Customize individual cell appearance
 - **Cell Validation**: Validate cell values during editing
 
-### Data Management
+### 📊 Data Management
 
 - **Pagination**: Built-in pagination support
 - **Infinite Scrolling**: Load data as the user scrolls
 - **Lazy Loading**: Load data on demand
 - **Copy & Paste**: Copy and paste data between cells
 
-### UI Customization
+### 🎨 UI Customization
 
 - **Themes**: Light and dark mode support
 - **Custom Styling**: Customize colors, borders, and text styles
@@ -230,14 +281,16 @@ TrinaGrid offers a comprehensive set of features for handling tabular data:
 - **RTL Support**: Right-to-left language support
 - **Responsive Design**: Works on all screen sizes
 
-### Other Features
+### ⚡ Other Features
 
 - **Keyboard Navigation**: Navigate and edit using keyboard shortcuts
 - **Context Menus**: Right-click menus for columns and cells
 - **Dual Grid Mode**: Display two linked grids side by side
 - **Popup Mode**: Use the grid as a popup selector
 
-## New Feature: Cell-Level Renderers
+---
+
+## 🆕 New Feature: Cell-Level Renderers
 
 TrinaGrid now supports cell-level renderers, allowing you to customize the appearance of individual cells:
 
@@ -270,9 +323,11 @@ This powerful feature enables:
 - Interactive elements within cells
 - Conditional styling for individual cells
 
-Cell renderers take precedence over column renderers, giving you fine-grained control over your grid's appearance.
+> Cell renderers take precedence over column renderers, giving you fine-grained control over your grid's appearance.
 
-## New Feature: Enhanced Scrollbars
+---
+
+## 🆕 New Feature: Enhanced Scrollbars
 
 TrinaGrid now includes enhanced scrollbar functionality, particularly useful for desktop applications:
 
@@ -281,17 +336,21 @@ TrinaGrid now includes enhanced scrollbar functionality, particularly useful for
 - **Customizable Appearance**: Control the colors, thickness, and behavior of scrollbars
 - **Desktop Optimized**: Enhanced interaction model ideal for desktop applications
 
-## Documentation
+---
+
+## 📚 Documentation
 
 For detailed documentation on each feature, please visit our [Wiki](https://github.com/doonfrs/trina_grid/blob/main/doc/index.md) or check the `/doc` folder in the repository.
 
-## Examples
+---
+
+## 🧑‍💻 Examples
 
 Check out the [example project](https://github.com/doonfrs/trina_grid/tree/master/example) for more usage examples.
 
-You can also try the [live demo](https://doonfrs.github.io/trina_grid/) to see TrinaGrid in action.
+---
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! If you'd like to help improve TrinaGrid, here's how you can contribute:
 
@@ -305,6 +364,8 @@ Contributions are welcome! If you'd like to help improve TrinaGrid, here's how y
 
 I'm committed to maintaining and improving this package, and your contributions help make it better for everyone. Feel free to reach out if you have any questions or ideas!
 
-## License
+---
+
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
