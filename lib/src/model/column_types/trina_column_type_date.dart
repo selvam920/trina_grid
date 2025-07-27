@@ -50,19 +50,20 @@ class TrinaColumnTypeDate
 
   @override
   bool isValid(dynamic value) {
-    final parsedDate = dateFormat.tryParse(value.toString());
+    if (value == null) return true;
 
-    if (parsedDate == null) {
-      return false;
+    DateTime? parsedDate;
+    if (value is DateTime) {
+      parsedDate = value;
+    } else {
+      parsedDate = dateFormat.tryParse(value.toString());
     }
 
-    if (startDate != null && parsedDate.isBefore(startDate!)) {
-      return false;
-    }
+    if (parsedDate == null) return false;
 
-    if (endDate != null && parsedDate.isAfter(endDate!)) {
-      return false;
-    }
+    if (startDate != null && parsedDate.isBefore(startDate!)) return false;
+
+    if (endDate != null && parsedDate.isAfter(endDate!)) return false;
 
     return true;
   }
@@ -78,25 +79,25 @@ class TrinaColumnTypeDate
 
   @override
   dynamic makeCompareValue(dynamic v) {
-    DateTime? dateFormatValue;
-
-    try {
-      dateFormatValue = dateFormat.parse(v.toString());
-    } catch (e) {
-      dateFormatValue = null;
-    }
-
-    return dateFormatValue;
+    if (v == null) return null;
+    if (v is DateTime) return v;
+    return dateFormat.tryParse(v.toString()) ?? DateTime.tryParse(v.toString());
   }
 
   @override
   String applyFormat(dynamic value) {
-    final parseValue = DateTime.tryParse(value.toString());
+    if (value == null) return '';
 
-    if (parseValue == null) {
-      return '';
+    DateTime? date;
+    if (value is DateTime) {
+      date = value;
+    } else {
+      date = dateFormat.tryParse(value.toString()) ??
+          DateTime.tryParse(value.toString());
     }
 
-    return dateFormat.format(DateTime.parse(value.toString()));
+    if (date == null) return '';
+
+    return dateFormat.format(date);
   }
 }

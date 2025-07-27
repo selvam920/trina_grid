@@ -89,7 +89,7 @@ class _DateTimeColumnScreenState extends State<DateTimeColumnScreen> {
         title: '12h Format',
         field: '12h_format',
         type: TrinaColumnType.dateTime(
-          format: 'yyyy-MM-dd hh:mm a',
+          format: 'yyyy-MM-dd hh:mm',
         ),
         width: 180,
       ),
