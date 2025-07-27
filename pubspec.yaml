@@ -11,7 +11,7 @@ topics:
  - data-table
 
 screenshots:
-  - description: 'TrinaGrid'
+  - description: 'TrinaGrid Logo'
     path: screenshots/trina_grid.png
 
 documentation: https://github.com/doonfrs/trina_grid/blob/main/doc/index.md
