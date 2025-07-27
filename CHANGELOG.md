@@ -1,13 +1,21 @@
 # Changelog
 
-## [1.6.11] - TBD
+## [1.6.11] - 2025. 07. 28
 
-* Add cell merging feature with support for horizontal and vertical merging
-* Add TrinaCellMergeRange class for defining merge areas
-* Add enableCellMerge column property to control merge behavior
-* Add cell merge management methods to TrinaGridStateManager
-* Fix cell border handling for merged cells
-* Fix vertical alignment for merged cell content
+* fix: can't start editing while pressing SHIFT key ( by @DMouayad )
+* fix: update number formatting in TrinaAggregateColumnFooter ( by @doonfrs )
+* fix bug [Bug] Drag&Drop moves selected row but not the dragged row ( by @doonfrs )
+* fix bug [Bug] TrinaColumn.formattedValueForType() has to call column types applyFormat() in case TrinaColumnTypeHasFormat implemented by column type. ( by @doonfrs )
+* feat: add cell merging functionality ( by @doonfrs )
+* fix: column-title background color not applied ( by @DMouayad )
+* fix: handle null maxWidth in layout offsets ( by @doonfrs )
+* dev: move pluto grid reference into support section ( by @Elia Tolin )
+* dev: increase size of Try Live Demo and convert to paragraph "please star" section ( by Elia Tolin)
+* fix: unregistered key events do not function when grid in focus ( by @DMouayad)
+* fix: Fix empty cell value for date\dateTime columns with custom format (#129) ( by @DMouayad )
+
+
+
 
 ## [1.6.10] - 2025. 07. 08
 
