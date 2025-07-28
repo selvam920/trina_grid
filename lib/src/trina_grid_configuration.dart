@@ -920,7 +920,6 @@ class TrinaGridScrollbarConfig {
       PointerDeviceKind.stylus,
       PointerDeviceKind.invertedStylus,
       PointerDeviceKind.trackpad,
-      PointerDeviceKind.mouse,
       PointerDeviceKind.unknown,
     },
     this.isDraggable = true,
@@ -944,6 +943,12 @@ class TrinaGridScrollbarConfig {
   final bool isAlwaysShown;
 
   /// Set of devices that can interact with the scrollbar
+  ///
+  /// By default only [PointerDeviceKind.touch], [PointerDeviceKind.stylus],
+  /// [PointerDeviceKind.invertedStylus], and [PointerDeviceKind.trackpad]
+  /// are configured to create drag gestures.
+  ///
+  /// See [ScrollBehavior.dragDevices] for more information.
   final Set<PointerDeviceKind> dragDevices;
 
   /// Whether scrollbar thumbs can be dragged with pointer devices
