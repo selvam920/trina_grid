@@ -58,9 +58,15 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
 
     final localeText = widget.stateManager.localeText;
 
-    final style = widget.stateManager.style;
+    // Use dark configuration if the current configuration is in dark mode
+    final baseConfiguration =
+        widget.stateManager.configuration.style.isDarkStyle
+            ? const TrinaGridConfiguration.dark()
+            : const TrinaGridConfiguration();
 
-    final configuration = widget.stateManager.configuration.copyWith(
+    final style = baseConfiguration.style;
+
+    final configuration = baseConfiguration.copyWith(
       tabKeyAction: TrinaGridTabKeyAction.normal,
       style: style.copyWith(
         enableColumnBorderVertical: false,

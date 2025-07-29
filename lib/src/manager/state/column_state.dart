@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../trina_grid.dart';
+import 'package:trina_grid/trina_grid.dart';
 import '../../ui/cells/trina_default_cell.dart';
 
 abstract class IColumnState {
@@ -772,10 +772,15 @@ mixin ColumnState implements ITrinaGridState {
       }
     }
 
+    // Use dark configuration if the current configuration is in dark mode
+    final baseConfiguration = configuration.style.isDarkStyle
+        ? const TrinaGridConfiguration.dark()
+        : const TrinaGridConfiguration();
+
     TrinaGridPopup(
       context: context,
-      configuration: configuration.copyWith(
-        style: configuration.style.copyWith(
+      configuration: baseConfiguration.copyWith(
+        style: baseConfiguration.style.copyWith(
           gridBorderRadius: configuration.style.gridPopupBorderRadius,
           enableRowColorAnimation: false,
           oddRowColor: const TrinaOptional(null),
