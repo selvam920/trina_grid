@@ -82,6 +82,12 @@ mixin PopupCellState<T extends PopupCell> on State<T>
 
     isOpenedPopup = true;
 
+    // Use dark configuration if the current configuration is in dark mode
+    final baseConfiguration =
+        widget.stateManager.configuration.style.isDarkStyle
+            ? const TrinaGridConfiguration.dark()
+            : const TrinaGridConfiguration();
+
     TrinaGridPopup(
       context: context,
       mode: TrinaGridMode.select,
@@ -96,9 +102,9 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       height: popupHeight,
       createHeader: createHeader,
       createFooter: createFooter,
-      configuration: widget.stateManager.configuration.copyWith(
+      configuration: baseConfiguration.copyWith(
         tabKeyAction: TrinaGridTabKeyAction.normal,
-        style: widget.stateManager.configuration.style.copyWith(
+        style: baseConfiguration.style.copyWith(
           oddRowColor: const TrinaOptional(null),
           evenRowColor: const TrinaOptional(null),
           gridBorderRadius:
