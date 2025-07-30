@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:trina_grid/src/widgets/trina_horizontal_scroll_bar.dart';

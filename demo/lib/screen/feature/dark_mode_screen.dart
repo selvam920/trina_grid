@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
-import '../../dummy_data/development.dart';
 import '../../widget/trina_example_button.dart';
 import '../../widget/trina_example_screen.dart';
 
