@@ -2,7 +2,8 @@
 
 ## [1.6.12] - 2025. 07. 28
 
-* Revert Merge cell feature and add it to private branch.
+* Revert Merge cell feature and add it to private branch. ( by @doonfrs )
+* Fix 'There may be a logical error statement in the file filtered_list.dart' ( by @doonfrs )
 
 
 ## [1.6.11] - 2025. 07. 28
