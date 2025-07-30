@@ -654,6 +654,7 @@ class TrinaGridStyleConfig {
     BorderSide? cellCheckedSide,
     Color? cellColorInEditState,
     Color? cellColorInReadOnlyState,
+    Color? cellReadonlyColor,
     TrinaOptional<Color?>? cellColorGroupedRow,
     Color? dragTargetColumnColor,
     Color? iconColor,
@@ -725,6 +726,7 @@ class TrinaGridStyleConfig {
         cellColorInEditState: cellColorInEditState ?? this.cellColorInEditState,
         cellColorInReadOnlyState:
             cellColorInReadOnlyState ?? this.cellColorInReadOnlyState,
+        cellReadonlyColor: cellReadonlyColor ?? this.cellReadonlyColor,
         cellColorGroupedRow: cellColorGroupedRow == null
             ? this.cellColorGroupedRow
             : cellColorGroupedRow.value,
@@ -807,6 +809,7 @@ class TrinaGridStyleConfig {
         cellColorInEditState: cellColorInEditState ?? this.cellColorInEditState,
         cellColorInReadOnlyState:
             cellColorInReadOnlyState ?? this.cellColorInReadOnlyState,
+        cellReadonlyColor: cellReadonlyColor ?? this.cellReadonlyColor,
         cellColorGroupedRow: cellColorGroupedRow == null
             ? this.cellColorGroupedRow
             : cellColorGroupedRow.value,
@@ -884,6 +887,7 @@ class TrinaGridStyleConfig {
             cellCheckedSide == other.cellCheckedSide &&
             cellColorInEditState == other.cellColorInEditState &&
             cellColorInReadOnlyState == other.cellColorInReadOnlyState &&
+            cellReadonlyColor == other.cellReadonlyColor &&
             cellColorGroupedRow == other.cellColorGroupedRow &&
             dragTargetColumnColor == other.dragTargetColumnColor &&
             iconColor == other.iconColor &&
@@ -944,6 +948,7 @@ class TrinaGridStyleConfig {
         cellCheckedSide,
         cellColorInEditState,
         cellColorInReadOnlyState,
+        cellReadonlyColor,
         cellColorGroupedRow,
         dragTargetColumnColor,
         iconColor,
