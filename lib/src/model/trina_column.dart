@@ -282,10 +282,6 @@ class TrinaColumn {
   /// If null, it falls back to the grid's enterKeyAction configuration.
   final TrinaGridEnterKeyAction? filterEnterKeyAction;
 
-  /// Whether cells in this column can be merged with other cells.
-  /// If false, cells in this column cannot participate in merging operations.
-  final bool enableCellMerge;
-
   TrinaColumn({
     required this.title,
     required this.field,
@@ -329,7 +325,6 @@ class TrinaColumn {
     this.validator,
     this.editCellRenderer,
     this.filterEnterKeyAction,
-    this.enableCellMerge = true,
   })  : _key = UniqueKey(),
         _checkReadOnly = checkReadOnly;
 

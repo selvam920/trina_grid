@@ -45,7 +45,6 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 
 - [Cell Selection](features/cell-selection.md)
 - [Cell Editing](features/cell-editing.md)
-- [Cell Merging](features/cell-merging.md)
 - [Cell Renderers](features/cell-renderer.md)
 - [Cell Validation](features/cell-validation.md)
 - [Cell Value Change Handling](features/cell_value_change_handling.md)

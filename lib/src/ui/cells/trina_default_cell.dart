@@ -509,41 +509,6 @@ class _DefaultCellWidget extends StatelessWidget {
       ));
     }
 
-    // Check if this is a merged cell and apply proper alignment
-    if (cell.merge?.isMainCell == true) {
-      final merge = cell.merge!;
-
-      // For merged cells, use Container with calculated height for proper alignment
-      final textWidget = Text(
-        _text,
-        style: stateManager.configuration.style.cellTextStyle.copyWith(
-          decoration: TextDecoration.none,
-          fontWeight: FontWeight.normal,
-        ),
-        overflow: TextOverflow.ellipsis,
-      );
-
-      // Calculate total height for vertically merged cells
-      if (merge.rowSpan > 1) {
-        // For vertical merging, we need to calculate the total height
-        final totalHeight = stateManager.rowHeight * merge.rowSpan;
-
-        return Container(
-          width: double.infinity,
-          height: totalHeight,
-          alignment: column.textAlign.alignmentValue,
-          child: textWidget,
-        );
-      } else {
-        // For horizontal-only merging, use Align
-        return Align(
-          alignment: column.textAlign.alignmentValue,
-          child: textWidget,
-        );
-      }
-    }
-
-    // For regular cells, use Text textAlign
     return Text(
       _text,
       style: stateManager.configuration.style.cellTextStyle.copyWith(

@@ -3,19 +3,18 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i7;
-import 'dart:ui' as _i6;
+import 'dart:async' as _i6;
+import 'dart:ui' as _i5;
 
-import 'package:flutter/gestures.dart' as _i8;
+import 'package:flutter/gestures.dart' as _i7;
 import 'package:flutter/material.dart' as _i3;
-import 'package:flutter/rendering.dart' as _i11;
-import 'package:flutter/services.dart' as _i12;
-import 'package:flutter/src/foundation/assertions.dart' as _i13;
-import 'package:flutter/src/foundation/diagnostics.dart' as _i9;
+import 'package:flutter/rendering.dart' as _i10;
+import 'package:flutter/services.dart' as _i11;
+import 'package:flutter/src/foundation/assertions.dart' as _i12;
+import 'package:flutter/src/foundation/diagnostics.dart' as _i8;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i10;
-import 'package:rxdart/rxdart.dart' as _i5;
-import 'package:trina_grid/src/manager/trina_cell_merge_manager.dart' as _i4;
+import 'package:mockito/src/dummies.dart' as _i9;
+import 'package:rxdart/rxdart.dart' as _i4;
 import 'package:trina_grid/trina_grid.dart' as _i2;
 
 // ignore_for_file: type=lint
@@ -101,9 +100,9 @@ class _FakeGlobalKey_5<T extends _i3.State<_i3.StatefulWidget>>
         );
 }
 
-class _FakeTrinaCellMergeManager_6 extends _i1.SmartFake
-    implements _i4.TrinaCellMergeManager {
-  _FakeTrinaCellMergeManager_6(
+class _FakePublishSubject_6<T> extends _i1.SmartFake
+    implements _i4.PublishSubject<T> {
+  _FakePublishSubject_6(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -112,20 +111,9 @@ class _FakeTrinaCellMergeManager_6 extends _i1.SmartFake
         );
 }
 
-class _FakePublishSubject_7<T> extends _i1.SmartFake
-    implements _i5.PublishSubject<T> {
-  _FakePublishSubject_7(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeTrinaGridColumnSizeConfig_8 extends _i1.SmartFake
+class _FakeTrinaGridColumnSizeConfig_7 extends _i1.SmartFake
     implements _i2.TrinaGridColumnSizeConfig {
-  _FakeTrinaGridColumnSizeConfig_8(
+  _FakeTrinaGridColumnSizeConfig_7(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -134,9 +122,9 @@ class _FakeTrinaGridColumnSizeConfig_8 extends _i1.SmartFake
         );
 }
 
-class _FakeTrinaGridConfiguration_9 extends _i1.SmartFake
+class _FakeTrinaGridConfiguration_8 extends _i1.SmartFake
     implements _i2.TrinaGridConfiguration {
-  _FakeTrinaGridConfiguration_9(
+  _FakeTrinaGridConfiguration_8(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -145,9 +133,9 @@ class _FakeTrinaGridConfiguration_9 extends _i1.SmartFake
         );
 }
 
-class _FakeTrinaGridLocaleText_10 extends _i1.SmartFake
+class _FakeTrinaGridLocaleText_9 extends _i1.SmartFake
     implements _i2.TrinaGridLocaleText {
-  _FakeTrinaGridLocaleText_10(
+  _FakeTrinaGridLocaleText_9(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -156,9 +144,9 @@ class _FakeTrinaGridLocaleText_10 extends _i1.SmartFake
         );
 }
 
-class _FakeTrinaGridStyleConfig_11 extends _i1.SmartFake
+class _FakeTrinaGridStyleConfig_10 extends _i1.SmartFake
     implements _i2.TrinaGridStyleConfig {
-  _FakeTrinaGridStyleConfig_11(
+  _FakeTrinaGridStyleConfig_10(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -167,9 +155,9 @@ class _FakeTrinaGridStyleConfig_11 extends _i1.SmartFake
         );
 }
 
-class _FakeTrinaGridKeyPressed_12 extends _i1.SmartFake
+class _FakeTrinaGridKeyPressed_11 extends _i1.SmartFake
     implements _i2.TrinaGridKeyPressed {
-  _FakeTrinaGridKeyPressed_12(
+  _FakeTrinaGridKeyPressed_11(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -178,9 +166,9 @@ class _FakeTrinaGridKeyPressed_12 extends _i1.SmartFake
         );
 }
 
-class _FakeChangeNotifier_13 extends _i1.SmartFake
+class _FakeChangeNotifier_12 extends _i1.SmartFake
     implements _i3.ChangeNotifier {
-  _FakeChangeNotifier_13(
+  _FakeChangeNotifier_12(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -189,8 +177,8 @@ class _FakeChangeNotifier_13 extends _i1.SmartFake
         );
 }
 
-class _FakeOffset_14 extends _i1.SmartFake implements _i6.Offset {
-  _FakeOffset_14(
+class _FakeOffset_13 extends _i1.SmartFake implements _i5.Offset {
+  _FakeOffset_13(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -199,9 +187,9 @@ class _FakeOffset_14 extends _i1.SmartFake implements _i6.Offset {
         );
 }
 
-class _FakeTrinaChangeNotifierFilter_15<T1> extends _i1.SmartFake
+class _FakeTrinaChangeNotifierFilter_14<T1> extends _i1.SmartFake
     implements _i2.TrinaChangeNotifierFilter<T1> {
-  _FakeTrinaChangeNotifierFilter_15(
+  _FakeTrinaChangeNotifierFilter_14(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -210,9 +198,9 @@ class _FakeTrinaChangeNotifierFilter_15<T1> extends _i1.SmartFake
         );
 }
 
-class _FakeTrinaAutoSize_16<T> extends _i1.SmartFake
+class _FakeTrinaAutoSize_15<T> extends _i1.SmartFake
     implements _i2.TrinaAutoSize<T> {
-  _FakeTrinaAutoSize_16(
+  _FakeTrinaAutoSize_15(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -221,9 +209,9 @@ class _FakeTrinaAutoSize_16<T> extends _i1.SmartFake
         );
 }
 
-class _FakeTrinaResize_17<T> extends _i1.SmartFake
+class _FakeTrinaResize_16<T> extends _i1.SmartFake
     implements _i2.TrinaResize<T> {
-  _FakeTrinaResize_17(
+  _FakeTrinaResize_16(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -232,9 +220,9 @@ class _FakeTrinaResize_17<T> extends _i1.SmartFake
         );
 }
 
-class _FakeTrinaGridCellPosition_18 extends _i1.SmartFake
+class _FakeTrinaGridCellPosition_17 extends _i1.SmartFake
     implements _i2.TrinaGridCellPosition {
-  _FakeTrinaGridCellPosition_18(
+  _FakeTrinaGridCellPosition_17(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -243,8 +231,8 @@ class _FakeTrinaGridCellPosition_18 extends _i1.SmartFake
         );
 }
 
-class _FakeTrinaRow_19<T> extends _i1.SmartFake implements _i2.TrinaRow<T> {
-  _FakeTrinaRow_19(
+class _FakeTrinaRow_18<T> extends _i1.SmartFake implements _i2.TrinaRow<T> {
+  _FakeTrinaRow_18(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -253,9 +241,9 @@ class _FakeTrinaRow_19<T> extends _i1.SmartFake implements _i2.TrinaRow<T> {
         );
 }
 
-class _FakeTrinaGridStateManager_20 extends _i1.SmartFake
+class _FakeTrinaGridStateManager_19 extends _i1.SmartFake
     implements _i2.TrinaGridStateManager {
-  _FakeTrinaGridStateManager_20(
+  _FakeTrinaGridStateManager_19(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -264,9 +252,9 @@ class _FakeTrinaGridStateManager_20 extends _i1.SmartFake
         );
 }
 
-class _FakeStreamSubscription_21<T> extends _i1.SmartFake
-    implements _i7.StreamSubscription<T> {
-  _FakeStreamSubscription_21(
+class _FakeStreamSubscription_20<T> extends _i1.SmartFake
+    implements _i6.StreamSubscription<T> {
+  _FakeStreamSubscription_20(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -275,9 +263,9 @@ class _FakeStreamSubscription_21<T> extends _i1.SmartFake
         );
 }
 
-class _FakeScrollController_22 extends _i1.SmartFake
+class _FakeScrollController_21 extends _i1.SmartFake
     implements _i3.ScrollController {
-  _FakeScrollController_22(
+  _FakeScrollController_21(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -286,9 +274,9 @@ class _FakeScrollController_22 extends _i1.SmartFake
         );
 }
 
-class _FakeScrollPosition_23 extends _i1.SmartFake
+class _FakeScrollPosition_22 extends _i1.SmartFake
     implements _i3.ScrollPosition {
-  _FakeScrollPosition_23(
+  _FakeScrollPosition_22(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -297,8 +285,8 @@ class _FakeScrollPosition_23 extends _i1.SmartFake
         );
 }
 
-class _FakeScrollPhysics_24 extends _i1.SmartFake implements _i3.ScrollPhysics {
-  _FakeScrollPhysics_24(
+class _FakeScrollPhysics_23 extends _i1.SmartFake implements _i3.ScrollPhysics {
+  _FakeScrollPhysics_23(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -307,8 +295,8 @@ class _FakeScrollPhysics_24 extends _i1.SmartFake implements _i3.ScrollPhysics {
         );
 }
 
-class _FakeScrollContext_25 extends _i1.SmartFake implements _i3.ScrollContext {
-  _FakeScrollContext_25(
+class _FakeScrollContext_24 extends _i1.SmartFake implements _i3.ScrollContext {
+  _FakeScrollContext_24(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -317,9 +305,9 @@ class _FakeScrollContext_25 extends _i1.SmartFake implements _i3.ScrollContext {
         );
 }
 
-class _FakeValueNotifier_26<T> extends _i1.SmartFake
+class _FakeValueNotifier_25<T> extends _i1.SmartFake
     implements _i3.ValueNotifier<T> {
-  _FakeValueNotifier_26(
+  _FakeValueNotifier_25(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -328,9 +316,9 @@ class _FakeValueNotifier_26<T> extends _i1.SmartFake
         );
 }
 
-class _FakeScrollHoldController_27 extends _i1.SmartFake
+class _FakeScrollHoldController_26 extends _i1.SmartFake
     implements _i3.ScrollHoldController {
-  _FakeScrollHoldController_27(
+  _FakeScrollHoldController_26(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -339,8 +327,8 @@ class _FakeScrollHoldController_27 extends _i1.SmartFake
         );
 }
 
-class _FakeDrag_28 extends _i1.SmartFake implements _i8.Drag {
-  _FakeDrag_28(
+class _FakeDrag_27 extends _i1.SmartFake implements _i7.Drag {
+  _FakeDrag_27(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -349,8 +337,8 @@ class _FakeDrag_28 extends _i1.SmartFake implements _i8.Drag {
         );
 }
 
-class _FakeScrollMetrics_29 extends _i1.SmartFake implements _i3.ScrollMetrics {
-  _FakeScrollMetrics_29(
+class _FakeScrollMetrics_28 extends _i1.SmartFake implements _i3.ScrollMetrics {
+  _FakeScrollMetrics_28(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -359,8 +347,8 @@ class _FakeScrollMetrics_29 extends _i1.SmartFake implements _i3.ScrollMetrics {
         );
 }
 
-class _FakeFuture_30<T1> extends _i1.SmartFake implements _i7.Future<T1> {
-  _FakeFuture_30(
+class _FakeFuture_29<T1> extends _i1.SmartFake implements _i6.Future<T1> {
+  _FakeFuture_29(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -369,8 +357,8 @@ class _FakeFuture_30<T1> extends _i1.SmartFake implements _i7.Future<T1> {
         );
 }
 
-class _FakeSize_31 extends _i1.SmartFake implements _i6.Size {
-  _FakeSize_31(
+class _FakeSize_30 extends _i1.SmartFake implements _i5.Size {
+  _FakeSize_30(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -379,8 +367,8 @@ class _FakeSize_31 extends _i1.SmartFake implements _i6.Size {
         );
 }
 
-class _FakeRect_32 extends _i1.SmartFake implements _i6.Rect {
-  _FakeRect_32(
+class _FakeRect_31 extends _i1.SmartFake implements _i5.Rect {
+  _FakeRect_31(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -389,9 +377,9 @@ class _FakeRect_32 extends _i1.SmartFake implements _i6.Rect {
         );
 }
 
-class _FakeFocusAttachment_33 extends _i1.SmartFake
+class _FakeFocusAttachment_32 extends _i1.SmartFake
     implements _i3.FocusAttachment {
-  _FakeFocusAttachment_33(
+  _FakeFocusAttachment_32(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -400,9 +388,9 @@ class _FakeFocusAttachment_33 extends _i1.SmartFake
         );
 }
 
-class _FakeDiagnosticsNode_34 extends _i1.SmartFake
+class _FakeDiagnosticsNode_33 extends _i1.SmartFake
     implements _i3.DiagnosticsNode {
-  _FakeDiagnosticsNode_34(
+  _FakeDiagnosticsNode_33(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -412,7 +400,7 @@ class _FakeDiagnosticsNode_34 extends _i1.SmartFake
 
   @override
   String toString({
-    _i9.TextTreeConfiguration? parentConfiguration,
+    _i8.TextTreeConfiguration? parentConfiguration,
     _i3.DiagnosticLevel? minLevel = _i3.DiagnosticLevel.info,
   }) =>
       super.toString();
@@ -540,32 +528,19 @@ class MockTrinaGridStateManager extends _i1.Mock
       ) as bool);
 
   @override
-  _i4.TrinaCellMergeManager get cellMergeManager => (super.noSuchMethod(
-        Invocation.getter(#cellMergeManager),
-        returnValue: _FakeTrinaCellMergeManager_6(
-          this,
-          Invocation.getter(#cellMergeManager),
-        ),
-        returnValueForMissingStub: _FakeTrinaCellMergeManager_6(
-          this,
-          Invocation.getter(#cellMergeManager),
-        ),
-      ) as _i4.TrinaCellMergeManager);
-
-  @override
-  _i5.PublishSubject<_i2.TrinaNotifierEvent> get streamNotifier =>
+  _i4.PublishSubject<_i2.TrinaNotifierEvent> get streamNotifier =>
       (super.noSuchMethod(
         Invocation.getter(#streamNotifier),
-        returnValue: _FakePublishSubject_7<_i2.TrinaNotifierEvent>(
+        returnValue: _FakePublishSubject_6<_i2.TrinaNotifierEvent>(
           this,
           Invocation.getter(#streamNotifier),
         ),
         returnValueForMissingStub:
-            _FakePublishSubject_7<_i2.TrinaNotifierEvent>(
+            _FakePublishSubject_6<_i2.TrinaNotifierEvent>(
           this,
           Invocation.getter(#streamNotifier),
         ),
-      ) as _i5.PublishSubject<_i2.TrinaNotifierEvent>);
+      ) as _i4.PublishSubject<_i2.TrinaNotifierEvent>);
 
   @override
   bool get hasListeners => (super.noSuchMethod(
@@ -598,11 +573,11 @@ class MockTrinaGridStateManager extends _i1.Mock
   @override
   _i2.TrinaGridColumnSizeConfig get columnSizeConfig => (super.noSuchMethod(
         Invocation.getter(#columnSizeConfig),
-        returnValue: _FakeTrinaGridColumnSizeConfig_8(
+        returnValue: _FakeTrinaGridColumnSizeConfig_7(
           this,
           Invocation.getter(#columnSizeConfig),
         ),
-        returnValueForMissingStub: _FakeTrinaGridColumnSizeConfig_8(
+        returnValueForMissingStub: _FakeTrinaGridColumnSizeConfig_7(
           this,
           Invocation.getter(#columnSizeConfig),
         ),
@@ -807,11 +782,11 @@ class MockTrinaGridStateManager extends _i1.Mock
   @override
   _i2.TrinaGridConfiguration get configuration => (super.noSuchMethod(
         Invocation.getter(#configuration),
-        returnValue: _FakeTrinaGridConfiguration_9(
+        returnValue: _FakeTrinaGridConfiguration_8(
           this,
           Invocation.getter(#configuration),
         ),
-        returnValueForMissingStub: _FakeTrinaGridConfiguration_9(
+        returnValueForMissingStub: _FakeTrinaGridConfiguration_8(
           this,
           Invocation.getter(#configuration),
         ),
@@ -827,11 +802,11 @@ class MockTrinaGridStateManager extends _i1.Mock
   @override
   _i2.TrinaGridLocaleText get localeText => (super.noSuchMethod(
         Invocation.getter(#localeText),
-        returnValue: _FakeTrinaGridLocaleText_10(
+        returnValue: _FakeTrinaGridLocaleText_9(
           this,
           Invocation.getter(#localeText),
         ),
-        returnValueForMissingStub: _FakeTrinaGridLocaleText_10(
+        returnValueForMissingStub: _FakeTrinaGridLocaleText_9(
           this,
           Invocation.getter(#localeText),
         ),
@@ -840,11 +815,11 @@ class MockTrinaGridStateManager extends _i1.Mock
   @override
   _i2.TrinaGridStyleConfig get style => (super.noSuchMethod(
         Invocation.getter(#style),
-        returnValue: _FakeTrinaGridStyleConfig_11(
+        returnValue: _FakeTrinaGridStyleConfig_10(
           this,
           Invocation.getter(#style),
         ),
-        returnValueForMissingStub: _FakeTrinaGridStyleConfig_11(
+        returnValueForMissingStub: _FakeTrinaGridStyleConfig_10(
           this,
           Invocation.getter(#style),
         ),
@@ -867,11 +842,11 @@ class MockTrinaGridStateManager extends _i1.Mock
   @override
   _i2.TrinaGridKeyPressed get keyPressed => (super.noSuchMethod(
         Invocation.getter(#keyPressed),
-        returnValue: _FakeTrinaGridKeyPressed_12(
+        returnValue: _FakeTrinaGridKeyPressed_11(
           this,
           Invocation.getter(#keyPressed),
         ),
-        returnValueForMissingStub: _FakeTrinaGridKeyPressed_12(
+        returnValueForMissingStub: _FakeTrinaGridKeyPressed_11(
           this,
           Invocation.getter(#keyPressed),
         ),
@@ -880,11 +855,11 @@ class MockTrinaGridStateManager extends _i1.Mock
   @override
   _i3.ChangeNotifier get resizingChangeNotifier => (super.noSuchMethod(
         Invocation.getter(#resizingChangeNotifier),
-        returnValue: _FakeChangeNotifier_13(
+        returnValue: _FakeChangeNotifier_12(
           this,
           Invocation.getter(#resizingChangeNotifier),
         ),
-        returnValueForMissingStub: _FakeChangeNotifier_13(
+        returnValueForMissingStub: _FakeChangeNotifier_12(
           this,
           Invocation.getter(#resizingChangeNotifier),
         ),
@@ -1136,11 +1111,11 @@ class MockTrinaGridStateManager extends _i1.Mock
       ) as double);
 
   @override
-  _i6.TextDirection get textDirection => (super.noSuchMethod(
+  _i5.TextDirection get textDirection => (super.noSuchMethod(
         Invocation.getter(#textDirection),
-        returnValue: _i6.TextDirection.rtl,
-        returnValueForMissingStub: _i6.TextDirection.rtl,
-      ) as _i6.TextDirection);
+        returnValue: _i5.TextDirection.rtl,
+        returnValueForMissingStub: _i5.TextDirection.rtl,
+      ) as _i5.TextDirection);
 
   @override
   bool get isLTR => (super.noSuchMethod(
@@ -1350,17 +1325,17 @@ class MockTrinaGridStateManager extends _i1.Mock
       ) as double);
 
   @override
-  _i6.Offset get directionalScrollEdgeOffset => (super.noSuchMethod(
+  _i5.Offset get directionalScrollEdgeOffset => (super.noSuchMethod(
         Invocation.getter(#directionalScrollEdgeOffset),
-        returnValue: _FakeOffset_14(
+        returnValue: _FakeOffset_13(
           this,
           Invocation.getter(#directionalScrollEdgeOffset),
         ),
-        returnValueForMissingStub: _FakeOffset_14(
+        returnValueForMissingStub: _FakeOffset_13(
           this,
           Invocation.getter(#directionalScrollEdgeOffset),
         ),
-      ) as _i6.Offset);
+      ) as _i5.Offset);
 
   @override
   bool get isSelecting => (super.noSuchMethod(
@@ -1401,11 +1376,11 @@ class MockTrinaGridStateManager extends _i1.Mock
   @override
   String get currentSelectingText => (super.noSuchMethod(
         Invocation.getter(#currentSelectingText),
-        returnValue: _i10.dummyValue<String>(
+        returnValue: _i9.dummyValue<String>(
           this,
           Invocation.getter(#currentSelectingText),
         ),
-        returnValueForMissingStub: _i10.dummyValue<String>(
+        returnValueForMissingStub: _i9.dummyValue<String>(
           this,
           Invocation.getter(#currentSelectingText),
         ),
@@ -1445,14 +1420,14 @@ class MockTrinaGridStateManager extends _i1.Mock
           #resolveNotifierFilter,
           [],
         ),
-        returnValue: _FakeTrinaChangeNotifierFilter_15<T>(
+        returnValue: _FakeTrinaChangeNotifierFilter_14<T>(
           this,
           Invocation.method(
             #resolveNotifierFilter,
             [],
           ),
         ),
-        returnValueForMissingStub: _FakeTrinaChangeNotifierFilter_15<T>(
+        returnValueForMissingStub: _FakeTrinaChangeNotifierFilter_14<T>(
           this,
           Invocation.method(
             #resolveNotifierFilter,
@@ -1486,101 +1461,6 @@ class MockTrinaGridStateManager extends _i1.Mock
         Invocation.method(
           #isColumnVisibleInViewport,
           [column],
-        ),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-
-  @override
-  bool mergeCells(_i2.TrinaCellMergeRange? range) => (super.noSuchMethod(
-        Invocation.method(
-          #mergeCells,
-          [range],
-        ),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-
-  @override
-  bool mergeSelectedCells() => (super.noSuchMethod(
-        Invocation.method(
-          #mergeSelectedCells,
-          [],
-        ),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-
-  @override
-  bool unmergeCells({
-    _i2.TrinaCellMergeRange? range,
-    _i2.TrinaCell? cell,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #unmergeCells,
-          [],
-          {
-            #range: range,
-            #cell: cell,
-          },
-        ),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-
-  @override
-  bool unmergeCurrentCell() => (super.noSuchMethod(
-        Invocation.method(
-          #unmergeCurrentCell,
-          [],
-        ),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-
-  @override
-  void unmergeAllCells() => super.noSuchMethod(
-        Invocation.method(
-          #unmergeAllCells,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i2.TrinaCellMergeRange? getMergeRange(
-    _i2.TrinaCell? cell,
-    int? rowIdx,
-    int? colIdx,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getMergeRange,
-          [
-            cell,
-            rowIdx,
-            colIdx,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      ) as _i2.TrinaCellMergeRange?);
-
-  @override
-  List<_i2.TrinaCellMergeRange> getAllMergedRanges() => (super.noSuchMethod(
-        Invocation.method(
-          #getAllMergedRanges,
-          [],
-        ),
-        returnValue: <_i2.TrinaCellMergeRange>[],
-        returnValueForMissingStub: <_i2.TrinaCellMergeRange>[],
-      ) as List<_i2.TrinaCellMergeRange>);
-
-  @override
-  bool isCellMerged(_i2.TrinaCell? cell) => (super.noSuchMethod(
-        Invocation.method(
-          #isCellMerged,
-          [cell],
         ),
         returnValue: false,
         returnValueForMissingStub: false,
@@ -1685,7 +1565,7 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
-  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i5.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -1694,7 +1574,7 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
-  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i5.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -1982,7 +1862,7 @@ class MockTrinaGridStateManager extends _i1.Mock
             #maxWidth: maxWidth,
           },
         ),
-        returnValue: _FakeTrinaAutoSize_16<dynamic>(
+        returnValue: _FakeTrinaAutoSize_15<dynamic>(
           this,
           Invocation.method(
             #getColumnsAutoSizeHelper,
@@ -1993,7 +1873,7 @@ class MockTrinaGridStateManager extends _i1.Mock
             },
           ),
         ),
-        returnValueForMissingStub: _FakeTrinaAutoSize_16<dynamic>(
+        returnValueForMissingStub: _FakeTrinaAutoSize_15<dynamic>(
           this,
           Invocation.method(
             #getColumnsAutoSizeHelper,
@@ -2022,7 +1902,7 @@ class MockTrinaGridStateManager extends _i1.Mock
             #offset: offset,
           },
         ),
-        returnValue: _FakeTrinaResize_17<dynamic>(
+        returnValue: _FakeTrinaResize_16<dynamic>(
           this,
           Invocation.method(
             #getColumnsResizeHelper,
@@ -2034,7 +1914,7 @@ class MockTrinaGridStateManager extends _i1.Mock
             },
           ),
         ),
-        returnValueForMissingStub: _FakeTrinaResize_17<dynamic>(
+        returnValueForMissingStub: _FakeTrinaResize_16<dynamic>(
           this,
           Invocation.method(
             #getColumnsResizeHelper,
@@ -2300,6 +2180,25 @@ class MockTrinaGridStateManager extends _i1.Mock
             column,
             frozen,
           ],
+        ),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+
+  @override
+  bool limitHideColumn(
+    _i2.TrinaColumn? column,
+    bool? hide, {
+    double? accumulateWidth = 0.0,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #limitHideColumn,
+          [
+            column,
+            hide,
+          ],
+          {#accumulateWidth: accumulateWidth},
         ),
         returnValue: false,
         returnValueForMissingStub: false,
@@ -2709,7 +2608,7 @@ class MockTrinaGridStateManager extends _i1.Mock
             direction,
           ],
         ),
-        returnValue: _FakeTrinaGridCellPosition_18(
+        returnValue: _FakeTrinaGridCellPosition_17(
           this,
           Invocation.method(
             #cellPositionToMove,
@@ -2719,7 +2618,7 @@ class MockTrinaGridStateManager extends _i1.Mock
             ],
           ),
         ),
-        returnValueForMissingStub: _FakeTrinaGridCellPosition_18(
+        returnValueForMissingStub: _FakeTrinaGridCellPosition_17(
           this,
           Invocation.method(
             #cellPositionToMove,
@@ -2984,7 +2883,7 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
-  void setTextDirection(_i6.TextDirection? textDirection) => super.noSuchMethod(
+  void setTextDirection(_i5.TextDirection? textDirection) => super.noSuchMethod(
         Invocation.method(
           #setTextDirection,
           [textDirection],
@@ -2993,7 +2892,7 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
-  void setGridGlobalOffset(_i6.Offset? offset) => super.noSuchMethod(
+  void setGridGlobalOffset(_i5.Offset? offset) => super.noSuchMethod(
         Invocation.method(
           #setGridGlobalOffset,
           [offset],
@@ -3228,14 +3127,14 @@ class MockTrinaGridStateManager extends _i1.Mock
           #getNewRow,
           [],
         ),
-        returnValue: _FakeTrinaRow_19<dynamic>(
+        returnValue: _FakeTrinaRow_18<dynamic>(
           this,
           Invocation.method(
             #getNewRow,
             [],
           ),
         ),
-        returnValueForMissingStub: _FakeTrinaRow_19<dynamic>(
+        returnValueForMissingStub: _FakeTrinaRow_18<dynamic>(
           this,
           Invocation.method(
             #getNewRow,
@@ -3418,26 +3317,26 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
-  _i6.Offset toDirectionalOffset(_i6.Offset? offset) => (super.noSuchMethod(
+  _i5.Offset toDirectionalOffset(_i5.Offset? offset) => (super.noSuchMethod(
         Invocation.method(
           #toDirectionalOffset,
           [offset],
         ),
-        returnValue: _FakeOffset_14(
+        returnValue: _FakeOffset_13(
           this,
           Invocation.method(
             #toDirectionalOffset,
             [offset],
           ),
         ),
-        returnValueForMissingStub: _FakeOffset_14(
+        returnValueForMissingStub: _FakeOffset_13(
           this,
           Invocation.method(
             #toDirectionalOffset,
             [offset],
           ),
         ),
-      ) as _i6.Offset);
+      ) as _i5.Offset);
 
   @override
   void scrollByDirection(
@@ -3506,7 +3405,7 @@ class MockTrinaGridStateManager extends _i1.Mock
 
   @override
   bool needMovingScroll(
-    _i6.Offset? offset,
+    _i5.Offset? offset,
     _i2.TrinaMoveDirection? move,
   ) =>
       (super.noSuchMethod(
@@ -3617,7 +3516,7 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
-  void setCurrentSelectingPositionWithOffset(_i6.Offset? offset) =>
+  void setCurrentSelectingPositionWithOffset(_i5.Offset? offset) =>
       super.noSuchMethod(
         Invocation.method(
           #setCurrentSelectingPositionWithOffset,
@@ -3788,41 +3687,41 @@ class MockTrinaGridEventManager extends _i1.Mock
   @override
   _i2.TrinaGridStateManager get stateManager => (super.noSuchMethod(
         Invocation.getter(#stateManager),
-        returnValue: _FakeTrinaGridStateManager_20(
+        returnValue: _FakeTrinaGridStateManager_19(
           this,
           Invocation.getter(#stateManager),
         ),
-        returnValueForMissingStub: _FakeTrinaGridStateManager_20(
+        returnValueForMissingStub: _FakeTrinaGridStateManager_19(
           this,
           Invocation.getter(#stateManager),
         ),
       ) as _i2.TrinaGridStateManager);
 
   @override
-  _i5.PublishSubject<_i2.TrinaGridEvent> get subject => (super.noSuchMethod(
+  _i4.PublishSubject<_i2.TrinaGridEvent> get subject => (super.noSuchMethod(
         Invocation.getter(#subject),
-        returnValue: _FakePublishSubject_7<_i2.TrinaGridEvent>(
+        returnValue: _FakePublishSubject_6<_i2.TrinaGridEvent>(
           this,
           Invocation.getter(#subject),
         ),
-        returnValueForMissingStub: _FakePublishSubject_7<_i2.TrinaGridEvent>(
+        returnValueForMissingStub: _FakePublishSubject_6<_i2.TrinaGridEvent>(
           this,
           Invocation.getter(#subject),
         ),
-      ) as _i5.PublishSubject<_i2.TrinaGridEvent>);
+      ) as _i4.PublishSubject<_i2.TrinaGridEvent>);
 
   @override
-  _i7.StreamSubscription<dynamic> get subscription => (super.noSuchMethod(
+  _i6.StreamSubscription<dynamic> get subscription => (super.noSuchMethod(
         Invocation.getter(#subscription),
-        returnValue: _FakeStreamSubscription_21<dynamic>(
+        returnValue: _FakeStreamSubscription_20<dynamic>(
           this,
           Invocation.getter(#subscription),
         ),
-        returnValueForMissingStub: _FakeStreamSubscription_21<dynamic>(
+        returnValueForMissingStub: _FakeStreamSubscription_20<dynamic>(
           this,
           Invocation.getter(#subscription),
         ),
-      ) as _i7.StreamSubscription<dynamic>);
+      ) as _i6.StreamSubscription<dynamic>);
 
   @override
   void dispose() => super.noSuchMethod(
@@ -3852,14 +3751,14 @@ class MockTrinaGridEventManager extends _i1.Mock
       );
 
   @override
-  _i7.StreamSubscription<_i2.TrinaGridEvent> listener(
+  _i6.StreamSubscription<_i2.TrinaGridEvent> listener(
           void Function(_i2.TrinaGridEvent)? onData) =>
       (super.noSuchMethod(
         Invocation.method(
           #listener,
           [onData],
         ),
-        returnValue: _FakeStreamSubscription_21<_i2.TrinaGridEvent>(
+        returnValue: _FakeStreamSubscription_20<_i2.TrinaGridEvent>(
           this,
           Invocation.method(
             #listener,
@@ -3867,14 +3766,14 @@ class MockTrinaGridEventManager extends _i1.Mock
           ),
         ),
         returnValueForMissingStub:
-            _FakeStreamSubscription_21<_i2.TrinaGridEvent>(
+            _FakeStreamSubscription_20<_i2.TrinaGridEvent>(
           this,
           Invocation.method(
             #listener,
             [onData],
           ),
         ),
-      ) as _i7.StreamSubscription<_i2.TrinaGridEvent>);
+      ) as _i6.StreamSubscription<_i2.TrinaGridEvent>);
 }
 
 /// A class which mocks [TrinaGridScrollController].
@@ -3989,14 +3888,14 @@ class MockLinkedScrollControllerGroup extends _i1.Mock
           #addAndGet,
           [],
         ),
-        returnValue: _FakeScrollController_22(
+        returnValue: _FakeScrollController_21(
           this,
           Invocation.method(
             #addAndGet,
             [],
           ),
         ),
-        returnValueForMissingStub: _FakeScrollController_22(
+        returnValueForMissingStub: _FakeScrollController_21(
           this,
           Invocation.method(
             #addAndGet,
@@ -4006,7 +3905,7 @@ class MockLinkedScrollControllerGroup extends _i1.Mock
       ) as _i3.ScrollController);
 
   @override
-  void addOffsetChangedListener(_i6.VoidCallback? onChanged) =>
+  void addOffsetChangedListener(_i5.VoidCallback? onChanged) =>
       super.noSuchMethod(
         Invocation.method(
           #addOffsetChangedListener,
@@ -4016,7 +3915,7 @@ class MockLinkedScrollControllerGroup extends _i1.Mock
       );
 
   @override
-  void removeOffsetChangedListener(_i6.VoidCallback? listener) =>
+  void removeOffsetChangedListener(_i5.VoidCallback? listener) =>
       super.noSuchMethod(
         Invocation.method(
           #removeOffsetChangedListener,
@@ -4026,7 +3925,7 @@ class MockLinkedScrollControllerGroup extends _i1.Mock
       );
 
   @override
-  _i7.Future<void> animateTo(
+  _i6.Future<void> animateTo(
     double? offset, {
     required _i3.Curve? curve,
     required Duration? duration,
@@ -4040,9 +3939,9 @@ class MockLinkedScrollControllerGroup extends _i1.Mock
             #duration: duration,
           },
         ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
   void jumpTo(double? value) => super.noSuchMethod(
@@ -4116,11 +4015,11 @@ class MockScrollController extends _i1.Mock implements _i3.ScrollController {
   @override
   _i3.ScrollPosition get position => (super.noSuchMethod(
         Invocation.getter(#position),
-        returnValue: _FakeScrollPosition_23(
+        returnValue: _FakeScrollPosition_22(
           this,
           Invocation.getter(#position),
         ),
-        returnValueForMissingStub: _FakeScrollPosition_23(
+        returnValueForMissingStub: _FakeScrollPosition_22(
           this,
           Invocation.getter(#position),
         ),
@@ -4141,7 +4040,7 @@ class MockScrollController extends _i1.Mock implements _i3.ScrollController {
       ) as bool);
 
   @override
-  _i7.Future<void> animateTo(
+  _i6.Future<void> animateTo(
     double? offset, {
     required Duration? duration,
     required _i3.Curve? curve,
@@ -4155,9 +4054,9 @@ class MockScrollController extends _i1.Mock implements _i3.ScrollController {
             #curve: curve,
           },
         ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
   void jumpTo(double? value) => super.noSuchMethod(
@@ -4210,7 +4109,7 @@ class MockScrollController extends _i1.Mock implements _i3.ScrollController {
             oldPosition,
           ],
         ),
-        returnValue: _FakeScrollPosition_23(
+        returnValue: _FakeScrollPosition_22(
           this,
           Invocation.method(
             #createScrollPosition,
@@ -4221,7 +4120,7 @@ class MockScrollController extends _i1.Mock implements _i3.ScrollController {
             ],
           ),
         ),
-        returnValueForMissingStub: _FakeScrollPosition_23(
+        returnValueForMissingStub: _FakeScrollPosition_22(
           this,
           Invocation.method(
             #createScrollPosition,
@@ -4244,7 +4143,7 @@ class MockScrollController extends _i1.Mock implements _i3.ScrollController {
       );
 
   @override
-  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i5.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -4253,7 +4152,7 @@ class MockScrollController extends _i1.Mock implements _i3.ScrollController {
       );
 
   @override
-  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i5.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -4278,11 +4177,11 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
   @override
   _i3.ScrollPhysics get physics => (super.noSuchMethod(
         Invocation.getter(#physics),
-        returnValue: _FakeScrollPhysics_24(
+        returnValue: _FakeScrollPhysics_23(
           this,
           Invocation.getter(#physics),
         ),
-        returnValueForMissingStub: _FakeScrollPhysics_24(
+        returnValueForMissingStub: _FakeScrollPhysics_23(
           this,
           Invocation.getter(#physics),
         ),
@@ -4291,11 +4190,11 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
   @override
   _i3.ScrollContext get context => (super.noSuchMethod(
         Invocation.getter(#context),
-        returnValue: _FakeScrollContext_25(
+        returnValue: _FakeScrollContext_24(
           this,
           Invocation.getter(#context),
         ),
-        returnValueForMissingStub: _FakeScrollContext_25(
+        returnValueForMissingStub: _FakeScrollContext_24(
           this,
           Invocation.getter(#context),
         ),
@@ -4311,11 +4210,11 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
   @override
   _i3.ValueNotifier<bool> get isScrollingNotifier => (super.noSuchMethod(
         Invocation.getter(#isScrollingNotifier),
-        returnValue: _FakeValueNotifier_26<bool>(
+        returnValue: _FakeValueNotifier_25<bool>(
           this,
           Invocation.getter(#isScrollingNotifier),
         ),
-        returnValueForMissingStub: _FakeValueNotifier_26<bool>(
+        returnValueForMissingStub: _FakeValueNotifier_25<bool>(
           this,
           Invocation.getter(#isScrollingNotifier),
         ),
@@ -4399,11 +4298,11 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
       ) as bool);
 
   @override
-  _i11.ScrollDirection get userScrollDirection => (super.noSuchMethod(
+  _i10.ScrollDirection get userScrollDirection => (super.noSuchMethod(
         Invocation.getter(#userScrollDirection),
-        returnValue: _i11.ScrollDirection.idle,
-        returnValueForMissingStub: _i11.ScrollDirection.idle,
-      ) as _i11.ScrollDirection);
+        returnValue: _i10.ScrollDirection.idle,
+        returnValueForMissingStub: _i10.ScrollDirection.idle,
+      ) as _i10.ScrollDirection);
 
   @override
   bool get hasListeners => (super.noSuchMethod(
@@ -4619,7 +4518,7 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
       );
 
   @override
-  _i7.Future<void> ensureVisible(
+  _i6.Future<void> ensureVisible(
     _i3.RenderObject? object, {
     double? alignment = 0.0,
     Duration? duration = Duration.zero,
@@ -4640,12 +4539,12 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
             #targetRenderObject: targetRenderObject,
           },
         ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i7.Future<void> animateTo(
+  _i6.Future<void> animateTo(
     double? to, {
     required Duration? duration,
     required _i3.Curve? curve,
@@ -4659,9 +4558,9 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
             #curve: curve,
           },
         ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
   void jumpTo(double? value) => super.noSuchMethod(
@@ -4682,7 +4581,7 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
       );
 
   @override
-  _i7.Future<void> moveTo(
+  _i6.Future<void> moveTo(
     double? to, {
     Duration? duration,
     _i3.Curve? curve,
@@ -4698,9 +4597,9 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
             #clamp: clamp,
           },
         ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
   void jumpToWithoutSettling(double? value) => super.noSuchMethod(
@@ -4712,20 +4611,20 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
       );
 
   @override
-  _i3.ScrollHoldController hold(_i6.VoidCallback? holdCancelCallback) =>
+  _i3.ScrollHoldController hold(_i5.VoidCallback? holdCancelCallback) =>
       (super.noSuchMethod(
         Invocation.method(
           #hold,
           [holdCancelCallback],
         ),
-        returnValue: _FakeScrollHoldController_27(
+        returnValue: _FakeScrollHoldController_26(
           this,
           Invocation.method(
             #hold,
             [holdCancelCallback],
           ),
         ),
-        returnValueForMissingStub: _FakeScrollHoldController_27(
+        returnValueForMissingStub: _FakeScrollHoldController_26(
           this,
           Invocation.method(
             #hold,
@@ -4735,9 +4634,9 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
       ) as _i3.ScrollHoldController);
 
   @override
-  _i8.Drag drag(
+  _i7.Drag drag(
     _i3.DragStartDetails? details,
-    _i6.VoidCallback? dragCancelCallback,
+    _i5.VoidCallback? dragCancelCallback,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -4747,7 +4646,7 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
             dragCancelCallback,
           ],
         ),
-        returnValue: _FakeDrag_28(
+        returnValue: _FakeDrag_27(
           this,
           Invocation.method(
             #drag,
@@ -4757,7 +4656,7 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
             ],
           ),
         ),
-        returnValueForMissingStub: _FakeDrag_28(
+        returnValueForMissingStub: _FakeDrag_27(
           this,
           Invocation.method(
             #drag,
@@ -4767,7 +4666,7 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
             ],
           ),
         ),
-      ) as _i8.Drag);
+      ) as _i7.Drag);
 
   @override
   void beginActivity(_i3.ScrollActivity? newActivity) => super.noSuchMethod(
@@ -4815,7 +4714,7 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
       );
 
   @override
-  void didUpdateScrollDirection(_i11.ScrollDirection? direction) =>
+  void didUpdateScrollDirection(_i10.ScrollDirection? direction) =>
       super.noSuchMethod(
         Invocation.method(
           #didUpdateScrollDirection,
@@ -4872,7 +4771,7 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
       );
 
   @override
-  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i5.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -4881,7 +4780,7 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
       );
 
   @override
-  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i5.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -4911,7 +4810,7 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
             #devicePixelRatio: devicePixelRatio,
           },
         ),
-        returnValue: _FakeScrollMetrics_29(
+        returnValue: _FakeScrollMetrics_28(
           this,
           Invocation.method(
             #copyWith,
@@ -4926,7 +4825,7 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
             },
           ),
         ),
-        returnValueForMissingStub: _FakeScrollMetrics_29(
+        returnValueForMissingStub: _FakeScrollMetrics_28(
           this,
           Invocation.method(
             #copyWith,
@@ -4948,7 +4847,7 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockStreamSubscription<T> extends _i1.Mock
-    implements _i7.StreamSubscription<T> {
+    implements _i6.StreamSubscription<T> {
   @override
   bool get isPaused => (super.noSuchMethod(
         Invocation.getter(#isPaused),
@@ -4957,14 +4856,14 @@ class MockStreamSubscription<T> extends _i1.Mock
       ) as bool);
 
   @override
-  _i7.Future<void> cancel() => (super.noSuchMethod(
+  _i6.Future<void> cancel() => (super.noSuchMethod(
         Invocation.method(
           #cancel,
           [],
         ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
   void onData(void Function(T)? handleData) => super.noSuchMethod(
@@ -4994,7 +4893,7 @@ class MockStreamSubscription<T> extends _i1.Mock
       );
 
   @override
-  void pause([_i7.Future<void>? resumeSignal]) => super.noSuchMethod(
+  void pause([_i6.Future<void>? resumeSignal]) => super.noSuchMethod(
         Invocation.method(
           #pause,
           [resumeSignal],
@@ -5012,46 +4911,46 @@ class MockStreamSubscription<T> extends _i1.Mock
       );
 
   @override
-  _i7.Future<E> asFuture<E>([E? futureValue]) => (super.noSuchMethod(
+  _i6.Future<E> asFuture<E>([E? futureValue]) => (super.noSuchMethod(
         Invocation.method(
           #asFuture,
           [futureValue],
         ),
-        returnValue: _i10.ifNotNull(
-              _i10.dummyValueOrNull<E>(
+        returnValue: _i9.ifNotNull(
+              _i9.dummyValueOrNull<E>(
                 this,
                 Invocation.method(
                   #asFuture,
                   [futureValue],
                 ),
               ),
-              (E v) => _i7.Future<E>.value(v),
+              (E v) => _i6.Future<E>.value(v),
             ) ??
-            _FakeFuture_30<E>(
+            _FakeFuture_29<E>(
               this,
               Invocation.method(
                 #asFuture,
                 [futureValue],
               ),
             ),
-        returnValueForMissingStub: _i10.ifNotNull(
-              _i10.dummyValueOrNull<E>(
+        returnValueForMissingStub: _i9.ifNotNull(
+              _i9.dummyValueOrNull<E>(
                 this,
                 Invocation.method(
                   #asFuture,
                   [futureValue],
                 ),
               ),
-              (E v) => _i7.Future<E>.value(v),
+              (E v) => _i6.Future<E>.value(v),
             ) ??
-            _FakeFuture_30<E>(
+            _FakeFuture_29<E>(
               this,
               Invocation.method(
                 #asFuture,
                 [futureValue],
               ),
             ),
-      ) as _i7.Future<E>);
+      ) as _i6.Future<E>);
 }
 
 /// A class which mocks [FocusNode].
@@ -5143,43 +5042,43 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
       ) as _i3.FocusHighlightMode);
 
   @override
-  _i6.Size get size => (super.noSuchMethod(
+  _i5.Size get size => (super.noSuchMethod(
         Invocation.getter(#size),
-        returnValue: _FakeSize_31(
+        returnValue: _FakeSize_30(
           this,
           Invocation.getter(#size),
         ),
-        returnValueForMissingStub: _FakeSize_31(
+        returnValueForMissingStub: _FakeSize_30(
           this,
           Invocation.getter(#size),
         ),
-      ) as _i6.Size);
+      ) as _i5.Size);
 
   @override
-  _i6.Offset get offset => (super.noSuchMethod(
+  _i5.Offset get offset => (super.noSuchMethod(
         Invocation.getter(#offset),
-        returnValue: _FakeOffset_14(
+        returnValue: _FakeOffset_13(
           this,
           Invocation.getter(#offset),
         ),
-        returnValueForMissingStub: _FakeOffset_14(
+        returnValueForMissingStub: _FakeOffset_13(
           this,
           Invocation.getter(#offset),
         ),
-      ) as _i6.Offset);
+      ) as _i5.Offset);
 
   @override
-  _i6.Rect get rect => (super.noSuchMethod(
+  _i5.Rect get rect => (super.noSuchMethod(
         Invocation.getter(#rect),
-        returnValue: _FakeRect_32(
+        returnValue: _FakeRect_31(
           this,
           Invocation.getter(#rect),
         ),
-        returnValueForMissingStub: _FakeRect_32(
+        returnValueForMissingStub: _FakeRect_31(
           this,
           Invocation.getter(#rect),
         ),
-      ) as _i6.Rect);
+      ) as _i5.Rect);
 
   @override
   set onKey(_i3.FocusOnKeyCallback? _onKey) => super.noSuchMethod(
@@ -5290,7 +5189,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
             #onKey: onKey,
           },
         ),
-        returnValue: _FakeFocusAttachment_33(
+        returnValue: _FakeFocusAttachment_32(
           this,
           Invocation.method(
             #attach,
@@ -5301,7 +5200,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
             },
           ),
         ),
-        returnValueForMissingStub: _FakeFocusAttachment_33(
+        returnValueForMissingStub: _FakeFocusAttachment_32(
           this,
           Invocation.method(
             #attach,
@@ -5364,7 +5263,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
       ) as bool);
 
   @override
-  void debugFillProperties(_i12.DiagnosticPropertiesBuilder? properties) =>
+  void debugFillProperties(_i11.DiagnosticPropertiesBuilder? properties) =>
       super.noSuchMethod(
         Invocation.method(
           #debugFillProperties,
@@ -5389,14 +5288,14 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
           #toStringShort,
           [],
         ),
-        returnValue: _i10.dummyValue<String>(
+        returnValue: _i9.dummyValue<String>(
           this,
           Invocation.method(
             #toStringShort,
             [],
           ),
         ),
-        returnValueForMissingStub: _i10.dummyValue<String>(
+        returnValueForMissingStub: _i9.dummyValue<String>(
           this,
           Invocation.method(
             #toStringShort,
@@ -5423,7 +5322,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
             #minLevel: minLevel,
           },
         ),
-        returnValue: _i10.dummyValue<String>(
+        returnValue: _i9.dummyValue<String>(
           this,
           Invocation.method(
             #toStringShallow,
@@ -5434,7 +5333,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
             },
           ),
         ),
-        returnValueForMissingStub: _i10.dummyValue<String>(
+        returnValueForMissingStub: _i9.dummyValue<String>(
           this,
           Invocation.method(
             #toStringShallow,
@@ -5465,7 +5364,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
             #wrapWidth: wrapWidth,
           },
         ),
-        returnValue: _i10.dummyValue<String>(
+        returnValue: _i9.dummyValue<String>(
           this,
           Invocation.method(
             #toStringDeep,
@@ -5478,7 +5377,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
             },
           ),
         ),
-        returnValueForMissingStub: _i10.dummyValue<String>(
+        returnValueForMissingStub: _i9.dummyValue<String>(
           this,
           Invocation.method(
             #toStringDeep,
@@ -5496,7 +5395,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
   @override
   _i3.DiagnosticsNode toDiagnosticsNode({
     String? name,
-    _i13.DiagnosticsTreeStyle? style,
+    _i12.DiagnosticsTreeStyle? style,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -5507,7 +5406,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
             #style: style,
           },
         ),
-        returnValue: _FakeDiagnosticsNode_34(
+        returnValue: _FakeDiagnosticsNode_33(
           this,
           Invocation.method(
             #toDiagnosticsNode,
@@ -5518,7 +5417,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
             },
           ),
         ),
-        returnValueForMissingStub: _FakeDiagnosticsNode_34(
+        returnValueForMissingStub: _FakeDiagnosticsNode_33(
           this,
           Invocation.method(
             #toDiagnosticsNode,
@@ -5532,7 +5431,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
       ) as _i3.DiagnosticsNode);
 
   @override
-  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i5.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -5541,7 +5440,7 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
       );
 
   @override
-  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i5.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -5557,136 +5456,4 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
         ),
         returnValueForMissingStub: null,
       );
-}
-
-/// A class which mocks [TrinaCellMergeManager].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockTrinaCellMergeManager extends _i1.Mock
-    implements _i4.TrinaCellMergeManager {
-  @override
-  _i2.TrinaGridStateManager get stateManager => (super.noSuchMethod(
-        Invocation.getter(#stateManager),
-        returnValue: _FakeTrinaGridStateManager_20(
-          this,
-          Invocation.getter(#stateManager),
-        ),
-        returnValueForMissingStub: _FakeTrinaGridStateManager_20(
-          this,
-          Invocation.getter(#stateManager),
-        ),
-      ) as _i2.TrinaGridStateManager);
-
-  @override
-  bool mergeCells(_i2.TrinaCellMergeRange? range) => (super.noSuchMethod(
-        Invocation.method(
-          #mergeCells,
-          [range],
-        ),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-
-  @override
-  bool unmergeCells({
-    _i2.TrinaCellMergeRange? range,
-    _i2.TrinaCell? cell,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #unmergeCells,
-          [],
-          {
-            #range: range,
-            #cell: cell,
-          },
-        ),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-
-  @override
-  void unmergeAllCells() => super.noSuchMethod(
-        Invocation.method(
-          #unmergeAllCells,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i2.TrinaCellMergeRange? getMergeRange(
-    _i2.TrinaCell? cell,
-    int? rowIdx,
-    int? colIdx,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getMergeRange,
-          [
-            cell,
-            rowIdx,
-            colIdx,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      ) as _i2.TrinaCellMergeRange?);
-
-  @override
-  List<_i2.TrinaCellMergeRange> getAllMergedRanges() => (super.noSuchMethod(
-        Invocation.method(
-          #getAllMergedRanges,
-          [],
-        ),
-        returnValue: <_i2.TrinaCellMergeRange>[],
-        returnValueForMissingStub: <_i2.TrinaCellMergeRange>[],
-      ) as List<_i2.TrinaCellMergeRange>);
-
-  @override
-  bool isCellMerged(_i2.TrinaCell? cell) => (super.noSuchMethod(
-        Invocation.method(
-          #isCellMerged,
-          [cell],
-        ),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-
-  @override
-  bool shouldRenderCell(_i2.TrinaCell? cell) => (super.noSuchMethod(
-        Invocation.method(
-          #shouldRenderCell,
-          [cell],
-        ),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-
-  @override
-  _i2.TrinaCell? getMainCell(_i2.TrinaCell? spannedCell) => (super.noSuchMethod(
-        Invocation.method(
-          #getMainCell,
-          [spannedCell],
-        ),
-        returnValueForMissingStub: null,
-      ) as _i2.TrinaCell?);
-
-  @override
-  List<_i2.TrinaCell> getSpannedCells(
-    _i2.TrinaCell? mainCell,
-    int? rowIdx,
-    int? colIdx,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getSpannedCells,
-          [
-            mainCell,
-            rowIdx,
-            colIdx,
-          ],
-        ),
-        returnValue: <_i2.TrinaCell>[],
-        returnValueForMissingStub: <_i2.TrinaCell>[],
-      ) as List<_i2.TrinaCell>);
 }

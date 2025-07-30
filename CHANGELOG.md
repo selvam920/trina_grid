@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.6.12] - 2025. 07. 28
+
+* Revert Merge cell feature and add it to private branch.
+
+
 ## [1.6.11] - 2025. 07. 28
 
 * fix: can't start editing while pressing SHIFT key ( by @DMouayad )
@@ -13,8 +18,6 @@
 * dev: increase size of Try Live Demo and convert to paragraph "please star" section ( by Elia Tolin)
 * fix: unregistered key events do not function when grid in focus ( by @DMouayad)
 * fix: Fix empty cell value for date\dateTime columns with custom format (#129) ( by @DMouayad )
-
-
 
 
 ## [1.6.10] - 2025. 07. 08

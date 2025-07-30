@@ -118,25 +118,6 @@ class TrinaBaseCell extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    // For spanned cells, show only borders without content
-    if (cell.merge?.isSpannedCell == true) {
-      return _CellContainer(
-        cell: cell,
-        rowIdx: rowIdx,
-        row: row,
-        column: column,
-        cellPadding: column.cellPadding ??
-            stateManager.configuration.style.defaultCellPadding,
-        stateManager: stateManager,
-        child: const SizedBox.shrink(), // Empty content, only borders
-      );
-    }
-
-    // Check if this cell should be rendered (not a spanned cell)
-    if (!stateManager.cellMergeManager.shouldRenderCell(cell)) {
-      return const SizedBox.shrink();
-    }
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       // Essential gestures.
@@ -266,36 +247,6 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     return readOnly == true ? cellColorInReadOnlyState : cellColorInEditState;
   }
 
-  /// Determines which borders should be shown for a cell, considering merge status
-  BoxBorder? _getMergedCellBorder({
-    required bool enableCellVerticalBorder,
-    required Color borderColor,
-    required Color activatedBorderColor,
-    required Color inactivatedBorderColor,
-    required bool hasFocus,
-    required bool isCurrentCell,
-    required bool isSelectedCell,
-  }) {
-    // For current/selected cells, show all borders
-    if (isCurrentCell || isSelectedCell) {
-      return Border.all(
-        color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
-        width: 1,
-      );
-    }
-
-    // For all cells (merged or not), show vertical border if enabled
-    // Horizontal borders are handled at the row level for vertical merges
-    return enableCellVerticalBorder
-        ? BorderDirectional(
-            end: BorderSide(
-              color: borderColor,
-              width: stateManager.style.cellVerticalBorderWidth,
-            ),
-          )
-        : null;
-  }
-
   BoxDecoration _boxDecoration({
     required bool hasFocus,
     required bool readOnly,
@@ -320,47 +271,52 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     final bool isDirty = widget.cell.isDirty;
     final Color dirtyColor = stateManager.configuration.style.cellDirtyColor;
 
-    // Determine cell color
-    Color cellColor;
-    if (isDirty) {
-      cellColor = dirtyColor;
-    } else if (isCurrentCell) {
-      cellColor = _currentCellColor(
-            hasFocus: hasFocus,
-            isEditing: isEditing,
-            readOnly: readOnly,
-            gridBackgroundColor: gridBackgroundColor,
-            activatedColor: activatedColor,
-            cellColorInReadOnlyState: cellColorInReadOnlyState,
-            cellColorInEditState: cellColorInEditState,
-            selectingMode: selectingMode,
-          ) ??
-          gridBackgroundColor;
+    if (isCurrentCell) {
+      return BoxDecoration(
+        color: isDirty
+            ? dirtyColor
+            : _currentCellColor(
+                hasFocus: hasFocus,
+                isEditing: isEditing,
+                readOnly: readOnly,
+                gridBackgroundColor: gridBackgroundColor,
+                activatedColor: activatedColor,
+                cellColorInReadOnlyState: cellColorInReadOnlyState,
+                cellColorInEditState: cellColorInEditState,
+                selectingMode: selectingMode,
+              ),
+        border: Border.all(
+          color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
+          width: 1,
+        ),
+      );
     } else if (isSelectedCell) {
-      cellColor = activatedColor;
-    } else if (isGroupedRowCell) {
-      cellColor = cellColorGroupedRow ?? gridBackgroundColor;
-    } else if (readOnly) {
-      cellColor = cellReadonlyColor ?? gridBackgroundColor;
+      return BoxDecoration(
+        color: isDirty ? dirtyColor : activatedColor,
+        border: Border.all(
+          color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
+          width: 1,
+        ),
+      );
     } else {
-      cellColor = cellDefaultColor ?? gridBackgroundColor;
+      return BoxDecoration(
+        color: isDirty
+            ? dirtyColor
+            : isGroupedRowCell
+                ? cellColorGroupedRow
+                : readOnly
+                    ? cellReadonlyColor
+                    : cellDefaultColor,
+        border: enableCellVerticalBorder
+            ? BorderDirectional(
+                end: BorderSide(
+                  color: borderColor,
+                  width: stateManager.style.cellVerticalBorderWidth,
+                ),
+              )
+            : null,
+      );
     }
-
-    // Get appropriate border based on merge status
-    final border = _getMergedCellBorder(
-      enableCellVerticalBorder: enableCellVerticalBorder,
-      borderColor: borderColor,
-      activatedBorderColor: activatedBorderColor,
-      inactivatedBorderColor: inactivatedBorderColor,
-      hasFocus: hasFocus,
-      isCurrentCell: isCurrentCell,
-      isSelectedCell: isSelectedCell,
-    );
-
-    return BoxDecoration(
-      color: cellColor,
-      border: border,
-    );
   }
 
   @override

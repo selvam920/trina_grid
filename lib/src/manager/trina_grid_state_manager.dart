@@ -24,7 +24,6 @@ import 'state/scroll_state.dart';
 import 'state/selecting_state.dart';
 import 'state/visibility_layout_state.dart';
 import 'state/hovering_state.dart';
-import 'trina_cell_merge_manager.dart';
 
 abstract class ITrinaGridState
     implements
@@ -210,12 +209,6 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   /// Get the current state of change tracking
   bool get enableChangeTracking => _enableChangeTracking;
 
-  /// Manager for cell merging operations
-  late final TrinaCellMergeManager _cellMergeManager;
-
-  /// Get the cell merge manager
-  TrinaCellMergeManager get cellMergeManager => _cellMergeManager;
-
   /// Enable or disable change tracking
   void setChangeTracking(bool enable, {bool notify = true}) {
     if (_enableChangeTracking == enable) return;
@@ -338,10 +331,7 @@ class TrinaGridStateManager extends TrinaGridStateChangeNotifier {
     super.notifierFilterResolver,
     super.configuration,
     super.mode,
-  }) {
-    // Initialize the cell merge manager
-    _cellMergeManager = TrinaCellMergeManager(this);
-  }
+  });
 
   TrinaChangeNotifierFilter<T> resolveNotifierFilter<T>() {
     return TrinaChangeNotifierFilter<T>(
@@ -394,63 +384,6 @@ class TrinaGridStateManager extends TrinaGridStateChangeNotifier {
 
     // Column is visible if any part of it is in the viewport
     return (columnStart <= viewportEnd && columnEnd > scrollPosition);
-  }
-
-  /// Merges cells in the specified range
-  /// Returns true if merge was successful, false otherwise
-  bool mergeCells(TrinaCellMergeRange range) {
-    return cellMergeManager.mergeCells(range);
-  }
-
-  /// Merges cells in the current selection
-  /// Returns true if merge was successful, false otherwise
-  bool mergeSelectedCells() {
-    if (currentCellPosition == null || currentSelectingPosition == null) {
-      return false;
-    }
-
-    final range = TrinaCellMergeRange.fromPositions(
-      currentCellPosition!,
-      currentSelectingPosition!,
-    );
-
-    return cellMergeManager.mergeCells(range);
-  }
-
-  /// Unmerges cells in the specified range or containing the specified cell
-  /// Returns true if unmerge was successful, false otherwise
-  bool unmergeCells({TrinaCellMergeRange? range, TrinaCell? cell}) {
-    return cellMergeManager.unmergeCells(range: range, cell: cell);
-  }
-
-  /// Unmerges the current cell if it's merged
-  /// Returns true if unmerge was successful, false otherwise
-  bool unmergeCurrentCell() {
-    if (currentCell == null) {
-      return false;
-    }
-
-    return cellMergeManager.unmergeCells(cell: currentCell);
-  }
-
-  /// Unmerges all merged cells in the grid
-  void unmergeAllCells() {
-    cellMergeManager.unmergeAllCells();
-  }
-
-  /// Gets the merge range for a merged cell
-  TrinaCellMergeRange? getMergeRange(TrinaCell cell, int rowIdx, int colIdx) {
-    return cellMergeManager.getMergeRange(cell, rowIdx, colIdx);
-  }
-
-  /// Gets all merged cell ranges in the grid
-  List<TrinaCellMergeRange> getAllMergedRanges() {
-    return cellMergeManager.getAllMergedRanges();
-  }
-
-  /// Checks if a cell is merged
-  bool isCellMerged(TrinaCell cell) {
-    return cellMergeManager.isCellMerged(cell);
   }
 
   /// It handles the necessary settings when [rows] are first set or added to the [TrinaGrid].

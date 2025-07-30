@@ -25,7 +25,6 @@ import 'feature/add_and_remove_column_row_screen.dart';
 import 'feature/add_rows_asynchronously.dart';
 import 'feature/column_renderer_screen.dart';
 import 'feature/cell_renderer_screen.dart';
-import 'feature/cell_merge_screen.dart';
 import 'feature/cell_selection_screen.dart';
 import 'feature/column_filtering_screen.dart';
 import 'feature/column_footer_screen.dart';
@@ -478,14 +477,6 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
             'You can customize individual cells with cell-level renderers.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, CellRendererScreen.routeName);
-        },
-      ),
-      TrinaListTile(
-        title: 'Cell merge',
-        description:
-            'Merge cells to span multiple rows and columns for better data presentation.',
-        onTapLiveDemo: () {
-          Navigator.pushNamed(context, CellMergeScreen.routeName);
         },
       ),
       TrinaListTile(
