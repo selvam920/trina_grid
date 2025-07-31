@@ -12,16 +12,34 @@ import '../../../mock/shared_mocks.mocks.dart';
 const selectItems = ['a', 'b', 'c'];
 
 void main() {
-  late MockTrinaGridStateManager stateManager;
+  late TrinaCell cell;
+  late TrinaColumn column;
 
-  setUp(() {
-    stateManager = MockTrinaGridStateManager();
-
-    when(stateManager.configuration).thenReturn(
-      const TrinaGridConfiguration(
-        enterKeyAction: TrinaGridEnterKeyAction.toggleEditing,
-        enableMoveDownAfterSelecting: false,
-      ),
+  Future<void> buildCellAndEdit(
+    WidgetTester tester, {
+    String? initialCellValue,
+    List<String> items = selectItems,
+    IconData? popupIcon = Icons.arrow_drop_down,
+    bool enableAutoEditing = true,
+    bool enableSearch = false,
+    bool enableFiltering = false,
+  }) async {
+    column = TrinaColumn(
+      title: 'column title',
+      field: 'column_field_name',
+      enableAutoEditing: enableAutoEditing,
+      type: enableSearch
+          ? TrinaColumnType.selectWithSearch(
+              items,
+              itemToString: (item) => item,
+              enableMenuFiltering: enableFiltering,
+              popupIcon: popupIcon,
+            )
+          : TrinaColumnType.select(
+              items,
+              popupIcon: popupIcon,
+              enableMenuFiltering: enableFiltering,
+            ),
     );
     when(stateManager.keyPressed).thenReturn(TrinaGridKeyPressed());
     when(stateManager.columnHeight).thenReturn(

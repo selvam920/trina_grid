@@ -66,7 +66,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
           'Designer',
           'Owner',
         ],
-        builder: (item) {
+        menuItemBuilder: (item) {
           return Row(children: [
             Icon(item == 'Programmer' ? Icons.code : Icons.design_services),
             const SizedBox(width: 8),

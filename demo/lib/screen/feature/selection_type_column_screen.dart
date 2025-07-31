@@ -39,7 +39,7 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
       TrinaColumn(
         title: 'Select B',
         field: 'select_b',
-        type: TrinaColumnType.select(
+        type: TrinaColumnType.selectWithSearch(
           <String>[
             'Mercury',
             'Venus',
@@ -51,6 +51,7 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
             'Neptune',
             'Trina',
           ],
+          itemToString: (item) => item,
           enableColumnFilter: true,
         ),
       ),
@@ -70,17 +71,34 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
         title: 'Select D',
         field: 'select_d',
         type: TrinaColumnType.select(
-          <String>[
-            '一',
-            '二',
-            '三',
-            '四',
-            '五',
-            '六',
-            '七',
-            '八',
-            '九',
-          ],
+          <String>['Arabic', 'English', 'Chinese', 'French', 'German'],
+          menuItemBuilder: (item) => Row(
+            children: [
+              const Icon(Icons.language, size: 20),
+              const SizedBox(width: 4),
+              Text(item),
+            ],
+          ),
+        ),
+      ),
+      // A select column that provides a custom widget to display when
+      // filtering yields no results.
+      TrinaColumn(
+        title: 'With custom empty filter result builder',
+        field: 'select_e',
+        type: TrinaColumnType.selectWithFilters(
+          <String>['America', 'Africa', 'Australia', 'Asia', 'Antarctic'],
+          menuFilters: [TrinaSelectMenuFilter.startsWith],
+          menuEmptyFilterResultBuilder: (context) => SizedBox(
+            height: 45,
+            child: Row(
+              children: [
+                const Icon(Icons.filter_list_rounded, size: 20),
+                const SizedBox(width: 4),
+                Flexible(child: Text('No countries match the filter')),
+              ],
+            ),
+          ),
           enableColumnFilter: true,
         ),
       ),
