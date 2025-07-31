@@ -167,9 +167,51 @@ void main() {
       expect(foundWidget.icon, stateManager.style.columnResizeIcon);
     },
   );
+  group('Title size', () {
+    testWidgets(
+      'column title height should equal stateManager.columnHeight',
+      (tester) async {
+        await buildGrid(tester);
+
+        final title = find.byType(TrinaColumnTitle);
+        expect(title, findsOneWidget);
+        final size = tester.getSize(title);
+        expect(size.height, stateManager.style.columnHeight);
+      },
+    );
+    testWidgets(
+      'column title width should equal column.width',
+      (tester) async {
+        final column = buildColumn(width: 100);
+        await buildGrid(tester, columns: [column]);
+
+        final title = find.byType(TrinaColumnTitle);
+        expect(title, findsOneWidget);
+        final size = tester.getSize(title);
+        expect(size.width, column.width);
+      },
+    );
+    testWidgets(
+      'WHEN enableColumnDrag is false, '
+      'column title height should equal to stateManager.columnHeight',
+      (tester) async {
+        final column = buildColumn(enableColumnDrag: false);
+        await buildGrid(tester, columns: [column]);
+
+        final title = find.ancestor(
+          of: find.text(column.title),
+          matching: find.byType(Container),
+        );
+        expect(title, findsOneWidget);
+        final size = tester.getSize(title);
+        expect(size.height, stateManager.style.columnHeight);
+      },
+    );
+  });
+
   group('enableColumnDrag', () {
     testWidgets(
-      'WHEN Column has enableDraggable false '
+      'WHEN Column has enableColumnDrag false '
       'THEN Draggable should not be visible',
       (tester) async {
         final column = buildColumn(enableColumnDrag: false);
@@ -179,7 +221,7 @@ void main() {
     );
 
     testWidgets(
-      'WHEN Column has enableDraggable true '
+      'WHEN Column has enableColumnDrag true '
       'THEN Draggable should be visible',
       (tester) async {
         await buildGrid(tester);
@@ -635,5 +677,72 @@ void main() {
       // then
       expect(gestureDetector, findsNothing);
     });
+    testWidgets(
+      'column title height should equal stateManager.columnHeight',
+      (tester) async {
+        final column = buildColumn(
+          enableColumnDrag: false,
+          title: originalTitleText,
+          titleRenderer: (context) => customTitleWidget,
+        );
+        await buildGrid(
+          tester,
+          columns: [column],
+        );
+
+        final title = find.byType(TrinaColumnTitle);
+        expect(title, findsOneWidget);
+        final size = tester.getSize(title);
+        expect(size.height, stateManager.style.columnHeight);
+      },
+    );
+    testWidgets(
+      'WHEN enableColumnDrag is false, '
+      'column title height should equal stateManager.columnHeight',
+      (tester) async {
+        final column = buildColumn(
+          enableColumnDrag: false,
+          title: originalTitleText,
+          titleRenderer: (context) => customTitleWidget,
+        );
+        final height = 100.0;
+        await buildGrid(
+          tester,
+          columns: [column],
+          configuration: TrinaGridConfiguration(
+            style: TrinaGridStyleConfig(columnHeight: height),
+          ),
+        );
+
+        final title = find.byType(TrinaColumnTitle);
+        expect(title, findsOneWidget);
+        final size = tester.getSize(title);
+        expect(size.height, height);
+      },
+    );
+    testWidgets(
+      'WHEN enableSorting is false, '
+      'column title height should equal stateManager.columnHeight',
+      (tester) async {
+        final column = buildColumn(
+          enableSorting: false,
+          title: originalTitleText,
+          titleRenderer: (context) => customTitleWidget,
+        );
+        final height = 100.0;
+        await buildGrid(
+          tester,
+          columns: [column],
+          configuration: TrinaGridConfiguration(
+            style: TrinaGridStyleConfig(columnHeight: height),
+          ),
+        );
+
+        final title = find.byType(TrinaColumnTitle);
+        expect(title, findsOneWidget);
+        final size = tester.getSize(title);
+        expect(size.height, height);
+      },
+    );
   });
 }
