@@ -11,9 +11,7 @@ typedef TrinaLazyPaginationFetch = Future<TrinaLazyPaginationResponse> Function(
 /// Callback function to build a custom pagination widget.
 ///
 typedef TrinaPaginationBuilder = Widget Function(
-  BuildContext context,
-  TrinaLazyPaginationState state,
-);
+    BuildContext context, TrinaLazyPaginationState paginationState);
 
 /// Request data for lazy pagination processing.
 class TrinaLazyPaginationRequest {
