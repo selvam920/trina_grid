@@ -131,10 +131,14 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
   @override
   Widget build(BuildContext context) {
     final style = stateManager.configuration.style;
-    final contextMenuIcon = _buildContextMenuIcon(style);
-
-    Widget title;
     final bool isCustom = widget.column.hasTitleRenderer;
+
+    var contextMenuIcon = _buildContextMenuIcon(style);
+    contextMenuIcon = _buildContextMenuWidget(
+      contextMenuIcon,
+      hasTitleRenderer: isCustom,
+    );
+    Widget title;
 
     if (isCustom) {
       final rendererContext = _createTitleRendererContext(contextMenuIcon);
@@ -180,14 +184,7 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
           Positioned.directional(
             textDirection: stateManager.textDirection,
             end: -3,
-            child: enableGesture
-                ? Listener(
-                    onPointerDown: _handleOnPointDown,
-                    onPointerMove: _handleOnPointMove,
-                    onPointerUp: _handleOnPointUp,
-                    child: contextMenuIcon,
-                  )
-                : contextMenuIcon,
+            child: contextMenuIcon,
           ),
       ],
     );
@@ -226,18 +223,43 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
       stateManager: stateManager,
       height: widget.height,
       showContextIcon: showContextIcon,
-      contextMenuIcon: enableGesture
-          ? Listener(
-              onPointerDown: _handleOnPointDown,
-              onPointerMove: _handleOnPointMove,
-              onPointerUp: _handleOnPointUp,
-              child: contextMenuIcon,
-            )
-          : contextMenuIcon,
+      contextMenuIcon: contextMenuIcon,
       isFiltered: isFiltered,
       showContextMenu:
           mounted && widget.column.enableContextMenu ? _showContextMenu : null,
     );
+  }
+
+  /// Builds the context menu widget, wrapping it with gesture detectors.
+  ///
+  /// If [hasTitleRenderer] is true, the widget is also wrapped in a
+  /// [GestureDetector] to absorb tap events. This prevents the tap from
+  /// propagating to the parent `_SortableWidget`, which would otherwise
+  /// trigger a column sort when the context menu icon is clicked.
+  Widget _buildContextMenuWidget(
+    Widget contextMenuIcon, {
+    bool hasTitleRenderer = false,
+  }) {
+    if (!enableGesture) {
+      return contextMenuIcon;
+    }
+
+    final listener = Listener(
+      onPointerDown: _handleOnPointDown,
+      onPointerMove: _handleOnPointMove,
+      onPointerUp: _handleOnPointUp,
+      child: contextMenuIcon,
+    );
+
+    if (hasTitleRenderer) {
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {}, // Absorb the tap to prevent sorting.
+        child: listener,
+      );
+    }
+
+    return listener;
   }
 }
 
