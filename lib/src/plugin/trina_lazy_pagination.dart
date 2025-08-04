@@ -135,6 +135,9 @@ class TrinaLazyPagination extends StatefulWidget {
     this.pageSizeToMove,
     this.showPageSizeSelector = false,
     this.pageSizes = const [10, 20, 30, 50, 100],
+    this.showLoading = true,
+    this.loadingLevel = TrinaGridLoadingLevel.rows,
+    this.customLoadingWidget,
     this.onPageSizeChanged,
     this.dropdownDecoration,
     this.dropdownItemDecoration,
@@ -206,6 +209,16 @@ class TrinaLazyPagination extends StatefulWidget {
   /// A callback function that returns a widget for custom pagination.
   final TrinaPaginationBuilder? builder;
 
+  /// Whether to show the loading indicator when [fetch] is called.
+  final bool showLoading;
+
+  /// Specifies where the loading indicator will be displayed.
+  ///
+  /// see [TrinaGridLoadingLevel]
+  final TrinaGridLoadingLevel loadingLevel;
+
+  /// A custom widget to be displayed instead of the default loading indicator.
+  final Widget? customLoadingWidget;
   @override
   State<TrinaLazyPagination> createState() => TrinaLazyPaginationState();
 }
@@ -277,7 +290,11 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
 
     _isFetching = true;
 
-    stateManager.setShowLoading(true, level: TrinaGridLoadingLevel.rows);
+    stateManager.setShowLoading(
+      widget.showLoading,
+      level: widget.loadingLevel,
+      customLoadingWidget: widget.customLoadingWidget,
+    );
 
     widget
         .fetch(

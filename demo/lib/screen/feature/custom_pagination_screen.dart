@@ -91,7 +91,8 @@ class _CustomPaginationScreenState extends State<CustomPaginationScreen> {
       topTitle: 'Custom Pagination UI',
       topContents: const [
         Text('This screen demonstrates how to customize the pagination UI.'),
-        Text('You can provide a custom widget for the pagination footer.'),
+        Text(
+            'You can enable\\disable through `TrinaLazyPagination.showLoading` and customize the loading widget through `TrinaLazyPagination.customLoadingWidget`.'),
       ],
       topButtons: [
         TrinaExampleButton(
