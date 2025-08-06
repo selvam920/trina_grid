@@ -311,6 +311,7 @@ abstract interface class TrinaColumnType {
     String headerFormat = 'yyyy-MM',
     bool applyFormatOnInit = true,
     IconData? popupIcon = Icons.date_range,
+    bool closePopupOnSelection = false,
   }) {
     return TrinaColumnTypeDate(
       defaultValue: defaultValue,
@@ -320,6 +321,7 @@ abstract interface class TrinaColumnType {
       headerFormat: headerFormat,
       applyFormatOnInit: applyFormatOnInit,
       popupIcon: popupIcon,
+      closePopupOnSelection: closePopupOnSelection,
     );
   }
 
