@@ -40,6 +40,12 @@ abstract class TrinaPopupCellStateWithCustomPopup<T extends PopupCell>
   }
 
   @override
+  void dispose() {
+    popupVisibilityNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   void closePopup(BuildContext context) {
     Navigator.maybePop(context);
   }
