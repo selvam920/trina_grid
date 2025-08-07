@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trina_grid/src/model/trina_select_menu_item.dart';
+import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/ui/cells/popup_cell.dart';
 import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_menu.dart';
@@ -31,6 +31,8 @@ class TrinaBooleanCell extends StatefulWidget implements PopupCell {
 
 class TrinaBooleanCellState
     extends TrinaPopupCellStateWithMenu<TrinaBooleanCell> {
+  TrinaColumnTypeBoolean get _column => widget.column.type.boolean;
+
   @override
   IconData? get popupMenuIcon => widget.column.type.boolean.popupIcon;
 

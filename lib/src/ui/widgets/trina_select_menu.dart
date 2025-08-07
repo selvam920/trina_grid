@@ -68,7 +68,9 @@ class TrinaSelectMenu<T> extends StatefulWidget {
   /// {@endtemplate}
   final void Function(T) onItemSelected;
 
-  /// The width of the popup menu.
+  /// {@template TrinaSelectMenu.width}
+  /// The width of the menu.
+  /// {@endtemplate}
   final double width;
 
   /// {@template TrinaSelectMenu.initialValue}
@@ -83,7 +85,9 @@ class TrinaSelectMenu<T> extends StatefulWidget {
   /// {@endtemplate}
   final ItemBuilder<T> itemBuilder;
 
+  /// {@template TrinaSelectMenu.itemHeight}
   /// The height of each item in the list.
+  /// {@endtemplate}
   final double itemHeight;
 
   /// {@template TrinaSelectMenu.maxHeight}
@@ -126,8 +130,7 @@ class TrinaSelectMenu<T> extends StatefulWidget {
     required this.items,
     required this.onItemSelected,
     required this.width,
-    required this.currentValue,
-    required this.isDarkMode,
+    required this.initialValue,
     required this.itemHeight,
     required this.maxHeight,
     this.itemBuilder,

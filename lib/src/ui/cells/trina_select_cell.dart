@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trina_grid/src/model/trina_select_menu_item.dart';
 import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_menu.dart';
+import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import 'popup_cell.dart';
