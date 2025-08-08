@@ -507,7 +507,7 @@ class TrinaFilterColumnWidgetDelegate {
     FocusNode focusNode,
     TextEditingController controller,
     bool enabled,
-    void Function(String changed) handleOnChanged,
+    void Function(dynamic changed) handleOnChanged,
     TrinaGridStateManager stateManager,
   )? onFilterSuffixTap;
 
@@ -515,7 +515,7 @@ class TrinaFilterColumnWidgetDelegate {
     FocusNode focusNode,
     TextEditingController controller,
     bool enabled,
-    void Function(String changed) handleOnChanged,
+    void Function(dynamic changed) handleOnChanged,
     TrinaGridStateManager stateManager,
   )? filterWidgetBuilder;
 

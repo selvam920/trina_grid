@@ -236,7 +236,7 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
     stateManager.setKeepFocus(false);
   }
 
-  void _handleOnChanged(String changed) {
+  void _handleOnChanged(dynamic changed) {
     stateManager.eventManager!.addEvent(
       TrinaGridChangeColumnFilterEvent(
         column: widget.column,

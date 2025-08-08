@@ -38,7 +38,7 @@ class FilterHelper {
   static TrinaRow createFilterRow({
     String? columnField,
     TrinaFilterType? filterType,
-    String? filterValue,
+    dynamic filterValue,
   }) {
     return TrinaRow(
       cells: {
