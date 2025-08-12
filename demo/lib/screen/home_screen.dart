@@ -195,6 +195,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
   List<Widget> _buildFeatureItems(BuildContext context) {
     final List<Widget> allItems = [
       TrinaListTile(
+        title: 'Custom Pagination UI',
+        description: 'Customize rows pagination UI',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CustomPaginationScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
         title: 'Column Title Renderer',
         description:
             'Fully customize column titles with your own widgets while preserving all column functionality.',
@@ -325,14 +333,6 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         description: 'A column to enter a number as currency value.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, CurrencyTypeColumnScreen.routeName);
-        },
-        trailing: newIcon,
-      ),
-      TrinaListTile(
-        title: 'Custom Pagination UI',
-        description: 'Demonstrates how to customize the pagination UI.',
-        onTapLiveDemo: () {
-          Navigator.pushNamed(context, CustomPaginationScreen.routeName);
         },
         trailing: newIcon,
       ),
