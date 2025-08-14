@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_menu.dart';
-import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
+import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import 'popup_cell.dart';
@@ -41,8 +41,8 @@ class TrinaSelectCellState
   late final List menuItems = _column.items;
 
   @override
-  TrinaSelectMenu buildMenu() {
-    return TrinaSelectMenu.variant(
+  TrinaDropdownMenu buildMenu() {
+    return TrinaDropdownMenu.variant(
       _column.menuVariant,
       items: menuItems,
       filters: _column.menuFilters,

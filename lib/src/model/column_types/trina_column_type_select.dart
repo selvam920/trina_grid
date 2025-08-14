@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/helper/trina_general_helper.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_menu_popup.dart';
-import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
+import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 /// A column type for selecting a value from a predefined list of items.
@@ -42,56 +42,56 @@ class TrinaColumnTypeSelect
   @override
   final IconData? popupIcon;
 
-  /// {@macro TrinaSelectMenu.variant}
+  /// {@macro TrinaDropdownMenu.variant}
   @override
   final TrinaSelectMenuVariant menuVariant;
 
-  /// {@macro TrinaSelectMenu.maxHeight}
+  /// {@macro TrinaDropdownMenu.maxHeight}
   @override
   final double menuMaxHeight;
 
-  /// {@macro TrinaSelectMenu.itemHeight}
+  /// {@macro TrinaDropdownMenu.itemHeight}
   @override
   final double menuItemHeight;
 
-  /// {@macro TrinaSelectMenu.itemBuilder}
+  /// {@macro TrinaDropdownMenu.itemBuilder}
   @override
   final Widget Function(dynamic item)? menuItemBuilder;
 
-  /// {@macro TrinaSelectMenu.items}
+  /// {@macro TrinaDropdownMenu.items}
   @override
   final List<dynamic> items;
 
   /// Whether to enable the default column filtering UI for this column.
   final bool enableColumnFilter;
 
-  /// {@macro TrinaSelectMenu.onItemSelected}
+  /// {@macro TrinaDropdownMenu.onItemSelected}
   @override
   final void Function(dynamic item)? onItemSelected;
 
-  /// {@macro TrinaSelectMenu.filtersInitiallyExpanded}
+  /// {@macro TrinaDropdownMenu.filtersInitiallyExpanded}
   @override
   final bool menuFiltersInitiallyExpanded;
 
-  /// {@macro TrinaSelectMenu.width}
+  /// {@macro TrinaDropdownMenu.width}
   ///
   /// if null, [TrinaColumn.width] will be used.
   @override
   final double? menuWidth;
 
-  /// {@macro TrinaSelectMenu.itemToString}
+  /// {@macro TrinaDropdownMenu.itemToString}
   @override
   final String Function(dynamic item)? itemToString;
 
-  /// {@macro TrinaSelectMenu.itemToValue}
+  /// {@macro TrinaDropdownMenu.itemToValue}
   @override
   final dynamic Function(dynamic item)? itemToValue;
 
-  /// {@macro TrinaSelectMenu.emptyFilterResultBuilder}
+  /// {@macro TrinaDropdownMenu.emptyFilterResultBuilder}
   @override
   final WidgetBuilder? menuEmptyFilterResultBuilder;
 
-  /// {@macro TrinaSelectMenu.emptySearchResultBuilder}
+  /// {@macro TrinaDropdownMenu.emptySearchResultBuilder}
   @override
   final WidgetBuilder? menuEmptySearchResultBuilder;
 

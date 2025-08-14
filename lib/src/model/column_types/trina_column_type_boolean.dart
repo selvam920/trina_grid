@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_menu_popup.dart';
-import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
+import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 /// A column type for handling boolean (`true`/`false`) data.
@@ -47,7 +47,7 @@ class TrinaColumnTypeBoolean
 
   dynamic get value => defaultValue;
 
-  /// {@macro TrinaSelectMenu.width}
+  /// {@macro TrinaDropdownMenu.width}
   ///
   /// if null, [TrinaColumn.width] will be used.
   @override

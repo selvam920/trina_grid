@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_menu_popup.dart';
 import 'package:trina_grid/src/ui/cells/popup_cell.dart';
 import 'package:trina_grid/src/ui/widgets/trina_default_popup_cell_editing_widget.dart';
-import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
+import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 
 /// Abstract state for popup cells that use a [MenuAnchor] for selection.
 abstract class TrinaPopupCellStateWithMenu<T extends PopupCell> extends State<T>
@@ -36,9 +36,9 @@ abstract class TrinaPopupCellStateWithMenu<T extends PopupCell> extends State<T>
     }
   }
 
-  /// Builds a [TrinaSelectMenu] widget to be displayed inside the [MenuAnchor].
+  /// Builds a [TrinaDropdownMenu] widget to be displayed inside the [MenuAnchor].
   @protected
-  TrinaSelectMenu buildMenu();
+  TrinaDropdownMenu buildMenu();
 
   @override
   void initState() {

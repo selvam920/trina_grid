@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trina_grid/src/model/trina_select_menu_filter.dart';
-import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
+import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 
 class _TestObject {
   final int id;
@@ -11,7 +11,7 @@ class _TestObject {
 }
 
 void main() {
-  group('TrinaSelectMenu - ', () {
+  group('TrinaDropdownMenu - ', () {
     const List<String> strTestItems = [
       'Apple',
       'Banana',
@@ -39,7 +39,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: TrinaSelectMenu.variant(
+            body: TrinaDropdownMenu.variant(
               variant,
               filters: filters,
               items: items,
@@ -226,7 +226,7 @@ void main() {
             filters: TrinaSelectMenuFilter.defaultFilters,
             filtersInitiallyExpanded: false,
           );
-          expect(find.byKey(TrinaSelectMenu.filterSectionKey), findsNothing);
+          expect(find.byKey(TrinaDropdownMenu.filterSectionKey), findsNothing);
         },
       );
 
@@ -412,7 +412,7 @@ void main() {
 
     group('Layout', () {
       Size getMenuSize(WidgetTester tester) =>
-          tester.getSize(find.byType(TrinaSelectMenu<String>));
+          tester.getSize(find.byType(TrinaDropdownMenu<String>));
 
       testWidgets(
         'when `items` is empty then it should not give any error',

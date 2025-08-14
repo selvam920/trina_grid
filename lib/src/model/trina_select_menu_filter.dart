@@ -1,4 +1,4 @@
-/// A filter for the items in a [TrinaSelectMenu].
+/// A filter for the items in a [TrinaDropdownMenu].
 class TrinaSelectMenuFilter {
   /// The name of the filter to be displayed in the menu.
   final String title;

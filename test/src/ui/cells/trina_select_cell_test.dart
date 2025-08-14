@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trina_grid/src/ui/cells/trina_select_cell.dart';
-import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
+import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 const selectItems = ['a', 'b', 'c'];
@@ -167,29 +167,29 @@ void main() {
       // Open popup
       await tester.sendKeyEvent(LogicalKeyboardKey.f2);
       await tester.pumpAndSettle();
-      expect(find.byType(TrinaSelectMenu), findsOneWidget);
+      expect(find.byType(TrinaDropdownMenu), findsOneWidget);
 
       // Close popup with escape
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
-      expect(find.byType(TrinaSelectMenu), findsNothing);
+      expect(find.byType(TrinaDropdownMenu), findsNothing);
 
       // Reopen popup
       await tester.sendKeyEvent(LogicalKeyboardKey.f2);
       await tester.pumpAndSettle();
-      expect(find.byType(TrinaSelectMenu), findsOneWidget);
+      expect(find.byType(TrinaDropdownMenu), findsOneWidget);
     });
 
     testWidgets(
       'After selecting an item with arrow keys and enter, value should be updated',
       (tester) async {
         await buildCellAndEdit(tester);
-        expect(find.byType(TrinaSelectMenu), findsNothing);
+        expect(find.byType(TrinaDropdownMenu), findsNothing);
 
         // Open popup
         await tester.sendKeyEvent(LogicalKeyboardKey.f2);
         await tester.pumpAndSettle();
-        expect(find.byType(TrinaSelectMenu), findsOneWidget);
+        expect(find.byType(TrinaDropdownMenu), findsOneWidget);
 
         // Select next item and press enter
         await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
@@ -197,7 +197,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Verify popup is closed and value is updated
-        expect(find.byType(TrinaSelectMenu), findsNothing);
+        expect(find.byType(TrinaDropdownMenu), findsNothing);
         expect(cell.value, selectItems[1]);
       },
     );

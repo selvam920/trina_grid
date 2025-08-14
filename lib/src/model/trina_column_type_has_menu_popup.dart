@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/model/trina_select_menu_filter.dart';
-import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
+import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 
-/// A contract for column types that use a [TrinaSelectMenu] inside the popup.
+/// A contract for column types that use a [TrinaDropdownMenu] inside the popup.
 ///
 /// This interface should be implemented by column types that want to use
 /// [TrinaPopupCellStateWithMenu] for their cell's state.
@@ -10,40 +10,40 @@ abstract class TrinaColumnTypeHasMenuPopup {
   /// The icon to display in the popup cell.
   IconData? get popupIcon;
 
-  /// {@macro TrinaSelectMenu.items}
+  /// {@macro TrinaDropdownMenu.items}
   List<dynamic> get items;
 
-  /// {@macro TrinaSelectMenu.variant}
+  /// {@macro TrinaDropdownMenu.variant}
   TrinaSelectMenuVariant get menuVariant;
 
-  /// {@macro TrinaSelectMenu.itemHeight}
+  /// {@macro TrinaDropdownMenu.itemHeight}
   double get menuItemHeight;
 
-  /// {@macro TrinaSelectMenu.maxHeight}
+  /// {@macro TrinaDropdownMenu.maxHeight}
   double get menuMaxHeight;
 
-  /// {@macro TrinaSelectMenu.width}
+  /// {@macro TrinaDropdownMenu.width}
   double? get menuWidth;
 
-  /// {@macro TrinaSelectMenu.itemBuilder}
+  /// {@macro TrinaDropdownMenu.itemBuilder}
   Widget Function(dynamic item)? get menuItemBuilder;
 
-  /// {@macro TrinaSelectMenu.filters}
+  /// {@macro TrinaDropdownMenu.filters}
   List<TrinaSelectMenuFilter> get menuFilters;
 
-  /// {@macro TrinaSelectMenu.itemToString}
+  /// {@macro TrinaDropdownMenu.itemToString}
   String Function(dynamic item)? get itemToString;
 
-  /// {@macro TrinaSelectMenu.filtersInitiallyExpanded}
+  /// {@macro TrinaDropdownMenu.filtersInitiallyExpanded}
   bool get menuFiltersInitiallyExpanded;
 
-  /// {@macro TrinaSelectMenu.itemToValue}
+  /// {@macro TrinaDropdownMenu.itemToValue}
   dynamic Function(dynamic item)? get itemToValue;
 
-  /// {@macro TrinaSelectMenu.emptyFilterResultBuilder}
+  /// {@macro TrinaDropdownMenu.emptyFilterResultBuilder}
   WidgetBuilder? get menuEmptyFilterResultBuilder;
 
-  /// {@macro TrinaSelectMenu.emptySearchResultBuilder}
+  /// {@macro TrinaDropdownMenu.emptySearchResultBuilder}
   WidgetBuilder? get menuEmptySearchResultBuilder;
 
   /// A callback invoked when a value is selected from the popup menu.

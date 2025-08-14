@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
+import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 /// Defines the behavior and properties of a `TrinaColumn`.
@@ -136,17 +136,17 @@ abstract interface class TrinaColumnType {
   ///  or [TrinaGridStateManager.editCellRenderer] is provided.
   ///
   /// - [menuItemBuilder]:
-  ///   {@macro TrinaSelectMenu.itemBuilder}
+  ///   {@macro TrinaDropdownMenu.itemBuilder}
   /// - [menuItemHeight]:
-  ///   {@macro TrinaSelectMenu.itemHeight}
+  ///   {@macro TrinaDropdownMenu.itemHeight}
   /// - [menuMaxHeight]:
-  ///   {@macro TrinaSelectMenu.maxHeight}
+  ///   {@macro TrinaDropdownMenu.maxHeight}
   /// - [menuWidth]:
-  ///   {@macro TrinaSelectMenu.width}
+  ///   {@macro TrinaDropdownMenu.width}
   /// - [itemToString]:
-  ///   {@macro TrinaSelectMenu.itemToString}
+  ///   {@macro TrinaDropdownMenu.itemToString}
   /// - [itemToValue]:
-  ///   {@macro TrinaSelectMenu.itemToValue}
+  ///   {@macro TrinaDropdownMenu.itemToValue}
   ///
   static TrinaColumnType select(
     List items, {
@@ -191,19 +191,19 @@ abstract interface class TrinaColumnType {
   ///  or [TrinaGridStateManager.editCellRenderer] is provided.
   ///
   /// - [menuEmptySearchResultBuilder]:
-  ///   {@macro TrinaSelectMenu.emptySearchResultBuilder}
+  ///   {@macro TrinaDropdownMenu.emptySearchResultBuilder}
   /// - [menuItemBuilder]:
-  ///   {@macro TrinaSelectMenu.itemBuilder}
+  ///   {@macro TrinaDropdownMenu.itemBuilder}
   /// - [menuItemHeight]:
-  ///   {@macro TrinaSelectMenu.itemHeight}
+  ///   {@macro TrinaDropdownMenu.itemHeight}
   /// - [menuMaxHeight]:
-  ///   {@macro TrinaSelectMenu.maxHeight}
+  ///   {@macro TrinaDropdownMenu.maxHeight}
   /// - [menuWidth]:
-  ///   {@macro TrinaSelectMenu.width}
+  ///   {@macro TrinaDropdownMenu.width}
   /// - [itemToString]:
-  ///   {@macro TrinaSelectMenu.itemToString}
+  ///   {@macro TrinaDropdownMenu.itemToString}
   /// - [itemToValue]:
-  ///   {@macro TrinaSelectMenu.itemToValue}
+  ///   {@macro TrinaDropdownMenu.itemToValue}
   static TrinaColumnType selectWithSearch(
     List items, {
     required String Function(dynamic item) itemToString,
@@ -248,21 +248,21 @@ abstract interface class TrinaColumnType {
   ///  or [TrinaGridStateManager.editCellRenderer] is provided.
   ///
   /// - [menuFilters]:
-  ///   {@macro TrinaSelectMenu.filters}
+  ///   {@macro TrinaDropdownMenu.filters}
   /// - [menuEmptyFilterResultBuilder]:
-  ///   {@macro TrinaSelectMenu.emptyFilterResultBuilder}
+  ///   {@macro TrinaDropdownMenu.emptyFilterResultBuilder}
   /// - [menuItemBuilder]:
-  ///   {@macro TrinaSelectMenu.itemBuilder}
+  ///   {@macro TrinaDropdownMenu.itemBuilder}
   /// - [menuItemHeight]:
-  ///   {@macro TrinaSelectMenu.itemHeight}
+  ///   {@macro TrinaDropdownMenu.itemHeight}
   /// - [menuMaxHeight]:
-  ///   {@macro TrinaSelectMenu.maxHeight}
+  ///   {@macro TrinaDropdownMenu.maxHeight}
   /// - [menuWidth]:
-  ///   {@macro TrinaSelectMenu.width}
+  ///   {@macro TrinaDropdownMenu.width}
   /// - [itemToString]:
-  ///   {@macro TrinaSelectMenu.itemToString}
+  ///   {@macro TrinaDropdownMenu.itemToString}
   /// - [itemToValue]:
-  ///   {@macro TrinaSelectMenu.itemToValue}
+  ///   {@macro TrinaDropdownMenu.itemToValue}
   static TrinaColumnType selectWithFilters(
     List items, {
     required List<TrinaSelectMenuFilter> menuFilters,

@@ -20,7 +20,7 @@ class _InheritedTrinaSelectMenu<T> extends InheritedWidget {
   }
 }
 
-/// Describes the specific variant of the [TrinaSelectMenu].
+/// Describes the specific variant of the [TrinaDropdownMenu].
 enum TrinaSelectMenuVariant {
   /// A simple dropdown list with no search or filtering.
   select,
@@ -38,15 +38,15 @@ enum TrinaSelectMenuVariant {
 /// and custom item rendering.
 ///
 /// ### Usage
-/// - [TrinaSelectMenu.new] for a basic select menu.
-/// - [TrinaSelectMenu.withSearch] for a menu with a search field.
-/// - [TrinaSelectMenu.withFilters] for a menu with filtering.
-class TrinaSelectMenu<T> extends StatefulWidget {
+/// - [TrinaDropdownMenu.new] for a basic select menu.
+/// - [TrinaDropdownMenu.withSearch] for a menu with a search field.
+/// - [TrinaDropdownMenu.withFilters] for a menu with filtering.
+class TrinaDropdownMenu<T> extends StatefulWidget {
   /// A key used to identify the filter section for testing purposes.
   @visibleForTesting
   static const Key filterSectionKey = Key('__filter_section__');
 
-  /// {@template TrinaSelectMenu.variant}
+  /// {@template TrinaDropdownMenu.variant}
   /// The variant of the menu to be built.
   ///
   /// This is used internally to determine which UI and state to use.
@@ -58,51 +58,51 @@ class TrinaSelectMenu<T> extends StatefulWidget {
   /// This is typically provided by the factory constructors.
   final WidgetBuilder builder;
 
-  /// {@template TrinaSelectMenu.items}
+  /// {@template TrinaDropdownMenu.items}
   /// The list of items to display in the popup menu.
   /// {@endtemplate}
   final List<T> items;
 
-  /// {@template TrinaSelectMenu.onItemSelected}
+  /// {@template TrinaDropdownMenu.onItemSelected}
   /// Called when an item is selected from the list.
   /// {@endtemplate}
   final void Function(T) onItemSelected;
 
-  /// {@template TrinaSelectMenu.width}
+  /// {@template TrinaDropdownMenu.width}
   /// The width of the menu.
   /// {@endtemplate}
   final double width;
 
-  /// {@template TrinaSelectMenu.initialValue}
+  /// {@template TrinaDropdownMenu.initialValue}
   /// The initially selected value, which will be highlighted in the list.
   /// {@endtemplate}
   final T initialValue;
 
-  /// {@template TrinaSelectMenu.itemBuilder}
+  /// {@template TrinaDropdownMenu.itemBuilder}
   /// A builder function to create a custom widget for each item in the list.
   ///
   /// If null, a default [Text] widget is used.
   /// {@endtemplate}
   final ItemBuilder<T> itemBuilder;
 
-  /// {@template TrinaSelectMenu.itemHeight}
+  /// {@template TrinaDropdownMenu.itemHeight}
   /// The height of each item in the list.
   /// {@endtemplate}
   final double itemHeight;
 
-  /// {@template TrinaSelectMenu.maxHeight}
+  /// {@template TrinaDropdownMenu.maxHeight}
   /// The maximum height of the popup menu's scrollable area.
   /// {@endtemplate}
   final double maxHeight;
 
-  /// {@template TrinaSelectMenu.itemToString}
+  /// {@template TrinaDropdownMenu.itemToString}
   /// A function that returns the string representation of an item.
   ///
   /// If provided, it's used as the display text if [itemBuilder] is not provided.
   /// {@endtemplate}
   final String Function(T item)? itemToString;
 
-  /// {@template TrinaSelectMenu.itemToValue}
+  /// {@template TrinaDropdownMenu.itemToValue}
   /// A function that returns a unique value for an item.
   ///
   /// Used to determine if an item is selected and for filtering.
@@ -110,7 +110,7 @@ class TrinaSelectMenu<T> extends StatefulWidget {
   /// {@endtemplate}
   final dynamic Function(T item)? itemToValue;
 
-  const TrinaSelectMenu._({
+  const TrinaDropdownMenu._({
     required this.variant,
     required this.builder,
     required this.items,
@@ -126,7 +126,7 @@ class TrinaSelectMenu<T> extends StatefulWidget {
   });
 
   /// Creates a basic select menu with a simple list of items.
-  const TrinaSelectMenu({
+  const TrinaDropdownMenu({
     required this.items,
     required this.onItemSelected,
     required this.width,
@@ -141,7 +141,7 @@ class TrinaSelectMenu<T> extends StatefulWidget {
         variant = TrinaSelectMenuVariant.select;
 
   static Widget _defaultBuilder<T>(BuildContext context) {
-    final widget = TrinaSelectMenu.of<T>(context).widget;
+    final widget = TrinaDropdownMenu.of<T>(context).widget;
     return SizedBox(
       height: widget.maxHeight,
       width: widget.width,
@@ -149,12 +149,12 @@ class TrinaSelectMenu<T> extends StatefulWidget {
     );
   }
 
-  /// A generic factory to build a [TrinaSelectMenu] based on a [variant].
+  /// A generic factory to build a [TrinaDropdownMenu] based on a [variant].
   ///
   /// This is used internally by [TrinaColumnType] to construct the appropriate
   /// menu. You should prefer using the more specific factory constructors like
-  /// [TrinaSelectMenu.withSearch] or [TrinaSelectMenu.withFilters].
-  factory TrinaSelectMenu.variant(
+  /// [TrinaDropdownMenu.withSearch] or [TrinaDropdownMenu.withFilters].
+  factory TrinaDropdownMenu.variant(
     TrinaSelectMenuVariant variant, {
     required List<T> items,
     required void Function(T item) onItemSelected,
@@ -173,7 +173,7 @@ class TrinaSelectMenu<T> extends StatefulWidget {
   }) {
     switch (variant) {
       case TrinaSelectMenuVariant.select:
-        return TrinaSelectMenu<T>._(
+        return TrinaDropdownMenu<T>._(
           key: key,
           variant: variant,
           builder: _defaultBuilder<T>,
@@ -189,7 +189,7 @@ class TrinaSelectMenu<T> extends StatefulWidget {
         );
       case TrinaSelectMenuVariant.selectWithSearch:
         assert(itemToString != null, 'itemToString must be provided');
-        return TrinaSelectMenu<T>.withSearch(
+        return TrinaDropdownMenu<T>.withSearch(
           key: key,
           items: items,
           itemToString: itemToString!,
@@ -203,7 +203,7 @@ class TrinaSelectMenu<T> extends StatefulWidget {
           itemBuilder: itemBuilder,
         );
       case TrinaSelectMenuVariant.selectWithFilters:
-        return TrinaSelectMenu<T>.withFilters(
+        return TrinaDropdownMenu<T>.withFilters(
           key: key,
           filters: filters,
           items: items,
@@ -224,7 +224,7 @@ class TrinaSelectMenu<T> extends StatefulWidget {
   /// Creates a select menu with a search field.
   ///
   /// Requires an [itemToString] function to perform the search.
-  factory TrinaSelectMenu.withSearch({
+  factory TrinaDropdownMenu.withSearch({
     required List<T> items,
     required String Function(T item) itemToString,
     required void Function(T item) onItemSelected,
@@ -241,7 +241,7 @@ class TrinaSelectMenu<T> extends StatefulWidget {
   /// Creates a select menu with an advanced filtering UI.
   ///
   /// Requires a list of [filters] to be applied.
-  factory TrinaSelectMenu.withFilters({
+  factory TrinaDropdownMenu.withFilters({
     required List<T> items,
     required void Function(T item) onItemSelected,
     required List<TrinaSelectMenuFilter> filters,
@@ -264,7 +264,7 @@ class TrinaSelectMenu<T> extends StatefulWidget {
   static TrinaSelectMenuState<T> of<T>(BuildContext context) {
     final scope = context
         .dependOnInheritedWidgetOfExactType<_InheritedTrinaSelectMenu<T>>();
-    assert(scope != null, 'TrinaSelectMenu not found in context');
+    assert(scope != null, 'TrinaDropdownMenu not found in context');
     return scope!.state;
   }
 
@@ -272,17 +272,17 @@ class TrinaSelectMenu<T> extends StatefulWidget {
   TrinaSelectMenuState<T> createState() => TrinaSelectMenuState<T>();
 }
 
-/// The base state for the [TrinaSelectMenu].
+/// The base state for the [TrinaDropdownMenu].
 ///
 /// This class manages the basic state of the menu, such as the list of items
 /// and the scroll controller.
-base class TrinaSelectMenuState<T> extends State<TrinaSelectMenu<T>> {
+base class TrinaSelectMenuState<T> extends State<TrinaDropdownMenu<T>> {
   late final ScrollController scrollController = ScrollController();
 
   late final ValueNotifier<List<T>> itemsNotifier;
 
   /// A helper method to get the comparable value from an item using the
-  /// provided [TrinaSelectMenu.itemToValue] function.
+  /// provided [TrinaDropdownMenu.itemToValue] function.
   dynamic getComparableValue(T item) {
     return widget.itemToValue?.call(item) ?? item;
   }
@@ -339,8 +339,8 @@ base class TrinaSelectMenuState<T> extends State<TrinaSelectMenu<T>> {
   }
 }
 
-/// The implementation of [TrinaSelectMenu.withSearch].
-final class _TrinaSelectMenuWithSearch<T> extends TrinaSelectMenu<T> {
+/// The implementation of [TrinaDropdownMenu.withSearch].
+final class _TrinaSelectMenuWithSearch<T> extends TrinaDropdownMenu<T> {
   _TrinaSelectMenuWithSearch({
     this.emptySearchResultBuilder,
     super.key,
@@ -357,7 +357,7 @@ final class _TrinaSelectMenuWithSearch<T> extends TrinaSelectMenu<T> {
           variant: TrinaSelectMenuVariant.selectWithSearch,
           itemToString: itemToString,
           builder: (context) {
-            final state = (TrinaSelectMenu.of<T>(context)
+            final state = (TrinaDropdownMenu.of<T>(context)
                 as _TrinaSelectMenuWithSearchState<T>);
             return FocusScope(
               onKeyEvent: (node, event) {
@@ -391,7 +391,7 @@ final class _TrinaSelectMenuWithSearch<T> extends TrinaSelectMenu<T> {
           },
         );
 
-  /// {@template TrinaSelectMenu.emptySearchResultBuilder}
+  /// {@template TrinaDropdownMenu.emptySearchResultBuilder}
   /// Used to provide a custom widget to display when the search yields no results.
   /// {@endtemplate}
   final WidgetBuilder? emptySearchResultBuilder;
@@ -465,8 +465,8 @@ class _SearchField<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final state =
-        (TrinaSelectMenu.of<T>(context) as _TrinaSelectMenuWithSearchState<T>);
+    final state = (TrinaDropdownMenu.of<T>(context)
+        as _TrinaSelectMenuWithSearchState<T>);
     return _EnterKeyListener(
       onEnter: () {
         if (state._debounce?.isActive ?? false) state._debounce!.cancel();
@@ -492,8 +492,8 @@ class _SearchField<T> extends StatelessWidget {
   }
 }
 
-/// The implementation of [TrinaSelectMenu.withFilters].
-class _TrinaSelectMenuWithFilters<T> extends TrinaSelectMenu<T> {
+/// The implementation of [TrinaDropdownMenu.withFilters].
+class _TrinaSelectMenuWithFilters<T> extends TrinaDropdownMenu<T> {
   _TrinaSelectMenuWithFilters({
     required this.filters,
     required super.items,
@@ -515,7 +515,7 @@ class _TrinaSelectMenuWithFilters<T> extends TrinaSelectMenu<T> {
         super._(
           variant: TrinaSelectMenuVariant.selectWithFilters,
           builder: (context) {
-            final state = TrinaSelectMenu.of<T>(context)
+            final state = TrinaDropdownMenu.of<T>(context)
                 as _TrinaSelectMenuWithFiltersState<T>;
             final colorScheme = Theme.of(context).colorScheme;
             return FocusTraversalGroup(
@@ -554,7 +554,7 @@ class _TrinaSelectMenuWithFilters<T> extends TrinaSelectMenu<T> {
                         ),
                         if (state.filtersIsVisible)
                           Container(
-                            key: TrinaSelectMenu.filterSectionKey,
+                            key: TrinaDropdownMenu.filterSectionKey,
                             child: _FiltersSection<T>(filters: filters),
                           ),
                       ],
@@ -566,17 +566,17 @@ class _TrinaSelectMenuWithFilters<T> extends TrinaSelectMenu<T> {
           },
         );
 
-  /// {@template TrinaSelectMenu.emptyFilterResultBuilder}
+  /// {@template TrinaDropdownMenu.emptyFilterResultBuilder}
   /// The widget to display when the applied filters yield no results.
   /// {@endtemplate}
   final WidgetBuilder? emptyFilterResultBuilder;
 
-  /// {@template TrinaSelectMenu.filters}
+  /// {@template TrinaDropdownMenu.filters}
   /// A list of filters that can be applied to the items.
   /// {@endtemplate}
   final List<TrinaSelectMenuFilter> filters;
 
-  /// {@template TrinaSelectMenu.filtersInitiallyExpanded}
+  /// {@template TrinaDropdownMenu.filtersInitiallyExpanded}
   /// Whether the filters section is initially visible.
   /// {@endtemplate}
   final bool filtersInitiallyExpanded;
@@ -868,7 +868,7 @@ class _FiltersSection<T> extends StatelessWidget {
   }
 
   _TrinaSelectMenuWithFiltersState<T> _menuState(BuildContext context) =>
-      TrinaSelectMenu.of<T>(context) as _TrinaSelectMenuWithFiltersState<T>;
+      TrinaDropdownMenu.of<T>(context) as _TrinaSelectMenuWithFiltersState<T>;
 
   void _onToggleAll(BuildContext context, bool? value) {
     final menuState = _menuState(context);
@@ -966,7 +966,7 @@ class _ActiveFilter<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final menuState =
-        TrinaSelectMenu.of<T>(context) as _TrinaSelectMenuWithFiltersState<T>;
+        TrinaDropdownMenu.of<T>(context) as _TrinaSelectMenuWithFiltersState<T>;
     final colorScheme = Theme.of(context).colorScheme;
     return _EnterKeyListener(
       onEnter: () => menuState.toggleFilter(filter),
@@ -1082,7 +1082,7 @@ class _ItemListView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final menuState = TrinaSelectMenu.of<T>(context);
+    final menuState = TrinaDropdownMenu.of<T>(context);
     final itemsNotifier = menuState.itemsNotifier;
     final menuWidget = menuState.widget;
     final itemHeight = menuWidget.itemHeight;
