@@ -56,7 +56,7 @@ class TrinaColumnTypeSelect
 
   /// {@macro TrinaDropdownMenu.itemBuilder}
   @override
-  final Widget Function(dynamic item)? menuItemBuilder;
+  final ItemBuilder menuItemBuilder;
 
   /// {@macro TrinaDropdownMenu.items}
   @override

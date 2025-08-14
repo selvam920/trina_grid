@@ -89,7 +89,7 @@ TrinaColumn(
 | `firstDate` | `DateTime?` | First date visible in calendar |
 | `lastDate` | `DateTime?` | Last date visible in calendar |
 | `closePopupOnSelection` | `bool` | Whether to close the popup immediately after a date is selected. Defaults to `true`. |
-| `popUpIcon` | `IconData?` | Custom icon for the popup button (defaults to `Icons.date_range`) |
+| `popupIcon` | `IconData?` | Custom icon for the popup button (defaults to `Icons.date_range`) |
 
 ### Time Column
 
@@ -166,7 +166,7 @@ TrinaColumn(
 | `items` | `List<dynamic>` | The list of items to display in the select menu. |
 | `itemToString` | `String Function(dynamic)?` | A function that returns the string representation of an item. This is required for search and filtering. |
 | `itemToValue` | `dynamic Function(dynamic)?` | A function that returns a unique value for an item, used for comparison and selection. |
-| `variant` | `TrinaSelectMenuVariant` | The variant of the select menu. Can be `select`, `selectWithSearch`, or `selectWithFilters`. |
+| `variant` | `TrinaSelectMenuVariant` | The select menu variant; one of `select`, `selectWithSearch`, or `selectWithFilters`. |
 | `filters` | `List<TrinaDropdownMenuFilter>` | A list of filters to be used when `variant` is `TrinaSelectMenuVariant.selectWithFilters`. |
 | `filtersInitiallyExpanded` | `bool` | Whether the filters section is initially expanded. Defaults to `true`. |
 | `emptySearchResultBuilder` | `WidgetBuilder?` | A builder function to create a widget to display when a search yields no results. |

@@ -8,7 +8,10 @@ class TrinaDropdownMenuFilter {
   /// Takes the item's value and the search text, and returns true if it's a match.
   final bool Function(dynamic itemValue, String searchText) filter;
 
-  const TrinaDropdownMenuFilter({required this.title, required this.filter});
+  const TrinaDropdownMenuFilter({
+    required this.title,
+    required this.filter,
+  }) : assert(title != '', 'Filter title cannot be empty');
 
   @override
   bool operator ==(Object other) =>
@@ -23,8 +26,12 @@ class TrinaDropdownMenuFilter {
   /// A filter that checks if the item's value contains the search text.
   static final contains = TrinaDropdownMenuFilter(
     title: 'Contains',
-    filter: (itemValue, searchText) =>
-        itemValue.toString().toLowerCase().contains(searchText.toLowerCase()),
+    filter: (itemValue, searchText) {
+      final iv = itemValue.toString().toLowerCase();
+      final st = searchText.toLowerCase().trim();
+      return iv.contains(st);
+    },
+    // itemValue.toString().toLowerCase().contains(searchText.toLowerCase()),
   );
 
   /// A filter that checks if the item's value is equal to the search text.
@@ -52,8 +59,10 @@ class TrinaDropdownMenuFilter {
   static final greaterThan = TrinaDropdownMenuFilter(
     title: 'Greater than',
     filter: (itemValue, searchText) {
-      final valueNum = num.tryParse(itemValue.toString());
-      final searchNum = num.tryParse(searchText);
+      final valueNum =
+          itemValue is num ? itemValue : num.tryParse(itemValue.toString());
+
+      final searchNum = num.tryParse(searchText.trim());
       if (valueNum == null || searchNum == null) return false;
       return valueNum > searchNum;
     },
@@ -63,8 +72,10 @@ class TrinaDropdownMenuFilter {
   static final greaterThanOrEqualTo = TrinaDropdownMenuFilter(
     title: 'Greater than or equal to',
     filter: (itemValue, searchText) {
-      final valueNum = num.tryParse(itemValue.toString());
-      final searchNum = num.tryParse(searchText);
+      final valueNum =
+          itemValue is num ? itemValue : num.tryParse(itemValue.toString());
+
+      final searchNum = num.tryParse(searchText.trim());
       if (valueNum == null || searchNum == null) return false;
       return valueNum >= searchNum;
     },
@@ -74,8 +85,9 @@ class TrinaDropdownMenuFilter {
   static final lessThan = TrinaDropdownMenuFilter(
     title: 'Less than',
     filter: (itemValue, searchText) {
-      final valueNum = num.tryParse(itemValue.toString());
-      final searchNum = num.tryParse(searchText);
+      final valueNum =
+          itemValue is num ? itemValue : num.tryParse(itemValue.toString());
+      final searchNum = num.tryParse(searchText.trim());
       if (valueNum == null || searchNum == null) return false;
       return valueNum < searchNum;
     },
@@ -85,13 +97,11 @@ class TrinaDropdownMenuFilter {
   static final lessThanOrEqualTo = TrinaDropdownMenuFilter(
     title: 'Less than or equal to',
     filter: (itemValue, searchText) {
-      final valueNum = num.tryParse(itemValue.toString());
-      final searchNum = num.tryParse(searchText);
+      final valueNum =
+          itemValue is num ? itemValue : num.tryParse(itemValue.toString());
+      final searchNum = num.tryParse(searchText.trim());
       if (valueNum == null || searchNum == null) return false;
       return valueNum <= searchNum;
     },
   );
-
-  /// The default list of filters.
-  static final defaultFilters = [contains, equals, startsWith, endsWith];
 }

@@ -620,7 +620,8 @@ final class _TrinaSelectMenuWithFiltersState<T>
   @override
   void initState() {
     super.initState();
-    filtersIsVisible = _widget.filtersInitiallyExpanded;
+    filtersIsVisible =
+        _widget.filtersInitiallyExpanded && _widget.filters.isNotEmpty;
     for (final controller in filterValueControllers.values) {
       controller.addListener(_onFilterChanged);
     }

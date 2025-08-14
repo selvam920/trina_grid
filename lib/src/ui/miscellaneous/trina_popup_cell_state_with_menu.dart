@@ -53,10 +53,10 @@ abstract class TrinaPopupCellStateWithMenu<T extends PopupCell> extends State<T>
             ? WidgetStatePropertyAll(Colors.grey.shade900)
             : const WidgetStatePropertyAll(Colors.white),
         minimumSize: WidgetStatePropertyAll(
-          Size(
-            _column.menuWidth ?? widget.column.width,
-            _column.menuMaxHeight,
-          ),
+          Size(_column.menuWidth ?? widget.column.width, 0),
+        ),
+        maximumSize: WidgetStatePropertyAll(
+          Size(double.infinity, _column.menuMaxHeight),
         ),
         alignment: Alignment.bottomLeft,
       ),

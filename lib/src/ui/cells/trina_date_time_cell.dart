@@ -59,10 +59,6 @@ class TrinaDateTimeCellState
     return isAfterStart && isBeforeEnd;
   }
 
-  void _validateAndUpdate() {
-    _dateTimeIsValidNotifier.value = isDateTimeInRange(dateTime);
-  }
-
   void onDateChanged(DateTime date) {
     dateTime = DateTime(
       date.year,
@@ -71,7 +67,7 @@ class TrinaDateTimeCellState
       dateTime?.hour ?? 0,
       dateTime?.minute ?? 0,
     );
-    _validateAndUpdate();
+    updateValidationState();
   }
 
   void onTimeChanged(TimeOfDay time) {
@@ -83,7 +79,10 @@ class TrinaDateTimeCellState
       time.hour,
       time.minute,
     );
-    _validateAndUpdate();
+  }
+
+  void updateValidationState() {
+    _dateTimeIsValidNotifier.value = isDateTimeInRange(dateTime);
   }
 
   void onOkPressed() {
@@ -118,6 +117,8 @@ class TrinaDateTimeCellState
       endDate: _column.endDate,
       dateTimeIsValidNotifier: _dateTimeIsValidNotifier,
     );
+    // It's important to call super.initState() after initializing [popupContent]
+    // because it's used in the super class `initState()`.
     super.initState();
   }
 }
@@ -153,7 +154,7 @@ class _PopupContent extends StatelessWidget {
                 maxHeight: 530,
                 minHeight: 440,
               )
-            : const BoxConstraints(maxWidth: 550, maxHeight: 360);
+            : const BoxConstraints(maxWidth: 560, maxHeight: 360);
 
         return SingleChildScrollView(
           child: ConstrainedBox(
@@ -188,9 +189,7 @@ class _PopupContent extends StatelessWidget {
                                 : const TimeOfDay(hour: 0, minute: 0),
                             onChanged: onTimeChanged,
                             onValidationChanged: (isValid) {
-                              if (!isValid) {
-                                dateTimeIsValidNotifier.value = false;
-                              }
+                              dateTimeIsValidNotifier.value = isValid;
                             },
                           ),
                         ),

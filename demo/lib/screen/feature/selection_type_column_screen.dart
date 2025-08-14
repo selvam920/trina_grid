@@ -59,7 +59,7 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
             'Haumea',
             'Eris',
           ],
-          itemToString: (item) => item,
+          itemToString: (item) => item, // item is already a string
           enableColumnFilter: true,
         ),
       ),
@@ -119,22 +119,25 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
       TrinaColumn(
         title: 'With editCellRenderer',
         field: 'select_f',
-        editCellRenderer: (defaultEditCellWidget, cell, controller, focusNode,
-            handleSelected) {
-          return DropdownButton(
+        editCellRenderer: (
+          defaultEditCellWidget,
+          cell,
+          controller,
+          focusNode,
+          handleSelected,
+        ) {
+          return DropdownButton<String>(
             value: cell.value,
             hint: Text(cell.value),
             items: cell.column.type.select.items
-                .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
                 .toList(),
             onChanged: (value) {
               handleSelected?.call(value);
             },
           );
         },
-        type: TrinaColumnType.select(
-          <String>['One', 'Two', 'Three'],
-        ),
+        type: TrinaColumnType.select(<String>['One', 'Two', 'Three']),
       ),
     ]);
 

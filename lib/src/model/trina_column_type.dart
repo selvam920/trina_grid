@@ -148,16 +148,16 @@ abstract interface class TrinaColumnType {
   /// - [itemToValue]:
   ///   {@macro TrinaDropdownMenu.itemToValue}
   ///
-  static TrinaColumnType select(
+  factory TrinaColumnType.select(
     List items, {
-    void Function(dynamic value)? onItemSelected,
+    void Function(dynamic item)? onItemSelected,
     dynamic defaultValue = '',
     bool enableColumnFilter = false,
     IconData? popupIcon = Icons.arrow_drop_down,
     double? menuWidth,
     double menuItemHeight = 40,
     double menuMaxHeight = 300,
-    Widget Function(dynamic item)? menuItemBuilder,
+    ItemBuilder<dynamic> menuItemBuilder,
     String Function(dynamic item)? itemToString,
     dynamic Function(dynamic item)? itemToValue,
   }) {
@@ -204,17 +204,17 @@ abstract interface class TrinaColumnType {
   ///   {@macro TrinaDropdownMenu.itemToString}
   /// - [itemToValue]:
   ///   {@macro TrinaDropdownMenu.itemToValue}
-  static TrinaColumnType selectWithSearch(
+  factory TrinaColumnType.selectWithSearch(
     List items, {
     required String Function(dynamic item) itemToString,
     dynamic defaultValue = '',
     bool enableColumnFilter = false,
     IconData? popupIcon = Icons.arrow_drop_down,
-    ItemBuilder<dynamic>? menuItemBuilder,
+    ItemBuilder<dynamic> menuItemBuilder,
     double? menuWidth,
     double menuItemHeight = 40,
     double menuMaxHeight = 300,
-    void Function(dynamic value)? onItemSelected,
+    void Function(dynamic item)? onItemSelected,
     WidgetBuilder? menuEmptySearchResultBuilder,
     dynamic Function(dynamic item)? itemToValue,
   }) {
@@ -263,19 +263,19 @@ abstract interface class TrinaColumnType {
   ///   {@macro TrinaDropdownMenu.itemToString}
   /// - [itemToValue]:
   ///   {@macro TrinaDropdownMenu.itemToValue}
-  static TrinaColumnType selectWithFilters(
+  factory TrinaColumnType.selectWithFilters(
     List items, {
     required List<TrinaDropdownMenuFilter> menuFilters,
     dynamic defaultValue = '',
     bool enableColumnFilter = false,
     IconData? popupIcon = Icons.arrow_drop_down,
-    ItemBuilder<dynamic>? menuItemBuilder,
+    ItemBuilder<dynamic> menuItemBuilder,
     WidgetBuilder? menuEmptyFilterResultBuilder,
     double? menuWidth,
     double menuItemHeight = 40,
     double menuMaxHeight = 300,
     bool menuFiltersInitiallyExpanded = true,
-    void Function(dynamic value)? onItemSelected,
+    void Function(dynamic item)? onItemSelected,
     String Function(dynamic item)? itemToString,
     dynamic Function(dynamic item)? itemToValue,
   }) {
@@ -390,6 +390,8 @@ abstract interface class TrinaColumnType {
   /// - [falseText]: The text to display for `false`.
   /// - [onItemSelected]: A callback invoked when an item is selected.
   /// - [menuWidth]: The width of the dropdown menu.
+  /// - [popupIcon]: The icon to display in the popup cell.
+  /// - [menuItemBuilder]: A function to provide a custom widget for each item in the list.
   factory TrinaColumnType.boolean({
     dynamic defaultValue = false,
     bool allowEmpty = false,
@@ -397,8 +399,8 @@ abstract interface class TrinaColumnType {
     String falseText = 'No',
     double? menuWidth,
     IconData? popupIcon,
-    Widget Function(dynamic item)? builder,
-    void Function(dynamic value)? onItemSelected,
+    Widget Function(dynamic item)? menuItemBuilder,
+    void Function(dynamic item)? onItemSelected,
   }) {
     return TrinaColumnTypeBoolean(
       defaultValue: defaultValue,
@@ -407,7 +409,7 @@ abstract interface class TrinaColumnType {
       falseText: falseText,
       menuWidth: menuWidth,
       popupIcon: popupIcon,
-      menuItemBuilder: builder,
+      menuItemBuilder: menuItemBuilder,
       onItemSelected: onItemSelected,
     );
   }

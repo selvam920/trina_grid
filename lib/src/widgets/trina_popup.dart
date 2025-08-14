@@ -106,8 +106,9 @@ class TrinaPopupState<T> extends State<TrinaPopup<T>> {
   /// Shows the popup overlay.
   void show() {
     final anchor = widget.anchorKey?.currentContext ?? context;
-    final renderBox = anchor.findRenderObject() as RenderBox?;
-    if (renderBox == null) return;
+    final renderBox = anchor.findRenderObject();
+    if (renderBox is! RenderBox) return;
+
     final offset = renderBox.localToGlobal(renderBox.paintBounds.topLeft);
 
     widget.onBeforePopup?.call();

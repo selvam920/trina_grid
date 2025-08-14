@@ -210,7 +210,7 @@ void main() {
             tester,
             items: strTestItems,
             variant: TrinaSelectMenuVariant.selectWithFilters,
-            filters: TrinaDropdownMenuFilter.defaultFilters,
+            filters: [TrinaDropdownMenuFilter.equals],
           );
           expect(find.widgetWithText(ListTile, 'Filters'), findsOneWidget);
         },
@@ -223,7 +223,7 @@ void main() {
             tester,
             items: strTestItems,
             variant: TrinaSelectMenuVariant.selectWithFilters,
-            filters: TrinaDropdownMenuFilter.defaultFilters,
+            filters: [TrinaDropdownMenuFilter.equals],
             filtersInitiallyExpanded: false,
           );
           expect(find.byKey(TrinaDropdownMenu.filterSectionKey), findsNothing);
@@ -359,7 +359,6 @@ void main() {
         // The CheckboxListTile is the parent of the Text which has the title.
         await tester.tap(find.byType(Checkbox));
         await tester.pumpAndSettle(Duration(milliseconds: 300));
-        await tester.pumpAndSettle();
 
         // 4. Assert that the filter is no longer applied (value is still in textfield)
         // but the list should be unfiltered.

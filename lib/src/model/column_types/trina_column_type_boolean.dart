@@ -8,18 +8,15 @@ import 'package:trina_grid/trina_grid.dart';
 /// This type provides mechanisms for parsing, validating, comparing, and
 /// formatting boolean values. It can interpret various inputs like `true`,
 /// `false`, `1`, `0`, 'true', 'false', and empty values.
-///
-/// It also provides a dropdown menu with "true" and "false" options for easy
-/// cell value selection.
 class TrinaColumnTypeBoolean
     with TrinaColumnTypeDefaultMixin
     implements TrinaColumnType, TrinaColumnTypeHasMenuPopup {
   /// Creates a boolean column type with customizable behavior.
   TrinaColumnTypeBoolean({
     required this.defaultValue,
+    required this.trueText,
+    required this.falseText,
     this.allowEmpty = false,
-    this.trueText = 'True',
-    this.falseText = 'False',
     this.onItemSelected,
     this.menuWidth,
     this.popupIcon,
@@ -57,7 +54,7 @@ class TrinaColumnTypeBoolean
   TrinaSelectMenuVariant get menuVariant => TrinaSelectMenuVariant.select;
 
   @override
-  final Widget Function(dynamic item)? menuItemBuilder;
+  final ItemBuilder menuItemBuilder;
 
   @override
   double get menuMaxHeight => 300;
@@ -152,16 +149,16 @@ class TrinaColumnTypeBoolean
   }
 
   @override
-  // ignore: prefer_function_declarations_over_variables
-  late final String Function(dynamic item)? itemToString = (item) {
+  late final String Function(dynamic item)? itemToString = _itemToString;
+
+  String _itemToString(dynamic item) {
     return switch (item) {
       true => trueText,
       false => falseText,
       _ => '-',
     };
-  };
+  }
 
   @override
-  // ignore: prefer_function_declarations_over_variables
-  final Function(dynamic item)? itemToValue = (item) => item;
+  final Function(dynamic item)? itemToValue = null;
 }

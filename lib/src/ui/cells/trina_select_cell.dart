@@ -49,10 +49,10 @@ class TrinaSelectCellState
       emptyFilterResultBuilder: _column.menuEmptyFilterResultBuilder,
       emptySearchResultBuilder: _column.menuEmptySearchResultBuilder,
       itemToString: _column.itemToString,
-      onItemSelected: (value) {
-        _column.onItemSelected?.call(value);
+      onItemSelected: (item) {
+        _column.onItemSelected?.call(item);
 
-        handleSelected(value);
+        handleSelected(item);
         menuController.close();
       },
       width: _column.menuWidth ?? widget.column.width,

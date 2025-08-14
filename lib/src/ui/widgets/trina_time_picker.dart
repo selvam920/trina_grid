@@ -153,6 +153,16 @@ class _TrinaTimePickerState extends State<TrinaTimePicker> {
         'Max time is ${widget.maxTime.format(context)}';
   }
 
+  String? _validateTimeRange(TimeOfDay? time) {
+    if (time == null) return null;
+    if (time.isBefore(widget.minTime)) {
+      return getMinTimeErrorText(context);
+    } else if (time.isAfter(widget.maxTime)) {
+      return getMaxTimeErrorText(context);
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -188,15 +198,9 @@ class _TrinaTimePickerState extends State<TrinaTimePicker> {
                 return widget.invalidHourText ??
                     'Hour must be between 0 and 23';
               }
-              if (currentTime.tryReplacing(hour: hourInt)
-                  case TimeOfDay newTime) {
-                if (newTime.isBefore(widget.minTime)) {
-                  return getMinTimeErrorText(context);
-                } else if (newTime.isAfter(widget.maxTime)) {
-                  return getMaxTimeErrorText(context);
-                }
-              }
-              return null;
+              return _validateTimeRange(
+                currentTime.tryReplacing(hour: hourInt),
+              );
             },
           ),
           SizedBox(
@@ -225,15 +229,9 @@ class _TrinaTimePickerState extends State<TrinaTimePicker> {
                 return widget.invalidMinuteText ??
                     'Minute must be between 0 and 59';
               }
-              if (currentTime.tryReplacing(minute: minuteInt)
-                  case TimeOfDay newTime) {
-                if (newTime.isBefore(widget.minTime)) {
-                  return getMinTimeErrorText(context);
-                } else if (newTime.isAfter(widget.maxTime)) {
-                  return getMaxTimeErrorText(context);
-                }
-              }
-              return null;
+              return _validateTimeRange(
+                currentTime.tryReplacing(minute: minuteInt),
+              );
             },
           ),
         ],
@@ -293,6 +291,7 @@ class _TimeDigitInputState extends State<_TimeDigitInput> {
   );
 
   late final ValueNotifier<String?> _errorTextNotifier;
+  double _verticalDragAccumulator = 0.0;
 
   @override
   void initState() {
@@ -307,113 +306,138 @@ class _TimeDigitInputState extends State<_TimeDigitInput> {
     super.dispose();
   }
 
+  void _increment() {
+    final currentValue = int.tryParse(controller.text) ?? 0;
+    final nextValue = currentValue + 1;
+    if (widget.isValidTime(nextValue)) {
+      controller.text = nextValue.toString().padLeft(2, '0');
+      widget.onChanged(nextValue);
+    }
+  }
+
+  void _decrement() {
+    final currentValue = int.tryParse(controller.text) ?? 0;
+    final prevValue = currentValue - 1;
+    if (widget.isValidTime(prevValue)) {
+      controller.text = prevValue.toString().padLeft(2, '0');
+      widget.onChanged(prevValue);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return SizedBox(
-      width: 80,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            flex: 0,
-            child: CallbackShortcuts(
-              bindings: {
-                LogicalKeySet(LogicalKeyboardKey.enter): () {
-                  FocusScope.of(context).nextFocus();
-                  widget.onEnterKeyEvent?.call(controller.text.padLeft(2, '0'));
-                },
-                LogicalKeySet(LogicalKeyboardKey.arrowUp): () {
-                  final currentValue = int.tryParse(controller.text) ?? 0;
-                  final nextValue = currentValue + 1;
-                  if (widget.isValidTime(nextValue)) {
-                    controller.text = nextValue.toString().padLeft(2, '0');
-                    widget.onChanged(nextValue);
-                  }
-                },
-                LogicalKeySet(LogicalKeyboardKey.arrowDown): () {
-                  final currentValue = int.tryParse(controller.text) ?? 0;
-                  final prevValue = currentValue - 1;
+    return GestureDetector(
+      onVerticalDragStart: (_) {
+        if (widget.focusNode != null && !widget.focusNode!.hasFocus) {
+          widget.focusNode!.requestFocus();
+        }
+        _verticalDragAccumulator = 0.0;
+      },
+      onVerticalDragUpdate: (details) {
+        const scrollThreshold = 15.0;
+        _verticalDragAccumulator += details.delta.dy;
 
-                  if (widget.isValidTime(prevValue)) {
-                    controller.text = prevValue.toString().padLeft(2, '0');
-                    widget.onChanged(prevValue);
-                  }
+        if (_verticalDragAccumulator > scrollThreshold) {
+          _decrement();
+          _verticalDragAccumulator = 0.0;
+        } else if (_verticalDragAccumulator < -scrollThreshold) {
+          _increment();
+          _verticalDragAccumulator = 0.0;
+        }
+      },
+      child: SizedBox(
+        width: 80,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              flex: 0,
+              child: CallbackShortcuts(
+                bindings: {
+                  LogicalKeySet(LogicalKeyboardKey.enter): () {
+                    FocusScope.of(context).nextFocus();
+                    widget.onEnterKeyEvent
+                        ?.call(controller.text.padLeft(2, '0'));
+                  },
+                  LogicalKeySet(LogicalKeyboardKey.arrowUp): _increment,
+                  LogicalKeySet(LogicalKeyboardKey.arrowDown): _decrement,
                 },
-              },
-              child: TextFormField(
-                focusNode: widget.focusNode,
-                controller: controller,
-                onChanged: (value) {
-                  if (int.tryParse(value) case int parsedValue) {
-                    widget.onChanged(parsedValue);
-                  }
-                },
-                validator: (value) {
-                  if (value == null) {
-                    _errorTextNotifier.value = 'Invalid value';
+                child: TextFormField(
+                  focusNode: widget.focusNode,
+                  controller: controller,
+                  onChanged: (value) {
+                    if (int.tryParse(value) case int parsedValue) {
+                      widget.onChanged(parsedValue);
+                    }
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      _errorTextNotifier.value = 'Invalid value';
+                      return null;
+                    }
+                    final error = widget.validator(value);
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _errorTextNotifier.value = error;
+                    });
+                    return error;
+                  },
+                  maxLength: 2,
+                  textInputAction: widget.textInputAction,
+                  maxLines: 1,
+                  autofocus: widget.autoFocus,
+                  canRequestFocus: true,
+                  errorBuilder: (context, errorText) => SizedBox.shrink(),
+                  buildCounter: (
+                    context, {
+                    required currentLength,
+                    required isFocused,
+                    required maxLength,
+                  }) {
                     return null;
-                  }
-                  final error = widget.validator(value);
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _errorTextNotifier.value = error;
-                  });
-                  return error;
-                },
-                maxLength: 2,
-                textInputAction: widget.textInputAction,
-                maxLines: 1,
-                autofocus: widget.autoFocus,
-                canRequestFocus: true,
-                errorBuilder: (context, errorText) => SizedBox.shrink(),
-                buildCounter: (
-                  context, {
-                  required currentLength,
-                  required isFocused,
-                  required maxLength,
-                }) {
-                  return null;
-                },
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                textAlign: TextAlign.center,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(
-                  helperText: widget.label,
-                  border: OutlineInputBorder(borderSide: BorderSide.none),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueAccent, width: 2),
+                  },
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  textAlign: TextAlign.center,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    helperText: widget.label,
+                    border: OutlineInputBorder(borderSide: BorderSide.none),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Colors.blueAccent, width: 2),
+                    ),
+                    filled: true,
+                    isDense: true,
+                    hoverColor: colorScheme.inverseSurface.withAlpha(20),
+                    fillColor: colorScheme.inverseSurface.withAlpha(10),
                   ),
-                  filled: true,
-                  isDense: true,
-                  hoverColor: colorScheme.inverseSurface.withAlpha(20),
-                  fillColor: colorScheme.inverseSurface.withAlpha(10),
+                  style: TextStyle(fontSize: 26, color: colorScheme.onSurface),
                 ),
-                style: TextStyle(fontSize: 26, color: colorScheme.onSurface),
               ),
             ),
-          ),
-          Flexible(
-            child: ValueListenableBuilder<String?>(
-              valueListenable: _errorTextNotifier,
-              builder: (context, errorText, child) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 100),
-                    child: errorText != null
-                        ? Text(
-                            errorText,
-                            style: TextStyle(color: Colors.red, fontSize: 12),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
-                  ),
-                );
-              },
+            Flexible(
+              child: ValueListenableBuilder<String?>(
+                valueListenable: _errorTextNotifier,
+                builder: (context, errorText, child) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 100),
+                      child: errorText != null
+                          ? Text(
+                              errorText,
+                              style: TextStyle(color: Colors.red, fontSize: 12),
+                              textAlign: TextAlign.center,
+                            )
+                          : SizedBox(),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

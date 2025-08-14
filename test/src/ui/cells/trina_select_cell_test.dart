@@ -118,8 +118,9 @@ void main() {
 
       await tester.enterText(searchFieldFinder, ''); // Clear search
 
-      await tester.pumpAndSettle(); // Wait for search debounce
-      await tester.pumpAndSettle(); // wait for items to be shown
+      // Double pumpAndSettle: first for search debounce, second for items to be shown
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
       expect(find.widgetWithText(MenuItemButton, 'a'), findsOneWidget);
       expect(find.widgetWithText(MenuItemButton, 'b'), findsOneWidget);
