@@ -1,5 +1,5 @@
 /// A filter for the items in a [TrinaDropdownMenu].
-class TrinaSelectMenuFilter {
+class TrinaDropdownMenuFilter {
   /// The name of the filter to be displayed in the menu.
   final String title;
 
@@ -8,12 +8,12 @@ class TrinaSelectMenuFilter {
   /// Takes the item's value and the search text, and returns true if it's a match.
   final bool Function(dynamic itemValue, String searchText) filter;
 
-  const TrinaSelectMenuFilter({required this.title, required this.filter});
+  const TrinaDropdownMenuFilter({required this.title, required this.filter});
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TrinaSelectMenuFilter &&
+      other is TrinaDropdownMenuFilter &&
           runtimeType == other.runtimeType &&
           title == other.title;
 
@@ -21,35 +21,35 @@ class TrinaSelectMenuFilter {
   int get hashCode => title.hashCode;
 
   /// A filter that checks if the item's value contains the search text.
-  static final contains = TrinaSelectMenuFilter(
+  static final contains = TrinaDropdownMenuFilter(
     title: 'Contains',
     filter: (itemValue, searchText) =>
         itemValue.toString().toLowerCase().contains(searchText.toLowerCase()),
   );
 
   /// A filter that checks if the item's value is equal to the search text.
-  static final equals = TrinaSelectMenuFilter(
+  static final equals = TrinaDropdownMenuFilter(
     title: 'Equals',
     filter: (itemValue, searchText) =>
         itemValue.toString().toLowerCase() == searchText.toLowerCase(),
   );
 
   /// A filter that checks if the item's value starts with the search text.
-  static final startsWith = TrinaSelectMenuFilter(
+  static final startsWith = TrinaDropdownMenuFilter(
     title: 'Starts with',
     filter: (itemValue, searchText) =>
         itemValue.toString().toLowerCase().startsWith(searchText.toLowerCase()),
   );
 
   /// A filter that checks if the item's value ends with the search text.
-  static final endsWith = TrinaSelectMenuFilter(
+  static final endsWith = TrinaDropdownMenuFilter(
     title: 'Ends with',
     filter: (itemValue, searchText) =>
         itemValue.toString().toLowerCase().endsWith(searchText.toLowerCase()),
   );
 
   /// A filter that checks if the item's value is greater than the search text.
-  static final greaterThan = TrinaSelectMenuFilter(
+  static final greaterThan = TrinaDropdownMenuFilter(
     title: 'Greater than',
     filter: (itemValue, searchText) {
       final valueNum = num.tryParse(itemValue.toString());
@@ -60,7 +60,7 @@ class TrinaSelectMenuFilter {
   );
 
   /// A filter that checks if the item's value is greater than or equal to the search text.
-  static final greaterThanOrEqualTo = TrinaSelectMenuFilter(
+  static final greaterThanOrEqualTo = TrinaDropdownMenuFilter(
     title: 'Greater than or equal to',
     filter: (itemValue, searchText) {
       final valueNum = num.tryParse(itemValue.toString());
@@ -71,7 +71,7 @@ class TrinaSelectMenuFilter {
   );
 
   /// A filter that checks if the item's value is less than the search text.
-  static final lessThan = TrinaSelectMenuFilter(
+  static final lessThan = TrinaDropdownMenuFilter(
     title: 'Less than',
     filter: (itemValue, searchText) {
       final valueNum = num.tryParse(itemValue.toString());
@@ -82,7 +82,7 @@ class TrinaSelectMenuFilter {
   );
 
   /// A filter that checks if the item's value is less than or equal to the search text.
-  static final lessThanOrEqualTo = TrinaSelectMenuFilter(
+  static final lessThanOrEqualTo = TrinaDropdownMenuFilter(
     title: 'Less than or equal to',
     filter: (itemValue, searchText) {
       final valueNum = num.tryParse(itemValue.toString());

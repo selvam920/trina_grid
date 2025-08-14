@@ -167,7 +167,7 @@ TrinaColumn(
 | `itemToString` | `String Function(dynamic)?` | A function that returns the string representation of an item. This is required for search and filtering. |
 | `itemToValue` | `dynamic Function(dynamic)?` | A function that returns a unique value for an item, used for comparison and selection. |
 | `variant` | `TrinaSelectMenuVariant` | The variant of the select menu. Can be `select`, `selectWithSearch`, or `selectWithFilters`. |
-| `filters` | `List<TrinaSelectMenuFilter>` | A list of filters to be used when `variant` is `TrinaSelectMenuVariant.selectWithFilters`. |
+| `filters` | `List<TrinaDropdownMenuFilter>` | A list of filters to be used when `variant` is `TrinaSelectMenuVariant.selectWithFilters`. |
 | `filtersInitiallyExpanded` | `bool` | Whether the filters section is initially expanded. Defaults to `true`. |
 | `emptySearchResultBuilder` | `WidgetBuilder?` | A builder function to create a widget to display when a search yields no results. |
 | `emptyFilterResultBuilder` | `WidgetBuilder?` | A builder function to create a widget to display when filtering yields no results. |

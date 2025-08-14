@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:trina_grid/src/model/trina_select_menu_filter.dart';
+import 'package:trina_grid/src/model/trina_dropdown_menu_filter.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 
 class _TestObject {
@@ -26,7 +26,7 @@ void main() {
       String Function(T item)? itemToString,
       dynamic Function(T item)? itemToValue,
       TrinaSelectMenuVariant variant = TrinaSelectMenuVariant.select,
-      List<TrinaSelectMenuFilter> filters = const [],
+      List<TrinaDropdownMenuFilter> filters = const [],
       void Function(T item)? onItemSelected,
       double itemHeight = 40,
       double maxHeight = 200,
@@ -68,7 +68,7 @@ void main() {
       required List<String> items,
       TrinaSelectMenuVariant variant = TrinaSelectMenuVariant.select,
       String? initialValue,
-      List<TrinaSelectMenuFilter> filters = const [],
+      List<TrinaDropdownMenuFilter> filters = const [],
       void Function(String item)? onItemSelected,
       double itemHeight = 40,
       double maxHeight = 200,
@@ -210,7 +210,7 @@ void main() {
             tester,
             items: strTestItems,
             variant: TrinaSelectMenuVariant.selectWithFilters,
-            filters: TrinaSelectMenuFilter.defaultFilters,
+            filters: TrinaDropdownMenuFilter.defaultFilters,
           );
           expect(find.widgetWithText(ListTile, 'Filters'), findsOneWidget);
         },
@@ -223,7 +223,7 @@ void main() {
             tester,
             items: strTestItems,
             variant: TrinaSelectMenuVariant.selectWithFilters,
-            filters: TrinaSelectMenuFilter.defaultFilters,
+            filters: TrinaDropdownMenuFilter.defaultFilters,
             filtersInitiallyExpanded: false,
           );
           expect(find.byKey(TrinaDropdownMenu.filterSectionKey), findsNothing);
@@ -233,7 +233,7 @@ void main() {
       testWidgets('filters items with a custom filter',
           (WidgetTester tester) async {
         final filters = [
-          TrinaSelectMenuFilter(
+          TrinaDropdownMenuFilter(
             title: 'Starts with',
             filter: (item, value) =>
                 (item as String).toLowerCase().startsWith(value.toLowerCase()),
@@ -272,7 +272,7 @@ void main() {
           tester,
           items: strTestItems,
           variant: TrinaSelectMenuVariant.selectWithFilters,
-          filters: [TrinaSelectMenuFilter.equals],
+          filters: [TrinaDropdownMenuFilter.equals],
           initialValue: strTestItems.first,
           itemToString: (item) => item,
           emptyFilterResultBuilder: (context) =>
@@ -291,7 +291,7 @@ void main() {
           tester,
           items: strTestItems,
           variant: TrinaSelectMenuVariant.selectWithFilters,
-          filters: [TrinaSelectMenuFilter.equals],
+          filters: [TrinaDropdownMenuFilter.equals],
           initialValue: strTestItems.first,
           itemToString: (item) => item,
           emptyFilterResultBuilder: (context) =>
@@ -304,8 +304,8 @@ void main() {
       testWidgets('applies multiple filters correctly (AND logic)',
           (tester) async {
         final filters = [
-          TrinaSelectMenuFilter.startsWith,
-          TrinaSelectMenuFilter.endsWith,
+          TrinaDropdownMenuFilter.startsWith,
+          TrinaDropdownMenuFilter.endsWith,
         ];
 
         await buildStringMenu(
@@ -339,7 +339,7 @@ void main() {
       });
 
       testWidgets('toggling a filter off removes the filter', (tester) async {
-        final filters = [TrinaSelectMenuFilter.equals];
+        final filters = [TrinaDropdownMenuFilter.equals];
 
         await buildStringMenu(tester,
             items: strTestItems,
@@ -371,8 +371,8 @@ void main() {
       testWidgets('throws an error if filter titles are not unique',
           (WidgetTester tester) async {
         final filters = [
-          TrinaSelectMenuFilter.contains,
-          TrinaSelectMenuFilter.contains, // Duplicate
+          TrinaDropdownMenuFilter.contains,
+          TrinaDropdownMenuFilter.contains, // Duplicate
         ];
 
         await expectLater(

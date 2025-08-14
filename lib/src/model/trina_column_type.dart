@@ -265,7 +265,7 @@ abstract interface class TrinaColumnType {
   ///   {@macro TrinaDropdownMenu.itemToValue}
   static TrinaColumnType selectWithFilters(
     List items, {
-    required List<TrinaSelectMenuFilter> menuFilters,
+    required List<TrinaDropdownMenuFilter> menuFilters,
     dynamic defaultValue = '',
     bool enableColumnFilter = false,
     IconData? popupIcon = Icons.arrow_drop_down,

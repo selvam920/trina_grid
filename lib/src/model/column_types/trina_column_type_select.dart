@@ -37,7 +37,7 @@ class TrinaColumnTypeSelect
   final dynamic defaultValue;
 
   @override
-  final List<TrinaSelectMenuFilter> menuFilters;
+  final List<TrinaDropdownMenuFilter> menuFilters;
 
   @override
   final IconData? popupIcon;

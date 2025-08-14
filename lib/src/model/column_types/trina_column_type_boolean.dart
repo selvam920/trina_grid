@@ -66,7 +66,7 @@ class TrinaColumnTypeBoolean
   double get menuItemHeight => 40;
 
   @override
-  List<TrinaSelectMenuFilter> get menuFilters => [];
+  List<TrinaDropdownMenuFilter> get menuFilters => [];
 
   @override
   List<bool> get items => [true, false];

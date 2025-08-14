@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:trina_grid/src/model/trina_select_menu_filter.dart';
+import 'package:trina_grid/src/model/trina_dropdown_menu_filter.dart';
 
 typedef ItemBuilder<T> = Widget Function(T item)?;
 
@@ -162,7 +162,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     required T initialValue,
     required double itemHeight,
     required double maxHeight,
-    required List<TrinaSelectMenuFilter> filters,
+    required List<TrinaDropdownMenuFilter> filters,
     bool filtersInitiallyExpanded = true,
     String Function(T item)? itemToString,
     WidgetBuilder? emptySearchResultBuilder,
@@ -244,7 +244,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
   factory TrinaDropdownMenu.withFilters({
     required List<T> items,
     required void Function(T item) onItemSelected,
-    required List<TrinaSelectMenuFilter> filters,
+    required List<TrinaDropdownMenuFilter> filters,
     required double width,
     required T initialValue,
     required double itemHeight,
@@ -574,7 +574,7 @@ class _TrinaSelectMenuWithFilters<T> extends TrinaDropdownMenu<T> {
   /// {@template TrinaDropdownMenu.filters}
   /// A list of filters that can be applied to the items.
   /// {@endtemplate}
-  final List<TrinaSelectMenuFilter> filters;
+  final List<TrinaDropdownMenuFilter> filters;
 
   /// {@template TrinaDropdownMenu.filtersInitiallyExpanded}
   /// Whether the filters section is initially visible.
@@ -604,7 +604,7 @@ final class _TrinaSelectMenuWithFiltersState<T>
     _widget.filters.map((e) => e.title).toSet(),
   );
 
-  /// A map that associates each [TrinaSelectMenuFilter] with a
+  /// A map that associates each [TrinaDropdownMenuFilter] with a
   /// [TextEditingController].
   ///
   /// This is used to manage the input values for each filter.
@@ -638,7 +638,7 @@ final class _TrinaSelectMenuWithFiltersState<T>
   }
 
   /// Checks if a filter is currently enabled.
-  bool isFilterEnabled(TrinaSelectMenuFilter filter) {
+  bool isFilterEnabled(TrinaDropdownMenuFilter filter) {
     return enabledFiltersNotifier.value.contains(filter.title);
   }
 
@@ -671,7 +671,7 @@ final class _TrinaSelectMenuWithFiltersState<T>
   }
 
   /// Toggles the enabled state of a filter.
-  void toggleFilter(TrinaSelectMenuFilter filter) {
+  void toggleFilter(TrinaDropdownMenuFilter filter) {
     final currentEnabledFilters = enabledFiltersNotifier.value;
     if (isFilterEnabled(filter)) {
       enabledFiltersNotifier.value =
@@ -718,7 +718,7 @@ class _ActionButtons<T> extends StatelessWidget {
     required this.maxWidth,
   });
 
-  final List<TrinaSelectMenuFilter> filters;
+  final List<TrinaDropdownMenuFilter> filters;
   final _TrinaSelectMenuWithFiltersState<T> menuState;
   final ColorScheme colorScheme;
   final void Function() onClearAll;
@@ -827,7 +827,7 @@ class _FiltersGridView<T> extends StatelessWidget {
     required this.girdCrossAxisCount,
   });
 
-  final List<TrinaSelectMenuFilter> filters;
+  final List<TrinaDropdownMenuFilter> filters;
   final int girdCrossAxisCount;
 
   @override
@@ -854,7 +854,7 @@ class _FiltersGridView<T> extends StatelessWidget {
 class _FiltersSection<T> extends StatelessWidget {
   const _FiltersSection({required this.filters});
 
-  final List<TrinaSelectMenuFilter> filters;
+  final List<TrinaDropdownMenuFilter> filters;
 
   int get girdCrossAxisCount {
     // Determine the number of columns for the grid based on the number of
@@ -961,7 +961,7 @@ class _FiltersSectionButton extends StatelessWidget {
 /// A widget that displays a single filter with its checkbox and text field.
 class _ActiveFilter<T> extends StatelessWidget {
   const _ActiveFilter(this.filter, {super.key});
-  final TrinaSelectMenuFilter filter;
+  final TrinaDropdownMenuFilter filter;
 
   @override
   Widget build(BuildContext context) {

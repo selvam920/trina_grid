@@ -70,10 +70,10 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
         type: TrinaColumnType.selectWithFilters(
           <String>['100', '101', '5', '10', '50', '30', '20', '1000'],
           menuFilters: [
-            TrinaSelectMenuFilter.equals,
-            TrinaSelectMenuFilter.greaterThan,
-            TrinaSelectMenuFilter.contains,
-            TrinaSelectMenuFilter.greaterThanOrEqualTo,
+            TrinaDropdownMenuFilter.equals,
+            TrinaDropdownMenuFilter.greaterThan,
+            TrinaDropdownMenuFilter.contains,
+            TrinaDropdownMenuFilter.greaterThanOrEqualTo,
           ],
         ),
       ),
@@ -100,7 +100,7 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
         field: 'select_e',
         type: TrinaColumnType.selectWithFilters(
           <String>['America', 'Africa', 'Australia', 'Asia', 'Antarctic'],
-          menuFilters: [TrinaSelectMenuFilter.startsWith],
+          menuFilters: [TrinaDropdownMenuFilter.startsWith],
           menuEmptyFilterResultBuilder: (context) => SizedBox(
             height: 45,
             child: Row(

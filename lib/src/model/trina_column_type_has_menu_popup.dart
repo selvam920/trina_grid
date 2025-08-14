@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trina_grid/src/model/trina_select_menu_filter.dart';
+import 'package:trina_grid/src/model/trina_dropdown_menu_filter.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 
 /// A contract for column types that use a [TrinaDropdownMenu] inside the popup.
@@ -29,7 +29,7 @@ abstract class TrinaColumnTypeHasMenuPopup {
   Widget Function(dynamic item)? get menuItemBuilder;
 
   /// {@macro TrinaDropdownMenu.filters}
-  List<TrinaSelectMenuFilter> get menuFilters;
+  List<TrinaDropdownMenuFilter> get menuFilters;
 
   /// {@macro TrinaDropdownMenu.itemToString}
   String Function(dynamic item)? get itemToString;
