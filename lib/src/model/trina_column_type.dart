@@ -131,7 +131,9 @@ abstract interface class TrinaColumnType {
   /// - [popupIcon]: The icon used to open the selection menu.
   ///
   /// ### Popup Menu Properties
-  /// These properties are ignored if a custom [TrinaColumn.editCellRenderer] is provided.
+  ///
+  /// These properties are ignored if [TrinaColumn.editCellRenderer]
+  ///  or [TrinaGridStateManager.editCellRenderer] is provided.
   ///
   /// - [menuItemBuilder]:
   ///   {@macro TrinaSelectMenu.itemBuilder}
@@ -185,7 +187,8 @@ abstract interface class TrinaColumnType {
   /// - [popupIcon]: The icon used to open the selection menu.
   ///
   /// ### Popup Menu Properties
-  /// These properties are ignored if a custom [TrinaColumn.editCellRenderer] is provided.
+  /// These properties are ignored if [TrinaColumn.editCellRenderer]
+  ///  or [TrinaGridStateManager.editCellRenderer] is provided.
   ///
   /// - [menuEmptySearchResultBuilder]:
   ///   {@macro TrinaSelectMenu.emptySearchResultBuilder}
@@ -240,7 +243,9 @@ abstract interface class TrinaColumnType {
   /// - [popupIcon]: The icon used to open the selection menu.
   ///
   /// ### Popup Menu Properties
-  /// These properties are ignored if a custom [TrinaColumn.editCellRenderer] is provided.
+  ///
+  /// These properties are ignored if [TrinaColumn.editCellRenderer]
+  ///  or [TrinaGridStateManager.editCellRenderer] is provided.
   ///
   /// - [menuFilters]:
   ///   {@macro TrinaSelectMenu.filters}
@@ -303,7 +308,6 @@ abstract interface class TrinaColumnType {
   /// - [popupIcon]: The icon used to open the date picker.
   /// - [closePopupOnSelection]: If true, the popup closes after a date is selected.
   factory TrinaColumnType.date({
-    /// {@macro TrinaColumnType.defaultValue}
     dynamic defaultValue = '',
     DateTime? startDate,
     DateTime? endDate,
@@ -333,7 +337,6 @@ abstract interface class TrinaColumnType {
   /// - [minTime]: The minimum selectable time.
   /// - [maxTime]: The maximum selectable time.
   factory TrinaColumnType.time({
-    /// {@macro TrinaColumnType.defaultValue}
     dynamic defaultValue = '00:00',
     IconData? popupIcon = Icons.access_time,
     TrinaTimePickerAutoFocusMode autoFocusMode =
@@ -361,7 +364,6 @@ abstract interface class TrinaColumnType {
   /// - [applyFormatOnInit]: Whether to apply the format when the editor loads.
   /// - [popupIcon]: The icon used to open the date & time picker.
   factory TrinaColumnType.dateTime({
-    /// {@macro TrinaColumnType.defaultValue}
     dynamic defaultValue = '',
     DateTime? startDate,
     DateTime? endDate,
@@ -387,13 +389,13 @@ abstract interface class TrinaColumnType {
   /// - [trueText]: The text to display for `true`.
   /// - [falseText]: The text to display for `false`.
   /// - [onItemSelected]: A callback invoked when an item is selected.
+  /// - [menuWidth]: The width of the dropdown menu.
   factory TrinaColumnType.boolean({
-    /// {@macro TrinaColumnType.defaultValue}
     dynamic defaultValue = false,
     bool allowEmpty = false,
     String trueText = 'Yes',
     String falseText = 'No',
-    double? width,
+    double? menuWidth,
     IconData? popupIcon,
     Widget Function(dynamic item)? builder,
     void Function(dynamic value)? onItemSelected,
@@ -403,7 +405,7 @@ abstract interface class TrinaColumnType {
       allowEmpty: allowEmpty,
       trueText: trueText,
       falseText: falseText,
-      menuWidth: width,
+      menuWidth: menuWidth,
       popupIcon: popupIcon,
       menuItemBuilder: builder,
       onItemSelected: onItemSelected,
