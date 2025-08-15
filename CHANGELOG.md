@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.7.1] - 2025. 08. 16
+## [2.0.0] - 2025. 08. 16
 
 * Feature: Added new popup cells editing widget, including TrinaSelectMenu, TrinaTimePicker, and TrinaPopup. @DMouayad
 * Feature: Added dynamic row height support. @doonfrs
