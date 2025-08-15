@@ -284,4 +284,71 @@ void main() {
       },
     );
   });
+
+  group('Initial Value Fallback', () {
+    testWidgets(
+      'should fall back to DateTime.now() when cell value is invalid',
+      (tester) async {
+        final now = DateTime.now();
+        final column = getColumn(
+          startDate: now.subtract(const Duration(days: 1)),
+          endDate: now.add(const Duration(days: 1)),
+        );
+        // Invalid cell value
+        await buildCellAndEdit(
+          tester,
+          column: column,
+          trinaCell: TrinaCell(value: 'invalid-date'),
+        );
+        await openPopup(tester);
+
+        // The picker should show today's date
+        expect(find.text(now.day.toString()), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'should fall back to startDate when cell value and DateTime.now() are invalid',
+      (tester) async {
+        final now = DateTime.now();
+        final startDate = now.add(const Duration(days: 5));
+        final column = getColumn(
+          startDate: startDate,
+          endDate: startDate.add(const Duration(days: 5)),
+        );
+        // Invalid cell value
+        await buildCellAndEdit(
+          tester,
+          column: column,
+          trinaCell: TrinaCell(value: 'invalid-date'),
+        );
+        await openPopup(tester);
+
+        // The picker should show the start date
+        expect(find.text(startDate.day.toString()), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'should have OK button disabled when all fallbacks are invalid',
+      (tester) async {
+        final now = DateTime.now();
+        final endDate = now.subtract(const Duration(days: 5));
+        final column = getColumn(
+          startDate: null,
+          endDate: endDate,
+        );
+        // Invalid cell value
+        await buildCellAndEdit(
+          tester,
+          column: column,
+          trinaCell: TrinaCell(value: 'invalid-date'),
+        );
+        await openPopup(tester);
+
+        // OK button should be disabled because no valid initial date could be determined
+        expect(tester.widget<TextButton>(okButtonFinder).onPressed, isNull);
+      },
+    );
+  });
 }

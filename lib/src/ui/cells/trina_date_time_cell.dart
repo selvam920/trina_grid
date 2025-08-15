@@ -46,6 +46,8 @@ class TrinaDateTimeCellState
   /// The selected date and time
   late DateTime? dateTime;
 
+  bool _isTimeValid = true;
+
   bool isDateTimeInRange(DateTime? initialDateTime) {
     if (initialDateTime == null) return false;
 
@@ -79,10 +81,17 @@ class TrinaDateTimeCellState
       time.hour,
       time.minute,
     );
+    updateValidationState();
+  }
+
+  void onTimeValidationChanged(bool isValid) {
+    _isTimeValid = isValid;
+    updateValidationState();
   }
 
   void updateValidationState() {
-    _dateTimeIsValidNotifier.value = isDateTimeInRange(dateTime);
+    _dateTimeIsValidNotifier.value =
+        isDateTimeInRange(dateTime) && _isTimeValid;
   }
 
   void onOkPressed() {
@@ -111,6 +120,7 @@ class TrinaDateTimeCellState
       startDate: _column.startDate,
       endDate: _column.endDate,
       dateTimeIsValidNotifier: _dateTimeIsValidNotifier,
+      onTimeValidationChanged: onTimeValidationChanged,
     );
     // It's important to call super.initState() after initializing [popupContent]
     // because it's used in the super class `initState()`.
@@ -138,8 +148,9 @@ class TrinaDateTimeCellState
 }
 
 class _PopupContent extends StatelessWidget {
-  final Function(DateTime) onDateChanged;
-  final Function(TimeOfDay) onTimeChanged;
+  final void Function(DateTime) onDateChanged;
+  final void Function(TimeOfDay) onTimeChanged;
+  final void Function(bool) onTimeValidationChanged;
   final VoidCallback onOkPressed;
   final DateTime? initialDateTime;
   final DateTime? startDate;
@@ -154,6 +165,7 @@ class _PopupContent extends StatelessWidget {
     required this.startDate,
     required this.endDate,
     required this.dateTimeIsValidNotifier,
+    required this.onTimeValidationChanged,
   });
 
   @override
@@ -202,9 +214,7 @@ class _PopupContent extends StatelessWidget {
                                 ? TimeOfDay.fromDateTime(initialDateTime!)
                                 : const TimeOfDay(hour: 0, minute: 0),
                             onChanged: onTimeChanged,
-                            onValidationChanged: (isValid) {
-                              dateTimeIsValidNotifier.value = isValid;
-                            },
+                            onValidationChanged: onTimeValidationChanged,
                           ),
                         ),
                       ),
