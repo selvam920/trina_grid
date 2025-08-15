@@ -36,25 +36,13 @@ class TrinaTimeCellState
   @override
   IconData? get popupMenuIcon => _column.popupIcon;
 
-  late TimeOfDay selectedTime = TimeOfDay(
-    hour: int.tryParse(cellHour) ?? 0,
-    minute: int.tryParse(cellMinute) ?? 0,
-  );
+  late TimeOfDay selectedTime;
 
   TrinaColumnTypeTime get _column => widget.column.type.time;
 
   String _getTimeString(TimeOfDay time) {
     return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }
-
-  List<String> get timeDigits => (widget.cell.value ?? _column.defaultValue)
-      .toString()
-      .split(':')
-      .toList();
-
-  String get cellHour => timeDigits.first.padLeft(2, '0');
-
-  String get cellMinute => timeDigits.last.padLeft(2, '0');
 
   @override
   late final Widget popupContent;
@@ -69,6 +57,7 @@ class TrinaTimeCellState
 
   @override
   void initState() {
+    selectedTime = _parseInitialTime();
     popupContent = _PopupContent(
       initialTime: selectedTime,
       minTime: _column.minTime,
@@ -89,6 +78,16 @@ class TrinaTimeCellState
       autoFocusMode: _column.autoFocusMode,
     );
     super.initState();
+  }
+
+  TimeOfDay _parseInitialTime() {
+    final timeString = widget.cell.value?.toString() ?? '';
+    final parts = timeString.split(':');
+
+    final hour = int.tryParse(parts.first) ?? 0;
+    final minute = int.tryParse(parts.length > 1 ? parts[1] : '') ?? 0;
+
+    return TimeOfDay(hour: hour, minute: minute);
   }
 }
 
@@ -134,14 +133,13 @@ class _PopupContent extends StatelessWidget {
     return Container(
       constraints: BoxConstraints(
         maxWidth: 270,
-        maxHeight: 180,
+        maxHeight: 190,
       ),
       child: Stack(
         fit: StackFit.loose,
         children: [
           Positioned.fill(
-            bottom: 20,
-            top: 20,
+            top: 12,
             child: TrinaTimePicker(
               autoFocusMode: autoFocusMode,
               initialTime: initialTime,

@@ -100,13 +100,8 @@ class TrinaDateTimeCellState
 
   @override
   void initState() {
-    final initialCellValue = _column.dateFormat.tryParse(widget.cell.value);
-    final initialDateTimeIsValid = isDateTimeInRange(initialCellValue);
-    dateTime = initialDateTimeIsValid
-        ? initialCellValue
-        : _column.dateFormat.tryParse(_column.defaultValue);
-
-    _dateTimeIsValidNotifier.value = initialDateTimeIsValid;
+    dateTime = _getInitialDateTime();
+    _dateTimeIsValidNotifier.value = isDateTimeInRange(dateTime);
 
     popupContent = _PopupContent(
       onDateChanged: onDateChanged,
@@ -120,6 +115,25 @@ class TrinaDateTimeCellState
     // It's important to call super.initState() after initializing [popupContent]
     // because it's used in the super class `initState()`.
     super.initState();
+  }
+
+  DateTime? _getInitialDateTime() {
+    var initialDateTime = _column.dateFormat.tryParse(widget.cell.value);
+
+    if (initialDateTime != null && isDateTimeInRange(initialDateTime)) {
+      return initialDateTime;
+    }
+
+    final now = DateTime.now();
+    if (isDateTimeInRange(now)) {
+      return now;
+    }
+
+    if (_column.startDate != null && isDateTimeInRange(_column.startDate)) {
+      return _column.startDate;
+    }
+
+    return null;
   }
 }
 
@@ -167,7 +181,7 @@ class _PopupContent extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: 300,
-                        height: 320,
+                        height: 330,
                         child: TrinaDatePicker(
                           onDateChanged: onDateChanged,
                           initialDate: initialDateTime,

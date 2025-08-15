@@ -12,13 +12,14 @@ void main() {
   late TrinaGridStateManager stateManager;
   late TrinaCell cell;
 
-  TrinaColumn getColumn({
+  TrinaColumn getTimeColumn({
     IconData? popupIcon = Icons.access_time,
     TrinaTimePickerAutoFocusMode autoFocusMode =
         TrinaTimePickerAutoFocusMode.hourField,
     bool saveAndClosePopupWithEnter = true,
     TimeOfDay minTime = const TimeOfDay(hour: 0, minute: 0),
     TimeOfDay maxTime = const TimeOfDay(hour: 23, minute: 59),
+    String? defaultValue,
   }) {
     return ColumnHelper.timeColumn(
       'time_column',
@@ -28,15 +29,16 @@ void main() {
       maxTime: maxTime,
       popupIcon: popupIcon,
       enableAutoEditing: true,
+      defaultValue: defaultValue,
     ).first;
   }
 
-  Future<void> buildCellAndEdit(
+  Future<void> pumpGrid(
     WidgetTester tester, {
     TrinaColumn? column,
     TrinaCell? trinaCell,
   }) async {
-    column ??= getColumn();
+    column ??= getTimeColumn();
 
     cell = trinaCell ?? TrinaCell(value: defaultCellValue);
 
@@ -57,33 +59,45 @@ void main() {
     );
 
     await tester.pumpAndSettle();
-    await tester.tap(find.text(cell.value));
-    await tester.pump();
   }
 
-  Future<void> openPopup(WidgetTester tester) async {
+  Future<void> setCellInEditingState(WidgetTester tester,
+      {bool useCellKey = false}) async {
+    if (stateManager.currentCell != cell) {
+      if (useCellKey) {
+        await tester.tap(find.byKey(cell.key));
+      } else {
+        await tester.tap(find.text(cell.value));
+      }
+      await tester.pump();
+    }
+  }
+
+  Future<void> openPopup(WidgetTester tester, {bool useCellKey = false}) async {
+    await setCellInEditingState(tester, useCellKey: useCellKey);
     await tester.tap(find.byIcon(cell.column.type.time.popupIcon!));
     await tester.pumpAndSettle();
   }
 
   group('Suffix icon rendering', () {
     testWidgets('Default icon should be rendered', (tester) async {
-      await buildCellAndEdit(tester);
+      await pumpGrid(tester);
+      await setCellInEditingState(tester);
       expect(find.byIcon(Icons.access_time), findsOneWidget);
     });
 
     testWidgets('Custom icon should be rendered', (tester) async {
       final customIcon = Icons.add;
-      await buildCellAndEdit(tester, column: getColumn(popupIcon: customIcon));
-
+      await pumpGrid(tester, column: getTimeColumn(popupIcon: customIcon));
+      await setCellInEditingState(tester);
       expect(find.byIcon(customIcon), findsOneWidget);
     });
 
     testWidgets('No icon should be rendered when popupIcon is null', (
       tester,
     ) async {
-      await buildCellAndEdit(tester, column: getColumn(popupIcon: null));
-
+      await pumpGrid(tester, column: getTimeColumn(popupIcon: null));
+      await setCellInEditingState(tester);
       expect(
         find.descendant(
             of: find.byType(TrinaTimeCell), matching: find.byType(Icon)),
@@ -94,7 +108,7 @@ void main() {
 
   testWidgets('Cell value should be displayed', (WidgetTester tester) async {
     // given
-    await buildCellAndEdit(tester, trinaCell: TrinaCell(value: '12:30'));
+    await pumpGrid(tester, trinaCell: TrinaCell(value: '12:30'));
     // assert
     expect(find.text('12:30'), findsOneWidget);
   });
@@ -107,7 +121,7 @@ void main() {
         widget is TextField && widget.decoration?.helperText == 'Minute');
     testWidgets('Tapping Cancel button should close popup', (tester) async {
       final cancelTextButtonFinder = find.widgetWithText(TextButton, 'Cancel');
-      await buildCellAndEdit(tester);
+      await pumpGrid(tester);
       await openPopup(tester);
       await tester.tap(cancelTextButtonFinder);
       await tester.pumpAndSettle();
@@ -118,8 +132,8 @@ void main() {
       testWidgets(
         'when saveAndClosePopupWithEnter is true, should save and close popup',
         (tester) async {
-          final column = getColumn(saveAndClosePopupWithEnter: true);
-          await buildCellAndEdit(
+          final column = getTimeColumn(saveAndClosePopupWithEnter: true);
+          await pumpGrid(
             tester,
             column: column,
           );
@@ -144,10 +158,10 @@ void main() {
       testWidgets(
           'when saveAndClosePopupWithEnter is false, should not save and close popup',
           (tester) async {
-        final column = getColumn(
+        final column = getTimeColumn(
           saveAndClosePopupWithEnter: false,
         );
-        await buildCellAndEdit(
+        await pumpGrid(
           tester,
           column: column,
           trinaCell: TrinaCell(value: defaultCellValue),
@@ -170,11 +184,11 @@ void main() {
       testWidgets(
         'OK button should be disabled when time is invalid',
         (tester) async {
-          final column = getColumn(
+          final column = getTimeColumn(
             minTime: const TimeOfDay(hour: 10, minute: 0),
             maxTime: const TimeOfDay(hour: 12, minute: 0),
           );
-          await buildCellAndEdit(
+          await pumpGrid(
             tester,
             column: column,
             trinaCell: TrinaCell(value: '11:00'),
@@ -203,11 +217,11 @@ void main() {
       testWidgets(
         'OK button should be disabled when minute is invalid',
         (tester) async {
-          final column = getColumn(
+          final column = getTimeColumn(
             minTime: const TimeOfDay(hour: 10, minute: 0),
             maxTime: const TimeOfDay(hour: 12, minute: 0),
           );
-          await buildCellAndEdit(
+          await pumpGrid(
             tester,
             column: column,
             trinaCell: TrinaCell(value: '11:00'),
@@ -238,11 +252,11 @@ void main() {
       testWidgets(
         'OK button should be disabled when time is out of min/max range',
         (tester) async {
-          final column = getColumn(
+          final column = getTimeColumn(
             minTime: const TimeOfDay(hour: 10, minute: 0),
             maxTime: const TimeOfDay(hour: 12, minute: 0),
           );
-          await buildCellAndEdit(
+          await pumpGrid(
             tester,
             column: column,
             trinaCell: TrinaCell(value: '11:00'),
@@ -283,7 +297,7 @@ void main() {
         },
       );
       testWidgets('Pressing Ok button should close the popup', (tester) async {
-        await buildCellAndEdit(
+        await pumpGrid(
           tester,
         );
         await openPopup(tester);
@@ -298,10 +312,10 @@ void main() {
       testWidgets(
         'When new time is valid, pressing OK should update cell value',
         (tester) async {
-          await buildCellAndEdit(
+          await pumpGrid(
             tester,
             trinaCell: TrinaCell(value: '10:00'),
-            column: getColumn(
+            column: getTimeColumn(
               minTime: const TimeOfDay(hour: 10, minute: 0),
               maxTime: const TimeOfDay(hour: 12, minute: 0),
             ),
@@ -319,6 +333,64 @@ void main() {
           expect(stateManager.currentCell?.value, '11:00');
         },
       );
+    });
+  });
+
+  group('TrinaTimePicker Initial time', () {
+    testWidgets('should parse valid cell value correctly', (tester) async {
+      await pumpGrid(tester, trinaCell: TrinaCell(value: '14:30'));
+      await openPopup(tester);
+
+      final timePicker =
+          tester.widget<TrinaTimePicker>(find.byType(TrinaTimePicker));
+      expect(timePicker.initialTime, const TimeOfDay(hour: 14, minute: 30));
+    });
+
+    testWidgets('should fall back to 00:00 for non-time cell value',
+        (tester) async {
+      await pumpGrid(tester, trinaCell: TrinaCell(value: 'not-a-time'));
+      await openPopup(tester);
+
+      final timePicker =
+          tester.widget<TrinaTimePicker>(find.byType(TrinaTimePicker));
+      expect(timePicker.initialTime, const TimeOfDay(hour: 0, minute: 0));
+    });
+
+    testWidgets(
+      'should fall back to 00:00 when cell value is null',
+      (tester) async {
+        final column = getTimeColumn();
+
+        await pumpGrid(
+          tester,
+          column: column,
+          trinaCell: TrinaCell(value: null),
+        );
+        await openPopup(tester, useCellKey: true);
+
+        final timePicker =
+            tester.widget<TrinaTimePicker>(find.byType(TrinaTimePicker));
+        expect(timePicker.initialTime, const TimeOfDay(hour: 0, minute: 0));
+      },
+    );
+
+    testWidgets('should fall back to 00:00 for empty string cell value',
+        (tester) async {
+      await pumpGrid(tester, trinaCell: TrinaCell(value: ''));
+      await openPopup(tester, useCellKey: true);
+
+      final timePicker =
+          tester.widget<TrinaTimePicker>(find.byType(TrinaTimePicker));
+      expect(timePicker.initialTime, const TimeOfDay(hour: 0, minute: 0));
+    });
+
+    testWidgets('should parse time with only hour correctly', (tester) async {
+      await pumpGrid(tester, trinaCell: TrinaCell(value: '11'));
+      await openPopup(tester);
+
+      final timePicker =
+          tester.widget<TrinaTimePicker>(find.byType(TrinaTimePicker));
+      expect(timePicker.initialTime, const TimeOfDay(hour: 11, minute: 0));
     });
   });
 }

@@ -98,11 +98,9 @@ class _TrinaTimePickerState extends State<TrinaTimePicker> {
     super.initState();
     currentTime = _getValidInitialTime(widget.initialTime);
 
-    if (_isTimeInRange(widget.initialTime) == false) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        widget.onValidationChanged?.call(false);
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onValidationChanged?.call(_isTimeInRange(widget.initialTime));
+    });
   }
 
   TimeOfDay _getValidInitialTime(TimeOfDay initialTime) {
