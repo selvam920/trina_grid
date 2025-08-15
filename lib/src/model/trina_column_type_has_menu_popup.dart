@@ -26,7 +26,7 @@ abstract class TrinaColumnTypeHasMenuPopup {
   double? get menuWidth;
 
   /// {@macro TrinaDropdownMenu.itemBuilder}
-  Widget Function(dynamic item)? get menuItemBuilder;
+  ItemBuilder<dynamic>? get menuItemBuilder;
 
   /// {@macro TrinaDropdownMenu.filters}
   List<TrinaDropdownMenuFilter> get menuFilters;

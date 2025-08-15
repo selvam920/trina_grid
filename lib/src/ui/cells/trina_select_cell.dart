@@ -38,7 +38,7 @@ class TrinaSelectCellState
   IconData? get popupMenuIcon => _column.popupIcon;
 
   @override
-  late final List menuItems = _column.items;
+  List get menuItems => _column.items;
 
   @override
   TrinaDropdownMenu buildMenu() {

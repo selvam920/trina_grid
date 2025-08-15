@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trina_grid/src/model/trina_dropdown_menu_filter.dart';
 
-typedef ItemBuilder<T> = Widget Function(T item)?;
+typedef ItemBuilder<T> = Widget Function(T item);
 
 class _InheritedTrinaDropdownMenu<T> extends InheritedWidget {
   const _InheritedTrinaDropdownMenu({
@@ -83,7 +83,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
   ///
   /// If null, a default [Text] widget is used.
   /// {@endtemplate}
-  final ItemBuilder<T> itemBuilder;
+  final ItemBuilder<T>? itemBuilder;
 
   /// {@template TrinaDropdownMenu.itemHeight}
   /// The height of each item in the list.
@@ -167,7 +167,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     String Function(T item)? itemToString,
     WidgetBuilder? emptySearchResultBuilder,
     WidgetBuilder? emptyFilterResultBuilder,
-    ItemBuilder<T> itemBuilder,
+    ItemBuilder<T>? itemBuilder,
     dynamic Function(T item)? itemToValue,
     Key? key,
   }) {
@@ -234,7 +234,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     required double maxHeight,
     Key? key,
     WidgetBuilder? emptySearchResultBuilder,
-    ItemBuilder<T> itemBuilder,
+    ItemBuilder<T>? itemBuilder,
     dynamic Function(T item)? itemToValue,
   }) = _TrinaSelectMenuWithSearch<T>;
 
@@ -252,7 +252,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     required bool filtersInitiallyExpanded,
     WidgetBuilder? emptyFilterResultBuilder,
     String Function(T item)? itemToString,
-    ItemBuilder<T> itemBuilder,
+    ItemBuilder<T>? itemBuilder,
     dynamic Function(T item)? itemToValue,
     Key? key,
   }) = _TrinaSelectMenuWithFilters<T>;

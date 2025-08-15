@@ -171,7 +171,7 @@ TrinaColumn(
 | `filtersInitiallyExpanded` | `bool` | Whether the filters section is initially expanded. Defaults to `true`. |
 | `emptySearchResultBuilder` | `WidgetBuilder?` | A builder function to create a widget to display when a search yields no results. |
 | `emptyFilterResultBuilder` | `WidgetBuilder?` | A builder function to create a widget to display when filtering yields no results. |
-| `menuItemBuilder` | `ItemBuilder<dynamic>?` | A builder function to create a custom widget for each item in the list. |
+| `menuItemBuilder` | `Widget Function(dynamic item)?` | A builder function to create a custom widget for each item in the list. |
 
 ### Boolean Column
 

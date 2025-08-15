@@ -54,7 +54,7 @@ class TrinaColumnTypeBoolean
   TrinaDropdownMenuVariant get menuVariant => TrinaDropdownMenuVariant.select;
 
   @override
-  final ItemBuilder menuItemBuilder;
+  final ItemBuilder? menuItemBuilder;
 
   @override
   double get menuMaxHeight => 300;
