@@ -30,6 +30,40 @@ void main() {
     when(stateManager.rowHeight).thenReturn(
       stateManager.configuration.style.rowHeight,
     );
+    when(stateManager.getRowHeight(0)).thenReturn(
+      stateManager.configuration.style.rowHeight,
+    );
+    when(stateManager.getRowHeight(1)).thenReturn(
+      stateManager.configuration.style.rowHeight,
+    );
+    when(stateManager.getRowHeight(2)).thenReturn(
+      stateManager.configuration.style.rowHeight,
+    );
+    when(stateManager.getRowHeight(3)).thenReturn(
+      stateManager.configuration.style.rowHeight,
+    );
+    when(stateManager.getRowHeight(4)).thenReturn(
+      stateManager.configuration.style.rowHeight,
+    );
+    when(stateManager.getRowHeight(5)).thenReturn(
+      stateManager.configuration.style.rowHeight,
+    );
+    when(stateManager.getRowHeight(6)).thenReturn(
+      stateManager.configuration.style.rowHeight,
+    );
+    when(stateManager.getRowHeight(7)).thenReturn(
+      stateManager.configuration.style.rowHeight,
+    );
+    when(stateManager.getRowHeight(8)).thenReturn(
+      stateManager.configuration.style.rowHeight,
+    );
+    when(stateManager.getRowHeight(9)).thenReturn(
+      stateManager.configuration.style.rowHeight,
+    );
+    // Add a catch-all for any other row index
+    when(stateManager.getRowHeight(argThat(isA<int>()))).thenReturn(
+      stateManager.configuration.style.rowHeight,
+    );
     when(stateManager.columnHeight).thenReturn(
       stateManager.configuration.style.columnHeight,
     );

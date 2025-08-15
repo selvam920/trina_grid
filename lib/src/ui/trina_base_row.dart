@@ -89,6 +89,7 @@ class TrinaBaseRow extends StatelessWidget {
                 stateManager: stateManager,
                 columns: columns,
                 textDirection: stateManager.textDirection,
+                rowIdx: rowIdx,
               ),
               scrollController: stateManager.scroll.bodyRowsHorizontal!,
               initialViewportDimension: MediaQuery.of(dragContext).size.width,
@@ -100,6 +101,7 @@ class TrinaBaseRow extends StatelessWidget {
                 stateManager: stateManager,
                 columns: columns,
                 textDirection: stateManager.textDirection,
+                rowIdx: rowIdx,
               ),
               children: columns.map(_makeCell).toList(growable: false),
             ),
@@ -141,10 +143,13 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
 
   final TextDirection textDirection;
 
+  final int rowIdx;
+
   _RowCellsLayoutDelegate({
     required this.stateManager,
     required this.columns,
     required this.textDirection,
+    required this.rowIdx,
   }) : super(relayout: stateManager.resizingChangeNotifier);
 
   @override
@@ -154,7 +159,10 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
       (previousValue, element) => previousValue + element.width,
     );
 
-    return Size(width, stateManager.rowHeight);
+    // Use row-specific height instead of global height
+    final rowHeight = stateManager.getRowHeight(rowIdx);
+
+    return Size(width, rowHeight);
   }
 
   @override
@@ -162,6 +170,9 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
     final isLTR = textDirection == TextDirection.ltr;
     final items = isLTR ? columns : columns.reversed;
     double dx = 0;
+
+    // Get row-specific height
+    final rowHeight = stateManager.getRowHeight(rowIdx);
 
     for (var element in items) {
       var width = element.width;
@@ -172,10 +183,10 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
           BoxConstraints.tightFor(
             width: width,
             height: stateManager.style.enableCellBorderHorizontal
-                ? stateManager.rowHeight
+                ? rowHeight
                 // we add `cellHorizontalBorderWidth` to the row height so the cells are not
                 // vertically-separated by the disabled horizontal border
-                : stateManager.rowHeight +
+                : rowHeight +
                     stateManager.style.cellHorizontalBorderWidth,
           ),
         );

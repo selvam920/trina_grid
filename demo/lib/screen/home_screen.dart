@@ -65,6 +65,7 @@ import 'feature/date_time_column_screen.dart';
 import 'feature/row_wrapper_screen.dart';
 import 'feature/multiitems_delegate_demo_screen.dart';
 import 'feature/custom_footer_screen.dart';
+import 'feature/dynamic_row_height_demo.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/';
@@ -632,6 +633,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, MultiItemsDelegateDemoScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'Dynamic Row Height',
+        description:
+            'Test dynamic row height functionality with custom setRowHeight method for individual rows.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, DynamicRowHeightDemo.routeName);
+        },
+        trailing: newIcon,
       ),
     ];
     return allItems;

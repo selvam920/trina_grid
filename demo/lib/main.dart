@@ -58,6 +58,7 @@ import 'screen/feature/scrollbars.dart';
 import 'screen/feature/row_wrapper_screen.dart';
 import 'screen/feature/multiitems_delegate_demo_screen.dart';
 import 'screen/feature/custom_footer_screen.dart';
+import 'screen/feature/dynamic_row_height_demo.dart';
 
 void main() {
   runApp(const MyApp());
@@ -155,6 +156,8 @@ class MyApp extends StatelessWidget {
         RowWrapperScreen.routeName: (context) => const RowWrapperScreen(),
         MultiItemsDelegateDemoScreen.routeName: (context) =>
             const MultiItemsDelegateDemoScreen(),
+        DynamicRowHeightDemo.routeName: (context) =>
+            const DynamicRowHeightDemo(),
         RTLScrollbarScreen.routeName: (context) => const RTLScrollbarScreen(),
         CustomFooterScreen.routeName: (context) => const CustomFooterScreen(),
       },
