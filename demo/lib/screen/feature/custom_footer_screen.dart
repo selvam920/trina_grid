@@ -145,6 +145,15 @@ class _PaginationFooterWidgetState extends State<PaginationFooterWidget> {
   // Define available page sizes including the default
   final List<int> availablePageSizes = [10, 20, 40, 50, 100];
 
+  // Controller for the page input field
+  final TextEditingController _pageController = TextEditingController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Ensure state manager is properly initialized and has data
@@ -157,6 +166,11 @@ class _PaginationFooterWidgetState extends State<PaginationFooterWidget> {
     final pageSize = widget.stateManager.pageSize;
     final totalPage = widget.stateManager.totalPage;
     final totalRows = widget.stateManager.refRows.length;
+
+    // Update the text controller when current page changes
+    if (_pageController.text != currentPage.toString()) {
+      _pageController.text = currentPage.toString();
+    }
 
     return Container(
       height: 60,
@@ -216,12 +230,48 @@ class _PaginationFooterWidgetState extends State<PaginationFooterWidget> {
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: Colors.blue[300]!),
                   ),
-                  child: Text(
-                    'Page $currentPage of $totalPage',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[700],
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Page ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue[700],
+                        ),
+                      ),
+                      // Direct page input field
+                      SizedBox(
+                        width: 50,
+                        child: TextField(
+                          controller: _pageController,
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[700],
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                            isDense: true,
+                          ),
+                          onSubmitted: (value) {
+                            _goToPageFromInput(value);
+                          },
+                          onEditingComplete: () {
+                            _goToPageFromInput(_pageController.text);
+                          },
+                        ),
+                      ),
+                      Text(
+                        ' of $totalPage',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue[700],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 IconButton(
@@ -272,5 +322,24 @@ class _PaginationFooterWidgetState extends State<PaginationFooterWidget> {
   void _goToPage(int page) {
     widget.stateManager.setPage(page);
     setState(() {}); // Trigger rebuild to update UI
+  }
+
+  void _goToPageFromInput(String input) {
+    final page = int.tryParse(input);
+    if (page != null && page >= 1 && page <= widget.stateManager.totalPage) {
+      _goToPage(page);
+    } else {
+      // Reset to current page if input is invalid
+      _pageController.text = widget.stateManager.page.toString();
+      // Show a brief feedback that the input was invalid
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'Please enter a valid page number between 1 and ${widget.stateManager.totalPage}'),
+          duration: const Duration(seconds: 2),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
