@@ -96,8 +96,9 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 
 ## Contributing
 
-- [How to Contribute](contributing/how-to-contribute.md)
-- [Code of Conduct](contributing/code-of-conduct.md)
+- [Contributors](contributing/contributors.md) - Meet our amazing contributors
+- [How to Contribute](contributing/how-to-contribute.md) - Guidelines for contributing
+- [Code of Conduct](contributing/code-of-conduct.md) - Community standards
 
 ## Release Notes
 

@@ -729,6 +729,13 @@ class TrinaContributors extends StatelessWidget {
             },
           ),
           TrinaContributorTile(
+            name: 'Mouayad Alhamwi',
+            linkTitle: 'Github',
+            onTapLink: () {
+              launchUrl('https://github.com/DMouayad');
+            },
+          ),
+          TrinaContributorTile(
             name: 'Gian',
             linkTitle: 'Github',
             onTapLink: () {
