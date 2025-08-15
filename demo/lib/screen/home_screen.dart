@@ -64,6 +64,7 @@ import 'feature/scrollbars.dart';
 import 'feature/date_time_column_screen.dart';
 import 'feature/row_wrapper_screen.dart';
 import 'feature/multiitems_delegate_demo_screen.dart';
+import 'feature/custom_footer_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/';
@@ -291,6 +292,16 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, ColumnFooterScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'Pagination Footer',
+        description:
+            'Create custom pagination footer widgets at the bottom of the grid using createFooter callback. '
+            'Includes basic, styled, and compact pagination designs.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CustomFooterScreen.routeName);
+        },
+        trailing: newIcon,
       ),
       TrinaListTile(
         title: 'Column hiding',

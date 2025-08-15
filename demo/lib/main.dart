@@ -57,6 +57,7 @@ import 'screen/feature/frozen_rows_screen.dart';
 import 'screen/feature/scrollbars.dart';
 import 'screen/feature/row_wrapper_screen.dart';
 import 'screen/feature/multiitems_delegate_demo_screen.dart';
+import 'screen/feature/custom_footer_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -155,6 +156,7 @@ class MyApp extends StatelessWidget {
         MultiItemsDelegateDemoScreen.routeName: (context) =>
             const MultiItemsDelegateDemoScreen(),
         RTLScrollbarScreen.routeName: (context) => const RTLScrollbarScreen(),
+        CustomFooterScreen.routeName: (context) => const CustomFooterScreen(),
       },
       theme: ThemeData(
         primaryColor: TrinaGridExampleColors.primaryColor,
