@@ -174,7 +174,7 @@ class _TrinaTimePickerState extends State<TrinaTimePicker> {
       },
       child: Flex(
         direction: Axis.horizontal,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _TimeDigitInput(
@@ -203,10 +203,15 @@ class _TrinaTimePickerState extends State<TrinaTimePicker> {
               );
             },
           ),
-          SizedBox(
-            width: 40,
-            height: 40,
-            child: Center(child: Text(':', style: TextStyle(fontSize: 35))),
+          const SizedBox(
+            width: 28,
+            height: 55,
+            child: Center(
+              child: Text(
+                ':',
+                style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
           _TimeDigitInput(
             focusNode: widget.minuteFocusNode,
@@ -327,6 +332,7 @@ class _TimeDigitInputState extends State<_TimeDigitInput> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    const contentPadding = EdgeInsets.fromLTRB(12, 20, 12, 12);
     return GestureDetector(
       onVerticalDragStart: (_) {
         if (widget.focusNode != null && !widget.focusNode!.hasFocus) {
@@ -347,7 +353,7 @@ class _TimeDigitInputState extends State<_TimeDigitInput> {
         }
       },
       child: SizedBox(
-        width: 80,
+        width: 90,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -387,7 +393,7 @@ class _TimeDigitInputState extends State<_TimeDigitInput> {
                   maxLines: 1,
                   autofocus: widget.autoFocus,
                   canRequestFocus: true,
-                  errorBuilder: (context, errorText) => SizedBox.shrink(),
+                  errorBuilder: (context, errorText) => const SizedBox.shrink(),
                   buildCounter: (
                     context, {
                     required currentLength,
@@ -402,17 +408,23 @@ class _TimeDigitInputState extends State<_TimeDigitInput> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     helperText: widget.label,
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    focusedBorder: OutlineInputBorder(
+                    border:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
+                    focusedBorder: const OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Colors.blueAccent, width: 2),
                     ),
                     filled: true,
-                    isDense: true,
-                    hoverColor: colorScheme.inverseSurface.withAlpha(20),
+                    isDense: false,
+                    hoverColor: colorScheme.inverseSurface.withAlpha(15),
                     fillColor: colorScheme.inverseSurface.withAlpha(10),
+                    contentPadding: contentPadding,
                   ),
-                  style: TextStyle(fontSize: 26, color: colorScheme.onSurface),
+                  style: TextStyle(
+                    fontSize: 28,
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -427,10 +439,11 @@ class _TimeDigitInputState extends State<_TimeDigitInput> {
                       child: errorText != null
                           ? Text(
                               errorText,
-                              style: TextStyle(color: Colors.red, fontSize: 12),
+                              style: const TextStyle(
+                                  color: Colors.red, fontSize: 12),
                               textAlign: TextAlign.center,
                             )
-                          : SizedBox(),
+                          : const SizedBox.shrink(),
                     ),
                   );
                 },

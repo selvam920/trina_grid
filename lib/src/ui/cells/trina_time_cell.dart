@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trina_grid/src/helper/platform_helper.dart';
 import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_custom_popup.dart';
 import 'package:trina_grid/src/ui/widgets/trina_time_picker.dart';
 import 'package:trina_grid/trina_grid.dart';
@@ -132,7 +133,7 @@ class _PopupContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
-        maxWidth: 250,
+        maxWidth: 270,
         maxHeight: 180,
       ),
       child: Stack(
@@ -178,6 +179,15 @@ class _PopupContent extends StatelessWidget {
               ),
             ),
           ),
+          if (PlatformHelper.isDesktop)
+            Positioned(
+              left: 22,
+              bottom: 16,
+              child: const Tooltip(
+                message: 'You can scroll to increment/decrement',
+                child: Icon(Icons.info_outline, size: 20),
+              ),
+            ),
         ],
       ),
     );
