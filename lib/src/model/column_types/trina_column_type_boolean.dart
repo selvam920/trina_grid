@@ -51,7 +51,7 @@ class TrinaColumnTypeBoolean
   final double? menuWidth;
 
   @override
-  TrinaSelectMenuVariant get menuVariant => TrinaSelectMenuVariant.select;
+  TrinaDropdownMenuVariant get menuVariant => TrinaDropdownMenuVariant.select;
 
   @override
   final ItemBuilder menuItemBuilder;

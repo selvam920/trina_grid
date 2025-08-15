@@ -162,7 +162,7 @@ abstract interface class TrinaColumnType {
     dynamic Function(dynamic item)? itemToValue,
   }) {
     return TrinaColumnTypeSelect(
-      menuVariant: TrinaSelectMenuVariant.select,
+      menuVariant: TrinaDropdownMenuVariant.select,
       onItemSelected: onItemSelected,
       defaultValue: defaultValue,
       items: items,
@@ -222,7 +222,7 @@ abstract interface class TrinaColumnType {
       onItemSelected: onItemSelected,
       defaultValue: defaultValue,
       items: items,
-      menuVariant: TrinaSelectMenuVariant.selectWithSearch,
+      menuVariant: TrinaDropdownMenuVariant.selectWithSearch,
       enableColumnFilter: enableColumnFilter,
       popupIcon: popupIcon,
       menuItemBuilder: menuItemBuilder,
@@ -281,7 +281,7 @@ abstract interface class TrinaColumnType {
   }) {
     return TrinaColumnTypeSelect(
       items: items,
-      menuVariant: TrinaSelectMenuVariant.selectWithFilters,
+      menuVariant: TrinaDropdownMenuVariant.selectWithFilters,
       defaultValue: defaultValue,
       menuFilters: menuFilters,
       onItemSelected: onItemSelected,

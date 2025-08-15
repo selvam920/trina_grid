@@ -14,7 +14,7 @@ abstract class TrinaColumnTypeHasMenuPopup {
   List<dynamic> get items;
 
   /// {@macro TrinaDropdownMenu.variant}
-  TrinaSelectMenuVariant get menuVariant;
+  TrinaDropdownMenuVariant get menuVariant;
 
   /// {@macro TrinaDropdownMenu.itemHeight}
   double get menuItemHeight;

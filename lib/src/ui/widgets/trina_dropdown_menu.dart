@@ -6,22 +6,22 @@ import 'package:trina_grid/src/model/trina_dropdown_menu_filter.dart';
 
 typedef ItemBuilder<T> = Widget Function(T item)?;
 
-class _InheritedTrinaSelectMenu<T> extends InheritedWidget {
-  const _InheritedTrinaSelectMenu({
+class _InheritedTrinaDropdownMenu<T> extends InheritedWidget {
+  const _InheritedTrinaDropdownMenu({
     required this.state,
     required super.child,
   });
 
-  final TrinaSelectMenuState<T> state;
+  final TrinaDropdownMenuState<T> state;
 
   @override
-  bool updateShouldNotify(_InheritedTrinaSelectMenu oldWidget) {
+  bool updateShouldNotify(_InheritedTrinaDropdownMenu oldWidget) {
     return state != oldWidget.state;
   }
 }
 
 /// Describes the specific variant of the [TrinaDropdownMenu].
-enum TrinaSelectMenuVariant {
+enum TrinaDropdownMenuVariant {
   /// A simple dropdown list with no search or filtering.
   select,
 
@@ -38,7 +38,7 @@ enum TrinaSelectMenuVariant {
 /// and custom item rendering.
 ///
 /// ### Usage
-/// - [TrinaDropdownMenu.new] for a basic select menu.
+/// - [TrinaDropdownMenu] for a basic select menu.
 /// - [TrinaDropdownMenu.withSearch] for a menu with a search field.
 /// - [TrinaDropdownMenu.withFilters] for a menu with filtering.
 class TrinaDropdownMenu<T> extends StatefulWidget {
@@ -51,7 +51,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
   ///
   /// This is used internally to determine which UI and state to use.
   /// {@endtemplate}
-  final TrinaSelectMenuVariant variant;
+  final TrinaDropdownMenuVariant variant;
 
   /// The builder function that constructs the menu's UI.
   ///
@@ -138,7 +138,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     this.itemToValue,
     super.key,
   })  : builder = _defaultBuilder<T>,
-        variant = TrinaSelectMenuVariant.select;
+        variant = TrinaDropdownMenuVariant.select;
 
   static Widget _defaultBuilder<T>(BuildContext context) {
     final widget = TrinaDropdownMenu.of<T>(context).widget;
@@ -155,7 +155,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
   /// menu. You should prefer using the more specific factory constructors like
   /// [TrinaDropdownMenu.withSearch] or [TrinaDropdownMenu.withFilters].
   factory TrinaDropdownMenu.variant(
-    TrinaSelectMenuVariant variant, {
+    TrinaDropdownMenuVariant variant, {
     required List<T> items,
     required void Function(T item) onItemSelected,
     required double width,
@@ -172,7 +172,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     Key? key,
   }) {
     switch (variant) {
-      case TrinaSelectMenuVariant.select:
+      case TrinaDropdownMenuVariant.select:
         return TrinaDropdownMenu<T>._(
           key: key,
           variant: variant,
@@ -187,7 +187,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
           itemToValue: itemToValue,
           itemBuilder: itemBuilder,
         );
-      case TrinaSelectMenuVariant.selectWithSearch:
+      case TrinaDropdownMenuVariant.selectWithSearch:
         assert(itemToString != null, 'itemToString must be provided');
         return TrinaDropdownMenu<T>.withSearch(
           key: key,
@@ -202,7 +202,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
           emptySearchResultBuilder: emptySearchResultBuilder,
           itemBuilder: itemBuilder,
         );
-      case TrinaSelectMenuVariant.selectWithFilters:
+      case TrinaDropdownMenuVariant.selectWithFilters:
         return TrinaDropdownMenu<T>.withFilters(
           key: key,
           filters: filters,
@@ -261,22 +261,22 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
   ///
   /// This is used by child widgets of the menu to access the menu's state,
   /// such as the list of items or the search controller.
-  static TrinaSelectMenuState<T> of<T>(BuildContext context) {
+  static TrinaDropdownMenuState<T> of<T>(BuildContext context) {
     final scope = context
-        .dependOnInheritedWidgetOfExactType<_InheritedTrinaSelectMenu<T>>();
+        .dependOnInheritedWidgetOfExactType<_InheritedTrinaDropdownMenu<T>>();
     assert(scope != null, 'TrinaDropdownMenu not found in context');
     return scope!.state;
   }
 
   @override
-  TrinaSelectMenuState<T> createState() => TrinaSelectMenuState<T>();
+  TrinaDropdownMenuState<T> createState() => TrinaDropdownMenuState<T>();
 }
 
 /// The base state for the [TrinaDropdownMenu].
 ///
 /// This class manages the basic state of the menu, such as the list of items
 /// and the scroll controller.
-base class TrinaSelectMenuState<T> extends State<TrinaDropdownMenu<T>> {
+base class TrinaDropdownMenuState<T> extends State<TrinaDropdownMenu<T>> {
   late final ScrollController scrollController = ScrollController();
 
   late final ValueNotifier<List<T>> itemsNotifier;
@@ -325,7 +325,7 @@ base class TrinaSelectMenuState<T> extends State<TrinaDropdownMenu<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return _InheritedTrinaSelectMenu<T>(
+    return _InheritedTrinaDropdownMenu<T>(
       state: this,
       child: Builder(
         builder: (context) {
@@ -354,7 +354,7 @@ final class _TrinaSelectMenuWithSearch<T> extends TrinaDropdownMenu<T> {
     required super.itemHeight,
     required super.maxHeight,
   }) : super._(
-          variant: TrinaSelectMenuVariant.selectWithSearch,
+          variant: TrinaDropdownMenuVariant.selectWithSearch,
           itemToString: itemToString,
           builder: (context) {
             final state = (TrinaDropdownMenu.of<T>(context)
@@ -397,13 +397,14 @@ final class _TrinaSelectMenuWithSearch<T> extends TrinaDropdownMenu<T> {
   final WidgetBuilder? emptySearchResultBuilder;
 
   @override
-  TrinaSelectMenuState<T> createState() {
+  TrinaDropdownMenuState<T> createState() {
     return _TrinaSelectMenuWithSearchState<T>();
   }
 }
 
 /// The state for [_TrinaSelectMenuWithSearch].
-final class _TrinaSelectMenuWithSearchState<T> extends TrinaSelectMenuState<T> {
+final class _TrinaSelectMenuWithSearchState<T>
+    extends TrinaDropdownMenuState<T> {
   late final TextEditingController controller = TextEditingController();
   late final FocusNode focusNode = FocusNode();
   Timer? _debounce;
@@ -513,7 +514,7 @@ class _TrinaSelectMenuWithFilters<T> extends TrinaDropdownMenu<T> {
           'Filter titles must be unique.',
         ),
         super._(
-          variant: TrinaSelectMenuVariant.selectWithFilters,
+          variant: TrinaDropdownMenuVariant.selectWithFilters,
           builder: (context) {
             final state = TrinaDropdownMenu.of<T>(context)
                 as _TrinaSelectMenuWithFiltersState<T>;
@@ -591,7 +592,7 @@ class _TrinaSelectMenuWithFilters<T> extends TrinaDropdownMenu<T> {
 /// enabled and their current values. It uses a [ValueNotifier] to trigger
 /// updates when the filters change.
 final class _TrinaSelectMenuWithFiltersState<T>
-    extends TrinaSelectMenuState<T> {
+    extends TrinaDropdownMenuState<T> {
   Timer? _debounce;
   _TrinaSelectMenuWithFilters<T> get _widget =>
       (widget as _TrinaSelectMenuWithFilters<T>);
@@ -614,7 +615,6 @@ final class _TrinaSelectMenuWithFiltersState<T>
 
   late final hasActiveFilterWithValueNotifier = ValueNotifier<bool>(false);
 
-  late final MenuController menuController = MenuController();
   late bool filtersIsVisible;
 
   @override
@@ -825,11 +825,11 @@ class _ActionButtons<T> extends StatelessWidget {
 class _FiltersGridView<T> extends StatelessWidget {
   const _FiltersGridView({
     required this.filters,
-    required this.girdCrossAxisCount,
+    required this.gridCrossAxisCount,
   });
 
   final List<TrinaDropdownMenuFilter> filters;
-  final int girdCrossAxisCount;
+  final int gridCrossAxisCount;
 
   @override
   Widget build(BuildContext context) {
@@ -857,7 +857,7 @@ class _FiltersSection<T> extends StatelessWidget {
 
   final List<TrinaDropdownMenuFilter> filters;
 
-  int get girdCrossAxisCount {
+  int get gridCrossAxisCount {
     // Determine the number of columns for the grid based on the number of
     // filters. This is to ensure the layout is responsive and doesn't
     // look too crowded.
@@ -892,7 +892,6 @@ class _FiltersSection<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gridCrossAxisCount = girdCrossAxisCount;
     final menuState = _menuState(context);
     final colorScheme = Theme.of(context).colorScheme;
     final sectionWidth = gridCrossAxisCount * 240.0;
@@ -913,7 +912,7 @@ class _FiltersSection<T> extends StatelessWidget {
               ),
             _FiltersGridView<T>(
               filters: filters,
-              girdCrossAxisCount: gridCrossAxisCount,
+              gridCrossAxisCount: gridCrossAxisCount,
             ),
           ],
         ),

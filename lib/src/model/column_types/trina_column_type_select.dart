@@ -44,7 +44,7 @@ class TrinaColumnTypeSelect
 
   /// {@macro TrinaDropdownMenu.variant}
   @override
-  final TrinaSelectMenuVariant menuVariant;
+  final TrinaDropdownMenuVariant menuVariant;
 
   /// {@macro TrinaDropdownMenu.maxHeight}
   @override

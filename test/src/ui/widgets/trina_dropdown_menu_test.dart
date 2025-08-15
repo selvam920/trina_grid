@@ -25,7 +25,7 @@ void main() {
       required T initialValue,
       String Function(T item)? itemToString,
       dynamic Function(T item)? itemToValue,
-      TrinaSelectMenuVariant variant = TrinaSelectMenuVariant.select,
+      TrinaDropdownMenuVariant variant = TrinaDropdownMenuVariant.select,
       List<TrinaDropdownMenuFilter> filters = const [],
       void Function(T item)? onItemSelected,
       double itemHeight = 40,
@@ -66,7 +66,7 @@ void main() {
     Future<void> buildStringMenu(
       WidgetTester tester, {
       required List<String> items,
-      TrinaSelectMenuVariant variant = TrinaSelectMenuVariant.select,
+      TrinaDropdownMenuVariant variant = TrinaDropdownMenuVariant.select,
       String? initialValue,
       List<TrinaDropdownMenuFilter> filters = const [],
       void Function(String item)? onItemSelected,
@@ -116,7 +116,7 @@ void main() {
         await buildStringMenu(
           tester,
           items: strTestItems,
-          variant: TrinaSelectMenuVariant.selectWithSearch,
+          variant: TrinaDropdownMenuVariant.selectWithSearch,
         );
 
         // Enter search text
@@ -137,7 +137,7 @@ void main() {
         await buildMenu<String>(
           tester,
           items: strTestItems,
-          variant: TrinaSelectMenuVariant.selectWithSearch,
+          variant: TrinaDropdownMenuVariant.selectWithSearch,
           itemToString: (item) => item,
           initialValue: strTestItems.first,
           emptySearchResultBuilder: (context) =>
@@ -209,7 +209,7 @@ void main() {
           await buildStringMenu(
             tester,
             items: strTestItems,
-            variant: TrinaSelectMenuVariant.selectWithFilters,
+            variant: TrinaDropdownMenuVariant.selectWithFilters,
             filters: [TrinaDropdownMenuFilter.equals],
           );
           expect(find.widgetWithText(ListTile, 'Filters'), findsOneWidget);
@@ -222,7 +222,7 @@ void main() {
           await buildStringMenu(
             tester,
             items: strTestItems,
-            variant: TrinaSelectMenuVariant.selectWithFilters,
+            variant: TrinaDropdownMenuVariant.selectWithFilters,
             filters: [TrinaDropdownMenuFilter.equals],
             filtersInitiallyExpanded: false,
           );
@@ -243,7 +243,7 @@ void main() {
         await buildStringMenu(
           tester,
           items: strTestItems,
-          variant: TrinaSelectMenuVariant.selectWithFilters,
+          variant: TrinaDropdownMenuVariant.selectWithFilters,
           filters: filters,
         );
 
@@ -271,7 +271,7 @@ void main() {
         await buildMenu<String>(
           tester,
           items: strTestItems,
-          variant: TrinaSelectMenuVariant.selectWithFilters,
+          variant: TrinaDropdownMenuVariant.selectWithFilters,
           filters: [TrinaDropdownMenuFilter.equals],
           initialValue: strTestItems.first,
           itemToString: (item) => item,
@@ -290,7 +290,7 @@ void main() {
         await buildMenu<String>(
           tester,
           items: strTestItems,
-          variant: TrinaSelectMenuVariant.selectWithFilters,
+          variant: TrinaDropdownMenuVariant.selectWithFilters,
           filters: [TrinaDropdownMenuFilter.equals],
           initialValue: strTestItems.first,
           itemToString: (item) => item,
@@ -311,7 +311,7 @@ void main() {
         await buildStringMenu(
           tester,
           items: strTestItems,
-          variant: TrinaSelectMenuVariant.selectWithFilters,
+          variant: TrinaDropdownMenuVariant.selectWithFilters,
           filters: filters,
         );
 
@@ -343,7 +343,7 @@ void main() {
 
         await buildStringMenu(tester,
             items: strTestItems,
-            variant: TrinaSelectMenuVariant.selectWithFilters,
+            variant: TrinaDropdownMenuVariant.selectWithFilters,
             filters: filters,
             filtersInitiallyExpanded: true);
 
@@ -378,7 +378,7 @@ void main() {
           () async => buildStringMenu(
             tester,
             items: strTestItems,
-            variant: TrinaSelectMenuVariant.selectWithFilters,
+            variant: TrinaDropdownMenuVariant.selectWithFilters,
             filters: filters,
           ),
           throwsA(isA<AssertionError>()),
