@@ -34,15 +34,74 @@
 - [🏁 Basic Usage](#-basic-usage)
 - [🦄 Features](#-features)
   - [🏷️ Column Features](#-column-features)
+    - [Column Types](#column-types)
+    - [Column Freezing](#column-freezing)
+    - [Column Resizing](#column-resizing)
+    - [Column Moving](#column-moving)
+    - [Column Hiding](#column-hiding)
+    - [Column Sorting](#column-sorting)
+    - [Column Filtering](#column-filtering)
+    - [Column Groups](#column-groups)
+    - [Column Renderers](#column-renderers)
+    - [Column Title Renderer](#column-title-renderer)
+    - [Column Footer](#column-footer)
+    - [Column Viewport Visibility](#column-viewport-visibility)
+    - [Column Menu](#column-menu)
+    - [Filter Icon Customization](#filter-icon-customization)
   - [🧑‍🤝‍🧑 Row Features](#-row-features)
+    - [Row Selection](#row-selection)
+    - [Row Moving](#row-moving)
+    - [Row Coloring](#row-coloring)
+    - [Row Wrapper](#row-wrapper)
+    - [Row Checking](#row-checking)
+    - [Row Groups](#row-groups)
+    - [Frozen Rows](#frozen-rows)
+    - [Row Pagination](#row-pagination)
+    - [Row Lazy Pagination](#row-lazy-pagination)
+    - [Row Infinity Scroll](#row-infinity-scroll)
+    - [Add/Remove Rows](#addremove-rows)
+    - [Add Rows Asynchronously](#add-rows-asynchronously)
   - [🔲 Cell Features](#-cell-features)
+    - [Cell Selection](#cell-selection)
+    - [Cell Editing](#cell-editing)
+    - [Cell Renderers](#cell-renderers)
+    - [Cell Validation](#cell-validation)
+    - [Cell Value Change Handling](#cell-value-change-handling)
+    - [Edit Cell Renderer](#edit-cell-renderer)
   - [📊 Data Management](#-data-management)
+    - [Pagination Overview](#pagination-overview)
+    - [Client-Side Pagination](#client-side-pagination)
+    - [Lazy Pagination (Server-Side)](#lazy-pagination-server-side)
+    - [Infinite Scrolling](#infinite-scrolling)
+    - [Lazy Loading](#lazy-loading)
+    - [Copy & Paste](#copy--paste)
+    - [Export](#export)
+    - [Custom Pagination UI](#custom-pagination-ui)
+    - [Custom Footer](#custom-footer)
   - [🎨 UI Customization](#-ui-customization)
+    - [Themes](#themes)
+    - [Custom Styling](#custom-styling)
+    - [Loading Options](#loading-options)
+    - [Enhanced Scrollbars](#enhanced-scrollbars)
+    - [RTL Support](#rtl-support)
+    - [Dark Mode](#dark-mode)
+    - [Value Formatter](#value-formatter)
   - [⚡ Other Features](#-other-features)
-- [🆕 New Feature: Cell-Level Renderers](#-new-feature-cell-level-renderers)
-- [🆕 New Feature: Enhanced Scrollbars](#-new-feature-enhanced-scrollbars)
+    - [Keyboard Navigation](#keyboard-navigation)
+    - [Context Menus](#context-menus)
+    - [Dual Grid Mode](#dual-grid-mode)
+    - [Popup Mode](#popup-mode)
+    - [Change Tracking](#change-tracking)
+    - [Moving](#moving)
+    - [Editing State](#editing-state)
+    - [Listing Mode](#listing-mode)
+    - [Grid as Popup](#grid-as-popup)
+    - [Multi-Items Filter Delegate](#multi-items-filter-delegate)
+- [Cell-Level Renderers](#cell-level-renderers)
+- [Enhanced Scrollbars](#enhanced-scrollbars)
 - [📚 Documentation](#-documentation)
 - [🧑‍💻 Examples](#-examples)
+- [📖 API Reference](#-api-reference)
 - [🤝 Contributing](#-contributing)
 - [📝 License](#license)
 
@@ -238,58 +297,202 @@ TrinaGrid offers a comprehensive set of features for handling tabular data:
 
 ### 🏷️ Column Features
 
-- **Column Types**: Support for various data types (text, number, select, date, time, currency, percentage)
-- **Column Freezing**: Freeze columns to the left or right
-- **Column Resizing**: Adjust column width by dragging
-- **Column Moving**: Change column order by drag and drop
-- **Column Hiding**: Hide and show columns as needed
-- **Column Sorting**: Sort data by clicking on column headers
-- **Column Filtering**: Filter data with built-in filter widgets
-- **Column Groups**: Group related columns together
-- **Column Renderers**: Customize column appearance with custom widgets
-- **Column Footer**: Display aggregate values at the bottom of columns
+#### Column Types
+Support for various data types including:
+- **Text Type**: Character value input
+- **Number Type**: Numeric value input
+- **Boolean Type**: True/false selection with custom options
+- **Selection Type**: Dropdown selection from predefined options
+- **Date Type**: Date picker input
+- **Time Type**: Time picker input
+- **DateTime Type**: Combined date and time input
+- **Currency Type**: Currency value input with formatting
+- **Percentage Type**: Percentage value input with decimal precision
+
+#### Column Freezing
+Freeze columns to the left or right
+
+#### Column Resizing
+Adjust column width by dragging
+
+#### Column Moving
+Change column order by drag and drop
+
+#### Column Hiding
+Hide and show columns as needed
+
+#### Column Sorting
+Sort data by clicking on column headers
+
+#### Column Filtering
+Filter data with built-in filter widgets
+
+#### Column Groups
+Group related columns together
+
+#### Column Renderers
+Customize column appearance with custom widgets
+
+#### Column Title Renderer
+Customize column header appearance
+
+#### Column Footer
+Display aggregate values at the bottom of columns
+
+#### Column Viewport Visibility
+Control column visibility based on viewport
+
+#### Column Menu
+Customize the menu on the right side of columns
+
+#### Filter Icon Customization
+Customize or hide the filter icon that appears in column titles after filtering
 
 ### 🧑‍🤝‍🧑 Row Features
 
-- **Row Selection**: Select single or multiple rows
-- **Row Moving**: Reorder rows by drag and drop
-- **Row Coloring**: Apply custom colors to rows
-- **Row Checking**: Built-in checkbox selection for rows
-- **Row Groups**: Group related rows together
-- **Frozen Rows**: Keep specific rows visible while scrolling
+#### Row Selection
+Select single or multiple rows
+
+#### Row Moving
+Reorder rows by drag and drop
+
+#### Row Coloring
+Apply custom colors to rows
+
+#### Row Wrapper
+Customize row appearance and behavior
+
+#### Row Checking
+Built-in checkbox selection for rows
+
+#### Row Groups
+Group related rows together
+
+#### Frozen Rows
+Keep specific rows visible while scrolling
+
+#### Row Pagination
+Paginate rows with built-in pagination support
+
+#### Row Lazy Pagination
+Implement server-side pagination for large datasets
+
+#### Row Infinity Scroll
+Add new rows when scrolling reaches the bottom end
+
+#### Add/Remove Rows
+Dynamically add or delete rows from the grid
+
+#### Add Rows Asynchronously
+Add or set rows asynchronously for better performance
 
 ### 🔲 Cell Features
 
-- **Cell Selection**: Select individual cells or ranges
-- **Cell Editing**: Edit cell values with appropriate editors
-- **Cell Renderers**: Customize individual cell appearance
-- **Cell Validation**: Validate cell values during editing
+#### Cell Selection
+Select individual cells or ranges
+
+#### Cell Editing
+Edit cell values with appropriate editors
+
+#### Cell Renderers
+Customize individual cell appearance
+
+#### Cell Validation
+Validate cell values during editing
+
+#### Cell Value Change Handling
+Handle and track cell value changes
+
+#### Edit Cell Renderer
+Customize the appearance of cells in edit mode
 
 ### 📊 Data Management
 
-- **Pagination**: Built-in pagination support
-- **Infinite Scrolling**: Load data as the user scrolls
-- **Lazy Loading**: Load data on demand
-- **Copy & Paste**: Copy and paste data between cells
+#### Pagination Overview
+Built-in pagination support with comprehensive options
+
+#### Client-Side Pagination
+Handle pagination on the client side
+
+#### Lazy Pagination (Server-Side)
+Implement server-side pagination for large datasets
+
+#### Infinite Scrolling
+Load data as the user scrolls
+
+#### Lazy Loading
+Load data on demand
+
+#### Copy & Paste
+Copy and paste data between cells
+
+#### Export
+Export data to various formats (CSV, JSON, PDF)
+
+#### Custom Pagination UI
+Customize rows pagination UI with your own design
+
+#### Custom Footer
+Create custom pagination footer widgets at the bottom of the grid
 
 ### 🎨 UI Customization
 
-- **Themes**: Light and dark mode support
-- **Custom Styling**: Customize colors, borders, and text styles
-- **Enhanced Scrollbars**: Draggable scrollbars with hover effects, custom colors, and improved desktop experience
-- **RTL Support**: Right-to-left language support
-- **Responsive Design**: Works on all screen sizes
+#### Themes
+Light and dark mode support
+
+#### Custom Styling
+Customize colors, borders, and text styles
+
+#### Loading Options
+Customize loading states and indicators
+
+#### Enhanced Scrollbars
+Draggable scrollbars with hover effects, custom colors, and improved desktop experience
+
+#### RTL Support
+Right-to-left language support
+
+#### Dark Mode
+Change the entire theme of the grid to dark mode
+
+#### Value Formatter
+Format cell values for display with custom formatters
 
 ### ⚡ Other Features
 
-- **Keyboard Navigation**: Navigate and edit using keyboard shortcuts
-- **Context Menus**: Right-click menus for columns and cells
-- **Dual Grid Mode**: Display two linked grids side by side
-- **Popup Mode**: Use the grid as a popup selector
+#### Keyboard Navigation
+Navigate and edit using keyboard shortcuts
+
+#### Context Menus
+Right-click menus for columns and cells
+
+#### Dual Grid Mode
+Display two linked grids side by side
+
+#### Popup Mode
+Use the grid as a popup selector
+
+#### Change Tracking
+Track and manage data changes
+
+#### Moving
+Change the current cell position with arrow keys, enter key, and tab key
+
+#### Editing State
+Control the editing state of cells
+
+#### Listing Mode
+Navigate to detail pages with listing mode
+
+#### Grid as Popup
+Use the grid as a popup selector with TextField integration
+
+#### Multi-Items Filter Delegate
+Advanced filtering with multi-line or multi-item column filtering
 
 ---
 
-## 🆕 New Feature: Cell-Level Renderers
+## Cell-Level Renderers
 
 TrinaGrid now supports cell-level renderers, allowing you to customize the appearance of individual cells:
 
@@ -326,7 +529,7 @@ This powerful feature enables:
 
 ---
 
-## 🆕 New Feature: Enhanced Scrollbars
+## Enhanced Scrollbars
 
 TrinaGrid now includes enhanced scrollbar functionality, particularly useful for desktop applications:
 
@@ -339,13 +542,31 @@ TrinaGrid now includes enhanced scrollbar functionality, particularly useful for
 
 ## 📚 Documentation
 
-For detailed documentation on each feature, please visit our [Wiki](https://github.com/doonfrs/trina_grid/blob/main/doc/index.md) or check the `/doc` folder in the repository.
+TrinaGrid comes with comprehensive documentation covering all features and use cases:
+
+- **📖 [Getting Started Guide](https://github.com/doonfrs/trina_grid/blob/main/doc/getting-started/installation.md)** - Installation, basic usage, and configuration
+- **🚀 [Migration Guide](https://github.com/doonfrs/trina_grid/blob/main/doc/migration/pluto-to-trina.md)** - Migrate from PlutoGrid with our automated tool
+- **✨ [Feature Documentation](https://github.com/doonfrs/trina_grid/blob/main/doc/features/)** - Detailed guides for all features
+- **🧑‍💻 [Examples & Tutorials](https://github.com/doonfrs/trina_grid/blob/main/doc/examples/)** - Practical examples and use cases
+- **📚 [API Reference](https://github.com/doonfrs/trina_grid/blob/main/doc/api/)** - Complete API documentation
+
+Visit our [Documentation Index](https://github.com/doonfrs/trina_grid/blob/main/doc/index.md) for a complete overview.
 
 ---
 
 ## 🧑‍💻 Examples
 
 Check out the [example project](https://github.com/doonfrs/trina_grid/tree/master/example) for more usage examples.
+
+---
+
+## 📖 API Reference
+
+For detailed API documentation, refer to the following resources:
+
+- **Core Classes**: [TrinaGrid](https://github.com/doonfrs/trina_grid/blob/main/doc/api/trina-grid.md), [TrinaColumn](https://github.com/doonfrs/trina_grid/blob/main/doc/api/trina-column.md), [TrinaRow](https://github.com/doonfrs/trina_grid/blob/main/doc/api/trina-row.md), [TrinaCell](https://github.com/doonfrs/trina_grid/blob/main/doc/api/trina-cell.md)
+- **State Management**: [TrinaGridStateManager](https://github.com/doonfrs/trina_grid/blob/main/doc/api/trina-grid-state-manager.md)
+- **Advanced Features**: [Custom Renderers](https://github.com/doonfrs/trina_grid/blob/main/doc/examples/custom-renderers.md), [Filtering & Sorting](https://github.com/doonfrs/trina_grid/blob/main/doc/examples/filtering-sorting.md)
 
 ---
 

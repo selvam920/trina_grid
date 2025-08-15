@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.7.1] - 2025. 08. 16
+
+* Feature: Added new popup cells editing widget, including TrinaSelectMenu, TrinaTimePicker, and TrinaPopup. @DMouayad
+* Feature: Added dynamic row height support. @doonfrs
+* Fix: Ensure combined date and time validation in TrinaDateTimeCell. @DMouayad
+* Feature: Improved initial value handling for date/time pickers. @DMouayad
+* Feature: Enhanced pagination footer with direct page input functionality. @doonfrs
+* Feature: Added CustomFooterScreen to demo and home screens. @doonfrs
+* Feature: Improved time picker UI with scroll-to-change hint. @DMouayad
+* Feature: Added closePopupOnSelection option for date columns. @DMouayad
+* Feature: Added examples for select and time column constraints in editing popups. @DMouayad
+* Fix: Prevent sorting from being triggered when clicking context menu in custom title. @DMouayad
+* Feature: Added loading customization to TrinaLazyPagination. @DMouayad
+* Feature: Added custom pagination UI and demo support. @DMouayad
+* Fix: Corrected empty cell value handling for date/dateTime columns with custom format. @DMouayad
+* Fix: Corrected column title height when enableColumnDrag is false. @DMouayad
+* Feature: Added read-only color configuration to TrinaGrid. @doonfrs
+
 ## [1.6.12] - 2025. 07. 28
 
 * Revert Merge cell feature and add it to private branch. ( by @doonfrs )
