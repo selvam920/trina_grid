@@ -52,9 +52,9 @@ abstract class TrinaPopupCellStateWithCustomPopup<T extends PopupCell>
 
   @override
   void openPopup(BuildContext context) {
-    // make sure the current column is visible to prevent the
-    // popup from being displayed off screen.
-    widget.stateManager.scrollToColumn(widget.column);
+    if (widget.column.readOnly) {
+      return;
+    }
     popupKey.currentState?.show();
   }
 

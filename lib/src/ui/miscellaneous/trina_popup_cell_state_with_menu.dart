@@ -71,8 +71,12 @@ abstract class TrinaPopupCellStateWithMenu<T extends PopupCell> extends State<T>
           child: TrinaDefaultPopupCellEditingWidget(
             popupMenuIcon: popupMenuIcon,
             controller: textController,
-            onTap: () =>
-                controller.isOpen ? controller.close() : controller.open(),
+            onTap: () {
+              if (widget.column.readOnly) {
+                return;
+              }
+              controller.isOpen ? controller.close() : controller.open();
+            },
           ),
         );
       },
