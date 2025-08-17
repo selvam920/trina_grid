@@ -24,6 +24,7 @@ import '../widget/trina_text_color_animation.dart';
 import 'feature/add_and_remove_column_row_screen.dart';
 import 'feature/add_rows_asynchronously.dart';
 import 'feature/column_renderer_screen.dart';
+import 'feature/cell_color_screen.dart';
 import 'feature/cell_renderer_screen.dart';
 import 'feature/cell_selection_screen.dart';
 import 'feature/column_filtering_screen.dart';
@@ -390,6 +391,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         description: 'Dynamically change the background color of row.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, RowColorScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Cell color',
+        description:
+            'Dynamically change the background color of individual cells.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CellColorScreen.routeName);
         },
       ),
       TrinaListTile(

@@ -50,6 +50,8 @@ abstract class IRowState {
 
   TrinaRowColorCallback? get rowColorCallback;
 
+  TrinaCellColorCallback? get cellColorCallback;
+
   int? getRowIdxByOffset(double offset);
 
   TrinaRow? getRowByIdx(int rowIdx);

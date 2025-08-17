@@ -247,6 +247,22 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     return readOnly == true ? cellColorInReadOnlyState : cellColorInEditState;
   }
 
+  Color? _getCellCallbackColor() {
+    if (stateManager.cellColorCallback == null) {
+      return null;
+    }
+
+    return stateManager.cellColorCallback!(
+      TrinaCellColorContext(
+        cell: widget.cell,
+        column: widget.column,
+        row: widget.row,
+        rowIdx: widget.rowIdx,
+        stateManager: stateManager,
+      ),
+    );
+  }
+
   BoxDecoration _boxDecoration({
     required bool hasFocus,
     required bool readOnly,
@@ -299,14 +315,16 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
         ),
       );
     } else {
+      // Get color from cell callback if available, otherwise fall back to default colors
+      final cellCallbackColor = _getCellCallbackColor();
+      final defaultColor = isGroupedRowCell
+          ? cellColorGroupedRow
+          : readOnly
+              ? cellReadonlyColor
+              : cellDefaultColor;
+
       return BoxDecoration(
-        color: isDirty
-            ? dirtyColor
-            : isGroupedRowCell
-                ? cellColorGroupedRow
-                : readOnly
-                    ? cellReadonlyColor
-                    : cellDefaultColor,
+        color: isDirty ? dirtyColor : cellCallbackColor ?? defaultColor,
         border: enableCellVerticalBorder
             ? BorderDirectional(
                 end: BorderSide(
