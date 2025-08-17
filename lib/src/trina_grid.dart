@@ -51,6 +51,9 @@ typedef CreateFooterCallBack = Widget Function(
 typedef TrinaRowColorCallback = Color Function(
     TrinaRowColorContext rowColorContext);
 
+typedef TrinaCellColorCallback = Color? Function(
+    TrinaCellColorContext cellColorContext);
+
 typedef TrinaSelectDateCallBack = Future<DateTime?> Function(
     TrinaCell dateCell, TrinaColumn column);
 
@@ -102,6 +105,7 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.createFooter,
     this.noRowsWidget,
     this.rowColorCallback,
+    this.cellColorCallback,
     this.selectDateCallback,
     this.columnMenuDelegate,
     this.configuration = const TrinaGridConfiguration(),
@@ -356,6 +360,21 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// {@endtemplate}
   final TrinaRowColorCallback? rowColorCallback;
 
+  /// {@template trina_grid_property_cellColorCallback}
+  /// [cellColorCallback] can change the cell background color dynamically according to the state.
+  ///
+  /// Implement a callback that returns a [Color] by referring to the value passed as a callback argument.
+  /// An exception should be handled when a column is deleted.
+  /// ```dart
+  /// cellColorCallback = (TrinaCellColorContext cellColorContext) {
+  ///   return cellColorContext.cell.value == 'highlight'
+  ///       ? const Color(0xFFE2F6DF)
+  ///       : Colors.white;
+  /// }
+  /// ```
+  /// {@endtemplate}
+  final TrinaCellColorCallback? cellColorCallback;
+
   final TrinaSelectDateCallBack? selectDateCallback;
 
   /// {@template trina_grid_property_columnMenuDelegate}
@@ -603,6 +622,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       onActiveCellChanged: widget.onActiveCellChanged,
       onColumnsMoved: widget.onColumnsMoved,
       rowColorCallback: widget.rowColorCallback,
+      cellColorCallback: widget.cellColorCallback,
       selectDateCallback: widget.selectDateCallback,
       createHeader: widget.createHeader,
       createFooter: widget.createFooter,
@@ -1312,6 +1332,28 @@ class TrinaRowColorContext {
   final TrinaGridStateManager stateManager;
 
   const TrinaRowColorContext({
+    required this.row,
+    required this.rowIdx,
+    required this.stateManager,
+  });
+}
+
+/// Argument of [TrinaGrid.cellColorCallback] callback
+/// to dynamically change the background color of a cell.
+class TrinaCellColorContext {
+  final TrinaCell cell;
+
+  final TrinaColumn column;
+
+  final TrinaRow row;
+
+  final int rowIdx;
+
+  final TrinaGridStateManager stateManager;
+
+  const TrinaCellColorContext({
+    required this.cell,
+    required this.column,
     required this.row,
     required this.rowIdx,
     required this.stateManager,
