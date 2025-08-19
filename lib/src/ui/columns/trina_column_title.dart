@@ -440,7 +440,9 @@ class _DefaultColumnTitleContent extends StatelessWidget {
           if (column.enableRowChecked &&
               column.rowCheckBoxGroupDepth == 0 &&
               column.enableTitleChecked)
-            CheckboxAllSelectionWidget(stateManager: stateManager),
+            Flexible(
+              child: CheckboxAllSelectionWidget(stateManager: stateManager),
+            ),
           Expanded(
             child: _ColumnTextWidget(
               column: column,
