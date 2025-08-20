@@ -5,41 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// 2021-11-19
-/// Temporary code due to KeyEventResult.skipRemainingHandlers operation error
-/// After issue resolution: Delete
-///
-/// Occurs only on desktop
-/// When returning skipRemainingHandlers, the FocusScope callback in trina_grid.dart
-/// is not called and key inputs should go to TextField, but
-/// arrow keys, backspace, etc. are not input (characters are input normally)
-/// https://github.com/flutter/flutter/issues/93873
-class TrinaGridKeyEventResult {
-  bool _skip = false;
-
-  bool get isSkip => _skip;
-
-  KeyEventResult skip(KeyEventResult result) {
-    _skip = true;
-
-    return result;
-  }
-
-  KeyEventResult consume(KeyEventResult result) {
-    if (_skip) {
-      _skip = false;
-
-      return KeyEventResult.ignored;
-    }
-
-    return result;
-  }
-}
-
 class TrinaGridKeyManager {
   TrinaGridStateManager stateManager;
-
-  TrinaGridKeyEventResult eventResult = TrinaGridKeyEventResult();
 
   TrinaGridKeyManager({
     required this.stateManager,
@@ -85,14 +52,8 @@ class TrinaGridKeyManager {
       return;
     }
 
-    _handleDefaultActions(keyEvent);
-  }
-
-  void _handleDefaultActions(TrinaKeyManagerEvent keyEvent) {
-    // If a modifier key is pressed, only allow shift.
     final hasAllowedModifier =
         !keyEvent.isModifierPressed || keyEvent.isShiftPressed;
-
     if (keyEvent.isCharacter && hasAllowedModifier) {
       _handleCharacter(keyEvent);
     }

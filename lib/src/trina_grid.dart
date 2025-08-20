@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show Intl;
 import 'package:trina_grid/trina_grid.dart';
@@ -712,13 +713,33 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       return KeyEventResult.ignored;
     }
 
-    if (_keyManager.eventResult.isSkip == false) {
-      _keyManager.subject.add(
-        TrinaKeyManagerEvent(focusNode: focusNode, event: event),
-      );
+    final trinaEvent = TrinaKeyManagerEvent(focusNode: focusNode, event: event);
+
+    if (_isRegisteredShortcut(event)) {
+      _keyManager.subject.add(trinaEvent);
+      return KeyEventResult.handled;
     }
 
-    return _keyManager.eventResult.consume(KeyEventResult.handled);
+    // check if it's a character for editing
+    if (_isCharInput(trinaEvent)) {
+      _keyManager.subject.add(trinaEvent);
+      return KeyEventResult.handled;
+    }
+
+    // 4. If it's not a shortcut and not a character for editing, ignore it.
+    return KeyEventResult.ignored;
+  }
+
+  bool _isRegisteredShortcut(KeyEvent keyEvent) {
+    return stateManager.configuration.shortcut.actions.entries.any(
+      (element) => element.key.accepts(keyEvent, HardwareKeyboard.instance),
+    );
+  }
+
+  bool _isCharInput(TrinaKeyManagerEvent trinaEvent) {
+    final hasAllowedModifier =
+        !trinaEvent.isModifierPressed || trinaEvent.isShiftPressed;
+    return trinaEvent.isCharacter && hasAllowedModifier;
   }
 
   @override
