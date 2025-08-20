@@ -30,13 +30,9 @@ class TrinaGridKeyManager {
   void init() {
     final normalStream = _subject.stream.where((event) => !event.needsThrottle);
 
-    final movingStream =
-        _subject.stream.where((event) => event.needsThrottle).transform(
-              ThrottleStreamTransformer(
-                // ignore: void_checks
-                (e) => TimerStream(e, const Duration(milliseconds: 1)),
-              ),
-            );
+    final movingStream = _subject.stream
+        .where((event) => event.needsThrottle)
+        .throttleTime(const Duration(milliseconds: 1));
 
     _subscription = MergeStream([normalStream, movingStream]).listen(_handler);
   }
