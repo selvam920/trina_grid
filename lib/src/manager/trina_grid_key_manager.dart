@@ -15,17 +15,24 @@ import 'package:rxdart/rxdart.dart';
 /// arrow keys, backspace, etc. are not input (characters are input normally)
 /// https://github.com/flutter/flutter/issues/93873
 class TrinaGridKeyEventResult {
-  bool _handled = false;
+  bool _skip = false;
 
-  /// Returns `true` if the event is handled by the grid.
-  bool get isHandled => _handled;
+  bool get isSkip => _skip;
 
-  /// Sets the handled state of the event.
-  ///
-  /// If `true`, the event is considered consumed by the grid.
-  /// If `false`, the event is ignored, allowing it to propagate.
-  set handled(bool handled) {
-    _handled = handled;
+  KeyEventResult skip(KeyEventResult result) {
+    _skip = true;
+
+    return result;
+  }
+
+  KeyEventResult consume(KeyEventResult result) {
+    if (_skip) {
+      _skip = false;
+
+      return KeyEventResult.ignored;
+    }
+
+    return result;
   }
 }
 
@@ -34,7 +41,9 @@ class TrinaGridKeyManager {
 
   TrinaGridKeyEventResult eventResult = TrinaGridKeyEventResult();
 
-  TrinaGridKeyManager({required this.stateManager});
+  TrinaGridKeyManager({
+    required this.stateManager,
+  });
 
   final PublishSubject<TrinaKeyManagerEvent> _subject =
       PublishSubject<TrinaKeyManagerEvent>();
@@ -54,35 +63,28 @@ class TrinaGridKeyManager {
   void init() {
     final normalStream = _subject.stream.where((event) => !event.needsThrottle);
 
-    final movingStream = _subject.stream
-        .where((event) => event.needsThrottle)
-        .transform(
-          ThrottleStreamTransformer(
-            // ignore: void_checks
-            (e) => TimerStream(e, const Duration(milliseconds: 1)),
-          ),
-        );
+    final movingStream =
+        _subject.stream.where((event) => event.needsThrottle).transform(
+              ThrottleStreamTransformer(
+                // ignore: void_checks
+                (e) => TimerStream(e, const Duration(milliseconds: 1)),
+              ),
+            );
 
     _subscription = MergeStream([normalStream, movingStream]).listen(_handler);
   }
 
   void _handler(TrinaKeyManagerEvent keyEvent) {
-    if (keyEvent.isKeyUpEvent) {
-      eventResult.handled = false;
-      return;
-    }
+    if (keyEvent.isKeyUpEvent) return;
 
-    // If a registered shortcut handles the event, mark it as handled and stop.
     if (stateManager.configuration.shortcut.handle(
       keyEvent: keyEvent,
       stateManager: stateManager,
       state: HardwareKeyboard.instance,
     )) {
-      eventResult.handled = true;
       return;
     }
 
-    // If no shortcut was triggered, process default actions (e.g., character input).
     _handleDefaultActions(keyEvent);
   }
 

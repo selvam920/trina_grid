@@ -157,8 +157,9 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
         stateManager.configuration.enterKeyAction;
 
     if (enterKeyAction.isNone) {
-      stateManager.keyManager!.eventResult.handled = false;
-      return KeyEventResult.ignored;
+      return stateManager.keyManager!.eventResult.skip(
+        KeyEventResult.ignored,
+      );
     }
 
     if (keyManager.isKeyUpEvent) {
@@ -166,8 +167,9 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
     }
     // If it's Enter key and the action is none, handle it here
     if (keyManager.isEnter && enterKeyAction.isNone) {
-      stateManager.keyManager!.eventResult.handled = false;
-      return KeyEventResult.ignored;
+      return stateManager.keyManager!.eventResult.skip(
+        KeyEventResult.ignored,
+      );
     }
 
     final handleMoveDown = (keyManager.isDown ||
@@ -185,8 +187,9 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
         return KeyEventResult.handled;
       }
 
-      stateManager.keyManager!.eventResult.handled = false;
-      return KeyEventResult.ignored;
+      return stateManager.keyManager!.eventResult.skip(
+        KeyEventResult.ignored,
+      );
     }
 
     if (handleMoveDown) {
