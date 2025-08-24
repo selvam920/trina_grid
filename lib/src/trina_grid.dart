@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show Intl;
 import 'package:trina_grid/trina_grid.dart';
@@ -702,26 +703,43 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
   }
 
   KeyEventResult _handleGridFocusOnKey(FocusNode focusNode, KeyEvent event) {
-    // Check if the focus is within a header widget - if so, don't capture the keyboard event
-    if (_header != null) {
-      // Get the current primary focus
-      final FocusNode? primaryFocus = FocusManager.instance.primaryFocus;
+    // Get the current primary focus
+    final FocusNode? primaryFocus = FocusManager.instance.primaryFocus;
 
-      // If the primary focus is not the grid's focus node, don't handle the event
-      // This allows TextFields and other input widgets in the header to receive keyboard events
-      if (primaryFocus != null && primaryFocus != _stateManager.gridFocusNode) {
-        // Skip handling this event if it's not focused on the grid
-        return KeyEventResult.ignored;
-      }
+    // If the primary focus is not the grid's focus node, don't handle the event
+    // This allows TextFields and other input widgets (for example, in the header or footer)
+    // to receive keyboard events
+    if (primaryFocus != null && primaryFocus != _stateManager.gridFocusNode) {
+      return KeyEventResult.ignored;
     }
 
-    _keyManager.subject.add(
-      TrinaKeyManagerEvent(focusNode: focusNode, event: event),
-    );
+    final trinaEvent = TrinaKeyManagerEvent(focusNode: focusNode, event: event);
 
-    return _keyManager.eventResult.isHandled
-        ? KeyEventResult.handled
-        : KeyEventResult.ignored;
+    if (_isRegisteredShortcut(event)) {
+      _keyManager.subject.add(trinaEvent);
+      return KeyEventResult.handled;
+    }
+
+    // check if it's a character for editing
+    if (_isCharInput(trinaEvent)) {
+      _keyManager.subject.add(trinaEvent);
+      return KeyEventResult.handled;
+    }
+
+    // 4. If it's not a shortcut and not a character for editing, ignore it.
+    return KeyEventResult.ignored;
+  }
+
+  bool _isRegisteredShortcut(KeyEvent keyEvent) {
+    return stateManager.configuration.shortcut.actions.entries.any(
+      (element) => element.key.accepts(keyEvent, HardwareKeyboard.instance),
+    );
+  }
+
+  bool _isCharInput(TrinaKeyManagerEvent trinaEvent) {
+    final hasAllowedModifier =
+        !trinaEvent.isModifierPressed || trinaEvent.isShiftPressed;
+    return trinaEvent.isCharacter && hasAllowedModifier;
   }
 
   @override

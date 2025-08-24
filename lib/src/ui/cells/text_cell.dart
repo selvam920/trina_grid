@@ -45,7 +45,8 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   @override
   List<TextInputFormatter>? get inputFormatters => [];
 
-  String get formattedValue => widget.column.formattedValueForDisplayInEditing(widget.cell.value);
+  String get formattedValue =>
+      widget.column.formattedValueForDisplayInEditing(widget.cell.value);
 
   @override
   void initState() {
@@ -82,7 +83,8 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       _changeValue();
     }
 
-    if (!widget.stateManager.isEditing || widget.stateManager.currentColumn?.enableEditingMode != true) {
+    if (!widget.stateManager.isEditing ||
+        widget.stateManager.currentColumn?.enableEditingMode != true) {
       widget.stateManager.setTextEditingController(null);
     }
 
@@ -192,7 +194,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     // Movement and enter key, non-editable cell left and right movement, etc. key input is propagated to text field.
     if (skip) {
-      widget.stateManager.keyManager!.eventResult.handled = false;
       return KeyEventResult.ignored;
     }
 
@@ -206,7 +207,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     // Enter key is propagated to grid focus handler.
     if (keyManager.isEnter) {
       _handleOnComplete();
-      return KeyEventResult.ignored;
     }
 
     // ESC is propagated to grid focus handler.

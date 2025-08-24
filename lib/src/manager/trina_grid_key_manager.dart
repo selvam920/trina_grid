@@ -5,36 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// 2021-11-19
-/// Temporary code due to KeyEventResult.skipRemainingHandlers operation error
-/// After issue resolution: Delete
-///
-/// Occurs only on desktop
-/// When returning skipRemainingHandlers, the FocusScope callback in trina_grid.dart
-/// is not called and key inputs should go to TextField, but
-/// arrow keys, backspace, etc. are not input (characters are input normally)
-/// https://github.com/flutter/flutter/issues/93873
-class TrinaGridKeyEventResult {
-  bool _handled = false;
-
-  /// Returns `true` if the event is handled by the grid.
-  bool get isHandled => _handled;
-
-  /// Sets the handled state of the event.
-  ///
-  /// If `true`, the event is considered consumed by the grid.
-  /// If `false`, the event is ignored, allowing it to propagate.
-  set handled(bool handled) {
-    _handled = handled;
-  }
-}
-
 class TrinaGridKeyManager {
   TrinaGridStateManager stateManager;
 
-  TrinaGridKeyEventResult eventResult = TrinaGridKeyEventResult();
-
-  TrinaGridKeyManager({required this.stateManager});
+  TrinaGridKeyManager({
+    required this.stateManager,
+  });
 
   final PublishSubject<TrinaKeyManagerEvent> _subject =
       PublishSubject<TrinaKeyManagerEvent>();
@@ -56,41 +32,24 @@ class TrinaGridKeyManager {
 
     final movingStream = _subject.stream
         .where((event) => event.needsThrottle)
-        .transform(
-          ThrottleStreamTransformer(
-            // ignore: void_checks
-            (e) => TimerStream(e, const Duration(milliseconds: 1)),
-          ),
-        );
+        .throttleTime(const Duration(milliseconds: 1));
 
     _subscription = MergeStream([normalStream, movingStream]).listen(_handler);
   }
 
   void _handler(TrinaKeyManagerEvent keyEvent) {
-    if (keyEvent.isKeyUpEvent) {
-      eventResult.handled = false;
-      return;
-    }
+    if (keyEvent.isKeyUpEvent) return;
 
-    // If a registered shortcut handles the event, mark it as handled and stop.
     if (stateManager.configuration.shortcut.handle(
       keyEvent: keyEvent,
       stateManager: stateManager,
       state: HardwareKeyboard.instance,
     )) {
-      eventResult.handled = true;
       return;
     }
 
-    // If no shortcut was triggered, process default actions (e.g., character input).
-    _handleDefaultActions(keyEvent);
-  }
-
-  void _handleDefaultActions(TrinaKeyManagerEvent keyEvent) {
-    // If a modifier key is pressed, only allow shift.
     final hasAllowedModifier =
         !keyEvent.isModifierPressed || keyEvent.isShiftPressed;
-
     if (keyEvent.isCharacter && hasAllowedModifier) {
       _handleCharacter(keyEvent);
     }
