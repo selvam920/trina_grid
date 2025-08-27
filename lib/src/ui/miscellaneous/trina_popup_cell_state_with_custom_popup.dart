@@ -25,6 +25,7 @@ abstract class TrinaPopupCellStateWithCustomPopup<T extends PopupCell>
       popupContent: popupContent,
       textFocus: textFocus,
       popupMenuIcon: popupMenuIcon,
+      cellTextStyle: widget.stateManager.configuration.style.cellTextStyle,
       onOpenPopup: () => openPopup(context),
       onBeforePopup: () => popupVisibilityNotifier.value = true,
       onAfterPopup: (selectedValue) {
@@ -73,6 +74,7 @@ class _CustomPopup extends StatelessWidget {
     required this.popupContent,
     required this.textFocus,
     required this.popupMenuIcon,
+    required this.cellTextStyle,
     required this.onOpenPopup,
     required this.onBeforePopup,
     required this.onAfterPopup,
@@ -85,6 +87,7 @@ class _CustomPopup extends StatelessWidget {
   final Widget popupContent;
   final FocusNode textFocus;
   final IconData? popupMenuIcon;
+  final TextStyle cellTextStyle;
   final void Function() onOpenPopup;
   final void Function() onBeforePopup;
   final void Function(dynamic value) onAfterPopup;
@@ -126,6 +129,8 @@ class _CustomPopup extends StatelessWidget {
           mouseCursor: SystemMouseCursors.click,
           readOnly: true,
           initialValue: initialValue,
+          style: cellTextStyle,
+          textAlignVertical: TextAlignVertical.center,
           decoration: InputDecoration(
             border: InputBorder.none,
             suffixIcon: popupMenuIcon != null ? Icon(popupMenuIcon) : null,

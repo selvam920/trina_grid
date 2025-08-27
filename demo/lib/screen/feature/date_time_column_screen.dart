@@ -170,6 +170,13 @@ class _DateTimeColumnScreenState extends State<DateTimeColumnScreen> {
         ),
       ],
       body: TrinaGrid(
+        configuration: TrinaGridConfiguration(
+          style: TrinaGridStyleConfig(
+            cellTextStyle: const TextStyle(
+              fontSize: 12,
+            ),
+          ),
+        ),
         columns: columns,
         rows: rows,
         onLoaded: (TrinaGridOnLoadedEvent event) {
