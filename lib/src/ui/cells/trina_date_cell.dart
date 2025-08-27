@@ -52,13 +52,15 @@ class TrinaDateCellState
     }
     if (_column.closePopupOnSelection) {
       callHandleSelected(value);
+      // For closePopupOnSelection, we need to close the popup programmatically
+      // since there are no buttons to close it
+      closePopup(context);
     }
   }
 
   void callHandleSelected(DateTime? value) {
     if (value == null) return;
     handleSelected(_column.dateFormat.format(value));
-    closePopup(context);
   }
 
   @override
@@ -85,14 +87,21 @@ class TrinaDateCellState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    TextButton(
-                      onPressed: () => closePopup(context),
-                      child: const Text('Cancel'),
+                    Builder(
+                      builder: (popupContext) => TextButton(
+                        onPressed: () => Navigator.of(popupContext).pop(),
+                        child: const Text('Cancel'),
+                      ),
                     ),
                     const SizedBox(width: 10),
-                    TextButton(
-                      onPressed: () => callHandleSelected(selectedDate),
-                      child: const Text('OK'),
+                    Builder(
+                      builder: (popupContext) => TextButton(
+                        onPressed: () {
+                          callHandleSelected(selectedDate);
+                          Navigator.of(popupContext).pop();
+                        },
+                        child: const Text('OK'),
+                      ),
                     ),
                   ],
                 ),
