@@ -349,13 +349,15 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
     required TrinaKeyManagerEvent keyEvent,
     required TrinaGridStateManager stateManager,
   }) {
-    // In SelectRow mode, the current Row is passed to the onSelected callback.
-    if (stateManager.mode.isSelectMode && stateManager.onSelected != null) {
+    // In SelectRow mode or Normal mode, the current Row is passed to the onSelected callback.
+    if ((stateManager.mode.isSelectMode || stateManager.mode.isNormal) && stateManager.onSelected != null) {
       stateManager.onSelected!(TrinaGridOnSelectedEvent(
         row: stateManager.currentRow,
         rowIdx: stateManager.currentRowIdx,
         cell: stateManager.currentCell,
-        selectedRows: stateManager.mode.isMultiSelectMode
+        // Include currentSelectingRows when we have row selection in any mode
+        selectedRows: (stateManager.mode.isMultiSelectMode || 
+                      (stateManager.mode.isNormal && stateManager.selectingMode.isRow))
             ? stateManager.currentSelectingRows
             : null,
       ));
