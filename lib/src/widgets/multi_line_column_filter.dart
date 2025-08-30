@@ -77,6 +77,7 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
                         },
                         icon: Icon(
                           Icons.clear,
+                          size: 16,
                           color:
                               widget.stateManager.configuration.style.iconColor,
                         ),
@@ -119,6 +120,7 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
                       },
                       icon: Icon(
                         Icons.edit,
+                        size: 16,
                         color:
                             widget.stateManager.configuration.style.iconColor,
                       ),
