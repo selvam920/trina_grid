@@ -1,12 +1,13 @@
 {
+  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
       "Bash(flutter clean:*)",
       "Bash(flutter pub:*)",
-      "Bash(flutter run:*)"
+      "Bash(flutter run:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
-  },
-  "includeCoAuthoredBy": false
+  }
 }
