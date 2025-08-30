@@ -231,24 +231,28 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       cellFocus.requestFocus();
     }
 
-    Widget w = TextField(
-      focusNode: cellFocus,
-      controller: _textController,
-      readOnly: widget.column.checkReadOnly(widget.row, widget.cell),
-      onChanged: _handleOnChanged,
-      onEditingComplete: _handleOnComplete,
-      onSubmitted: (_) => _handleOnComplete(),
-      onTap: _handleOnTap,
-      style: widget.stateManager.configuration.style.cellTextStyle,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(borderSide: BorderSide.none),
-        contentPadding: EdgeInsets.zero,
+    Widget w = Container(
+      alignment: Alignment.center,
+      child: TextField(
+        focusNode: cellFocus,
+        controller: _textController,
+        readOnly: widget.column.checkReadOnly(widget.row, widget.cell),
+        onChanged: _handleOnChanged,
+        onEditingComplete: _handleOnComplete,
+        onSubmitted: (_) => _handleOnComplete(),
+        onTap: _handleOnTap,
+        style: widget.stateManager.configuration.style.cellTextStyle,
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.zero,
+          isDense: true,
+        ),
+        maxLines: 1,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
+        textAlignVertical: TextAlignVertical.center,
+        textAlign: widget.column.textAlign.value,
       ),
-      maxLines: 1,
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatters,
-      textAlignVertical: TextAlignVertical.center,
-      textAlign: widget.column.textAlign.value,
     );
 
     // Use column-level editCellRenderer if available, otherwise fall back to grid-level
