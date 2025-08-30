@@ -250,7 +250,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
         maxLines: 1,
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,
-        textAlignVertical: TextAlignVertical.center,
         textAlign: widget.column.textAlign.value,
       ),
     );
