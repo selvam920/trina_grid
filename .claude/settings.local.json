@@ -5,7 +5,9 @@
       "Bash(flutter clean:*)",
       "Bash(flutter pub:*)",
       "Bash(flutter run:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
