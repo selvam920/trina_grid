@@ -125,6 +125,8 @@ class _BooleanTypeColumnScreenState extends State<BooleanTypeColumnScreen> {
               },
               configuration: TrinaGridConfiguration(
                 style: TrinaGridStyleConfig(
+                  rowHeight: 100,
+                  cellTextStyle: TextStyle(fontSize: 10),
                   cellDirtyColor: Colors.amber[100]!,
                 ),
               ),
