@@ -2358,6 +2358,7 @@ class MockTrinaGridStateManager extends _i1.Mock
     bool? callOnChangedEvent = true,
     bool? force = false,
     bool? notify = true,
+    bool? validate = true,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -2370,6 +2371,7 @@ class MockTrinaGridStateManager extends _i1.Mock
             #callOnChangedEvent: callOnChangedEvent,
             #force: force,
             #notify: notify,
+            #validate: validate,
           },
         ),
         returnValueForMissingStub: null,
