@@ -40,6 +40,27 @@ mixin PopupCellState<T extends PopupCell> on State<T>
   ) {
     final trinaKeyEvent = TrinaKeyManagerEvent(focusNode: node, event: event);
 
+    // Trigger onKeyPressed callback if it exists
+    if (widget.cell.onKeyPressed != null && !trinaKeyEvent.isKeyUpEvent) {
+      final keyEvent = TrinaGridOnKeyEvent(
+        column: widget.column,
+        row: widget.row,
+        rowIdx: widget.stateManager.refRows.indexOf(widget.row),
+        cell: widget.cell,
+        event: event,
+        isEnter: trinaKeyEvent.isEnter,
+        isEscape: trinaKeyEvent.isEsc,
+        isTab: trinaKeyEvent.isTab,
+        isShiftPressed: trinaKeyEvent.isShiftPressed,
+        isCtrlPressed: trinaKeyEvent.isCtrlPressed,
+        isAltPressed: trinaKeyEvent.isAltPressed,
+        logicalKey: event.logicalKey,
+        currentValue: textController.text,
+      );
+      
+      widget.cell.onKeyPressed!(keyEvent);
+    }
+
     // If the column is readOnly, do not open the popup.
     if (widget.column.readOnly) {
       node.unfocus();

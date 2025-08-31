@@ -185,6 +185,27 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return KeyEventResult.handled;
     }
 
+    // Trigger onKeyPressed callback if it exists
+    if (widget.cell.onKeyPressed != null) {
+      final keyEvent = TrinaGridOnKeyEvent(
+        column: widget.column,
+        row: widget.row,
+        rowIdx: widget.stateManager.refRows.indexOf(widget.row),
+        cell: widget.cell,
+        event: event,
+        isEnter: keyManager.isEnter,
+        isEscape: keyManager.isEsc,
+        isTab: keyManager.isTab,
+        isShiftPressed: keyManager.isShiftPressed,
+        isCtrlPressed: keyManager.isCtrlPressed,
+        isAltPressed: keyManager.isAltPressed,
+        logicalKey: event.logicalKey,
+        currentValue: _textController.text,
+      );
+      
+      widget.cell.onKeyPressed!(keyEvent);
+    }
+
     final skip = !(keyManager.isVertical ||
         _moveHorizontal(keyManager) ||
         keyManager.isEsc ||

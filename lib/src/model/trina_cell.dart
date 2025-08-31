@@ -25,13 +25,14 @@ class TrinaCellRendererContext {
 }
 
 class TrinaCell {
-  /// Creates a cell with an optional initial value, key, renderer, and onChanged callback.
+  /// Creates a cell with an optional initial value, key, renderer, onChanged callback, and onKeyPressed callback.
   ///
   /// The [value] parameter sets the initial value of the cell.
   /// The [key] parameter provides a unique identifier for the cell.
   /// The [renderer] parameter allows for custom rendering of the cell.
   /// The [onChanged] parameter allows for cell-level control over value changes.
-  TrinaCell({dynamic value, Key? key, this.renderer, this.onChanged})
+  /// The [onKeyPressed] parameter allows for capturing keyboard events in the cell.
+  TrinaCell({dynamic value, Key? key, this.renderer, this.onChanged, this.onKeyPressed})
       : _key = key ?? UniqueKey(),
         _value = value,
         _originalValue = value,
@@ -58,6 +59,10 @@ class TrinaCell {
   /// Callback that is triggered when this specific cell's value is changed.
   /// This allows for cell-level control over value changes.
   final TrinaOnChangedEventCallback? onChanged;
+
+  /// Callback that is triggered when a key is pressed in this specific cell.
+  /// This allows for capturing keyboard events like Enter, Tab, Escape, etc.
+  final TrinaOnKeyPressedEventCallback? onKeyPressed;
 
   /// Returns true if this cell has a custom renderer.
   bool get hasRenderer => renderer != null;

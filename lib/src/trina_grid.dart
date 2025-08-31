@@ -16,6 +16,9 @@ typedef TrinaOnLoadedEventCallback = void Function(
 typedef TrinaOnChangedEventCallback = void Function(
     TrinaGridOnChangedEvent event);
 
+typedef TrinaOnKeyPressedEventCallback = void Function(
+    TrinaGridOnKeyEvent event);
+
 typedef TrinaOnSelectedEventCallback = void Function(
     TrinaGridOnSelectedEvent event);
 
