@@ -25,6 +25,7 @@ class TrinaGridOnChangedEvent {
   final TrinaColumn column;
   final int rowIdx;
   final TrinaRow row;
+  final TrinaCell cell;
   final dynamic value;
   final dynamic oldValue;
 
@@ -33,6 +34,7 @@ class TrinaGridOnChangedEvent {
     required this.column,
     required this.rowIdx,
     required this.row,
+    required this.cell,
     this.value,
     this.oldValue,
   });

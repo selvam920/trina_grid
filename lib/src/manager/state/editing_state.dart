@@ -322,6 +322,7 @@ mixin EditingState implements ITrinaGridState {
       column: currentColumn,
       rowIdx: rowIdx,
       row: currentRow,
+      cell: cell,
       value: value,
       oldValue: oldValue,
     );
@@ -446,6 +447,7 @@ mixin EditingState implements ITrinaGridState {
           column: currentColumn,
           rowIdx: rowIdx,
           row: refRows[rowIdx],
+          cell: currentCell,
           value: newValue,
           oldValue: oldValue,
         );
