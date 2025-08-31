@@ -10,7 +10,8 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(gh pr create:*)",
-      "Bash(flutter analyze:*)"
+      "Bash(flutter analyze:*)",
+      "Bash(flutter test:*)"
     ],
     "deny": [],
     "ask": []
