@@ -148,6 +148,7 @@ Both callback types receive a `TrinaGridOnChangedEvent` object that contains inf
 | `column` | `TrinaColumn` | The column object |
 | `rowIdx` | `int` | The index of the row in the current view |
 | `row` | `TrinaRow` | The row object |
+| `cell` | `TrinaCell` | The cell that was changed |
 | `value` | `dynamic` | The new value |
 | `oldValue` | `dynamic` | The previous value |
 
@@ -159,6 +160,15 @@ onChanged: (event) {
   print('Field: ${event.column.field}');
   print('Row index: ${event.rowIdx}');
   print('Changed from: ${event.oldValue} to ${event.value}');
+  
+  // Direct access to the changed cell
+  print('Cell key: ${event.cell.key}');
+  print('Original value: ${event.cell.originalValue}');
+  print('Is dirty: ${event.cell.isDirty}');
+  
+  // Access formatted value
+  String formattedValue = event.column.formattedValueForDisplay(event.value);
+  print('Formatted value: $formattedValue');
   
   // Access other cells in the same row
   final otherCellValue = event.row.cells['otherField']?.value;
