@@ -271,6 +271,34 @@ TrinaCell(
     context.cell.value.toString(),
     style: const TextStyle(fontWeight: FontWeight.bold),
   ),
+  // Custom padding for this specific cell
+  padding: const EdgeInsets.all(16.0),
+)
+```
+
+### Cell-Level Padding
+
+Cells can override the default padding with the `padding` property. The padding system follows a priority hierarchy:
+
+1. **Cell padding** (highest priority) - Custom padding set on individual cells
+2. **Column padding** - Padding defined at the column level with `cellPadding`
+3. **Configuration padding** (lowest priority) - Global default padding from grid configuration
+
+```dart
+// Examples of cell-level padding
+TrinaCell(
+  value: 'Emphasized Cell',
+  padding: const EdgeInsets.all(20.0), // More padding for emphasis
+)
+
+TrinaCell(
+  value: 'Compact Cell',
+  padding: const EdgeInsets.symmetric(vertical: 4.0), // Less vertical space
+)
+
+TrinaCell(
+  value: 'Asymmetric Cell',
+  padding: const EdgeInsets.only(left: 16.0, right: 8.0), // Different sides
 )
 ```
 
