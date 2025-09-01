@@ -12,7 +12,8 @@
       "Bash(gh pr create:*)",
       "Bash(flutter analyze:*)",
       "Bash(flutter test:*)",
-      "Bash(gh pr view:*)"
+      "Bash(gh pr view:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []
