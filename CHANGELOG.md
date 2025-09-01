@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.2] - 2025. 09. 01
+
+* Fix: Restored mouse scrolling/dragging functionality that was broken since v1.6.11. @doonfrs
+
 ## [2.0.1] - 2025. 09. 01
 
 * Feature: Enhanced filter color customization system. @doonfrs
@@ -23,7 +27,6 @@
 * Fix: Grid no longer absorbs unregistered shortcuts. @DMouayad
 * Fix: Key events now properly ignored when grid doesn't have primary focus. @DMouayad
 * Fix: Editing popup no longer shown for readonly cells. @DMouayad
-* Fix: Restored mouse scrolling/dragging functionality that was broken since v1.6.11. @doonfrs
 
 ## [2.0.0] - 2025. 08. 16
 
