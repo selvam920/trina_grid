@@ -69,9 +69,10 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
         borderRadius: BorderRadius.zero,
       );
 
-  Color get _textFieldColor => _enabled
-      ? stateManager.configuration.style.cellColorInEditState
-      : stateManager.configuration.style.cellColorInReadOnlyState;
+  Color get _textFieldColor => stateManager.configuration.style.filterHeaderColor ??
+      (_enabled
+          ? stateManager.configuration.style.cellColorInEditState
+          : stateManager.configuration.style.cellColorInReadOnlyState);
 
   EdgeInsets get _padding =>
       widget.column.filterPadding ??
@@ -337,6 +338,7 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
       height: stateManager.columnFilterHeight,
       child: DecoratedBox(
         decoration: BoxDecoration(
+          color: style.filterHeaderColor,
           border: BorderDirectional(
             top: BorderSide(color: style.borderColor),
             end: style.enableColumnBorderVertical

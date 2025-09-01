@@ -324,6 +324,7 @@ class TrinaGridStyleConfig {
     this.cellHorizontalBorderWidth =
         TrinaGridSettings.cellHorizontalBorderWidth,
     this.filterHeaderColor,
+    this.filterPopupHeaderColor,
     this.filterHeaderIconColor,
   })  : columnCheckedColor = (columnCheckedColor ?? activatedColor),
         cellCheckedColor = (cellCheckedColor ?? activatedColor),
@@ -406,6 +407,7 @@ class TrinaGridStyleConfig {
     this.cellHorizontalBorderWidth =
         TrinaGridSettings.cellHorizontalBorderWidth,
     this.filterHeaderColor,
+    this.filterPopupHeaderColor,
     this.filterHeaderIconColor,
   })  : columnCheckedColor = (columnCheckedColor ?? activatedColor),
         cellCheckedColor = (cellCheckedColor ?? activatedColor),
@@ -621,6 +623,9 @@ class TrinaGridStyleConfig {
   final double gridBorderWidth;
 
   /// Set color of filter popup header
+  final Color? filterPopupHeaderColor;
+
+  /// Set color of main grid filter header
   final Color? filterHeaderColor;
 
   /// Set color of filter popup header icon
@@ -690,6 +695,7 @@ class TrinaGridStyleConfig {
     double? gridBorderWidth,
     double? cellVerticalBorderWidth,
     double? cellHorizontalBorderWidth,
+    Color? filterPopupHeaderColor,
     Color? filterHeaderColor,
     Color? filterHeaderIconColor,
   }) {
@@ -774,6 +780,8 @@ class TrinaGridStyleConfig {
         gridPadding: gridPadding ?? this.gridPadding,
         gridBorderWidth: gridBorderWidth ?? this.gridBorderWidth,
         filterHeaderColor: filterHeaderColor ?? this.filterHeaderColor,
+        filterPopupHeaderColor:
+            filterPopupHeaderColor ?? this.filterPopupHeaderColor,
         filterHeaderIconColor:
             filterHeaderIconColor ?? this.filterHeaderIconColor,
       );
@@ -857,6 +865,8 @@ class TrinaGridStyleConfig {
         gridPadding: gridPadding ?? this.gridPadding,
         gridBorderWidth: gridBorderWidth ?? this.gridBorderWidth,
         filterHeaderColor: filterHeaderColor ?? this.filterHeaderColor,
+        filterPopupHeaderColor:
+            filterPopupHeaderColor ?? this.filterPopupHeaderColor,
         filterHeaderIconColor:
             filterHeaderIconColor ?? this.filterHeaderIconColor,
       );
@@ -924,6 +934,7 @@ class TrinaGridStyleConfig {
             cellVerticalBorderWidth == other.cellVerticalBorderWidth &&
             cellHorizontalBorderWidth == other.cellHorizontalBorderWidth &&
             filterHeaderColor == other.filterHeaderColor &&
+            filterPopupHeaderColor == other.filterPopupHeaderColor &&
             filterHeaderIconColor == other.filterHeaderIconColor &&
             isDarkStyle == other.isDarkStyle;
   }
@@ -984,6 +995,7 @@ class TrinaGridStyleConfig {
         gridBorderWidth,
         cellVerticalBorderWidth,
         cellHorizontalBorderWidth,
+        filterPopupHeaderColor,
         filterHeaderColor,
         filterHeaderIconColor,
         isDarkStyle

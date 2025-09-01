@@ -577,7 +577,8 @@ class _ColumnTextWidgetState extends TrinaStateWithChange<_ColumnTextWidget> {
             child: IconButton(
               icon: Icon(
                 stateManager.configuration.style.filterIcon!.icon,
-                color: stateManager.configuration.style.iconColor,
+                color: stateManager.configuration.style.filterHeaderIconColor ?? 
+                       stateManager.configuration.style.iconColor,
                 size: stateManager.configuration.style.iconSize,
               ),
               onPressed: _handleOnPressedFilter,

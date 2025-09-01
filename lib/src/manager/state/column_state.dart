@@ -744,7 +744,7 @@ mixin ColumnState implements ITrinaGridState {
           enableDropToResize: true,
           enableContextMenu: false,
           enableColumnDrag: false,
-          backgroundColor: configuration.style.filterHeaderColor),
+          backgroundColor: configuration.style.filterPopupHeaderColor),
       TrinaColumn(
         title: 'hidden column',
         field: columnField,
