@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.0.1] - 2025. 09. 01
+
+* Feature: Enhanced filter color customization system. @doonfrs
+* Feature: Added cell-level padding property to TrinaCell. @doonfrs
+* Feature: Added validate parameter to changeCellValue method. @doonfrs
+* Feature: Added keyboard event handling to TrinaCell. @doonfrs
+* Feature: Enhanced TrinaGrid with customizable cell text style. @doonfrs
+* Feature: Added cell color functionality to TrinaGrid. @doonfrs
+* Enhancement: Added cell field to TrinaGridOnChangedEvent. @doonfrs
+* Fix: Preserved horizontal borders for cells with custom background colors. @doonfrs
+* Fix: Set default cellReadonlyColor to null to use default cell style. @doonfrs
+* Fix: Improved text cell vertical alignment during editing. @doonfrs
+* Fix: Reduced multi-line filter icon size to 16px. @doonfrs
+* Fix: Improved vertical centering and text styling for edited cells. @doonfrs
+* Fix: Enabled onSelected callback to fire in normal mode with comprehensive row selection support. @doonfrs
+* Fix: Resolved frozen row alignment issue with dynamic row heights. @doonfrs
+* Fix: Improved popup handling in TrinaDateCell. @doonfrs
+* Fix: Improved date time cell styling and height adaptation. @doonfrs
+* Fix: Prevented cell overflow when both Row checking & drag are enabled. @DMouayad
+* Fix: Fixed checkbox overflow in column title. @DMouayad
+* Fix: Grid no longer absorbs unregistered shortcuts. @DMouayad
+* Fix: Key events now properly ignored when grid doesn't have primary focus. @DMouayad
+* Fix: Editing popup no longer shown for readonly cells. @DMouayad
+
 ## [2.0.0] - 2025. 08. 16
 
 * Feature: Added new popup cells editing widget, including TrinaSelectMenu, TrinaTimePicker, and TrinaPopup. @DMouayad
