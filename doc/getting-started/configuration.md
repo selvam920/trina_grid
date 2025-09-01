@@ -58,12 +58,48 @@ TrinaGridConfiguration(
     iconSize: 18,
     iconColor: Colors.black54,
     
+    // Filter colors
+    filterHeaderColor: Colors.blue[50],      // Filter row background & input fields
+    filterPopupHeaderColor: Colors.grey[100], // Filter popup headers
+    filterHeaderIconColor: Colors.blue,      // Filter icons (indicators, controls)
+    
     // Even/odd row colors
     oddRowColor: Colors.grey[100],
     evenRowColor: Colors.white,
   ),
 )
 ```
+
+### Filter Color Configuration
+
+The filter color properties allow you to customize the appearance of filter-related elements:
+
+- **`filterHeaderColor`**: Background color for the main grid filter row and filter input fields (text fields, multiline inputs)
+- **`filterPopupHeaderColor`**: Background color for filter popup headers (used in separate popup dialogs)
+- **`filterHeaderIconColor`**: Color for filter-related icons (filter indicators in column titles, clear/edit buttons in multiline filters)
+
+```dart
+TrinaGridConfiguration(
+  style: TrinaGridStyleConfig(
+    // Main grid filter row styling
+    filterHeaderColor: Colors.lightBlue[50],
+    
+    // Popup filter header styling  
+    filterPopupHeaderColor: Colors.grey[200],
+    
+    // Filter icon coloring
+    filterHeaderIconColor: Colors.blue,
+    
+    // Regular icons (fallback)
+    iconColor: Colors.grey[600],
+  ),
+)
+```
+
+**Priority System:**
+- Filter inputs use `filterHeaderColor` first, then fall back to `cellColorInEditState`/`cellColorInReadOnlyState`
+- Filter icons use `filterHeaderIconColor` first, then fall back to `iconColor`
+- All properties are optional and maintain backward compatibility
 
 ### Scrollbar Configuration
 
