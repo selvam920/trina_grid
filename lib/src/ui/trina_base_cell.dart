@@ -323,16 +323,31 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
               ? cellReadonlyColor
               : cellDefaultColor;
 
+      final bool hasCustomColor = isDirty || cellCallbackColor != null;
+      
       return BoxDecoration(
         color: isDirty ? dirtyColor : cellCallbackColor ?? defaultColor,
-        border: enableCellVerticalBorder
-            ? BorderDirectional(
-                end: BorderSide(
+        border: hasCustomColor
+            ? Border(
+                right: BorderSide(
                   color: borderColor,
                   width: stateManager.style.cellVerticalBorderWidth,
                 ),
+                bottom: stateManager.style.enableCellBorderHorizontal
+                    ? BorderSide(
+                        color: borderColor,
+                        width: stateManager.style.cellHorizontalBorderWidth,
+                      )
+                    : BorderSide.none,
               )
-            : null,
+            : enableCellVerticalBorder
+                ? BorderDirectional(
+                    end: BorderSide(
+                      color: borderColor,
+                      width: stateManager.style.cellVerticalBorderWidth,
+                    ),
+                  )
+                : null,
       );
     }
   }
