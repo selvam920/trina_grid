@@ -72,7 +72,8 @@ typedef TrinaOnLazyFetchCompletedEventCallback = void Function(
 
 typedef RowWrapper = Widget Function(
   BuildContext context,
-  Widget row,
+  Widget rowWidget,
+  TrinaRow rowData,
   TrinaGridStateManager stateManager,
 );
 
