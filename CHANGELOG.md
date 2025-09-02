@@ -1,8 +1,10 @@
 # Changelog
 
-## [2.0.2] - 2025. 09. 01
+## [2.1.0] - 2025. 09. 01
 
 * Fix: Restored mouse scrolling/dragging functionality that was broken since v1.6.11. @doonfrs
+* Breaking Change: Enhanced rowWrapper callback to include TrinaRow data parameter and renamed row widget parameter to rowWidget for clarity. @doonfrs
+
 
 ## [2.0.1] - 2025. 09. 01
 

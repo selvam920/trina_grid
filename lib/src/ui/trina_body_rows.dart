@@ -179,7 +179,7 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
       visibilityLayout: true,
     );
 
-    return stateManager.rowWrapper?.call(context, rowWidget, stateManager) ??
+    return stateManager.rowWrapper?.call(context, rowWidget, row, stateManager) ??
         rowWidget;
   }
 
