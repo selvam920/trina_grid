@@ -222,7 +222,134 @@ See also: [Column Types](column-types.md), [Custom Filters](#custom-filters)
 
 ## Programmatic Filtering
 
-You can programmatically apply filters using the state manager:
+TrinaGrid provides two approaches for programmatically applying filters: the new simplified API methods and the traditional filter row approach.
+
+### New Simplified API (Recommended)
+
+The state manager now provides convenient methods for managing column filters programmatically:
+
+#### Setting Column Filters
+
+```dart
+// Set or update a specific column filter
+stateManager.setColumnFilter(
+  columnField: 'department',
+  filterType: const TrinaFilterTypeEquals(),
+  filterValue: 'Engineering',
+);
+
+// Set boolean filters
+stateManager.setColumnFilter(
+  columnField: 'active',
+  filterType: const TrinaFilterTypeEquals(),
+  filterValue: true,
+);
+
+// Set numeric filters
+stateManager.setColumnFilter(
+  columnField: 'salary',
+  filterType: const TrinaFilterTypeGreaterThan(),
+  filterValue: 60000,
+);
+
+// Set text contains filters
+stateManager.setColumnFilter(
+  columnField: 'name',
+  filterType: const TrinaFilterTypeContains(),
+  filterValue: 'John',
+);
+```
+
+#### Removing Column Filters
+
+```dart
+// Remove a specific column filter
+stateManager.removeColumnFilter('department');
+
+// Clear all column filters at once
+stateManager.clearAllColumnFilters();
+```
+
+#### Getting Current Filter Values
+
+```dart
+// Get the current filter value for a specific column
+dynamic currentValue = stateManager.getColumnFilterValue('department');
+if (currentValue != null) {
+  print('Department is filtered by: $currentValue');
+}
+
+// Get the current filter type for a specific column
+TrinaFilterType? currentFilterType = stateManager.getColumnFilterType('department');
+if (currentFilterType != null) {
+  if (currentFilterType is TrinaFilterTypeEquals) {
+    print('Department filter uses exact matching');
+  } else if (currentFilterType is TrinaFilterTypeContains) {
+    print('Department filter uses contains matching');
+  }
+}
+
+// Check if a column has any filter applied
+bool isDepartmentFiltered = stateManager.getColumnFilterValue('department') != null;
+
+// Example: Toggle a filter based on current state
+void toggleActiveFilter() {
+  dynamic currentValue = stateManager.getColumnFilterValue('active');
+  if (currentValue == null) {
+    // No filter applied, filter for active records
+    stateManager.setColumnFilter(
+      columnField: 'active',
+      filterType: const TrinaFilterTypeEquals(),
+      filterValue: true,
+    );
+  } else {
+    // Filter already applied, remove it
+    stateManager.removeColumnFilter('active');
+  }
+}
+```
+
+#### Practical Example
+
+```dart
+// Apply multiple filters programmatically
+void applyBusinessLogicFilters() {
+  // Filter for active employees only
+  stateManager.setColumnFilter(
+    columnField: 'active',
+    filterType: const TrinaFilterTypeEquals(),
+    filterValue: true,
+  );
+  
+  // Filter for engineering department
+  stateManager.setColumnFilter(
+    columnField: 'department',
+    filterType: const TrinaFilterTypeEquals(),
+    filterValue: 'Engineering',
+  );
+  
+  // Filter for high salaries
+  stateManager.setColumnFilter(
+    columnField: 'salary',
+    filterType: const TrinaFilterTypeGreaterThan(),
+    filterValue: 80000,
+  );
+}
+
+// Clear specific filters
+void clearDepartmentFilter() {
+  stateManager.removeColumnFilter('department');
+}
+
+// Reset all filters
+void resetAllFilters() {
+  stateManager.clearAllColumnFilters();
+}
+```
+
+### Traditional Filter Row Approach
+
+You can also programmatically apply filters using the traditional filter row approach:
 
 ```dart
 // Create a filter row
@@ -353,32 +480,46 @@ class _ColumnFilteringExampleState extends State<ColumnFilteringExample> {
   }
 
   void _filterEngineering() {
-    // Create a filter for the Engineering department
-    TrinaRow filterRow = FilterHelper.createFilterRow(
+    // Filter for Engineering department using the new simplified API
+    stateManager.setColumnFilter(
       columnField: 'department',
       filterType: const TrinaFilterTypeEquals(),
       filterValue: 'Engineering',
     );
-
-    // Apply the filter
-    stateManager.setFilterRows([filterRow]);
   }
 
   void _filterHighSalary() {
-    // Create a filter for salaries > 80000
-    TrinaRow filterRow = FilterHelper.createFilterRow(
+    // Filter for salaries > 80000 using the new simplified API
+    stateManager.setColumnFilter(
       columnField: 'salary',
       filterType: const TrinaFilterTypeGreaterThan(),
-      filterValue: '80000',
+      filterValue: 80000, // Note: numeric value, not string
     );
-
-    // Apply the filter
-    stateManager.setFilterRows([filterRow]);
   }
 
   void _clearFilters() {
-    // Clear all filters
-    stateManager.setFilterRows([]);
+    // Clear all filters using the new simplified API
+    stateManager.clearAllColumnFilters();
+  }
+
+  void _filterMultiple() {
+    // Example of applying multiple filters
+    stateManager.setColumnFilter(
+      columnField: 'department',
+      filterType: const TrinaFilterTypeEquals(),
+      filterValue: 'Engineering',
+    );
+    
+    stateManager.setColumnFilter(
+      columnField: 'salary',
+      filterType: const TrinaFilterTypeGreaterThan(),
+      filterValue: 80000,
+    );
+  }
+
+  void _removeSpecificFilter() {
+    // Remove only the department filter
+    stateManager.removeColumnFilter('department');
   }
 
   @override
@@ -389,21 +530,31 @@ class _ColumnFilteringExampleState extends State<ColumnFilteringExample> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
               children: [
                 ElevatedButton(
                   onPressed: _filterEngineering,
                   child: Text('Filter Engineering'),
                 ),
-                SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: _filterHighSalary,
                   child: Text('Filter Salary > 80000'),
                 ),
-                SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: _filterMultiple,
+                  child: Text('Multiple Filters'),
+                ),
+                ElevatedButton(
+                  onPressed: _removeSpecificFilter,
+                  child: Text('Remove Dept Filter'),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                ),
                 ElevatedButton(
                   onPressed: _clearFilters,
-                  child: Text('Clear Filters'),
+                  child: Text('Clear All Filters'),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 ),
               ],
             ),
@@ -496,17 +647,23 @@ In this example, pressing Enter in the ID or Name column filters will move focus
 
 ## Best Practices
 
-1. **Enable Filtering Selectively**: Only enable filtering for columns where it makes sense. For action columns or columns with complex widgets, filtering may not be relevant.
+1. **Use the New Simplified API**: Prefer `setColumnFilter()`, `removeColumnFilter()`, and `clearAllColumnFilters()` methods over the traditional filter row approach for cleaner, more maintainable code.
 
-2. **Choose Appropriate Default Filters**: Set default filter types that make sense for each column's data type. For example, use "Contains" for text columns and "Greater Than" for numeric columns.
+2. **Enable Filtering Selectively**: Only enable filtering for columns where it makes sense. For action columns or columns with complex widgets, filtering may not be relevant.
 
-3. **Provide Clear UI Indicators**: Ensure that users can easily see which filters are currently applied. TrinaGrid automatically highlights filtered columns.
+3. **Choose Appropriate Default Filters**: Set default filter types that make sense for each column's data type. For example, use "Contains" for text columns and "Greater Than" for numeric columns.
 
-4. **Consider Performance**: For very large datasets, consider implementing server-side filtering to improve performance.
+4. **Provide Clear UI Indicators**: Ensure that users can easily see which filters are currently applied. TrinaGrid automatically highlights filtered columns.
 
-5. **Combine with Sorting**: Filtering works well in combination with sorting, allowing users to find and organize data more efficiently.
+5. **Use Proper Data Types**: When using `setColumnFilter()`, use the appropriate data types (e.g., numeric values for number columns, boolean values for boolean columns) rather than always using strings.
 
-6. **Save User Preferences**: Consider saving the user's filter preferences to restore them when they return to the grid.
+6. **Consider Performance**: For very large datasets, consider implementing server-side filtering to improve performance.
+
+7. **Combine with Sorting**: Filtering works well in combination with sorting, allowing users to find and organize data more efficiently.
+
+8. **Provide Filter Management UI**: Consider adding buttons or controls that allow users to easily clear specific filters or all filters at once using the new API methods.
+
+9. **Save User Preferences**: Consider saving the user's filter preferences to restore them when they return to the grid.
 
 ## Related Features
 

@@ -28,6 +28,7 @@ import 'feature/cell_color_screen.dart';
 import 'feature/cell_renderer_screen.dart';
 import 'feature/cell_selection_screen.dart';
 import 'feature/column_filtering_screen.dart';
+import 'feature/column_filter_methods_screen.dart';
 import 'feature/column_footer_screen.dart';
 import 'feature/column_freezing_screen.dart';
 import 'feature/column_group_screen.dart';
@@ -275,6 +276,13 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         description: 'Column filtering allows to filter all data.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, ColumnFilteringScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column Filter Methods',
+        description: 'Programmatically set, update, and clear column filters.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnFilterMethodsScreen.routeName);
         },
       ),
       TrinaListTile(

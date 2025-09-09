@@ -26,6 +26,28 @@ abstract class IFilteringRowState {
     BuildContext context, {
     TrinaColumn? calledColumn,
   });
+
+  /// Set or update a column filter value programmatically
+  void setColumnFilter({
+    required String columnField,
+    required TrinaFilterType filterType,
+    required dynamic filterValue,
+    bool notify = true,
+  });
+
+  /// Remove a specific column filter
+  void removeColumnFilter(String columnField, {bool notify = true});
+
+  /// Clear all column filters
+  void clearAllColumnFilters({bool notify = true});
+
+  /// Get the current filter value for a specific column
+  /// Returns null if no filter is applied to the column
+  dynamic getColumnFilterValue(String columnField);
+
+  /// Get the current filter type for a specific column
+  /// Returns null if no filter is applied to the column
+  TrinaFilterType? getColumnFilterType(String columnField);
 }
 
 class _State {
@@ -186,5 +208,78 @@ mixin FilteringRowState implements ITrinaGridState {
         onClosed: onClosed,
       ),
     );
+  }
+
+  @override
+  void setColumnFilter({
+    required String columnField,
+    required TrinaFilterType filterType,
+    required dynamic filterValue,
+    bool notify = true,
+  }) {
+    List<TrinaRow> updatedFilterRows = List.from(filterRows);
+    
+    // Find existing filter row for this column
+    int existingIndex = updatedFilterRows.indexWhere((row) => 
+      row.cells[FilterHelper.filterFieldColumn]?.value == columnField);
+    
+    if (existingIndex != -1) {
+      // Update existing filter
+      updatedFilterRows[existingIndex].cells[FilterHelper.filterFieldValue]!.value = filterValue;
+      updatedFilterRows[existingIndex].cells[FilterHelper.filterFieldType]!.value = filterType;
+    } else {
+      // Add new filter
+      updatedFilterRows.add(
+        FilterHelper.createFilterRow(
+          columnField: columnField,
+          filterType: filterType,
+          filterValue: filterValue,
+        ),
+      );
+    }
+    
+    setFilterWithFilterRows(updatedFilterRows, notify: notify);
+  }
+
+  @override
+  void removeColumnFilter(String columnField, {bool notify = true}) {
+    List<TrinaRow> updatedFilterRows = filterRows
+        .where((row) => row.cells[FilterHelper.filterFieldColumn]?.value != columnField)
+        .toList();
+    
+    setFilterWithFilterRows(updatedFilterRows, notify: notify);
+  }
+
+  @override
+  void clearAllColumnFilters({bool notify = true}) {
+    setFilterWithFilterRows([], notify: notify);
+  }
+
+  @override
+  dynamic getColumnFilterValue(String columnField) {
+    final filterRow = filterRows.firstWhere(
+      (row) => row.cells[FilterHelper.filterFieldColumn]?.value == columnField,
+      orElse: () => TrinaRow(cells: {}),
+    );
+    
+    if (filterRow.cells.isEmpty) {
+      return null;
+    }
+    
+    return filterRow.cells[FilterHelper.filterFieldValue]?.value;
+  }
+
+  @override
+  TrinaFilterType? getColumnFilterType(String columnField) {
+    final filterRow = filterRows.firstWhere(
+      (row) => row.cells[FilterHelper.filterFieldColumn]?.value == columnField,
+      orElse: () => TrinaRow(cells: {}),
+    );
+    
+    if (filterRow.cells.isEmpty) {
+      return null;
+    }
+    
+    return filterRow.cells[FilterHelper.filterFieldType]?.value as TrinaFilterType?;
   }
 }
