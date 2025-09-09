@@ -122,12 +122,10 @@ class _BooleanTypeColumnScreenState extends State<BooleanTypeColumnScreen> {
               rows: rows,
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 stateManager = event.stateManager;
+                stateManager.setShowColumnFilter(true);
               },
               configuration: TrinaGridConfiguration(
-                style: TrinaGridStyleConfig(
-                  cellTextStyle: TextStyle(fontSize: 10),
-                  cellDirtyColor: Colors.amber[100]!,
-                ),
+                style: TrinaGridStyleConfig(),
               ),
             ),
           ),
