@@ -16,6 +16,7 @@ class TrinaColumnTypeAutoComplete<T>
   final TrinaAutoCompleteItemBuilder<T> itemBuilder;
   final double itemHeight;
   final double maxHeight;
+  final TrinaAutocompleteOptionToString<T>? displayStringForOption;
 
   const TrinaColumnTypeAutoComplete({
     this.defaultValue,
@@ -26,6 +27,7 @@ class TrinaColumnTypeAutoComplete<T>
     required this.itemBuilder,
     required this.itemHeight,
     required this.maxHeight,
+    this.displayStringForOption,
   });
 
   @override
@@ -66,6 +68,7 @@ class TrinaColumnTypeAutoComplete<T>
       itemBuilder: itemBuilder,
       itemHeight: itemHeight,
       maxHeight: maxHeight,
+      displayStringForOption: displayStringForOption,
     );
   }
 }

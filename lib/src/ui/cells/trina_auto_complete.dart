@@ -9,7 +9,11 @@ typedef TrinaAutoCompleteFetchItems<T> = Future<List<T>> Function(String input);
 typedef TrinaAutoCompleteItemBuilder<T> =
     Widget Function(BuildContext context, T item, bool selected);
 
+typedef TrinaAutocompleteOptionToString<T> = String Function(T option);
+
 class TrinaAutoCompleteCell<T> extends StatefulWidget {
+  /// Function to get display string for an option.
+  final TrinaAutocompleteOptionToString<T>? displayStringForOption;
   final TrinaGridStateManager stateManager;
 
   final TrinaCell cell;
@@ -53,6 +57,7 @@ class TrinaAutoCompleteCell<T> extends StatefulWidget {
     required this.itemBuilder,
     required this.itemHeight,
     required this.maxHeight,
+    this.displayStringForOption,
   });
 
   @override
@@ -210,7 +215,10 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
   void _selectOption(T option) {
     _hideOverlay();
-    _textController.text = option.toString();
+    final displayString = widget.displayStringForOption != null
+        ? widget.displayStringForOption!(option)
+        : option.toString();
+    _textController.text = displayString;
     _textController.selection = TextSelection.fromPosition(
       TextPosition(offset: _textController.text.length),
     );
