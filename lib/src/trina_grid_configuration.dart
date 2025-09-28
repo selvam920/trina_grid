@@ -269,6 +269,7 @@ class TrinaGridStyleConfig {
     this.oddRowColor,
     this.evenRowColor,
     this.activatedColor = const Color(0xFFDCF5FF),
+    this.activatedTextColor = Colors.black,
     Color? columnCheckedColor,
     this.columnCheckedSide,
     Color? cellCheckedColor,
@@ -352,6 +353,7 @@ class TrinaGridStyleConfig {
     this.oddRowColor,
     this.evenRowColor,
     this.activatedColor = const Color(0xFF313131),
+    this.activatedTextColor = Colors.white,
     Color? columnCheckedColor,
     this.columnCheckedSide,
     Color? cellCheckedColor,
@@ -473,6 +475,9 @@ class TrinaGridStyleConfig {
 
   /// Activated Color. (Current or Selected row, cell)
   final Color activatedColor;
+
+  /// Activated Cell Text Color. (Current or Selected row)
+  final Color activatedTextColor;
 
   /// Checked Color for the column title. (Checked rows)
   final Color columnCheckedColor;
@@ -657,6 +662,7 @@ class TrinaGridStyleConfig {
     TrinaOptional<Color?>? oddRowColor,
     TrinaOptional<Color?>? evenRowColor,
     Color? activatedColor,
+    Color? activatedTextColor,
     Color? columnCheckedColor,
     BorderSide? columnCheckedSide,
     Color? cellCheckedColor,

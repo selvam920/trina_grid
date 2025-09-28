@@ -67,6 +67,8 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
 
   bool _isCurrentCell = false;
 
+  bool _isCurrentRow = false;
+
   String _text = '';
 
   @override
@@ -118,6 +120,15 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
       stateManager.isCurrentCell(widget.cell),
     );
 
+    _isCurrentRow = update<bool>(
+      _isCurrentRow,
+      ((stateManager.hasFocus && stateManager.currentRowIdx == widget.rowIdx) ||
+          (stateManager.hasCheckedRow &&
+              stateManager.checkedRows.any(
+                (element) => element.sortIdx == widget.rowIdx,
+              ))),
+    );
+
     _text = update<String>(
       _text,
       widget.column.formattedValueForDisplay(widget.cell.value),
@@ -142,6 +153,7 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
       row: widget.row,
       column: widget.column,
       cell: widget.cell,
+      isCurrentRow: _isCurrentRow,
     );
 
     final style = stateManager.configuration.style;
@@ -456,12 +468,15 @@ class _DefaultCellWidget extends StatelessWidget {
 
   final TrinaCell cell;
 
+  final bool isCurrentRow;
+
   const _DefaultCellWidget({
     required this.stateManager,
     required this.rowIdx,
     required this.row,
     required this.column,
     required this.cell,
+    this.isCurrentRow = false,
   });
 
   bool get _showText {
@@ -525,6 +540,9 @@ class _DefaultCellWidget extends StatelessWidget {
       style: stateManager.configuration.style.cellTextStyle.copyWith(
         decoration: TextDecoration.none,
         fontWeight: FontWeight.normal,
+        color: isCurrentRow
+            ? stateManager.configuration.style.activatedTextColor
+            : null,
       ),
       overflow: TextOverflow.ellipsis,
       textAlign: column.textAlign.value,
