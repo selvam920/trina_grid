@@ -63,7 +63,7 @@ class TrinaColumnTypeAutoComplete<T>
       row: row,
       fetchItems: fetchItems,
       width: width,
-      initialValue: initialValue ?? cell.value as T,
+      initialValue: initialValue,
       onItemSelected: onItemSelected,
       itemBuilder: itemBuilder,
       itemHeight: itemHeight,

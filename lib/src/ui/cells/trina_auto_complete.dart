@@ -29,7 +29,7 @@ class TrinaAutoCompleteCell<T> extends StatefulWidget {
   final double width;
 
   /// The initially selected value, which will be highlighted in the list.
-  final T initialValue;
+  final T? initialValue;
 
   /// Called when an item is selected from the list.
   final void Function(T) onItemSelected;
@@ -496,7 +496,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     _overlayEntry?.markNeedsBuild();
     _showOverlay();
     _debounceForTextController = Timer(
-      const Duration(milliseconds: 300),
+      const Duration(milliseconds: 150),
       () async {
         final results = await widget.fetchItems(query);
         setState(() {
