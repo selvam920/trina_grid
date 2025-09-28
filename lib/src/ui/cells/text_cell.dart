@@ -46,7 +46,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   List<TextInputFormatter>? get inputFormatters => [];
 
   String get formattedValue =>
-      widget.column.formattedValueForDisplayInEditing(widget.cell.value);
+      widget.column.formattedValueForDisplayInEditing(widget.cell.value ?? '');
 
   @override
   void initState() {
