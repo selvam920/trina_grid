@@ -182,7 +182,7 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
         keyManager.isTab ||
         (_controller.text.isEmpty && keyManager.isHorizontal);
 
-    final skip = !(handleMoveDown || handleMoveHorizontal || keyManager.isF3);
+    final skip = !(handleMoveDown || handleMoveHorizontal);
 
     if (skip) {
       if (keyManager.isUp) {
@@ -198,15 +198,6 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
       stateManager.nextFocusOfColumnFilter(
         widget.column,
         reversed: keyManager.isLeft || keyManager.isShiftPressed,
-      );
-    } else if (keyManager.isF3) {
-      stateManager.showFilterPopup(
-        _focusNode.context!,
-        calledColumn: widget.column,
-        onClosed: () {
-          stateManager.setKeepFocus(true, notify: false);
-          _focusNode.requestFocus();
-        },
       );
     }
 

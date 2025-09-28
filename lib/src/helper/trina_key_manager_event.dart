@@ -14,7 +14,8 @@ class TrinaKeyManagerEvent {
 
   bool get needsThrottle => isMoving || isTab || isPageUp || isPageDown;
 
-  bool get isKeyDownEvent => event.runtimeType == KeyDownEvent;
+  bool get isKeyDownEvent =>
+      event.runtimeType == KeyDownEvent || event.runtimeType == KeyRepeatEvent;
 
   bool get isKeyUpEvent => event.runtimeType == KeyUpEvent;
 
@@ -55,6 +56,7 @@ class TrinaKeyManagerEvent {
 
   bool get isEnter =>
       event.logicalKey.keyId == LogicalKeyboardKey.enter.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.select.keyId ||
       event.logicalKey.keyId == LogicalKeyboardKey.numpadEnter.keyId;
 
   bool get isTab => event.logicalKey.keyId == LogicalKeyboardKey.tab.keyId;
@@ -108,7 +110,9 @@ class TrinaKeyManagerEvent {
     LogicalKeyboardKey.controlRight,
   ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
 
-  bool get isCharacter => _characters.contains(event.logicalKey.keyId);
+  bool get isCharacter =>
+      (_characters.contains(event.logicalKey.keyId) &&
+      event.logicalKey.keyId != LogicalKeyboardKey.space.keyId);
 
   bool get isCtrlC {
     return isCtrlPressed &&

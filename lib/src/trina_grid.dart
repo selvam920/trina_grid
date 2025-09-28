@@ -7,7 +7,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show Intl;
 import 'package:trina_grid/trina_grid.dart';
 
-import 'helper/platform_helper.dart';
 import 'ui/ui.dart';
 
 typedef TrinaOnLoadedEventCallback =
@@ -1330,7 +1329,7 @@ class _GridContainer extends StatelessWidget {
       focusNode: stateManager.gridFocusNode,
       child: ScrollConfiguration(
         behavior: TrinaScrollBehavior(
-          isMobile: PlatformHelper.isMobile,
+          isTouchScroll: stateManager.configuration.scrollbar.isTouchScroll,
           userDragDevices: stateManager.configuration.scrollbar.dragDevices,
         ),
         child: DecoratedBox(
@@ -1395,14 +1394,14 @@ class TrinaCellColorContext {
 /// Extension class for [ScrollConfiguration.behavior] of [TrinaGrid].
 class TrinaScrollBehavior extends MaterialScrollBehavior {
   const TrinaScrollBehavior({
-    required this.isMobile,
+    required this.isTouchScroll,
     Set<PointerDeviceKind>? userDragDevices,
   }) : _dragDevices =
            userDragDevices ??
-           (isMobile ? _mobileDragDevices : _desktopDragDevices),
+           (isTouchScroll ? _mobileDragDevices : _desktopDragDevices),
        super();
 
-  final bool isMobile;
+  final bool isTouchScroll;
 
   @override
   Set<PointerDeviceKind> get dragDevices => _dragDevices;

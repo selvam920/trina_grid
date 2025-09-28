@@ -53,9 +53,24 @@ class TrinaGridKeyManager {
     }
   }
 
+  bool _isNumeric(String? str) {
+    if (str == null) {
+      return false;
+    }
+    return double.tryParse(str) != null;
+  }
+
   void _handleCharacter(TrinaKeyManagerEvent keyEvent) {
     if (stateManager.isEditing || stateManager.currentCell == null) {
       return;
+    }
+
+    if (stateManager.currentCell!.column.type is TrinaColumnTypeNumber) {
+      if (keyEvent.event.character != null) {
+        if (!_isNumeric(keyEvent.event.character)) {
+          return;
+        }
+      }
     }
 
     stateManager.setEditing(true);

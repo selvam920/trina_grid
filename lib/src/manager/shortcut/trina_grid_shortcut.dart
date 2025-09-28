@@ -85,6 +85,8 @@ class TrinaGridShortcut {
     // Default enter key action
     LogicalKeySet(LogicalKeyboardKey.enter):
         const TrinaGridActionDefaultEnterKey(),
+    LogicalKeySet(LogicalKeyboardKey.select):
+        const TrinaGridActionDefaultEnterKey(),
     LogicalKeySet(LogicalKeyboardKey.numpadEnter):
         const TrinaGridActionDefaultEnterKey(),
     LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.enter):

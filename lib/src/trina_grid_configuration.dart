@@ -1029,6 +1029,7 @@ class TrinaGridScrollbarConfig {
   const TrinaGridScrollbarConfig({
     // Basic scrollbar behavior settings
     this.isAlwaysShown = false,
+    this.isTouchScroll = false,
     this.dragDevices = const <PointerDeviceKind>{
       PointerDeviceKind.mouse,
       PointerDeviceKind.touch,
@@ -1056,6 +1057,8 @@ class TrinaGridScrollbarConfig {
 
   /// Whether the scrollbar is always visible
   final bool isAlwaysShown;
+
+  final bool isTouchScroll;
 
   /// Set of devices that can interact with the scrollbar
   ///

@@ -214,7 +214,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
             _moveHorizontal(keyManager) ||
             keyManager.isEsc ||
             keyManager.isTab ||
-            keyManager.isF3 ||
             keyManager.isEnter);
 
     // Movement and enter key, non-editable cell left and right movement, etc. key input is propagated to text field.
