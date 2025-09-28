@@ -14,6 +14,7 @@ typedef TrinaAutocompleteOptionToString<T> = String Function(T option);
 class TrinaAutoCompleteCell<T> extends StatefulWidget {
   /// Function to get display string for an option.
   final TrinaAutocompleteOptionToString<T>? displayStringForOption;
+
   final TrinaGridStateManager stateManager;
 
   final TrinaCell cell;
@@ -77,7 +78,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
   late _CellEditingStatus _cellEditingStatus;
 
   String get formattedValue =>
-      widget.column.formattedValueForDisplayInEditing(widget.cell.value);
+      widget.column.formattedValueForDisplayInEditing(widget.cell.value ?? '');
 
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
