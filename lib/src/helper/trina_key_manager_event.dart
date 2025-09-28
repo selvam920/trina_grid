@@ -112,7 +112,18 @@ class TrinaKeyManagerEvent {
 
   bool get isCharacter =>
       (_characters.contains(event.logicalKey.keyId) &&
-      event.logicalKey.keyId != LogicalKeyboardKey.space.keyId);
+          event.logicalKey.keyId != LogicalKeyboardKey.space.keyId) ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad0.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad1.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad2.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad3.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad4.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad5.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad6.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad7.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad8.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad9.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpadDecimal.keyId;
 
   bool get isCtrlC {
     return isCtrlPressed &&
