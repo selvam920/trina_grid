@@ -6,9 +6,6 @@ import 'package:trina_grid/trina_grid.dart';
 class TrinaColumnTypeAutoComplete<T>
     with TrinaColumnTypeDefaultMixin
     implements TrinaColumnType {
-  @override
-  final dynamic defaultValue;
-
   final TrinaAutoCompleteFetchItems<T> fetchItems;
   final double width;
   final T? initialValue;
@@ -29,6 +26,9 @@ class TrinaColumnTypeAutoComplete<T>
     required this.maxHeight,
     this.displayStringForOption,
   });
+
+  @override
+  final dynamic defaultValue;
 
   @override
   bool isValid(dynamic value) {

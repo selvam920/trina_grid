@@ -183,7 +183,7 @@ abstract interface class TrinaColumnType {
     required TrinaAutoCompleteFetchItems<T> fetchItems,
     required void Function(T item) onItemSelected,
     required TrinaAutoCompleteItemBuilder<T> itemBuilder,
-    T? defaultValue,
+    dynamic defaultValue = '',
     double? menuWidth,
     double menuItemHeight = 40,
     double menuMaxHeight = 300,
