@@ -396,18 +396,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
                       final bool isSelected = _selectedIndex == index;
                       return InkWell(
                         key: _itemKeys.length > index ? _itemKeys[index] : null,
-                        onTap: () {
-                          _textController.text = option.toString();
-                          _textController
-                              .selection = TextSelection.fromPosition(
-                            TextPosition(offset: _textController.text.length),
-                          );
-                          _hideOverlay();
-                          Future.delayed(const Duration(milliseconds: 20), () {
-                            cellFocus.requestFocus();
-                          });
-                          widget.onItemSelected(option);
-                        },
+                        onTap: () => _selectOption(option),
                         child: Container(
                           color: isSelected
                               ? Theme.of(
