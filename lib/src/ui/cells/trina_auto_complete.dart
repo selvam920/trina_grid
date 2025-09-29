@@ -223,10 +223,10 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     _textController.selection = TextSelection.fromPosition(
       TextPosition(offset: _textController.text.length),
     );
-    Future.delayed(const Duration(milliseconds: 20), () {
+    Future.delayed(const Duration(milliseconds: 10), () {
       cellFocus.requestFocus();
+      widget.onItemSelected(option);
     });
-    widget.onItemSelected(option);
   }
 
   KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
