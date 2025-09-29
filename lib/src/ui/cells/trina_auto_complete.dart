@@ -98,7 +98,9 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
     cellFocus.addListener(() {
       if (!cellFocus.hasFocus) {
-        _handleOnComplete();
+        Future.delayed(const Duration(milliseconds: 300), () {
+          _handleOnComplete();
+        });
       }
     });
 
