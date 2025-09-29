@@ -356,9 +356,14 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
         MediaQuery.of(context).padding.bottom;
     final double spaceBelow = screenHeight - offset.dy - size.height;
     final double spaceAbove = offset.dy;
+
     // Estimate overlay height
-    double overlayHeight = widget.maxHeight;
-    bool showAbove = spaceBelow < overlayHeight && spaceAbove > overlayHeight;
+    // Pick the larger available space if maxHeight doesn't fit
+    bool showAbove = spaceBelow < widget.maxHeight && spaceAbove > spaceBelow;
+    double availableSpace = showAbove ? spaceAbove : spaceBelow;
+    double overlayHeight = widget.maxHeight <= availableSpace
+        ? widget.maxHeight
+        : availableSpace;
     double overlayTop = showAbove
         ? offset.dy - overlayHeight
         : offset.dy + size.height;
