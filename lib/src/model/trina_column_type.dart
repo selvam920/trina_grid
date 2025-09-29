@@ -186,7 +186,6 @@ abstract interface class TrinaColumnType {
     dynamic defaultValue = '',
     T? initialValue,
     double? menuWidth,
-    double menuItemHeight = 40,
     double menuMaxHeight = 300,
     TrinaAutocompleteOptionToString? displayStringForOption,
   }) {
@@ -197,7 +196,6 @@ abstract interface class TrinaColumnType {
       initialValue: initialValue,
       onItemSelected: onItemSelected,
       itemBuilder: itemBuilder,
-      itemHeight: menuItemHeight,
       maxHeight: menuMaxHeight,
       displayStringForOption: displayStringForOption,
     );

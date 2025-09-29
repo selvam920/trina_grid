@@ -39,9 +39,6 @@ class TrinaAutoCompleteCell<T> extends StatefulWidget {
   /// If null, a default [Text] widget is used.
   final TrinaAutoCompleteItemBuilder<T> itemBuilder;
 
-  /// The height of each item in the list.
-  final double itemHeight;
-
   /// The maximum height of the popup menu's scrollable area.
   final double maxHeight;
 
@@ -56,7 +53,6 @@ class TrinaAutoCompleteCell<T> extends StatefulWidget {
     required this.initialValue,
     required this.onItemSelected,
     required this.itemBuilder,
-    required this.itemHeight,
     required this.maxHeight,
     this.displayStringForOption,
   });
@@ -354,7 +350,10 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     if (renderBox == null) return;
     final Size size = renderBox.size;
     final Offset offset = renderBox.localToGlobal(Offset.zero);
-    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenHeight =
+        MediaQuery.of(context).size.height -
+        MediaQuery.of(context).viewInsets.bottom -
+        MediaQuery.of(context).padding.bottom;
     final double spaceBelow = screenHeight - offset.dy - size.height;
     final double spaceAbove = offset.dy;
     // Estimate overlay height

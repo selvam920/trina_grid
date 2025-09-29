@@ -11,7 +11,6 @@ class TrinaColumnTypeAutoComplete<T>
   final T? initialValue;
   final void Function(T item) onItemSelected;
   final TrinaAutoCompleteItemBuilder<T> itemBuilder;
-  final double itemHeight;
   final double maxHeight;
   final TrinaAutocompleteOptionToString<T>? displayStringForOption;
 
@@ -22,7 +21,6 @@ class TrinaColumnTypeAutoComplete<T>
     required this.initialValue,
     required this.onItemSelected,
     required this.itemBuilder,
-    required this.itemHeight,
     required this.maxHeight,
     this.displayStringForOption,
   });
@@ -66,7 +64,6 @@ class TrinaColumnTypeAutoComplete<T>
       initialValue: initialValue,
       onItemSelected: onItemSelected,
       itemBuilder: itemBuilder,
-      itemHeight: itemHeight,
       maxHeight: maxHeight,
       displayStringForOption: displayStringForOption,
     );
