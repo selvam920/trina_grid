@@ -130,14 +130,7 @@ class TrinaGridShortcut {
     ): const TrinaGridActionMoveSelectedCellFocusToEdge(
       TrinaMoveDirection.down,
     ),
-    // Set editing
-    LogicalKeySet(LogicalKeyboardKey.f2): const TrinaGridActionSetEditing(),
-    // Focus to column filter
-    LogicalKeySet(LogicalKeyboardKey.f3):
-        const TrinaGridActionFocusToColumnFilter(),
-    // Toggle column sort
-    LogicalKeySet(LogicalKeyboardKey.f4):
-        const TrinaGridActionToggleColumnSort(),
+    
     // Copy the values of cells
     LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
         const TrinaGridActionCopyValues(),
