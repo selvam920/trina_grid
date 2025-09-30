@@ -151,35 +151,6 @@ void main() {
   });
 
   group('Popup interaction', () {
-    testWidgets('Pressing F2 should open the popup', (tester) async {
-      await buildCellAndEdit(tester);
-      await tester.sendKeyEvent(LogicalKeyboardKey.f2);
-      await tester.pumpAndSettle();
-      expect(find.byType(MenuAnchor), findsOneWidget);
-    });
-
-    testWidgets(
-      'After closing popup with ESC and pressing F2 again, popup should reopen',
-      (tester) async {
-        await buildCellAndEdit(tester);
-
-        // Open popup
-        await tester.sendKeyEvent(LogicalKeyboardKey.f2);
-        await tester.pumpAndSettle();
-        expect(find.byType(TrinaDropdownMenu<String>), findsOneWidget);
-
-        // Close popup with escape
-        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-        await tester.pumpAndSettle();
-        expect(find.byType(TrinaDropdownMenu<String>), findsNothing);
-
-        // Reopen popup
-        await tester.sendKeyEvent(LogicalKeyboardKey.f2);
-        await tester.pumpAndSettle();
-        expect(find.byType(TrinaDropdownMenu<String>), findsOneWidget);
-      },
-    );
-
     testWidgets(
       'After selecting an item with arrow keys and enter, value should be updated',
       (tester) async {
@@ -187,7 +158,7 @@ void main() {
         expect(find.byType(TrinaDropdownMenu<String>), findsNothing);
 
         // Open popup
-        await tester.sendKeyEvent(LogicalKeyboardKey.f2);
+        await tester.sendKeyEvent(LogicalKeyboardKey.space);
         await tester.pumpAndSettle();
         expect(find.byType(TrinaDropdownMenu<String>), findsOneWidget);
 

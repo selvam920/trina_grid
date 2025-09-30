@@ -61,12 +61,6 @@ class TrinaKeyManagerEvent {
 
   bool get isTab => event.logicalKey.keyId == LogicalKeyboardKey.tab.keyId;
 
-  bool get isF2 => event.logicalKey.keyId == LogicalKeyboardKey.f2.keyId;
-
-  bool get isF3 => event.logicalKey.keyId == LogicalKeyboardKey.f3.keyId;
-
-  bool get isF4 => event.logicalKey.keyId == LogicalKeyboardKey.f4.keyId;
-
   bool get isBackspace =>
       event.logicalKey.keyId == LogicalKeyboardKey.backspace.keyId;
 

@@ -67,7 +67,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       return KeyEventResult.ignored;
     }
 
-    if (trinaKeyEvent.isF2 || trinaKeyEvent.isSpace) {
+    if (trinaKeyEvent.isSpace) {
       if (!isPopupOpen) {
         openPopup(context);
       }

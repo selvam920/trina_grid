@@ -88,17 +88,6 @@ void main() {
     await tester.sendKeyUpEvent(key);
   });
 
-  testWidgets('When the F4 key is pressed, isF4 must be `true`.', (
-    tester,
-  ) async {
-    await buildWidget(tester: tester, callback: callback);
-
-    const key = LogicalKeyboardKey.f4;
-    await tester.sendKeyDownEvent(key);
-    expect(keyManagerEvent!.isF4, true);
-    await tester.sendKeyUpEvent(key);
-  });
-
   testWidgets(
     'When the Backspace key is pressed, isBackspace must be `true`.',
     (tester) async {
