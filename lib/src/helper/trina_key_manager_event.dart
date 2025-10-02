@@ -105,8 +105,7 @@ class TrinaKeyManagerEvent {
   ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
 
   bool get isCharacter =>
-      (_characters.contains(event.logicalKey.keyId) &&
-          event.logicalKey.keyId != LogicalKeyboardKey.space.keyId) ||
+      _characters.contains(event.logicalKey.keyId) ||
       event.logicalKey.keyId == LogicalKeyboardKey.numpad0.keyId ||
       event.logicalKey.keyId == LogicalKeyboardKey.numpad1.keyId ||
       event.logicalKey.keyId == LogicalKeyboardKey.numpad2.keyId ||

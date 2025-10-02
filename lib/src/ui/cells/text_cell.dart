@@ -223,7 +223,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     if (_debounce.isDebounced(
       hashCode: _textController.text.hashCode,
-      ignore: !kIsWeb,
+      ignore: false,
     )) {
       return KeyEventResult.handled;
     }
