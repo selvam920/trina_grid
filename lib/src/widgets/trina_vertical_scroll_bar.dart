@@ -187,6 +187,44 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
         });
       },
       child: GestureDetector(
+        onTapUp: (details) {
+          // Handle clicks on the track to jump to that position
+          final scrollController = widget.stateManager.scroll.bodyRowsVertical;
+          if (scrollController == null) return;
+
+          final scrollExtent = widget.verticalScrollExtentNotifier.value;
+          final viewportExtent = widget.verticalViewportExtentNotifier.value;
+
+          if (scrollExtent <= 0) return;
+
+          final double thumbHeight =
+              (viewportExtent / (viewportExtent + scrollExtent)) *
+              widget.height;
+
+          // Get the local Y position of the tap
+          final tapY = details.localPosition.dy;
+
+          // Calculate the scroll position where the center of the thumb should be at tapY
+          // thumbPosition = (scrollOffset / scrollExtent) * (widget.height - thumbHeight)
+          // Solving for scrollOffset when thumbPosition + thumbHeight/2 = tapY:
+          final targetThumbPosition = tapY - (thumbHeight / 2);
+          final newScrollOffset =
+              (targetThumbPosition / (widget.height - thumbHeight)) *
+              scrollExtent;
+
+          // Clamp to valid range
+          final clampedOffset = newScrollOffset.clamp(
+            0.0,
+            scrollController.position.maxScrollExtent,
+          );
+
+          // Use animateTo for smooth scrolling instead of jumpTo
+          scrollController.animateTo(
+            clampedOffset,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+          );
+        },
         onPanDown: (_) {
           setState(() {
             _isDragging = true;
@@ -314,7 +352,8 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                                 .stateManager
                                                 .scroll
                                                 .bodyRowsVertical;
-                                            if (scrollController != null) {
+                                            if (scrollController != null &&
+                                                scrollController.hasClients) {
                                               // Apply the scroll by adding delta to current position
                                               final currentOffset =
                                                   scrollController.offset;
@@ -327,7 +366,7 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                                             .maxScrollExtent,
                                                       );
 
-                                              // Jump to the new position
+                                              // Use jumpTo for immediate response during drag
                                               scrollController.jumpTo(
                                                 newOffset,
                                               );
