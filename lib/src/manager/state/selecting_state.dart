@@ -71,6 +71,10 @@ abstract class ISelectingState {
   /// Resets currently selected rows and cells.
   void clearCurrentSelecting({bool notify = true});
 
+  /// Clear only range selections, preserving individual cell selections.
+  /// Used when Ctrl+Click multi-select is enabled to preserve individual selections.
+  void clearRangeSelections({bool notify = true});
+
   /// Select or unselect a row.
   void toggleSelectingRow(int rowIdx, {bool notify = true});
 
@@ -94,6 +98,12 @@ class _State {
   List<TrinaRow> _currentSelectingRows = [];
 
   TrinaGridCellPosition? _currentSelectingPosition;
+
+  // Individual cell tracking for Ctrl+Click multi-select
+  final Set<TrinaGridCellPosition> _individuallySelectedCells = {};
+
+  // Drag state tracking
+  bool _isDragSelecting = false;
 }
 
 mixin SelectingState implements ITrinaGridState {
@@ -111,19 +121,50 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   List<TrinaGridSelectingCellPosition> get currentSelectingPositionList {
-    if (currentCellPosition == null || currentSelectingPosition == null) {
-      return [];
+    final List<TrinaGridSelectingCellPosition> positions = [];
+
+    // Add range selections
+    if (currentCellPosition != null && currentSelectingPosition != null) {
+      switch (selectingMode) {
+        case TrinaGridSelectingMode.cell:
+          positions.addAll(_selectingCells());
+          break;
+        case TrinaGridSelectingMode.horizontal:
+          positions.addAll(_selectingCellsHorizontally());
+          break;
+        case TrinaGridSelectingMode.row:
+        case TrinaGridSelectingMode.none:
+          break;
+      }
     }
 
-    switch (selectingMode) {
-      case TrinaGridSelectingMode.cell:
-        return _selectingCells();
-      case TrinaGridSelectingMode.horizontal:
-        return _selectingCellsHorizontally();
-      case TrinaGridSelectingMode.row:
-      case TrinaGridSelectingMode.none:
-        return [];
+    // Add individual selections (for Ctrl+Click multi-select)
+    if (configuration.enableCtrlClickMultiSelect && selectingMode.isCell) {
+      final columnIndexes = columnIndexesByShowFrozen;
+      for (final cellPos in _state._individuallySelectedCells) {
+        if (cellPos.columnIdx != null &&
+            cellPos.rowIdx != null &&
+            cellPos.columnIdx! < columnIndexes.length &&
+            cellPos.rowIdx! < refRows.length) {
+          final String field =
+              refColumns[columnIndexes[cellPos.columnIdx!]].field;
+          final selectingPos = TrinaGridSelectingCellPosition(
+            rowIdx: cellPos.rowIdx,
+            field: field,
+          );
+          // Avoid duplicates
+          if (!positions.any(
+            (p) =>
+                p.rowIdx == selectingPos.rowIdx &&
+                p.field == selectingPos.field,
+          )) {
+            positions.add(selectingPos);
+          }
+        }
+      }
     }
+
+    return positions;
   }
 
   @override
@@ -150,12 +191,19 @@ mixin SelectingState implements ITrinaGridState {
     final bool fromSelectingPosition =
         currentCellPosition != null && currentSelectingPosition != null;
 
+    // Check for individually selected cells (Ctrl+Click mode)
+    final bool fromIndividualCells =
+        configuration.enableCtrlClickMultiSelect &&
+        selectingMode.isCell &&
+        _state._individuallySelectedCells.isNotEmpty;
+
     final bool fromCurrentCell = currentCellPosition != null;
 
     if (fromSelectingRows) {
       return _selectingTextFromSelectingRows();
-    } else if (fromSelectingPosition) {
-      return _selectingTextFromSelectingPosition();
+    } else if (fromSelectingPosition || fromIndividualCells) {
+      // When we have range selection and/or individual cells, use the combined text
+      return _selectingTextFromAllSelections();
     } else if (fromCurrentCell) {
       return _selectingTextFromCurrentCell();
     }
@@ -165,6 +213,10 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   void setSelecting(bool flag, {bool notify = true}) {
+    debugPrint(
+      '[Selection] setSelecting called - flag: $flag, notify: $notify, current isSelecting: $isSelecting',
+    );
+
     if (selectingMode.isNone) {
       return;
     }
@@ -181,7 +233,19 @@ mixin SelectingState implements ITrinaGridState {
 
     // Invalidates the previously selected row.
     if (isSelecting) {
-      clearCurrentSelecting(notify: false);
+      // When Ctrl+Click multi-select is enabled, preserve individual selections
+      if (configuration.enableCtrlClickMultiSelect &&
+          selectingMode == TrinaGridSelectingMode.cell) {
+        debugPrint(
+          '[Selection] setSelecting - Ctrl+Click mode enabled, clearing only range selections',
+        );
+        clearRangeSelections(notify: false);
+      } else {
+        debugPrint(
+          '[Selection] setSelecting - Standard mode, clearing all selections',
+        );
+        clearCurrentSelecting(notify: false);
+      }
     }
 
     notifyListeners(notify, setSelecting.hashCode);
@@ -257,6 +321,12 @@ mixin SelectingState implements ITrinaGridState {
 
     if (currentSelectingPosition == cellPosition) {
       return;
+    }
+
+    // Exit editing mode when creating a range selection
+    // This ensures copy/paste operations work correctly
+    if (isEditing && cellPosition != null) {
+      setEditing(false, notify: false);
     }
 
     _state._currentSelectingPosition = isInvalidCellPosition(cellPosition)
@@ -377,11 +447,37 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   void clearCurrentSelecting({bool notify = true}) {
+    debugPrint('[Selection] clearCurrentSelecting called - notify: $notify');
+    debugPrint(
+      '[Selection] Clearing ${_state._individuallySelectedCells.length} individual cells',
+    );
+
     _clearCurrentSelectingPosition(notify: false);
 
     _clearCurrentSelectingRows(notify: false);
 
+    // Clear individual selections
+    if (_state._individuallySelectedCells.isNotEmpty) {
+      _state._individuallySelectedCells.clear();
+    }
+
     notifyListeners(notify, clearCurrentSelecting.hashCode);
+  }
+
+  @override
+  void clearRangeSelections({bool notify = true}) {
+    debugPrint('[Selection] clearRangeSelections called - notify: $notify');
+    debugPrint(
+      '[Selection] Preserving ${_state._individuallySelectedCells.length} individual cells',
+    );
+
+    _clearCurrentSelectingPosition(notify: false);
+
+    _clearCurrentSelectingRows(notify: false);
+
+    // Do NOT clear individual selections - that's the difference from clearCurrentSelecting
+
+    notifyListeners(notify, clearRangeSelections.hashCode);
   }
 
   @override
@@ -406,6 +502,164 @@ mixin SelectingState implements ITrinaGridState {
 
     notifyListeners(notify, toggleSelectingRow.hashCode);
   }
+
+  /// Toggle individual cell in multi-select mode.
+  /// Used for Ctrl+Click functionality.
+  void toggleSelectingCell(
+    TrinaGridCellPosition cellPosition, {
+    bool notify = true,
+  }) {
+    debugPrint(
+      '[Selection] toggleSelectingCell called - cellPosition: (${cellPosition.columnIdx}, ${cellPosition.rowIdx}), notify: $notify',
+    );
+    debugPrint(
+      '[Selection] Individual cells count before: ${_state._individuallySelectedCells.length}',
+    );
+
+    if (!configuration.enableCtrlClickMultiSelect) {
+      debugPrint(
+        '[Selection] toggleSelectingCell - Feature not enabled, returning',
+      );
+      return;
+    }
+    if (selectingMode != TrinaGridSelectingMode.cell) {
+      debugPrint(
+        '[Selection] toggleSelectingCell - Not in cell mode, returning',
+      );
+      return;
+    }
+
+    // Exit editing mode when selecting individual cells
+    // This ensures copy/paste operations work correctly
+    if (isEditing) {
+      setEditing(false, notify: false);
+    }
+
+    if (_state._individuallySelectedCells.contains(cellPosition)) {
+      debugPrint(
+        '[Selection] toggleSelectingCell - Removing cell from selection',
+      );
+      _state._individuallySelectedCells.remove(cellPosition);
+    } else {
+      debugPrint('[Selection] toggleSelectingCell - Adding cell to selection');
+      _state._individuallySelectedCells.add(cellPosition);
+    }
+
+    debugPrint(
+      '[Selection] Individual cells count after: ${_state._individuallySelectedCells.length}',
+    );
+    notifyListeners(notify, toggleSelectingCell.hashCode);
+  }
+
+  /// Clear individual cell selections.
+  void clearIndividualSelections({bool notify = true}) {
+    if (_state._individuallySelectedCells.isEmpty) return;
+
+    _state._individuallySelectedCells.clear();
+
+    notifyListeners(notify, clearIndividualSelections.hashCode);
+  }
+
+  /// Start drag selection.
+  void startDragSelection(TrinaGridCellPosition startPosition) {
+    debugPrint(
+      '[Selection] startDragSelection called - col: ${startPosition.columnIdx}, row: ${startPosition.rowIdx}',
+    );
+
+    if (!configuration.enableDragSelection) {
+      debugPrint('[Selection] startDragSelection - Drag selection not enabled');
+      return;
+    }
+    if (selectingMode != TrinaGridSelectingMode.cell) {
+      debugPrint(
+        '[Selection] startDragSelection - Not in cell selecting mode: $selectingMode',
+      );
+      return;
+    }
+
+    _state._isDragSelecting = true;
+    debugPrint('[Selection] startDragSelection - Set _isDragSelecting to true');
+
+    // Set the start position as current cell
+    if (startPosition.columnIdx != null && startPosition.rowIdx != null) {
+      final columnIndexes = columnIndexesByShowFrozen;
+      if (startPosition.columnIdx! < columnIndexes.length &&
+          startPosition.rowIdx! < refRows.length) {
+        final column = refColumns[columnIndexes[startPosition.columnIdx!]];
+        final row = refRows[startPosition.rowIdx!];
+        final cell = row.cells[column.field];
+        if (cell != null) {
+          setCurrentCell(cell, startPosition.rowIdx, notify: false);
+        }
+      }
+    }
+  }
+
+  /// Update drag selection endpoint.
+  void updateDragSelection(TrinaGridCellPosition endPosition) {
+    debugPrint(
+      '[Selection] updateDragSelection called - isDragSelecting: ${_state._isDragSelecting}, col: ${endPosition.columnIdx}, row: ${endPosition.rowIdx}',
+    );
+
+    if (!_state._isDragSelecting) {
+      debugPrint(
+        '[Selection] updateDragSelection - Not drag selecting, returning',
+      );
+      return;
+    }
+
+    debugPrint(
+      '[Selection] updateDragSelection - Calling setCurrentSelectingPosition',
+    );
+    setCurrentSelectingPosition(cellPosition: endPosition, notify: true);
+  }
+
+  /// End drag selection.
+  void endDragSelection() {
+    if (!_state._isDragSelecting) return;
+
+    debugPrint(
+      '[Selection] endDragSelection - Adding ${currentSelectingPositionList.length} cells to individual selections',
+    );
+
+    // Add all cells in the current selection range to individual selections
+    if (configuration.enableCtrlClickMultiSelect) {
+      for (final position in currentSelectingPositionList) {
+        // Convert field name to column index
+        final column = refColumns.firstWhereOrNull(
+          (col) => col.field == position.field,
+        );
+        if (column == null) continue;
+
+        final columnIdx = columnIndex(column);
+        if (columnIdx != null && position.rowIdx != null) {
+          final cellPos = TrinaGridCellPosition(
+            columnIdx: columnIdx,
+            rowIdx: position.rowIdx,
+          );
+          _state._individuallySelectedCells.add(cellPos);
+          debugPrint(
+            '[Selection] Added cell to individual selections: field=${position.field}, col=$columnIdx, row=${position.rowIdx}',
+          );
+        }
+      }
+    }
+
+    // Clear the range selection (but keep individual selections)
+    clearRangeSelections(notify: false);
+
+    _state._isDragSelecting = false;
+
+    debugPrint(
+      '[Selection] endDragSelection - Total individual cells: ${_state._individuallySelectedCells.length}',
+    );
+
+    // Notify listeners to update the UI
+    notifyListeners(true, endDragSelection.hashCode);
+  }
+
+  /// Get drag selecting state.
+  bool get isDragSelecting => _state._isDragSelecting;
 
   @override
   bool isSelectingInteraction() {
@@ -433,6 +687,20 @@ mixin SelectingState implements ITrinaGridState {
   bool isSelectedCell(TrinaCell cell, TrinaColumn column, int rowIdx) {
     if (selectingMode.isNone) {
       return false;
+    }
+
+    // Check individual selections first (for Ctrl+Click multi-select)
+    if (configuration.enableCtrlClickMultiSelect && selectingMode.isCell) {
+      final int? columnIdx = columnIndex(column);
+      if (columnIdx != null) {
+        final cellPosition = TrinaGridCellPosition(
+          columnIdx: columnIdx,
+          rowIdx: rowIdx,
+        );
+        if (_state._individuallySelectedCells.contains(cellPosition)) {
+          return true;
+        }
+      }
     }
 
     if (currentCellPosition == null) {
@@ -701,6 +969,87 @@ mixin SelectingState implements ITrinaGridState {
 
   String _selectingTextFromCurrentCell() {
     return currentCell!.value.toString();
+  }
+
+  String _selectingTextFromAllSelections() {
+    // This method combines BOTH range selections (from Shift+Click)
+    // AND individual cell selections (from Ctrl+Click)
+    final columnIndexes = columnIndexesByShowFrozen;
+
+    // Use currentSelectingPositionList which already combines both types
+    final positions = currentSelectingPositionList;
+
+    // If we have individual cells but no range selection, also include current cell
+    // (When user clicks a cell, then Ctrl+Clicks others, the first cell should be included)
+    final hasRangeSelection =
+        currentCellPosition != null && currentSelectingPosition != null;
+    final hasIndividualCells = _state._individuallySelectedCells.isNotEmpty;
+
+    List<TrinaGridSelectingCellPosition> allPositions = List.from(positions);
+
+    if (hasIndividualCells &&
+        !hasRangeSelection &&
+        currentCellPosition != null) {
+      // Add current cell to the list if it's not already there
+      final currentField = currentColumn?.field;
+      if (currentField != null) {
+        final currentPos = TrinaGridSelectingCellPosition(
+          rowIdx: currentRowIdx,
+          field: currentField,
+        );
+        // Check if current cell is not already in the list
+        if (!allPositions.any(
+          (p) => p.rowIdx == currentPos.rowIdx && p.field == currentPos.field,
+        )) {
+          allPositions.add(currentPos);
+        }
+      }
+    }
+
+    if (allPositions.isEmpty) {
+      return '';
+    }
+
+    // Group positions by row for structured output
+    Map<int, List<TrinaGridSelectingCellPosition>> rowGroups = {};
+    for (final pos in allPositions) {
+      if (pos.rowIdx != null) {
+        rowGroups.putIfAbsent(pos.rowIdx!, () => []).add(pos);
+      }
+    }
+
+    // Sort rows and build text
+    final sortedRowIdxs = rowGroups.keys.toList()..sort();
+    List<String> rowTexts = [];
+
+    for (final rowIdx in sortedRowIdxs) {
+      final rowPositions = rowGroups[rowIdx]!;
+
+      // Sort positions within row by column
+      rowPositions.sort((a, b) {
+        final aColIdx = columnIndexes.indexOf(
+          refColumns.indexWhere((col) => col.field == a.field),
+        );
+        final bColIdx = columnIndexes.indexOf(
+          refColumns.indexWhere((col) => col.field == b.field),
+        );
+        return aColIdx.compareTo(bColIdx);
+      });
+
+      List<String> cellTexts = [];
+      for (final pos in rowPositions) {
+        final cell = refRows[pos.rowIdx!].cells[pos.field];
+        if (cell != null) {
+          cellTexts.add(cell.value.toString());
+        }
+      }
+
+      if (cellTexts.isNotEmpty) {
+        rowTexts.add(cellTexts.join('\t'));
+      }
+    }
+
+    return rowTexts.join('\n');
   }
 
   void _setFistCellAsCurrent() {
