@@ -485,7 +485,9 @@ class _DefaultCellWidget extends StatelessWidget {
     }
 
     return stateManager.rowGroupDelegate!.isExpandableCell(cell) ||
-        stateManager.rowGroupDelegate!.isEditableCell(cell);
+        stateManager.rowGroupDelegate!.isEditableCell(cell) ||
+        cell.hasRenderer ||
+        column.hasRenderer;
   }
 
   String get _text {
