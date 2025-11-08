@@ -1442,7 +1442,7 @@ class TrinaCellColorContext {
 /// Extension class for [ScrollConfiguration.behavior] of [TrinaGrid].
 class TrinaScrollBehavior extends MaterialScrollBehavior {
   const TrinaScrollBehavior({
-    required this.isTouchScroll,
+    this.isTouchScroll = false,
     Set<PointerDeviceKind>? userDragDevices,
     this.scrollPhysics,
   }) : _dragDevices =
@@ -1450,7 +1450,7 @@ class TrinaScrollBehavior extends MaterialScrollBehavior {
            (isTouchScroll ? _mobileDragDevices : _desktopDragDevices),
        super();
 
-  final bool isMobile;
+  final bool isTouchScroll;
   final ScrollPhysics? scrollPhysics;
 
   @override
