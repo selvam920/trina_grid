@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trina_grid/src/model/column_types/trina_column_type_auto_complete.dart';
+import 'package:trina_grid/src/ui/cells/trina_auto_complete.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -174,6 +176,28 @@ abstract interface class TrinaColumnType {
       menuMaxHeight: menuMaxHeight,
       itemToString: itemToString,
       itemToValue: itemToValue,
+    );
+  }
+
+  static TrinaColumnType autoComplete<T>({
+    required TrinaAutoCompleteFetchItems<T> fetchItems,
+    required void Function(T item) onItemSelected,
+    required TrinaAutoCompleteItemBuilder<T> itemBuilder,
+    dynamic defaultValue = '',
+    T? initialValue,
+    double? menuWidth,
+    double menuMaxHeight = 300,
+    TrinaAutocompleteOptionToString? displayStringForOption,
+  }) {
+    return TrinaColumnTypeAutoComplete<T>(
+      defaultValue: defaultValue,
+      fetchItems: fetchItems,
+      width: menuWidth ?? 200,
+      initialValue: initialValue,
+      onItemSelected: onItemSelected,
+      itemBuilder: itemBuilder,
+      maxHeight: menuMaxHeight,
+      displayStringForOption: displayStringForOption,
     );
   }
 

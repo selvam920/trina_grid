@@ -46,7 +46,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   List<TextInputFormatter>? get inputFormatters => [];
 
   String get formattedValue =>
-      widget.column.formattedValueForDisplayInEditing(widget.cell.value);
+      widget.column.formattedValueForDisplayInEditing(widget.cell.value ?? '');
 
   @override
   void initState() {
@@ -120,22 +120,25 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return true;
     }
 
-    final selection = _textController.selection;
+    // final selection = _textController.selection;
 
-    if (selection.baseOffset != selection.extentOffset) {
-      return false;
-    }
+    // if (selection.baseOffset != selection.extentOffset) {
+    //   return false;
+    // }
 
-    if (selection.baseOffset == 0 && keyManager.isLeft) {
+    // if (selection.baseOffset == 0 && keyManager.isLeft) {
+    //   return true;
+    // }
+
+    // final textLength = _textController.text.length;
+
+    // if (selection.baseOffset == textLength && keyManager.isRight) {
+    //   return true;
+    // }
+
+    if (keyManager.isHorizontal) {
       return true;
     }
-
-    final textLength = _textController.text.length;
-
-    if (selection.baseOffset == textLength && keyManager.isRight) {
-      return true;
-    }
-
     return false;
   }
 
@@ -211,7 +214,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
             _moveHorizontal(keyManager) ||
             keyManager.isEsc ||
             keyManager.isTab ||
-            keyManager.isF3 ||
             keyManager.isEnter);
 
     // Movement and enter key, non-editable cell left and right movement, etc. key input is propagated to text field.
@@ -221,7 +223,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     if (_debounce.isDebounced(
       hashCode: _textController.text.hashCode,
-      ignore: !kIsWeb,
+      ignore: false,
     )) {
       return KeyEventResult.handled;
     }

@@ -91,6 +91,8 @@ class TrinaGridShortcut {
     // Default enter key action
     LogicalKeySet(LogicalKeyboardKey.enter):
         const TrinaGridActionDefaultEnterKey(),
+    LogicalKeySet(LogicalKeyboardKey.select):
+        const TrinaGridActionDefaultEnterKey(),
     LogicalKeySet(LogicalKeyboardKey.numpadEnter):
         const TrinaGridActionDefaultEnterKey(),
     LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.enter):
@@ -134,14 +136,7 @@ class TrinaGridShortcut {
     ): const TrinaGridActionMoveSelectedCellFocusToEdge(
       TrinaMoveDirection.down,
     ),
-    // Set editing
-    LogicalKeySet(LogicalKeyboardKey.f2): const TrinaGridActionSetEditing(),
-    // Focus to column filter
-    LogicalKeySet(LogicalKeyboardKey.f3):
-        const TrinaGridActionFocusToColumnFilter(),
-    // Toggle column sort
-    LogicalKeySet(LogicalKeyboardKey.f4):
-        const TrinaGridActionToggleColumnSort(),
+    
     // Copy the values of cells
     LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
         const TrinaGridActionCopyValues(),

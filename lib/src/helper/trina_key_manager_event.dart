@@ -14,7 +14,8 @@ class TrinaKeyManagerEvent {
 
   bool get needsThrottle => isMoving || isTab || isPageUp || isPageDown;
 
-  bool get isKeyDownEvent => event.runtimeType == KeyDownEvent;
+  bool get isKeyDownEvent =>
+      event.runtimeType == KeyDownEvent || event.runtimeType == KeyRepeatEvent;
 
   bool get isKeyUpEvent => event.runtimeType == KeyUpEvent;
 
@@ -55,15 +56,10 @@ class TrinaKeyManagerEvent {
 
   bool get isEnter =>
       event.logicalKey.keyId == LogicalKeyboardKey.enter.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.select.keyId ||
       event.logicalKey.keyId == LogicalKeyboardKey.numpadEnter.keyId;
 
   bool get isTab => event.logicalKey.keyId == LogicalKeyboardKey.tab.keyId;
-
-  bool get isF2 => event.logicalKey.keyId == LogicalKeyboardKey.f2.keyId;
-
-  bool get isF3 => event.logicalKey.keyId == LogicalKeyboardKey.f3.keyId;
-
-  bool get isF4 => event.logicalKey.keyId == LogicalKeyboardKey.f4.keyId;
 
   bool get isBackspace =>
       event.logicalKey.keyId == LogicalKeyboardKey.backspace.keyId;
@@ -108,7 +104,19 @@ class TrinaKeyManagerEvent {
     LogicalKeyboardKey.controlRight,
   ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
 
-  bool get isCharacter => _characters.contains(event.logicalKey.keyId);
+  bool get isCharacter =>
+      _characters.contains(event.logicalKey.keyId) ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad0.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad1.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad2.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad3.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad4.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad5.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad6.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad7.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad8.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpad9.keyId ||
+      event.logicalKey.keyId == LogicalKeyboardKey.numpadDecimal.keyId;
 
   bool get isCtrlC {
     return isCtrlPressed &&

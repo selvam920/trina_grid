@@ -27,15 +27,86 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
     super.initState();
 
     columns.addAll([
-      // A basic select column with a simple list of items.
       TrinaColumn(
-        title: 'Basic',
+        title: 'Autocomplete',
         field: 'select_a',
-        type: TrinaColumnType.select(<String>[
-          'One',
-          'Two',
-          'Three',
-        ], enableColumnFilter: true),
+        type: TrinaColumnType.autoComplete<String>(
+          displayStringForOption: (option) => option,
+          fetchItems: (input) {
+            final items = [
+              'apple',
+              'alphabet',
+              'china',
+              'banana',
+              'orange',
+              'kiwi',
+              'grape',
+              'pear',
+              'peach',
+              'plum',
+              'mango',
+              'melon',
+              'berry',
+              'lemon',
+              'lime',
+              'apricot',
+              'date',
+              'fig',
+              'guava',
+              'papaya',
+              'coconut',
+              'avocado',
+              'pineapple',
+              'watermelon',
+              'cherry',
+              'blueberry',
+              'raspberry',
+              'strawberry',
+              'dragonfruit',
+              'passionfruit',
+              'lychee',
+              'durian',
+              'jackfruit',
+              'tangerine',
+              'nectarine',
+              'pomegranate',
+              'starfruit',
+              'persimmon',
+              'cranberry',
+              'currant',
+              'gooseberry',
+              'elderberry',
+              'mulberry',
+              'boysenberry',
+              'loganberry',
+              'quince',
+              'satsuma',
+              'kumquat',
+              'longan',
+              'rambutan',
+              'sapote',
+              'soursop',
+              'tamarind',
+            ];
+            final filtered = input.isEmpty
+                ? items
+                : items
+                      .where(
+                        (e) => e.toLowerCase().contains(input.toLowerCase()),
+                      )
+                      .toList();
+            return Future.value(filtered);
+          },
+          onItemSelected: (String item) {
+            print(item);
+          },
+          itemBuilder: (context, String item, isSelected) {
+            return Text(item);
+          },
+          menuWidth: 350,
+        ),
+        enableEditingMode: true,
+        enableAutoEditing: true,
       ),
       // A select column that includes a search field in its dropdown menu.
       TrinaColumn(
@@ -58,7 +129,10 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
           ],
           itemToString: (item) => item, // item is already a string
           enableColumnFilter: true,
+          menuWidth: 800,
         ),
+        enableEditingMode: true,
+        enableAutoEditing: true,
       ),
       // A select column with advanced filtering options in the menu.
       TrinaColumn(
@@ -73,6 +147,8 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
             TrinaDropdownMenuFilter.greaterThanOrEqualTo,
           ],
         ),
+        enableEditingMode: true,
+        enableAutoEditing: true,
       ),
       // A select column that uses a custom builder to render each item
       // in the dropdown list.
@@ -144,6 +220,206 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
     ]);
 
     rows.addAll([
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'select_a': TrinaCell(value: 'One'),
+          'select_b': TrinaCell(value: 'Saturn'),
+          'select_c': TrinaCell(value: '100'),
+          'select_d': TrinaCell(value: 'French'),
+          'select_e': TrinaCell(value: 'Africa'),
+          'select_f': TrinaCell(value: 'One'),
+        },
+      ),
       TrinaRow(
         cells: {
           'select_a': TrinaCell(value: 'One'),

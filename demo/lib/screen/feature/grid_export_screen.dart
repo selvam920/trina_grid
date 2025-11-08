@@ -565,7 +565,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
         saveFilePath = await FileSaver.instance.saveFile(
           name: fileName,
           bytes: Uint8List.fromList(content.codeUnits),
-          ext: formatName,
+          fileExtension: formatName,
           mimeType: MimeType.csv,
         );
       } else if (formatName == formatJson) {
@@ -578,7 +578,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
         saveFilePath = await FileSaver.instance.saveFile(
           name: fileName,
           bytes: Uint8List.fromList(content.codeUnits),
-          ext: formatName,
+          fileExtension: formatName,
           mimeType: MimeType.json,
         );
       } else if (formatName == formatPdf) {
@@ -640,7 +640,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
         saveFilePath = await FileSaver.instance.saveFile(
           name: fileName,
           bytes: content,
-          ext: formatName,
+          fileExtension: formatName,
           mimeType: MimeType.pdf,
         );
       } else {
