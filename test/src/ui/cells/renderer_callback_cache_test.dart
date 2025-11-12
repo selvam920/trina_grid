@@ -5,7 +5,6 @@ import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/ui/ui.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../helper/trina_widget_test_helper.dart';
 import '../../../helper/row_helper.dart';
 import '../../../mock/shared_mocks.mocks.dart';
 

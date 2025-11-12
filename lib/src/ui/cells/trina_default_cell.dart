@@ -597,8 +597,8 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
       style: widget.stateManager.configuration.style.cellTextStyle.copyWith(
         decoration: TextDecoration.none,
         fontWeight: FontWeight.normal,
-        color: isCurrentRow
-            ? stateManager.configuration.style.activatedTextColor
+        color: widget.isCurrentRow
+            ? widget.stateManager.configuration.style.activatedTextColor
             : null,
       ),
       overflow: TextOverflow.ellipsis,
