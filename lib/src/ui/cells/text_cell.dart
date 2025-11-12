@@ -38,6 +38,14 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
   late _CellEditingStatus _cellEditingStatus;
 
+  // Cache for checkReadOnly callback result
+  bool? _cachedReadOnly;
+  dynamic _cachedCellValueForReadOnly;
+
+  // Cache for editCellRenderer callback result
+  Widget? _cachedEditCellWidget;
+  dynamic _cachedCellValueForEditRenderer;
+
   @override
   TextInputType get keyboardType => TextInputType.text;
 
@@ -46,6 +54,16 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
   String get formattedValue =>
       widget.column.formattedValueForDisplayInEditing(widget.cell.value ?? '');
+
+  bool get _readOnly {
+    // Cache the checkReadOnly result to avoid excessive callback executions
+    if (_cachedCellValueForReadOnly != widget.cell.value ||
+        _cachedReadOnly == null) {
+      _cachedCellValueForReadOnly = widget.cell.value;
+      _cachedReadOnly = widget.column.checkReadOnly(widget.row, widget.cell);
+    }
+    return _cachedReadOnly!;
+  }
 
   @override
   void initState() {
@@ -259,7 +277,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       child: TextField(
         focusNode: cellFocus,
         controller: _textController,
-        readOnly: widget.column.checkReadOnly(widget.row, widget.cell),
+        readOnly: _readOnly,
         onChanged: _handleOnChanged,
         onEditingComplete: _handleOnComplete,
         onSubmitted: (_) => _handleOnComplete(),
@@ -279,21 +297,33 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     // Use column-level editCellRenderer if available, otherwise fall back to grid-level
     if (widget.column.editCellRenderer != null) {
-      w = widget.column.editCellRenderer!(
-        w,
-        widget.cell,
-        _textController,
-        cellFocus,
-        null,
-      );
+      // Cache the editCellRenderer result to avoid excessive callback executions
+      if (_cachedCellValueForEditRenderer != widget.cell.value ||
+          _cachedEditCellWidget == null) {
+        _cachedCellValueForEditRenderer = widget.cell.value;
+        _cachedEditCellWidget = widget.column.editCellRenderer!(
+          w,
+          widget.cell,
+          _textController,
+          cellFocus,
+          null,
+        );
+      }
+      return _cachedEditCellWidget!;
     } else if (widget.stateManager.editCellRenderer != null) {
-      w = widget.stateManager.editCellRenderer!(
-        w,
-        widget.cell,
-        _textController,
-        cellFocus,
-        null,
-      );
+      // Cache the editCellRenderer result to avoid excessive callback executions
+      if (_cachedCellValueForEditRenderer != widget.cell.value ||
+          _cachedEditCellWidget == null) {
+        _cachedCellValueForEditRenderer = widget.cell.value;
+        _cachedEditCellWidget = widget.stateManager.editCellRenderer!(
+          w,
+          widget.cell,
+          _textController,
+          cellFocus,
+          null,
+        );
+      }
+      return _cachedEditCellWidget!;
     }
 
     return w;
