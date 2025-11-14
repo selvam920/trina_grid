@@ -546,26 +546,15 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
 
     // Check for cell renderer first
     if (widget.cell.hasRenderer) {
-      // Cache the renderer result to avoid excessive callback executions
-      // Invalidate cache if cell value or selection state changes
-      if (_cachedCellValue != widget.cell.value ||
-          _cachedIsCurrentCell != isCurrentCell ||
-          _cachedIsSelectedCell != isSelectedCell ||
-          _cachedRendererWidget == null) {
-        _cachedCellValue = widget.cell.value;
-        _cachedIsCurrentCell = isCurrentCell;
-        _cachedIsSelectedCell = isSelectedCell;
-        _cachedRendererWidget = widget.cell.renderer!(
-          TrinaCellRendererContext(
-            column: widget.column,
-            rowIdx: widget.rowIdx,
-            row: widget.row,
-            cell: widget.cell,
-            stateManager: widget.stateManager,
-          ),
-        );
-      }
-      return _cachedRendererWidget!;
+      return widget.cell.renderer!(
+        TrinaCellRendererContext(
+          column: widget.column,
+          rowIdx: widget.rowIdx,
+          row: widget.row,
+          cell: widget.cell,
+          stateManager: widget.stateManager,
+        ),
+      );
     }
 
     // Fall back to column renderer
