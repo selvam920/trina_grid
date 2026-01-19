@@ -128,6 +128,8 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
       widget.stateManager.setTextEditingController(null);
     }
 
+    _debounceForTextController?.cancel();
+
     _debounce.dispose();
 
     _textController.dispose();
@@ -214,6 +216,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
   void _selectOption(T option) {
     _hideOverlay();
+    _debounceForTextController?.cancel();
     final displayString = widget.displayStringForOption != null
         ? widget.displayStringForOption!(option)
         : option.toString();
@@ -475,7 +478,9 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
   void _filterOptions() {
     _debounceForTextController?.cancel();
+
     final String query = _textController.text;
+
     if (query.isEmpty) {
       setState(() {
         _filteredOptions = [];
@@ -484,32 +489,50 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
       _hideOverlay();
       return;
     }
+
     setState(() {
       _isLoading = true;
       _filteredOptions = [];
       _selectedIndex = 0;
     });
+
     _overlayEntry?.markNeedsBuild();
     _showOverlay();
+
     _debounceForTextController = Timer(
       const Duration(milliseconds: 150),
       () async {
-        final results = await widget.fetchItems(query);
-        setState(() {
-          _filteredOptions = results;
-          _isLoading = false;
-          _selectedIndex = results.isNotEmpty ? 0 : -1;
-        });
-        _overlayEntry?.markNeedsBuild();
-        if (_filteredOptions.isEmpty) {
-          _hideOverlay();
-          _itemKeys.clear();
-        } else {
-          _itemKeys
-            ..clear()
-            ..addAll(
-              List.generate(_filteredOptions.length, (_) => GlobalKey()),
-            );
+        try {
+          final results = await widget.fetchItems(query);
+
+          if (!mounted || _textController.text != query) {
+            return;
+          }
+
+          setState(() {
+            _filteredOptions = results;
+            _isLoading = false;
+            _selectedIndex = results.isNotEmpty ? 0 : -1;
+          });
+
+          _overlayEntry?.markNeedsBuild();
+
+          if (_filteredOptions.isEmpty) {
+            _hideOverlay();
+            _itemKeys.clear();
+          } else {
+            _itemKeys
+              ..clear()
+              ..addAll(
+                List.generate(_filteredOptions.length, (_) => GlobalKey()),
+              );
+          }
+        } catch (e) {
+          if (mounted && _textController.text == query) {
+            setState(() {
+              _isLoading = false;
+            });
+          }
         }
       },
     );
