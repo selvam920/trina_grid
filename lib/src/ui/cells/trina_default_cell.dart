@@ -588,6 +588,9 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
             row: widget.row,
             cell: widget.cell,
             stateManager: widget.stateManager,
+            isCurrentCell: isCurrentCell,
+            isSelectedCell: isSelectedCell,
+            isCurrentRow: widget.isCurrentRow,
           ),
         );
       }

@@ -555,12 +555,24 @@ class TrinaColumnRendererContext {
 
   final TrinaGridStateManager stateManager;
 
+  /// Whether this cell is the currently focused cell.
+  final bool isCurrentCell;
+
+  /// Whether this cell is within the current selection range.
+  final bool isSelectedCell;
+
+  /// Whether this row is the currently active row.
+  final bool isCurrentRow;
+
   TrinaColumnRendererContext({
     required this.column,
     required this.rowIdx,
     required this.row,
     required this.cell,
     required this.stateManager,
+    this.isCurrentCell = false,
+    this.isSelectedCell = false,
+    this.isCurrentRow = false,
   });
 }
 
