@@ -40,7 +40,7 @@ class _MovingScreenState extends State<MovingScreen> {
           'Change the current cell position with the arrow keys, enter key, and tab key.',
         ),
         Text(
-          'When creating a Grid, you can control "Enter key action" and "After pop-up action" with enableMoveDownAfterSelecting and enterKeyAction properties in the configuration.',
+          'When creating a Grid, you can control "Enter key action" and "After pop-up action" with the enterKeyAction property in the configuration.',
         ),
       ],
       topButtons: [
@@ -56,7 +56,6 @@ class _MovingScreenState extends State<MovingScreen> {
           print(event);
         },
         configuration: const TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: true,
           enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
         ),
       ),

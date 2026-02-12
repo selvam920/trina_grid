@@ -477,8 +477,9 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
           print(event);
         },
         configuration: const TrinaGridConfiguration(
-          // If you don't want to move to the next line after selecting the pop-up item, uncomment it.
-          // enableMoveDownAfterSelecting: false,
+          // If you don't want to move to the next line after selecting the pop-up item,
+          // set enterKeyAction to toggleEditing or none.
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveDown,
         ),
       ),
     );

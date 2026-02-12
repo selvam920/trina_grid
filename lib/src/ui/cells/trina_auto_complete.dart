@@ -105,7 +105,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
       } else {
         Future.delayed(const Duration(milliseconds: 300), () {
           if (mounted && !cellFocus.hasFocus) {
-            if (_overlayEntry != null && !_isSelecting) {
+            if (!_isSelecting) {
               _restoreText();
             }
             _hideOverlay();
@@ -129,9 +129,12 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
   @override
   void dispose() {
-    // If restore on cancel is enabled and overlay was open, restore before disposing
-    if (widget.stateManager.configuration.enableRestoreValueOnCancel &&
-        _overlayEntry != null) {
+    final configuration = widget.stateManager.configuration;
+
+    // If restore on cancel is enabled, restore before disposing if it was changed and not explicitly selected
+    if (configuration.enableRestoreValueOnCancel &&
+        _cellEditingStatus.isChanged &&
+        !_isSelecting) {
       _restoreText();
     }
 
@@ -167,7 +170,8 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
       return;
     }
 
-    if (_cellEditingStatus.isNotChanged) {
+    if (_textController.text == formattedValue &&
+        _cellEditingStatus.isNotChanged) {
       return;
     }
 
@@ -249,8 +253,10 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     );
 
     final configuration = widget.stateManager.configuration;
-    final shouldMove = configuration.enableMoveDownAfterSelecting ||
-        configuration.enableMoveRightAfterSelecting;
+    final shouldMove = configuration.enterKeyAction.isEditingAndMoveDown ||
+        configuration.enterKeyAction.isEditingAndMoveRight ||
+        configuration.enterKeyAction.isEditingAndMoveUp ||
+        configuration.enterKeyAction.isEditingAndMoveLeft;
 
     if (!shouldMove) {
       cellFocus.requestFocus();
@@ -258,6 +264,8 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
     widget.stateManager.handleAfterSelectingRow(widget.cell, option);
     widget.onItemSelected(option);
+
+    _cellEditingStatus = _CellEditingStatus.updated;
 
     Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) _isSelecting = false;
@@ -277,9 +285,13 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     }
 
     final value =
-        _textController.text == formattedValue ? widget.cell.value : _textController.text;
+        _textController.text == formattedValue
+            ? widget.cell.value
+            : _textController.text;
 
     widget.stateManager.handleAfterSelectingRow(widget.cell, value);
+
+    _cellEditingStatus = _CellEditingStatus.updated;
   }
 
   KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
@@ -288,7 +300,20 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
         if (event.logicalKey == LogicalKeyboardKey.enter) {
           if (_selectedIndex != -1) {
             _selectOption(_filteredOptions[_selectedIndex]);
+
+            final config = widget.stateManager.configuration;
+            final shouldMove = config.enterKeyAction.isEditingAndMoveDown ||
+                config.enterKeyAction.isEditingAndMoveRight ||
+                config.enterKeyAction.isEditingAndMoveUp ||
+                config.enterKeyAction.isEditingAndMoveLeft;
+
+            if (!shouldMove) {
+              return KeyEventResult.ignored;
+            }
             return KeyEventResult.handled;
+          } else {
+            _hideOverlay();
+            return KeyEventResult.ignored;
           }
         } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
           if (_filteredOptions.isNotEmpty &&
@@ -325,6 +350,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
           _restoreText();
           _hideOverlay();
         } else if (event.logicalKey == LogicalKeyboardKey.escape) {
+          _restoreText();
           _hideOverlay();
           return KeyEventResult.handled;
         }
@@ -394,6 +420,15 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
       // Enter key is propagated to grid focus handler.
       if (keyManager.isEnter) {
+        final config = widget.stateManager.configuration;
+        final shouldMove = config.enterKeyAction.isEditingAndMoveDown ||
+            config.enterKeyAction.isEditingAndMoveRight ||
+            config.enterKeyAction.isEditingAndMoveUp ||
+            config.enterKeyAction.isEditingAndMoveLeft;
+
+        if (!shouldMove) {
+          return KeyEventResult.ignored;
+        }
         _handleOnComplete();
         return KeyEventResult.handled;
       }

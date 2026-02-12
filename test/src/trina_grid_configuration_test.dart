@@ -68,7 +68,6 @@ void main() {
       'When the values of configuration A and B are the same, the comparison should be true.',
       () {
         const configurationA = TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: true,
           enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
           style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
           scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
@@ -76,7 +75,6 @@ void main() {
         );
 
         const configurationB = TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: true,
           enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
           style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
           scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
@@ -91,7 +89,6 @@ void main() {
       'When the values of configuration A and B are the same, the comparison should be true.',
       () {
         const configurationA = TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: true,
           enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
           style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
           scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
@@ -99,7 +96,6 @@ void main() {
         );
 
         const configurationB = TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: true,
           enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
           style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
           scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
@@ -111,10 +107,9 @@ void main() {
     );
 
     test(
-      'When the enableMoveDownAfterSelecting value is different, the comparison should be false.',
+      'When the enterKeyAction value is different, the comparison should be false.',
       () {
         const configurationA = TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: true,
           enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
           style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
           scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
@@ -122,8 +117,7 @@ void main() {
         );
 
         const configurationB = TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: false,
-          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveDown,
           style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
           scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
           localeText: TrinaGridLocaleText(setColumnsTitle: 'test'),
@@ -137,7 +131,6 @@ void main() {
       'When the isAlwaysShown value is different, the comparison should be false.',
       () {
         const configurationA = TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: true,
           enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
           style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
           scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
@@ -145,7 +138,6 @@ void main() {
         );
 
         const configurationB = TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: true,
           enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
           style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
           scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: false),
@@ -160,7 +152,6 @@ void main() {
       'When the localeText value is different, the comparison should be false.',
       () {
         const configurationA = TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: true,
           enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
           style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
           scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
@@ -168,7 +159,6 @@ void main() {
         );
 
         const configurationB = TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: true,
           enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
           style: TrinaGridStyleConfig(columnResizeIcon: IconData(0)),
           scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),

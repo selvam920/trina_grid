@@ -349,8 +349,6 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
           configuration: TrinaGridConfiguration(
             // Rollback text if editing is canceled
             enableRestoreValueOnCancel: _restoreOnCancel,
-            // Move right after selecting from dropdown/autocomplete
-            enableMoveRightAfterSelecting: true,
             // Desktop-focused: Enter edits then moves right (Excel-like)
             enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
             // Tab moves to next cell on edge (Excel-like)

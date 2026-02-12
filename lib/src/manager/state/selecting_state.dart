@@ -822,11 +822,15 @@ mixin SelectingState implements ITrinaGridState {
   void handleAfterSelectingRow(TrinaCell cell, dynamic value) {
     changeCellValue(cell, value, notify: false);
 
-    if (configuration.enableMoveDownAfterSelecting) {
-      moveCurrentCell(TrinaMoveDirection.down, force: true, notify: false);
+    final action = configuration.enterKeyAction;
 
+    if (action.isEditingAndMoveDown) {
+      moveCurrentCell(TrinaMoveDirection.down, force: true, notify: false);
       setEditing(true, notify: false);
-    } else if (configuration.enableMoveRightAfterSelecting) {
+    } else if (action.isEditingAndMoveUp) {
+      moveCurrentCell(TrinaMoveDirection.up, force: true, notify: false);
+      setEditing(true, notify: false);
+    } else if (action.isEditingAndMoveRight) {
       // Check if we're on the last cell of the row
       final position = currentCellPosition;
       final columnIndexes = columnIndexesByShowFrozen;
@@ -848,6 +852,9 @@ mixin SelectingState implements ITrinaGridState {
         moveCurrentCell(TrinaMoveDirection.right, force: true, notify: false);
       }
 
+      setEditing(true, notify: false);
+    } else if (action.isEditingAndMoveLeft) {
+      moveCurrentCell(TrinaMoveDirection.left, force: true, notify: false);
       setEditing(true, notify: false);
     }
 

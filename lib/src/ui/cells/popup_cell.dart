@@ -111,8 +111,13 @@ mixin PopupCellState<T extends PopupCell> on State<T>
 
     widget.stateManager.setEditing(false);
 
-    if (!widget.stateManager.configuration.enableMoveDownAfterSelecting &&
-        !widget.stateManager.configuration.enableMoveRightAfterSelecting) {
+    final config = widget.stateManager.configuration;
+    final shouldMove = config.enterKeyAction.isEditingAndMoveDown ||
+        config.enterKeyAction.isEditingAndMoveRight ||
+        config.enterKeyAction.isEditingAndMoveUp ||
+        config.enterKeyAction.isEditingAndMoveLeft;
+
+    if (!shouldMove) {
       textFocus.requestFocus();
     }
   }

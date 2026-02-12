@@ -120,6 +120,10 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void _restoreText() {
+    if (!widget.stateManager.configuration.enableRestoreValueOnCancel) {
+      return;
+    }
+
     if (_cellEditingStatus.isNotChanged) {
       return;
     }
@@ -127,10 +131,12 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     _textController.text = _initialCellValue.toString();
 
     widget.stateManager.changeCellValue(
-      widget.stateManager.currentCell!,
+      widget.cell,
       _initialCellValue,
       notify: false,
     );
+
+    _cellEditingStatus = _CellEditingStatus.init;
   }
 
   bool _moveHorizontal(TrinaKeyManagerEvent keyManager) {

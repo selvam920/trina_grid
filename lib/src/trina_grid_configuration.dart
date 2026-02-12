@@ -5,12 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class TrinaGridConfiguration {
-  /// When you select a value in the pop-up grid, it moves down.
-  final bool enableMoveDownAfterSelecting;
-
-  /// When you select a value in the pop-up grid, it moves right.
-  final bool enableMoveRightAfterSelecting;
-
   /// Moves the current cell when focus reaches the left or right edge in the edit state.
   final bool enableMoveHorizontalInEditing;
 
@@ -191,8 +185,6 @@ class TrinaGridConfiguration {
   final bool enableRestoreValueOnCancel;
 
   const TrinaGridConfiguration({
-    this.enableMoveDownAfterSelecting = false,
-    this.enableMoveRightAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
     this.enableAutoSelectFirstRow = true,
     this.rowSelectionCheckBoxBehavior =
@@ -218,8 +210,6 @@ class TrinaGridConfiguration {
   });
 
   const TrinaGridConfiguration.dark({
-    this.enableMoveDownAfterSelecting = false,
-    this.enableMoveRightAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
     this.enableAutoSelectFirstRow = true,
     this.rowSelectionCheckBoxBehavior =
@@ -272,8 +262,6 @@ class TrinaGridConfiguration {
   }
 
   TrinaGridConfiguration copyWith({
-    bool? enableMoveDownAfterSelecting,
-    bool? enableMoveRightAfterSelecting,
     bool? enableMoveHorizontalInEditing,
     bool? enableAutoSelectFirstRow,
     TrinaGridRowSelectionCheckBoxBehavior? rowSelectionCheckBoxBehavior,
@@ -295,10 +283,6 @@ class TrinaGridConfiguration {
     bool? enableRestoreValueOnCancel,
   }) {
     return TrinaGridConfiguration(
-      enableMoveDownAfterSelecting:
-          enableMoveDownAfterSelecting ?? this.enableMoveDownAfterSelecting,
-      enableMoveRightAfterSelecting:
-          enableMoveRightAfterSelecting ?? this.enableMoveRightAfterSelecting,
       enableMoveHorizontalInEditing:
           enableMoveHorizontalInEditing ?? this.enableMoveHorizontalInEditing,
       enableAutoSelectFirstRow:
@@ -335,10 +319,6 @@ class TrinaGridConfiguration {
     return identical(this, other) ||
         other is TrinaGridConfiguration &&
             runtimeType == other.runtimeType &&
-            enableMoveDownAfterSelecting ==
-                other.enableMoveDownAfterSelecting &&
-            enableMoveRightAfterSelecting ==
-                other.enableMoveRightAfterSelecting &&
             enableMoveHorizontalInEditing ==
                 other.enableMoveHorizontalInEditing &&
             enableAutoSelectFirstRow == other.enableAutoSelectFirstRow &&
@@ -364,8 +344,6 @@ class TrinaGridConfiguration {
 
   @override
   int get hashCode => Object.hash(
-    enableMoveDownAfterSelecting,
-    enableMoveRightAfterSelecting,
     enableMoveHorizontalInEditing,
     enableAutoSelectFirstRow,
     rowSelectionCheckBoxBehavior,

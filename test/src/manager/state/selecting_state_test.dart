@@ -1169,7 +1169,7 @@ void main() {
   });
 
   group('handleAfterSelectingRow', () {
-    testWidgets('When enableMoveDownAfterSelecting is false'
+    testWidgets('When enterKeyAction is toggleEditing'
         'then cell value change should not move to the next row.', (
       WidgetTester tester,
     ) async {
@@ -1186,7 +1186,7 @@ void main() {
         gridFocusNode: FocusNode(),
         scroll: null,
         configuration: const TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: false,
+          enterKeyAction: TrinaGridEnterKeyAction.toggleEditing,
         ),
       );
 
@@ -1212,7 +1212,7 @@ void main() {
       expect(stateManager.currentCellPosition!.rowIdx, 1);
     });
 
-    testWidgets('When enableMoveDownAfterSelecting is true'
+    testWidgets('When enterKeyAction is editingAndMoveDown'
         'then cell value change should move to the next row.', (
       WidgetTester tester,
     ) async {
@@ -1236,7 +1236,7 @@ void main() {
           horizontal: MockLinkedScrollControllerGroup(),
         ),
         configuration: const TrinaGridConfiguration(
-          enableMoveDownAfterSelecting: true,
+          enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveDown,
         ),
         layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
       );

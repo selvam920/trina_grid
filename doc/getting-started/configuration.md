@@ -188,7 +188,6 @@ Control editing behavior:
 
 ```dart
 TrinaGridConfiguration(
-  enableMoveDownAfterSelecting: true,
   enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveDown,
   enableEditingMode: true,
 )
@@ -443,7 +442,6 @@ TrinaGrid(
     ),
     
     // Behavior configuration
-    enableMoveDownAfterSelecting: true,
     enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveDown,
     selectingMode: TrinaGridSelectingMode.cell,
 

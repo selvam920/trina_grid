@@ -154,8 +154,7 @@ TrinaGrid(
   columns: columns,
   rows: rows,
   configuration: TrinaGridConfiguration(
-    enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveDown,
-    enableMoveDownAfterSelecting: true,
+    enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveDown,
   ),
 )
 ```
