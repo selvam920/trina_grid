@@ -487,6 +487,7 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
   dynamic _cachedCellValue;
   bool? _cachedIsCurrentCell;
   bool? _cachedIsSelectedCell;
+  bool? _cachedIsCurrentRow;
   Widget? _cachedRendererWidget;
   int? _cachedRowVersion;
 
@@ -495,10 +496,13 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
     super.didUpdateWidget(oldWidget);
 
     // Clear cache if the widget properties changed
-    if (oldWidget.cell != widget.cell || oldWidget.row != widget.row) {
+    if (oldWidget.cell != widget.cell ||
+        oldWidget.row != widget.row ||
+        oldWidget.isCurrentRow != widget.isCurrentRow) {
       _cachedCellValue = null;
       _cachedIsCurrentCell = null;
       _cachedIsSelectedCell = null;
+      _cachedIsCurrentRow = null;
       _cachedRowVersion = null;
     }
   }
@@ -550,11 +554,13 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
           _cachedRowVersion != widget.row.version ||
           _cachedIsCurrentCell != isCurrentCell ||
           _cachedIsSelectedCell != isSelectedCell ||
+          _cachedIsCurrentRow != widget.isCurrentRow ||
           _cachedRendererWidget == null) {
         _cachedCellValue = widget.cell.value;
         _cachedRowVersion = widget.row.version;
         _cachedIsCurrentCell = isCurrentCell;
         _cachedIsSelectedCell = isSelectedCell;
+        _cachedIsCurrentRow = widget.isCurrentRow;
         _cachedRendererWidget = widget.cell.renderer!(
           TrinaCellRendererContext(
             column: widget.column,
@@ -576,11 +582,13 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
           _cachedRowVersion != widget.row.version ||
           _cachedIsCurrentCell != isCurrentCell ||
           _cachedIsSelectedCell != isSelectedCell ||
+          _cachedIsCurrentRow != widget.isCurrentRow ||
           _cachedRendererWidget == null) {
         _cachedCellValue = widget.cell.value;
         _cachedRowVersion = widget.row.version;
         _cachedIsCurrentCell = isCurrentCell;
         _cachedIsSelectedCell = isSelectedCell;
+        _cachedIsCurrentRow = widget.isCurrentRow;
         _cachedRendererWidget = widget.column.renderer!(
           TrinaColumnRendererContext(
             column: widget.column,

@@ -132,6 +132,28 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
   }
 
   late final List<TrinaColumn> columns = <TrinaColumn>[
+    /// SNo. — uses renderer with isCurrentRow to change text color
+    TrinaColumn(
+      title: 'SNo.',
+      field: 'sno',
+      type: TrinaColumnType.text(),
+      width: 60,
+      readOnly: true,
+      enableEditingMode: false,
+      renderer: (rendererContext) {
+        return Text(
+          '${rendererContext.rowIdx + 1}',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: rendererContext.isCurrentRow ? Colors.white : Colors.black,
+            fontWeight: rendererContext.isCurrentRow
+                ? FontWeight.bold
+                : FontWeight.normal,
+          ),
+        );
+      },
+    ),
+
     /// Product Name with Autocomplete
     TrinaColumn(
       title: 'Product Name',
@@ -236,6 +258,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
 
       return TrinaRow(
         cells: {
+          'sno': TrinaCell(value: '${index + 1}'),
           'product_name': TrinaCell(value: product),
           'mrp': TrinaCell(value: mrp),
           'rate': TrinaCell(value: rate),
@@ -251,7 +274,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
   final List<TrinaColumnGroup> columnGroups = [
     TrinaColumnGroup(
       title: 'Product Details',
-      fields: ['product_name', 'unit'],
+      fields: ['sno', 'product_name', 'unit'],
     ),
     TrinaColumnGroup(
       title: 'Pricing & Qty',
