@@ -210,7 +210,14 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
-    var keyManager = TrinaKeyManagerEvent(focusNode: node, event: event);
+    var keyManager = TrinaKeyManagerEvent(
+      focusNode: node,
+      event: event,
+      sourceColumn: widget.column,
+      sourceRow: widget.row,
+      sourceCell: widget.cell,
+      sourceRowIdx: widget.stateManager.refRows.indexOf(widget.row),
+    );
 
     if (keyManager.isKeyUpEvent) {
       return KeyEventResult.handled;

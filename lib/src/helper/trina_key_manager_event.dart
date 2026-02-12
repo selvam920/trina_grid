@@ -1,15 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../model/trina_cell.dart';
+import '../model/trina_column.dart';
+import '../model/trina_row.dart';
+
 class TrinaKeyManagerEvent {
   FocusNode focusNode;
   KeyEvent event;
   bool Function(LogicalKeyboardKey key)? isLogicalKeyPressed;
 
+  /// The column that was being edited when this key event originated.
+  /// This is captured before any cursor movement occurs, so it always
+  /// reflects the cell the user was interacting with.
+  final TrinaColumn? sourceColumn;
+
+  /// The row that was being edited when this key event originated.
+  final TrinaRow? sourceRow;
+
+  /// The cell that was being edited when this key event originated.
+  final TrinaCell? sourceCell;
+
+  /// The row index that was being edited when this key event originated.
+  final int? sourceRowIdx;
+
   TrinaKeyManagerEvent({
     required this.focusNode,
     required this.event,
     this.isLogicalKeyPressed,
+    this.sourceColumn,
+    this.sourceRow,
+    this.sourceCell,
+    this.sourceRowIdx,
   });
 
   bool get needsThrottle => isMoving || isTab || isPageUp || isPageDown;

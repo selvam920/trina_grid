@@ -758,7 +758,14 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       return KeyEventResult.ignored;
     }
 
-    final trinaEvent = TrinaKeyManagerEvent(focusNode: focusNode, event: event);
+    final trinaEvent = TrinaKeyManagerEvent(
+      focusNode: focusNode,
+      event: event,
+      sourceColumn: _stateManager.currentColumn,
+      sourceRow: _stateManager.currentRow,
+      sourceCell: _stateManager.currentCell,
+      sourceRowIdx: _stateManager.currentRowIdx,
+    );
 
     if (_isRegisteredShortcut(event)) {
       _keyManager.subject.add(trinaEvent);

@@ -299,6 +299,16 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
           onLoaded: (TrinaGridOnLoadedEvent event) {
             stateManager = event.stateManager;
             stateManager.setShowColumnFilter(true);
+
+            // Listen to key manager events — use sourceColumn for the originating cell
+            stateManager.keyManager?.subject.listen((keyEvent) {
+              if (keyEvent.sourceColumn != null) {
+                debugPrint(
+                  'Key Event: ${keyEvent.event.logicalKey.keyLabel} | '
+                  'Source Column: ${keyEvent.sourceColumn!.title} (${keyEvent.sourceColumn!.field})',
+                );
+              }
+            });
           },
           onChanged: (TrinaGridOnChangedEvent event) {
             debugPrint(

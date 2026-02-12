@@ -294,6 +294,17 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
       if (event is KeyDownEvent || event is KeyRepeatEvent) {
         if (event.logicalKey == LogicalKeyboardKey.enter) {
           if (_selectedIndex != -1) {
+            // Broadcast key event with source info BEFORE selection/movement
+            final keyManager = TrinaKeyManagerEvent(
+              focusNode: node,
+              event: event,
+              sourceColumn: widget.column,
+              sourceRow: widget.row,
+              sourceCell: widget.cell,
+              sourceRowIdx: widget.stateManager.refRows.indexOf(widget.row),
+            );
+            widget.stateManager.keyManager!.subject.add(keyManager);
+
             _selectOption(_filteredOptions[_selectedIndex]);
 
             final config = widget.stateManager.configuration;
@@ -353,14 +364,28 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
       if (_overlayEntry == null) {
         // Fall through to grid navigation if overlay was closed
-        var keyManager = TrinaKeyManagerEvent(focusNode: node, event: event);
+        var keyManager = TrinaKeyManagerEvent(
+          focusNode: node,
+          event: event,
+          sourceColumn: widget.column,
+          sourceRow: widget.row,
+          sourceCell: widget.cell,
+          sourceRowIdx: widget.stateManager.refRows.indexOf(widget.row),
+        );
         widget.stateManager.keyManager!.subject.add(keyManager);
         return KeyEventResult.handled;
       }
 
       return KeyEventResult.ignored;
     } else {
-      var keyManager = TrinaKeyManagerEvent(focusNode: node, event: event);
+      var keyManager = TrinaKeyManagerEvent(
+        focusNode: node,
+        event: event,
+        sourceColumn: widget.column,
+        sourceRow: widget.row,
+        sourceCell: widget.cell,
+        sourceRowIdx: widget.stateManager.refRows.indexOf(widget.row),
+      );
 
       if (keyManager.isKeyUpEvent) {
         return KeyEventResult.handled;
@@ -424,6 +449,8 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
         if (!shouldMove) {
           return KeyEventResult.ignored;
         }
+        // Broadcast key event with source info BEFORE movement
+        widget.stateManager.keyManager!.subject.add(keyManager);
         _handleOnComplete();
         return KeyEventResult.handled;
       }
