@@ -210,11 +210,6 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
   void _selectOption(T option) {
     _isSelecting = true;
     _hideOverlay();
-    final displayString = widget.displayStringForOption != null
-        ? widget.displayStringForOption!(option)
-        : option.toString();
-
-    final bool isChanged = formattedValue != displayString;
 
     final configuration = widget.stateManager.configuration;
     final shouldMove = configuration.enableMoveDownAfterSelecting ||
@@ -224,10 +219,9 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
       cellFocus.requestFocus();
     }
 
-    if (isChanged || shouldMove) {
-      widget.stateManager.handleAfterSelectingRow(widget.cell, displayString);
-      widget.onItemSelected(option);
-    }
+    widget.stateManager.handleAfterSelectingRow(widget.cell, option);
+    widget.onItemSelected(option);
+
     Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) _isSelecting = false;
     });

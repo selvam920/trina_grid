@@ -143,6 +143,7 @@ class TrinaColumnTypeBoolean
   /// Formats a boolean value into its string representation.
   ///
   /// Uses [trueText] and [falseText]. Returns an empty string for `null`.
+  @override
   String formatValue(dynamic value) {
     final boolValue = parseValue(value);
     if (boolValue == null) return '';

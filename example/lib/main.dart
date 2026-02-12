@@ -286,6 +286,18 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
             stateManager.setShowColumnFilter(true);
           },
           onChanged: (TrinaGridOnChangedEvent event) {
+            debugPrint(
+              'Field: ${event.column.field} | Value: ${event.value} (${event.value.runtimeType}) | Old: ${event.oldValue}',
+            );
+
+            // You can get the typed objects directly:
+            if (event.column.field == 'unit') {
+              final unit = event.value is Unit ? event.value as Unit : null;
+              if (unit != null) {
+                debugPrint('Selected Unit Object: ID=${unit.id}, Name=${unit.name}');
+              }
+            }
+
             // When product changes, reset unit if current one is invalid
             if (event.column.field == 'product_name') {
               final unitCell = event.row.cells['unit'];
@@ -293,6 +305,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                 final product = event.value is Product ? event.value as Product : null;
                 final validUnits = _getUnitsForProduct(product);
                 if (!validUnits.contains(unitCell.value)) {
+                  debugPrint('Product changed: updating unit cell to default.');
                   stateManager.changeCellValue(
                     unitCell,
                     validUnits.isNotEmpty ? validUnits.first : null,
@@ -309,6 +322,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
               final amountCell = event.row.cells['amount'];
 
               if (amountCell != null) {
+                debugPrint('Updating amount: $rate * $qty');
                 stateManager.changeCellValue(
                   amountCell,
                   rate * qty,

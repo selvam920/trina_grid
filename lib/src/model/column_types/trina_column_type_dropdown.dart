@@ -98,6 +98,15 @@ class TrinaColumnTypeDropdown<T>
     return v.toString();
   }
 
+  @override
+  String? formatValue(dynamic value) {
+    if (value == null) return null;
+    if (displayStringForOption != null && value is T) {
+      return displayStringForOption!(value);
+    }
+    return null;
+  }
+
   /// Default item builder that renders a simple text widget.
   static Widget _defaultItemBuilder<T>(
     BuildContext context,

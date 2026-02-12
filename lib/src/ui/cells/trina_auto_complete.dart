@@ -228,8 +228,6 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
         ? widget.displayStringForOption!(option)
         : option.toString();
 
-    final bool isChanged = formattedValue != displayString;
-
     _textController.text = displayString;
     _textController.selection = TextSelection.fromPosition(
       TextPosition(offset: _textController.text.length),
@@ -243,10 +241,8 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
       cellFocus.requestFocus();
     }
 
-    if (isChanged || shouldMove) {
-      widget.stateManager.handleAfterSelectingRow(widget.cell, displayString);
-      widget.onItemSelected(option);
-    }
+    widget.stateManager.handleAfterSelectingRow(widget.cell, option);
+    widget.onItemSelected(option);
   }
 
   void _handleOnComplete() {

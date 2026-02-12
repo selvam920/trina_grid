@@ -526,6 +526,10 @@ abstract interface class TrinaColumnType {
   /// into a `DateTime` object.
   dynamic makeCompareValue(dynamic v);
 
+  /// Formats the value for display.
+  /// If null is returned, the grid will use its default formatting logic.
+  String? formatValue(dynamic value);
+
   /// Intercepts and potentially transforms a cell's value before it is updated.
   ///
   /// Return a tuple of `(bool, dynamic)`.
@@ -546,6 +550,8 @@ abstract interface class TrinaColumnType {
 ///
 /// The default implementation is a pass-through that does not alter the value.
 mixin TrinaColumnTypeDefaultMixin {
+  String? formatValue(dynamic value) => null;
+
   (bool, dynamic) filteredValue({dynamic newValue, dynamic oldValue}) =>
       (false, newValue);
 }
