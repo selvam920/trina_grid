@@ -225,8 +225,8 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
               stateManager: stateManager,
             ),
           ),
-        if (spacingWidget != null) spacingWidget,
-        if (expandIcon != null) expandIcon,
+        ?spacingWidget,
+        ?expandIcon,
         Expanded(child: cellWidget),
         if (TrinaDefaultCell.showGroupCount(
           stateManager.rowGroupDelegate,
@@ -290,10 +290,9 @@ class _RowDragIconWidget extends StatelessWidget {
   }
 
   void _handleOnPointerMove(PointerMoveEvent event) {
-    // Do not drag while rows are selected.
-    if (stateManager.isSelecting) {
-      stateManager.setIsDraggingRow(false);
-
+    // Do not start drag while actively selecting rows.
+    // Allow drag to continue if it was already initiated via the drag handle.
+    if (stateManager.isSelecting && !stateManager.isDraggingRow) {
       return;
     }
 
@@ -457,7 +456,7 @@ class CheckboxSelectionWidgetState
   }
 }
 
-class _DefaultCellWidget extends StatelessWidget {
+class _DefaultCellWidget extends StatefulWidget {
   final TrinaGridStateManager stateManager;
 
   final int rowIdx;
@@ -479,75 +478,133 @@ class _DefaultCellWidget extends StatelessWidget {
     this.isCurrentRow = false,
   });
 
+  @override
+  State<_DefaultCellWidget> createState() => _DefaultCellWidgetState();
+}
+
+class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
+  // Cache for cell renderer callback result
+  dynamic _cachedCellValue;
+  bool? _cachedIsCurrentCell;
+  bool? _cachedIsSelectedCell;
+  Widget? _cachedRendererWidget;
+  int? _cachedRowVersion;
+
+  @override
+  void didUpdateWidget(_DefaultCellWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Clear cache if the widget properties changed
+    if (oldWidget.cell != widget.cell || oldWidget.row != widget.row) {
+      _cachedCellValue = null;
+      _cachedIsCurrentCell = null;
+      _cachedIsSelectedCell = null;
+      _cachedRowVersion = null;
+    }
+  }
+
   bool get _showText {
-    if (!stateManager.enabledRowGroups) {
+    if (!widget.stateManager.enabledRowGroups) {
       return true;
     }
 
-    return stateManager.rowGroupDelegate!.isExpandableCell(cell) ||
-        stateManager.rowGroupDelegate!.isEditableCell(cell) ||
-        cell.hasRenderer ||
-        column.hasRenderer;
+    return widget.stateManager.rowGroupDelegate!.isExpandableCell(widget.cell) ||
+        widget.stateManager.rowGroupDelegate!.isEditableCell(widget.cell) ||
+        widget.cell.hasRenderer ||
+        widget.column.hasRenderer;
   }
 
   String get _text {
     if (!_showText) return '';
 
-    dynamic cellValue = cell.value;
+    dynamic cellValue = widget.cell.value;
 
-    if (stateManager.enabledRowGroups &&
-        stateManager.rowGroupDelegate!.showFirstExpandableIcon &&
-        stateManager.rowGroupDelegate!.type.isByColumn) {
+    if (widget.stateManager.enabledRowGroups &&
+        widget.stateManager.rowGroupDelegate!.showFirstExpandableIcon &&
+        widget.stateManager.rowGroupDelegate!.type.isByColumn) {
       final delegate =
-          stateManager.rowGroupDelegate as TrinaRowGroupByColumnDelegate;
+          widget.stateManager.rowGroupDelegate as TrinaRowGroupByColumnDelegate;
 
-      if (row.depth < delegate.columns.length) {
-        cellValue = row.cells[delegate.columns[row.depth].field]!.value;
+      if (widget.row.depth < delegate.columns.length) {
+        cellValue = widget.row.cells[delegate.columns[widget.row.depth].field]!.value;
       }
     }
 
-    return column.formattedValueForDisplay(cellValue);
+    return widget.column.formattedValueForDisplay(cellValue);
   }
 
   @override
   Widget build(BuildContext context) {
+    final isCurrentCell = widget.stateManager.isCurrentCell(widget.cell);
+    final isSelectedCell = widget.stateManager.isSelectedCell(
+      widget.cell,
+      widget.column,
+      widget.rowIdx,
+    );
+
     // Check for cell renderer first
-    if (cell.hasRenderer) {
-      return cell.renderer!(
-        TrinaCellRendererContext(
-          column: column,
-          rowIdx: rowIdx,
-          row: row,
-          cell: cell,
-          stateManager: stateManager,
-        ),
-      );
+    if (widget.cell.hasRenderer) {
+      // Cache the renderer result to avoid excessive callback executions
+      // Invalidate cache if cell value, row version, or selection state changes
+      if (_cachedCellValue != widget.cell.value ||
+          _cachedRowVersion != widget.row.version ||
+          _cachedIsCurrentCell != isCurrentCell ||
+          _cachedIsSelectedCell != isSelectedCell ||
+          _cachedRendererWidget == null) {
+        _cachedCellValue = widget.cell.value;
+        _cachedRowVersion = widget.row.version;
+        _cachedIsCurrentCell = isCurrentCell;
+        _cachedIsSelectedCell = isSelectedCell;
+        _cachedRendererWidget = widget.cell.renderer!(
+          TrinaCellRendererContext(
+            column: widget.column,
+            rowIdx: widget.rowIdx,
+            row: widget.row,
+            cell: widget.cell,
+            stateManager: widget.stateManager,
+          ),
+        );
+      }
+      return _cachedRendererWidget!;
     }
 
     // Fall back to column renderer
-    if (column.hasRenderer) {
-      return column.renderer!(
-        TrinaColumnRendererContext(
-          column: column,
-          rowIdx: rowIdx,
-          row: row,
-          cell: cell,
-          stateManager: stateManager,
-        ),
-      );
+    if (widget.column.hasRenderer) {
+      // Cache the renderer result to avoid excessive callback executions
+      // Invalidate cache if cell value, row version, or selection state changes
+      if (_cachedCellValue != widget.cell.value ||
+          _cachedRowVersion != widget.row.version ||
+          _cachedIsCurrentCell != isCurrentCell ||
+          _cachedIsSelectedCell != isSelectedCell ||
+          _cachedRendererWidget == null) {
+        _cachedCellValue = widget.cell.value;
+        _cachedRowVersion = widget.row.version;
+        _cachedIsCurrentCell = isCurrentCell;
+        _cachedIsSelectedCell = isSelectedCell;
+        _cachedRendererWidget = widget.column.renderer!(
+          TrinaColumnRendererContext(
+            column: widget.column,
+            rowIdx: widget.rowIdx,
+            row: widget.row,
+            cell: widget.cell,
+            stateManager: widget.stateManager,
+          ),
+        );
+      }
+      return _cachedRendererWidget!;
     }
 
     return Text(
       _text,
-      style: stateManager.configuration.style.cellTextStyle.copyWith(
+      style: widget.stateManager.configuration.style.cellTextStyle.copyWith(
         decoration: TextDecoration.none,
         fontWeight: FontWeight.normal,
-        color: isCurrentRow
-            ? stateManager.configuration.style.activatedTextColor
+        color: widget.isCurrentRow
+            ? widget.stateManager.configuration.style.activatedTextColor
             : null,
       ),
       overflow: TextOverflow.ellipsis,
-      textAlign: column.textAlign.value,
+      textAlign: widget.column.textAlign.value,
     );
   }
 }

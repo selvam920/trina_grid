@@ -32,6 +32,7 @@ class TrinaColumnTypeSelect<T>
     this.menuMaxHeight = 300,
     this.itemToString,
     this.itemToValue,
+    this.itemsProvider,
   });
 
   @override
@@ -96,14 +97,42 @@ class TrinaColumnTypeSelect<T>
   @override
   final WidgetBuilder? menuEmptySearchResultBuilder;
 
+  /// A callback function that provides items dynamically based on the row.
+  /// If provided, this takes precedence over the static [items] list.
+  ///
+  /// Example:
+  /// ```dart
+  /// itemsProvider: (row, cell) {
+  ///   // Return different items based on row data
+  ///   if (row.cells['category']?.value == 'A') {
+  ///     return ['Option1', 'Option2'];
+  ///   } else {
+  ///     return ['Option3', 'Option4'];
+  ///   }
+  /// }
+  /// ```
+  final List<T> Function(TrinaRow row, TrinaCell cell)? itemsProvider;
+
   /// A value is valid if it is present in the [items] list.
+  /// When [itemsProvider] is used, validation is skipped since items are dynamic.
   @override
-  bool isValid(dynamic value) => items.contains(value) == true;
+  bool isValid(dynamic value) {
+    // If itemsProvider is used, skip validation as items are dynamic per row
+    if (itemsProvider != null) {
+      return true;
+    }
+    return items.contains(value) == true;
+  }
 
   /// Compares two values based on their index in the [items] list.
+  /// When [itemsProvider] is used, compares values as strings.
   @override
   int compare(dynamic a, dynamic b) {
     return TrinaGeneralHelper.compareWithNull(a, b, () {
+      // If itemsProvider is used, compare as strings since items are dynamic
+      if (itemsProvider != null) {
+        return a.toString().compareTo(b.toString());
+      }
       return items.indexOf(a).compareTo(items.indexOf(b));
     });
   }

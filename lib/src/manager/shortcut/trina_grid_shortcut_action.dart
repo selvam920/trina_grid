@@ -258,9 +258,15 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
 
     final saveIsEditing = stateManager.isEditing;
 
-    keyEvent.isShiftPressed
-        ? _moveCellPrevious(stateManager)
-        : _moveCellNext(stateManager);
+    if (stateManager.configuration.tabKeyAction.isMoveToNextOnVerticalEdge) {
+      keyEvent.isShiftPressed
+          ? _moveCellPreviousVertical(stateManager)
+          : _moveCellNextVertical(stateManager);
+    } else {
+      keyEvent.isShiftPressed
+          ? _moveCellPrevious(stateManager)
+          : _moveCellNext(stateManager);
+    }
 
     stateManager.setEditing(stateManager.autoEditing || saveIsEditing);
   }
@@ -281,6 +287,25 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
       _moveCellToNextRow(stateManager);
     } else {
       stateManager.moveCurrentCell(TrinaMoveDirection.right, force: true);
+    }
+  }
+
+  void _moveCellPreviousVertical(TrinaGridStateManager stateManager) {
+    if (_willMoveToPreviousColumn(
+      stateManager.currentCellPosition,
+      stateManager,
+    )) {
+      _moveCellToPreviousColumn(stateManager);
+    } else {
+      stateManager.moveCurrentCell(TrinaMoveDirection.up, force: true);
+    }
+  }
+
+  void _moveCellNextVertical(TrinaGridStateManager stateManager) {
+    if (_willMoveToNextColumn(stateManager.currentCellPosition, stateManager)) {
+      _moveCellToNextColumn(stateManager);
+    } else {
+      stateManager.moveCurrentCell(TrinaMoveDirection.down, force: true);
     }
   }
 
@@ -311,6 +336,33 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
         position.columnIdx == stateManager.refColumns.length - 1;
   }
 
+  bool _willMoveToPreviousColumn(
+    TrinaGridCellPosition? position,
+    TrinaGridStateManager stateManager,
+  ) {
+    if (!stateManager.configuration.tabKeyAction.isMoveToNextOnVerticalEdge ||
+        position == null ||
+        !position.hasPosition) {
+      return false;
+    }
+
+    return position.columnIdx! > 0 && position.rowIdx == 0;
+  }
+
+  bool _willMoveToNextColumn(
+    TrinaGridCellPosition? position,
+    TrinaGridStateManager stateManager,
+  ) {
+    if (!stateManager.configuration.tabKeyAction.isMoveToNextOnVerticalEdge ||
+        position == null ||
+        !position.hasPosition) {
+      return false;
+    }
+
+    return position.columnIdx! < stateManager.refColumns.length - 1 &&
+        position.rowIdx == stateManager.refRows.length - 1;
+  }
+
   void _moveCellToPreviousRow(TrinaGridStateManager stateManager) {
     stateManager.moveCurrentCell(
       TrinaMoveDirection.up,
@@ -333,6 +385,32 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
 
     stateManager.moveCurrentCellToEdgeOfColumns(
       TrinaMoveDirection.left,
+      force: true,
+    );
+  }
+
+  void _moveCellToPreviousColumn(TrinaGridStateManager stateManager) {
+    stateManager.moveCurrentCell(
+      TrinaMoveDirection.left,
+      force: true,
+      notify: false,
+    );
+
+    stateManager.moveCurrentCellToEdgeOfRows(
+      TrinaMoveDirection.down,
+      force: true,
+    );
+  }
+
+  void _moveCellToNextColumn(TrinaGridStateManager stateManager) {
+    stateManager.moveCurrentCell(
+      TrinaMoveDirection.right,
+      force: true,
+      notify: false,
+    );
+
+    stateManager.moveCurrentCellToEdgeOfRows(
+      TrinaMoveDirection.up,
       force: true,
     );
   }
@@ -431,6 +509,12 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
       } else {
         stateManager.moveCurrentCell(TrinaMoveDirection.down, notify: false);
       }
+    } else if (enterKeyAction.isEditingAndMoveUp) {
+      if (keyEvent.isShiftPressed) {
+        stateManager.moveCurrentCell(TrinaMoveDirection.down, notify: false);
+      } else {
+        stateManager.moveCurrentCell(TrinaMoveDirection.up, notify: false);
+      }
     } else if (enterKeyAction.isEditingAndMoveRight) {
       if (keyEvent.isShiftPressed) {
         stateManager.moveCurrentCell(
@@ -461,6 +545,40 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
         } else {
           stateManager.moveCurrentCell(
             TrinaMoveDirection.right,
+            force: true,
+            notify: false,
+          );
+        }
+      }
+    } else if (enterKeyAction.isEditingAndMoveLeft) {
+      if (keyEvent.isShiftPressed) {
+        stateManager.moveCurrentCell(
+          TrinaMoveDirection.right,
+          force: true,
+          notify: false,
+        );
+      } else {
+        // Check if we're on the first cell of the row
+        final position = stateManager.currentCellPosition;
+        final columnIndexes = stateManager.columnIndexesByShowFrozen;
+        final currentVisualIndex = columnIndexes.indexOf(position!.columnIdx!);
+        final isAtFirstColumn = currentVisualIndex == 0;
+
+        if (isAtFirstColumn && position.rowIdx! > 0) {
+          // Move to last cell of previous row
+          stateManager.moveCurrentCell(
+            TrinaMoveDirection.up,
+            force: true,
+            notify: false,
+          );
+          stateManager.moveCurrentCellToEdgeOfColumns(
+            TrinaMoveDirection.right,
+            force: true,
+            notify: false,
+          );
+        } else {
+          stateManager.moveCurrentCell(
+            TrinaMoveDirection.left,
             force: true,
             notify: false,
           );

@@ -350,9 +350,12 @@ mixin CellState implements ITrinaGridState {
     if (typeResult.$1) return typeResult.$2;
 
     if (column.type.isSelect) {
-      return column.type.asSelect().items.contains(newValue) == true
-          ? newValue
-          : oldValue;
+      final selectType = column.type.asSelect();
+      // If using itemsProvider, skip static items validation
+      if (selectType.itemsProvider != null) {
+        return newValue;
+      }
+      return selectType.items.contains(newValue) == true ? newValue : oldValue;
     }
 
     if (column.type.isDate) {

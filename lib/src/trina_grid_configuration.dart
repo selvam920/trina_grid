@@ -8,6 +8,9 @@ class TrinaGridConfiguration {
   /// When you select a value in the pop-up grid, it moves down.
   final bool enableMoveDownAfterSelecting;
 
+  /// When you select a value in the pop-up grid, it moves right.
+  final bool enableMoveRightAfterSelecting;
+
   /// Moves the current cell when focus reaches the left or right edge in the edit state.
   final bool enableMoveHorizontalInEditing;
 
@@ -180,6 +183,7 @@ class TrinaGridConfiguration {
 
   const TrinaGridConfiguration({
     this.enableMoveDownAfterSelecting = false,
+    this.enableMoveRightAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
     this.enableAutoSelectFirstRow = true,
     this.rowSelectionCheckBoxBehavior =
@@ -205,6 +209,7 @@ class TrinaGridConfiguration {
 
   const TrinaGridConfiguration.dark({
     this.enableMoveDownAfterSelecting = false,
+    this.enableMoveRightAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
     this.enableAutoSelectFirstRow = true,
     this.rowSelectionCheckBoxBehavior =
@@ -257,6 +262,7 @@ class TrinaGridConfiguration {
 
   TrinaGridConfiguration copyWith({
     bool? enableMoveDownAfterSelecting,
+    bool? enableMoveRightAfterSelecting,
     bool? enableMoveHorizontalInEditing,
     bool? enableAutoSelectFirstRow,
     TrinaGridRowSelectionCheckBoxBehavior? rowSelectionCheckBoxBehavior,
@@ -279,6 +285,8 @@ class TrinaGridConfiguration {
     return TrinaGridConfiguration(
       enableMoveDownAfterSelecting:
           enableMoveDownAfterSelecting ?? this.enableMoveDownAfterSelecting,
+      enableMoveRightAfterSelecting:
+          enableMoveRightAfterSelecting ?? this.enableMoveRightAfterSelecting,
       enableMoveHorizontalInEditing:
           enableMoveHorizontalInEditing ?? this.enableMoveHorizontalInEditing,
       enableAutoSelectFirstRow:
@@ -315,6 +323,8 @@ class TrinaGridConfiguration {
             runtimeType == other.runtimeType &&
             enableMoveDownAfterSelecting ==
                 other.enableMoveDownAfterSelecting &&
+            enableMoveRightAfterSelecting ==
+                other.enableMoveRightAfterSelecting &&
             enableMoveHorizontalInEditing ==
                 other.enableMoveHorizontalInEditing &&
             enableAutoSelectFirstRow == other.enableAutoSelectFirstRow &&
@@ -340,6 +350,7 @@ class TrinaGridConfiguration {
   @override
   int get hashCode => Object.hash(
     enableMoveDownAfterSelecting,
+    enableMoveRightAfterSelecting,
     enableMoveHorizontalInEditing,
     enableAutoSelectFirstRow,
     rowSelectionCheckBoxBehavior,
@@ -782,6 +793,13 @@ class TrinaGridStyleConfig {
     TrinaOptional<Color?>? evenRowColor,
     Color? activatedColor,
     Color? activatedTextColor,
+    bool? enableRowHoverColor,
+    Color? rowCheckedColor,
+    Color? rowHoveredColor,
+    Color? cellDefaultColor,
+    Color? cellDirtyColor,
+    Color? frozenRowColor,
+    Color? frozenRowBorderColor,
     Color? columnCheckedColor,
     BorderSide? columnCheckedSide,
     Color? cellCheckedColor,
@@ -855,6 +873,14 @@ class TrinaGridStyleConfig {
             ? this.evenRowColor
             : evenRowColor.value,
         activatedColor: activatedColor ?? this.activatedColor,
+        activatedTextColor: activatedTextColor ?? this.activatedTextColor,
+        enableRowHoverColor: enableRowHoverColor ?? this.enableRowHoverColor,
+        rowCheckedColor: rowCheckedColor ?? this.rowCheckedColor,
+        rowHoveredColor: rowHoveredColor ?? this.rowHoveredColor,
+        cellDefaultColor: cellDefaultColor ?? this.cellDefaultColor,
+        cellDirtyColor: cellDirtyColor ?? this.cellDirtyColor,
+        frozenRowColor: frozenRowColor ?? this.frozenRowColor,
+        frozenRowBorderColor: frozenRowBorderColor ?? this.frozenRowBorderColor,
         columnCheckedColor: columnCheckedColor ?? this.columnCheckedColor,
         columnCheckedSide: columnCheckedSide ?? this.columnCheckedSide,
         cellCheckedColor: cellCheckedColor ?? this.cellCheckedColor,
@@ -1084,6 +1110,14 @@ class TrinaGridStyleConfig {
     oddRowColor,
     evenRowColor,
     activatedColor,
+    activatedTextColor,
+    enableRowHoverColor,
+    rowCheckedColor,
+    rowHoveredColor,
+    cellDefaultColor,
+    cellDirtyColor,
+    frozenRowColor,
+    frozenRowBorderColor,
     columnCheckedColor,
     columnCheckedSide,
     cellCheckedColor,
@@ -2453,7 +2487,20 @@ class TrinaGridLocaleText {
             loadingText == other.loadingText &&
             multiLineFilterHint == other.multiLineFilterHint &&
             multiLineFilterEditTitle == other.multiLineFilterEditTitle &&
-            multiLineFilterOkButton == other.multiLineFilterOkButton;
+            multiLineFilterOkButton == other.multiLineFilterOkButton &&
+            paginationGoToPageTitle == other.paginationGoToPageTitle &&
+            paginationGoToPageLabel == other.paginationGoToPageLabel &&
+            paginationCancelButton == other.paginationCancelButton &&
+            paginationGoButton == other.paginationGoButton &&
+            paginationInvalidPageNumberMessage == other.paginationInvalidPageNumberMessage &&
+            paginationGoToPageTooltip == other.paginationGoToPageTooltip &&
+            timePickerHourLabel == other.timePickerHourLabel &&
+            timePickerMinuteLabel == other.timePickerMinuteLabel &&
+            timePickerInvalidHourMessage == other.timePickerInvalidHourMessage &&
+            timePickerInvalidMinuteMessage == other.timePickerInvalidMinuteMessage &&
+            timePickerMinTimeMessage == other.timePickerMinTimeMessage &&
+            timePickerMaxTimeMessage == other.timePickerMaxTimeMessage &&
+            timePickerInvalidValueMessage == other.timePickerInvalidValueMessage;
   }
 
   @override
@@ -2492,6 +2539,19 @@ class TrinaGridLocaleText {
     multiLineFilterHint,
     multiLineFilterEditTitle,
     multiLineFilterOkButton,
+    paginationGoToPageTitle,
+    paginationGoToPageLabel,
+    paginationCancelButton,
+    paginationGoButton,
+    paginationInvalidPageNumberMessage,
+    paginationGoToPageTooltip,
+    timePickerHourLabel,
+    timePickerMinuteLabel,
+    timePickerInvalidHourMessage,
+    timePickerInvalidMinuteMessage,
+    timePickerMinTimeMessage,
+    timePickerMaxTimeMessage,
+    timePickerInvalidValueMessage,
   ]);
 }
 
@@ -2519,8 +2579,16 @@ enum TrinaGridEnterKeyAction {
   editingAndMoveDown,
 
   /// When the Enter key is pressed, the cell is changed to the edit state,
+  /// or if it is already in the edit state, it moves to the cell above.
+  editingAndMoveUp,
+
+  /// When the Enter key is pressed, the cell is changed to the edit state,
   /// or if it is already in the edit state, it moves to the right cell.
   editingAndMoveRight,
+
+  /// When the Enter key is pressed, the cell is changed to the edit state,
+  /// or if it is already in the edit state, it moves to the left cell.
+  editingAndMoveLeft,
 
   /// Pressing the Enter key toggles the editing status.
   toggleEditing,
@@ -2531,8 +2599,14 @@ enum TrinaGridEnterKeyAction {
   bool get isEditingAndMoveDown =>
       this == TrinaGridEnterKeyAction.editingAndMoveDown;
 
+  bool get isEditingAndMoveUp =>
+      this == TrinaGridEnterKeyAction.editingAndMoveUp;
+
   bool get isEditingAndMoveRight =>
       this == TrinaGridEnterKeyAction.editingAndMoveRight;
+
+  bool get isEditingAndMoveLeft =>
+      this == TrinaGridEnterKeyAction.editingAndMoveLeft;
 
   bool get isToggleEditing => this == TrinaGridEnterKeyAction.toggleEditing;
 
@@ -2550,9 +2624,16 @@ enum TrinaGridTabKeyAction {
   /// Tab or Shift Tab key to continue moving to the next or previous row
   /// of cells when the edge is reached.
   /// {@endtemplate}
-  moveToNextOnEdge;
+  moveToNextOnEdge,
+
+  /// Tab or Shift Tab key moves focus vertically, and moves to the next
+  /// column when reaching the bottom or top edge.
+  moveToNextOnVerticalEdge;
 
   bool get isNormal => this == TrinaGridTabKeyAction.normal;
 
   bool get isMoveToNextOnEdge => this == TrinaGridTabKeyAction.moveToNextOnEdge;
+
+  bool get isMoveToNextOnVerticalEdge =>
+      this == TrinaGridTabKeyAction.moveToNextOnVerticalEdge;
 }

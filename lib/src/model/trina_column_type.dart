@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:trina_grid/src/model/column_types/trina_column_type_auto_complete.dart';
-import 'package:trina_grid/src/ui/cells/trina_auto_complete.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -128,6 +126,8 @@ abstract interface class TrinaColumnType {
   /// [TrinaColumnType.selectWithFilters].
   ///
   /// - [items]: The list of values to display in the popup menu.
+  /// - [itemsProvider]: A callback to provide items dynamically per row.
+  ///   If provided, this takes precedence over [items].
   /// - [onItemSelected]: A callback invoked when an item is selected.
   /// - [enableColumnFilter]: Whether to enable the default column filter UI.
   /// - [popupIcon]: The icon used to open the selection menu.
@@ -162,6 +162,7 @@ abstract interface class TrinaColumnType {
     ItemBuilder<T>? menuItemBuilder,
     String Function(T item)? itemToString,
     dynamic Function(T item)? itemToValue,
+    List<T> Function(TrinaRow row, TrinaCell cell)? itemsProvider,
   }) {
     return TrinaColumnTypeSelect<T>(
       menuVariant: TrinaDropdownMenuVariant.select,
@@ -176,34 +177,100 @@ abstract interface class TrinaColumnType {
       menuMaxHeight: menuMaxHeight,
       itemToString: itemToString,
       itemToValue: itemToValue,
+      itemsProvider: itemsProvider,
     );
   }
 
+  /// Creates a column with autocomplete/typeahead functionality.
+  ///
+  /// As the user types, [fetchItems] is called to retrieve matching suggestions.
+  /// Results are displayed in a dropdown overlay with full keyboard navigation.
+  ///
+  /// - [fetchItems]: **Required.** Async function returning items matching the query.
+  /// - [onItemSelected]: Called when the user selects an item.
+  /// - [itemBuilder]: Custom widget builder for each suggestion item.
+  /// - [menuWidth]: Width of the dropdown. Defaults to the column width.
+  /// - [menuMaxHeight]: Maximum height of the dropdown.
+  /// - [autoOpen]: Whether to automatically open the dropdown when focused.
+  /// - [displayStringForOption]: Extracts display text from an item for the text field.
+  /// - [itemToString]: Converts an item to its string representation.
+  /// - [itemToValue]: Extracts a comparable value from an item.
   static TrinaColumnType autoComplete<T>({
     required TrinaAutoCompleteFetchItems<T> fetchItems,
-    required void Function(T item) onItemSelected,
-    required TrinaAutoCompleteItemBuilder<T> itemBuilder,
+    void Function(T item)? onItemSelected,
+    TrinaAutoCompleteItemBuilder<T>? itemBuilder,
     dynamic defaultValue = '',
     T? initialValue,
     double? menuWidth,
     double menuMaxHeight = 300,
-    TrinaAutocompleteOptionToString? displayStringForOption,
+    bool autoOpen = false,
+    TrinaAutocompleteOptionToString<T>? displayStringForOption,
+    String Function(T item)? itemToString,
+    dynamic Function(T item)? itemToValue,
   }) {
     return TrinaColumnTypeAutoComplete<T>(
       defaultValue: defaultValue,
       fetchItems: fetchItems,
-      width: menuWidth ?? 200,
+      width: menuWidth,
       initialValue: initialValue,
       onItemSelected: onItemSelected,
       itemBuilder: itemBuilder,
       maxHeight: menuMaxHeight,
+      autoOpen: autoOpen,
       displayStringForOption: displayStringForOption,
+      itemToString: itemToString,
+      itemToValue: itemToValue,
+    );
+  }
+
+  /// Creates a column with a dropdown list that is not editable by text input.
+  ///
+  /// - [items]: The list of values to display in the dropdown.
+  /// - [itemsProvider]: A callback to provide items dynamically per row.
+  ///   If provided, this takes precedence over [items].
+  /// - [onItemSelected]: Called when an item is selected.
+  /// - [itemBuilder]: Custom widget builder for each dropdown item.
+  /// - [menuWidth]: Width of the dropdown. Defaults to the column width.
+  /// - [menuMaxHeight]: Maximum height of the dropdown.
+  /// - [autoOpen]: Whether to automatically open the dropdown when focused.
+  /// - [displayStringForOption]: Extracts display text from an item.
+  /// - [itemToString]: Converts an item to its string representation.
+  /// - [itemToValue]: Extracts a comparable value from an item.
+  static TrinaColumnType dropdown<T>({
+    List<T> items = const [],
+    List<T> Function(TrinaRow row, TrinaCell cell)? itemsProvider,
+    void Function(T item)? onItemSelected,
+    TrinaAutoCompleteItemBuilder<T>? itemBuilder,
+    dynamic defaultValue = '',
+    T? initialValue,
+    double? menuWidth,
+    double menuMaxHeight = 300,
+    bool autoOpen = true,
+    TrinaAutocompleteOptionToString<T>? displayStringForOption,
+    String Function(T item)? itemToString,
+    dynamic Function(T item)? itemToValue,
+  }) {
+    return TrinaColumnTypeDropdown<T>(
+      defaultValue: defaultValue,
+      items: items,
+      itemsProvider: itemsProvider,
+      width: menuWidth,
+      initialValue: initialValue,
+      onItemSelected: onItemSelected,
+      itemBuilder: itemBuilder,
+      maxHeight: menuMaxHeight,
+      autoOpen: autoOpen,
+      displayStringForOption: displayStringForOption,
+      itemToString: itemToString,
+      itemToValue: itemToValue,
     );
   }
 
   /// Creates a column with a searchable dropdown selection list.
   ///
   /// - [items]: The list of values to display in the popup menu.
+  /// - [itemsProvider]: A callback to provide items dynamically per row.
+  ///   If provided, this takes precedence over [items].
   /// - [itemToString]: **Required.** A function to convert an item to its string
   ///   representation for searching.
   /// - [onItemSelected]: A callback invoked when an item is selected.
@@ -241,6 +308,7 @@ abstract interface class TrinaColumnType {
     void Function(T item)? onItemSelected,
     WidgetBuilder? menuEmptySearchResultBuilder,
     dynamic Function(T item)? itemToValue,
+    List<T> Function(TrinaRow row, TrinaCell cell)? itemsProvider,
   }) {
     return TrinaColumnTypeSelect<T>(
       onItemSelected: onItemSelected,
@@ -256,6 +324,7 @@ abstract interface class TrinaColumnType {
       itemToString: itemToString,
       itemToValue: itemToValue,
       menuEmptySearchResultBuilder: menuEmptySearchResultBuilder,
+      itemsProvider: itemsProvider,
     );
   }
 
@@ -302,6 +371,7 @@ abstract interface class TrinaColumnType {
     void Function(T item)? onItemSelected,
     String Function(T item)? itemToString,
     dynamic Function(T item)? itemToValue,
+    List<T> Function(TrinaRow row, TrinaCell cell)? itemsProvider,
   }) {
     return TrinaColumnTypeSelect<T>(
       items: items,
@@ -319,6 +389,7 @@ abstract interface class TrinaColumnType {
       menuMaxHeight: menuMaxHeight,
       itemToString: itemToString,
       itemToValue: itemToValue,
+      itemsProvider: itemsProvider,
     );
   }
 

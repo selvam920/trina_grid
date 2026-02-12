@@ -42,6 +42,9 @@ class TrinaAutoCompleteCell<T> extends StatefulWidget {
   /// The maximum height of the popup menu's scrollable area.
   final double maxHeight;
 
+  /// Whether to automatically open the dropdown when the cell is focused.
+  final bool autoOpen;
+
   const TrinaAutoCompleteCell({
     required this.stateManager,
     required this.cell,
@@ -54,6 +57,7 @@ class TrinaAutoCompleteCell<T> extends StatefulWidget {
     required this.onItemSelected,
     required this.itemBuilder,
     required this.maxHeight,
+    this.autoOpen = false,
     this.displayStringForOption,
   });
 
@@ -93,9 +97,16 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     cellFocus = FocusNode(onKeyEvent: _handleOnKey);
 
     cellFocus.addListener(() {
-      if (!cellFocus.hasFocus) {
+      if (cellFocus.hasFocus) {
+        if (widget.autoOpen) {
+          _filterOptions(forceShowAll: true);
+        }
+      } else {
         Future.delayed(const Duration(milliseconds: 300), () {
-          _handleOnComplete();
+          if (mounted && !cellFocus.hasFocus) {
+            _changeValue();
+            _hideOverlay();
+          }
         });
       }
     });
@@ -115,10 +126,11 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
   @override
   void dispose() {
-    /**
-     * Saves the changed value when moving a cell while text is being input.
-     * if user do not press enter key, onEditingComplete is not called and the value is not saved.
-     */
+    // Remove overlay before disposing to prevent orphaned overlay entries
+    _hideOverlay();
+
+    /// Saves the changed value when moving a cell while text is being input.
+    /// If user does not press enter key, onEditingComplete is not called.
     if (_cellEditingStatus.isChanged) {
       _changeValue();
     }
@@ -131,6 +143,8 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     _debounceForTextController?.cancel();
 
     _debounce.dispose();
+
+    _scrollController.dispose();
 
     _textController.dispose();
 
@@ -207,33 +221,58 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
         : _CellEditingStatus.updated;
   }
 
-  void _handleOnComplete() {
-    final old = _textController.text;
-    _changeValue();
-    _handleOnChanged(old);
-    _hideOverlay();
-  }
-
   void _selectOption(T option) {
     _hideOverlay();
     _debounceForTextController?.cancel();
     final displayString = widget.displayStringForOption != null
         ? widget.displayStringForOption!(option)
         : option.toString();
+
+    final bool isChanged = formattedValue != displayString;
+
     _textController.text = displayString;
     _textController.selection = TextSelection.fromPosition(
       TextPosition(offset: _textController.text.length),
     );
-    Future.delayed(const Duration(milliseconds: 10), () {
+
+    final configuration = widget.stateManager.configuration;
+    final shouldMove = configuration.enableMoveDownAfterSelecting ||
+        configuration.enableMoveRightAfterSelecting;
+
+    if (!shouldMove) {
       cellFocus.requestFocus();
+    }
+
+    if (isChanged || shouldMove) {
+      widget.stateManager.handleAfterSelectingRow(widget.cell, displayString);
       widget.onItemSelected(option);
-    });
+    }
+  }
+
+  void _handleOnComplete() {
+    // If overlay is open, select the current item.
+    // If overlay is closed, let the grid handle it.
+    if (_overlayEntry != null) {
+      if (_selectedIndex != -1) {
+        _selectOption(_filteredOptions[_selectedIndex]);
+      } else {
+        _hideOverlay();
+      }
+      return;
+    }
+
+    widget.stateManager.handleAfterSelectingRow(widget.cell, _textController.text);
   }
 
   KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
     if (_overlayEntry != null) {
       if (event is KeyDownEvent || event is KeyRepeatEvent) {
-        if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        if (event.logicalKey == LogicalKeyboardKey.enter) {
+          if (_selectedIndex != -1) {
+            _selectOption(_filteredOptions[_selectedIndex]);
+            return KeyEventResult.handled;
+          }
+        } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
           if (_filteredOptions.isNotEmpty &&
               _selectedIndex < _filteredOptions.length - 1) {
             setState(() {
@@ -251,7 +290,6 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
           return KeyEventResult.handled;
         } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-          print(_selectedIndex);
           _textController.selection = TextSelection.fromPosition(
             TextPosition(offset: _textController.text.length),
           );
@@ -265,11 +303,6 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
             });
           }
           return KeyEventResult.handled;
-        } else if (event.logicalKey == LogicalKeyboardKey.enter) {
-          if (_selectedIndex != -1) {
-            _selectOption(_filteredOptions[_selectedIndex]);
-            return KeyEventResult.handled;
-          }
         } else if (event.logicalKey == LogicalKeyboardKey.escape) {
           _hideOverlay();
           return KeyEventResult.handled;
@@ -305,6 +338,13 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
         widget.cell.onKeyPressed!(keyEvent);
       }
 
+      if (event.logicalKey == LogicalKeyboardKey.space &&
+          event is KeyDownEvent &&
+          _overlayEntry == null) {
+        _filterOptions(forceShowAll: true);
+        return KeyEventResult.handled;
+      }
+
       final skip =
           !(keyManager.isVertical ||
               _moveHorizontal(keyManager) ||
@@ -327,6 +367,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
       // Enter key is propagated to grid focus handler.
       if (keyManager.isEnter) {
         _handleOnComplete();
+        return KeyEventResult.handled;
       }
 
       // ESC is propagated to grid focus handler.
@@ -348,7 +389,6 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
   void _showOverlay() {
     if (_overlayEntry != null) return;
-    // Find the position and size of the text field
     final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
     final Size size = renderBox.size;
@@ -360,70 +400,73 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     final double spaceBelow = screenHeight - offset.dy - size.height;
     final double spaceAbove = offset.dy;
 
-    // Estimate overlay height
-    // Pick the larger available space if maxHeight doesn't fit
     bool showAbove = spaceBelow < widget.maxHeight && spaceAbove > spaceBelow;
     double availableSpace = showAbove ? spaceAbove : spaceBelow;
     double overlayHeight = widget.maxHeight <= availableSpace
         ? widget.maxHeight
         : availableSpace;
-    double overlayTop = showAbove
-        ? offset.dy - overlayHeight
-        : offset.dy + size.height;
 
+    // Use CompositedTransformFollower so the overlay tracks the cell if the grid scrolls
     _overlayEntry = OverlayEntry(
       builder: (BuildContext context) {
-        return Positioned(
-          left: offset.dx,
-          width: widget.width,
-          top: overlayTop,
-          height: overlayHeight,
-          child: Material(
-            elevation: 4.0,
-            child: _isLoading
-                ? Container(
-                    height: 60,
-                    alignment: Alignment.center,
-                    child: const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(strokeWidth: 3),
-                    ),
-                  )
-                : _filteredOptions.isEmpty
-                ? const SizedBox(
-                    height: 60,
-                    child: Center(child: Text('No results found')),
-                  )
-                : ListView.builder(
-                    controller: _scrollController,
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    itemCount: _filteredOptions.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final T option = _filteredOptions[index];
-                      final bool isSelected = _selectedIndex == index;
-                      return InkWell(
-                        key: _itemKeys.length > index ? _itemKeys[index] : null,
-                        onTap: () => _selectOption(option),
-                        child: Container(
-                          color: isSelected
-                              ? Theme.of(
-                                  context,
-                                ).colorScheme.primary.withAlpha(38)
-                              : null,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: widget.itemBuilder(
-                              context,
-                              option,
-                              isSelected,
-                            ),
-                          ),
+        return UnconstrainedBox(
+          alignment: Alignment.topLeft,
+          child: CompositedTransformFollower(
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: showAbove ? Offset(0, -overlayHeight) : Offset(0, size.height),
+            child: SizedBox(
+              width: widget.width,
+              height: overlayHeight,
+              child: Material(
+                elevation: 4.0,
+                child: _isLoading
+                    ? Container(
+                        height: 60,
+                        alignment: Alignment.center,
+                        child: const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 3),
                         ),
-                      );
-                    },
-                  ),
+                      )
+                    : _filteredOptions.isEmpty
+                    ? const SizedBox(
+                        height: 60,
+                        child: Center(child: Text('No results found')),
+                      )
+                    : ListView.builder(
+                        controller: _scrollController,
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        itemCount: _filteredOptions.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final T option = _filteredOptions[index];
+                          final bool isSelected = _selectedIndex == index;
+                          return InkWell(
+                            key: _itemKeys.length > index ? _itemKeys[index] : null,
+                            onTap: () => _selectOption(option),
+                            child: Container(
+                              alignment: widget.column.textAlign.alignmentValue,
+                              color: isSelected
+                                  ? Theme.of(
+                                      context,
+                                    ).colorScheme.primary.withAlpha(38)
+                                  : null,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: widget.itemBuilder(
+                                  context,
+                                  option,
+                                  isSelected,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ),
           ),
         );
       },
@@ -476,12 +519,12 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     _overlayEntry = null;
   }
 
-  void _filterOptions() {
+  void _filterOptions({bool forceShowAll = false}) {
     _debounceForTextController?.cancel();
 
-    final String query = _textController.text;
+    final String query = forceShowAll ? '' : _textController.text;
 
-    if (query.isEmpty) {
+    if (query.isEmpty && !widget.autoOpen && !forceShowAll) {
       setState(() {
         _filteredOptions = [];
         _isLoading = false;
@@ -505,14 +548,31 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
         try {
           final results = await widget.fetchItems(query);
 
-          if (!mounted || _textController.text != query) {
+          if (!mounted ||
+              (forceShowAll ? false : _textController.text != query)) {
             return;
           }
 
           setState(() {
             _filteredOptions = results;
             _isLoading = false;
-            _selectedIndex = results.isNotEmpty ? 0 : -1;
+
+            // Select the item if it matches the current text
+            final currentText = _textController.text;
+            int matchIndex = -1;
+            for (int i = 0; i < results.length; i++) {
+              final itemText = widget.displayStringForOption != null
+                  ? widget.displayStringForOption!(results[i])
+                  : results[i].toString();
+              if (itemText == currentText) {
+                matchIndex = i;
+                break;
+              }
+            }
+
+            _selectedIndex = matchIndex != -1
+                ? matchIndex
+                : (results.isNotEmpty ? 0 : -1);
           });
 
           _overlayEntry?.markNeedsBuild();
@@ -526,9 +586,15 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
               ..addAll(
                 List.generate(_filteredOptions.length, (_) => GlobalKey()),
               );
+
+            if (_selectedIndex != -1) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _scrollToSelectedIndex();
+              });
+            }
           }
         } catch (e) {
-          if (mounted && _textController.text == query) {
+          if (mounted && (forceShowAll || _textController.text == query)) {
             setState(() {
               _isLoading = false;
             });
@@ -561,7 +627,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
           isDense: true,
         ),
         maxLines: 1,
-
+        textAlignVertical: TextAlignVertical.center,
         textAlign: widget.column.textAlign.value,
         onChanged: (value) {
           _filterOptions();

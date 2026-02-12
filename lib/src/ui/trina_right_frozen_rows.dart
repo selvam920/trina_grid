@@ -70,7 +70,6 @@ class TrinaRightFrozenRowsState
       row: row,
       columns: _columns,
       stateManager: stateManager,
-      visibilityLayout: true,
     );
 
     return stateManager.rowWrapper?.call(
@@ -102,7 +101,11 @@ class TrinaRightFrozenRowsState
             scrollDirection: Axis.vertical,
             physics: const ClampingScrollPhysics(),
             itemCount: _scrollableRows.length,
-            // Remove fixed itemExtent for variable heights
+            itemExtent:
+                (stateManager.rowWrapper != null &&
+                    !stateManager.configuration.rowWrapperIsConstantHeight)
+                ? null
+                : stateManager.rowTotalHeight,
             itemBuilder: (ctx, i) =>
                 _buildRow(ctx, _scrollableRows[i], i + _frozenTopRows.length),
           ),

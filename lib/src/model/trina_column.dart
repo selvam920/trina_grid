@@ -317,7 +317,7 @@ class TrinaColumn {
     this.enableFilterMenuItem = true,
     this.enableHideColumnMenuItem = true,
     this.enableSetColumnsMenuItem = true,
-    this.enableAutoEditing = false,
+    bool? enableAutoEditing,
     this.enableEditingMode = true,
     this.hide = false,
     this.filterWidgetDelegate =
@@ -327,7 +327,8 @@ class TrinaColumn {
     this.editCellRenderer,
     this.filterEnterKeyAction,
   }) : _key = UniqueKey(),
-       _checkReadOnly = checkReadOnly;
+       _checkReadOnly = checkReadOnly,
+       enableAutoEditing = enableAutoEditing ?? (type.isAutoComplete || type.isDropdown);
 
   final Key _key;
 

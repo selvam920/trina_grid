@@ -12,16 +12,45 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TrinaGrid Example',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      title: 'TrinaGrid Invoice Entry',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
       home: const TrinaGridExamplePage(),
     );
   }
 }
 
-/// TrinaGrid Example
-//
-/// For more examples, go to the demo web link on the github below.
+class Product {
+  final int id;
+  final String name;
+
+  const Product({required this.id, required this.name});
+
+  @override
+  String toString() => name;
+}
+
+class Unit {
+  final int id;
+  final String name;
+
+  const Unit({required this.id, required this.name});
+
+  @override
+  String toString() => name;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Unit && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+}
+
+/// TrinaGrid Example — Invoice items entry grid with autocomplete and calculations.
 class TrinaGridExamplePage extends StatefulWidget {
   const TrinaGridExamplePage({super.key});
 
@@ -30,52 +59,161 @@ class TrinaGridExamplePage extends StatefulWidget {
 }
 
 class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
-  final List<TrinaColumn> columns = <TrinaColumn>[
-    TrinaColumn(title: 'Id', field: 'id', type: TrinaColumnType.text()),
-    TrinaColumn(title: 'Name', field: 'name', type: TrinaColumnType.text()),
-    TrinaColumn(title: 'Age', field: 'age', type: TrinaColumnType.number()),
+  // --- Simulated data source for invoice products ---
+  static const _products = [
+    Product(id: 1, name: 'Apple iPhone 15'),
+    Product(id: 2, name: 'Samsung Galaxy S23'),
+    Product(id: 3, name: 'Sony WH-1000XM5'),
+    Product(id: 4, name: 'MacBook Air M2'),
+    Product(id: 5, name: 'Dell XPS 13'),
+    Product(id: 6, name: 'Logitech MX Master 3S'),
+    Product(id: 7, name: 'Kindle Paperwhite'),
+    Product(id: 8, name: 'Nikon Z6 II'),
+    Product(id: 9, name: 'GoPro Hero 12'),
+    Product(id: 10, name: 'iPad Pro 11"'),
+    Product(id: 11, name: 'Office Desk'),
+    Product(id: 12, name: 'Ergonomic Chair'),
+    Product(id: 13, name: 'LED Monitor 27"'),
+    Product(id: 14, name: 'Mechanical Keyboard'),
+    Product(id: 15, name: 'USB-C Hub'),
+    Product(id: 16, name: 'External SSD 1TB'),
+    Product(id: 17, name: 'Wireless Router'),
+    Product(id: 18, name: 'Webcam 4K'),
+    Product(id: 19, name: 'Standing Desk'),
+    Product(id: 20, name: 'A4 Paper Bundle'),
+    Product(id: 21, name: 'Printer Ink Black'),
+    Product(id: 22, name: 'Laptop Stand'),
+    Product(id: 23, name: 'Coffee Beans 1kg'),
+    Product(id: 24, name: 'Organic Milk'),
+    Product(id: 25, name: 'Green Tea Pack'),
+    Product(id: 26, name: 'Electric Kettle'),
+    Product(id: 27, name: 'Bread Toaster'),
+    Product(id: 28, name: 'Smart Watch v2'),
+  ];
+
+  List<Unit> _getUnitsForProduct(Product? product) {
+    if (product == null) {
+      return [
+        const Unit(id: 100, name: 'Pcs'),
+        const Unit(id: 101, name: 'Unit'),
+      ];
+    }
+    final name = product.name;
+    if (name.contains('Paper') || name.contains('Ink') || name.contains('Tea')) {
+      return [
+        const Unit(id: 200, name: 'Bundle'),
+        const Unit(id: 201, name: 'Pack'),
+        const Unit(id: 202, name: 'Box'),
+        const Unit(id: 203, name: 'Carton'),
+      ];
+    }
+    if (name.contains('Desk') ||
+        name.contains('Chair') ||
+        name.contains('Kettle')) {
+      return [
+        const Unit(id: 300, name: 'Set'),
+        const Unit(id: 101, name: 'Unit'),
+        const Unit(id: 100, name: 'Pcs'),
+      ];
+    }
+    if (name.contains('Milk') || name.contains('Beans')) {
+      return [
+        const Unit(id: 400, name: 'Kg'),
+        const Unit(id: 401, name: 'Ltr'),
+        const Unit(id: 402, name: 'Gram'),
+        const Unit(id: 403, name: 'Bottle'),
+      ];
+    }
+    return [
+      const Unit(id: 100, name: 'Pcs'),
+      const Unit(id: 101, name: 'Unit'),
+    ];
+  }
+
+  late final List<TrinaColumn> columns = <TrinaColumn>[
+    /// Product Name with Autocomplete
     TrinaColumn(
-      title: 'Role',
-      field: 'role',
-      type: TrinaColumnType.select(<String>['Programmer', 'Designer', 'Owner']),
-    ),
-    TrinaColumn(
-      title: 'Role 2',
-      field: 'role2',
-      type: TrinaColumnType.select(
-        <String>['Programmer', 'Designer', 'Owner'],
-        menuItemBuilder: (item) {
-          return Row(
-            children: [
-              Icon(item == 'Programmer' ? Icons.code : Icons.design_services),
-              const SizedBox(width: 8),
-              Text(item),
-            ],
-          );
+      title: 'Product Name',
+      field: 'product_name',
+      type: TrinaColumnType.autoComplete<Product>(
+        fetchItems: (query) async {
+          await Future.delayed(const Duration(milliseconds: 50));
+          return _products
+              .where(
+                (p) => p.name.toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList();
         },
+        displayStringForOption: (item) => item.name,
       ),
+      width: 250,
     ),
-    TrinaColumn(title: 'Joined', field: 'joined', type: TrinaColumnType.date()),
+
+    /// MRP
     TrinaColumn(
-      title: 'Working time',
-      field: 'working_time',
-      type: TrinaColumnType.time(),
+      title: 'MRP',
+      field: 'mrp',
+      type: TrinaColumnType.currency(symbol: '₹', decimalDigits: 2),
+      width: 120,
+      textAlign: TrinaColumnTextAlign.right,
     ),
+
+    /// Rate
     TrinaColumn(
-      title: 'salary',
-      field: 'salary',
-      type: TrinaColumnType.currency(),
+      title: 'Rate',
+      field: 'rate',
+      type: TrinaColumnType.currency(symbol: '₹', decimalDigits: 2),
+      width: 120,
+      textAlign: TrinaColumnTextAlign.right,
+    ),
+
+    /// Quantity
+    TrinaColumn(
+      title: 'Qty',
+      field: 'qty',
+      type: TrinaColumnType.number(format: '#,###.##'),
+      width: 100,
+      textAlign: TrinaColumnTextAlign.center,
+    ),
+
+    /// Unit
+    TrinaColumn(
+      title: 'Unit',
+      field: 'unit',
+      type: TrinaColumnType.dropdown<Unit>(
+        items: <Unit>[],
+        itemsProvider: (row, cell) {
+          final product = row.cells['product_name']?.value;
+          return _getUnitsForProduct(product is Product ? product : null);
+        },
+        displayStringForOption: (unit) => unit.name,
+        autoOpen: true,
+      ),
+      width: 100,
+    ),
+
+    /// Amount (Calculated)
+    TrinaColumn(
+      title: 'Amount',
+      field: 'amount',
+      type: TrinaColumnType.currency(symbol: '₹', decimalDigits: 2),
+      width: 150,
+      readOnly: true,
+      textAlign: TrinaColumnTextAlign.right,
       footerRenderer: (rendererContext) {
         return TrinaAggregateColumnFooter(
           rendererContext: rendererContext,
           type: TrinaAggregateColumnType.sum,
-          alignment: Alignment.center,
-          numberFormat: NumberFormat.simpleCurrency(),
+          alignment: Alignment.centerRight,
+          numberFormat: NumberFormat.currency(
+            symbol: '₹',
+            decimalDigits: 2,
+          ),
           titleSpanBuilder: (text) {
             return [
               const TextSpan(
-                text: 'Sum',
-                style: TextStyle(color: Colors.red),
+                text: 'Grand Total',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               const TextSpan(text: ' : '),
               TextSpan(text: text),
@@ -86,70 +224,60 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
     ),
   ];
 
-  final List<TrinaRow> rows = [
-    TrinaRow(
-      cells: {
-        'id': TrinaCell(value: 'user1'),
-        'name': TrinaCell(value: 'Mike'),
-        'age': TrinaCell(value: 20),
-        'role': TrinaCell(value: 'Programmer'),
-        'role2': TrinaCell(value: 'Programmer'),
-        'joined': TrinaCell(value: '2021-01-01'),
-        'working_time': TrinaCell(value: '09:00'),
-        'salary': TrinaCell(value: 300),
-      },
-    ),
-    TrinaRow(
-      cells: {
-        'id': TrinaCell(value: 'user2'),
-        'name': TrinaCell(value: 'Jack'),
-        'age': TrinaCell(value: 25),
-        'role': TrinaCell(value: 'Designer'),
-        'role2': TrinaCell(value: 'Designer'),
-        'joined': TrinaCell(value: '2021-02-01'),
-        'working_time': TrinaCell(value: '10:00'),
-        'salary': TrinaCell(value: 400),
-      },
-    ),
-    TrinaRow(
-      cells: {
-        'id': TrinaCell(value: 'user3'),
-        'name': TrinaCell(value: 'Suzi'),
-        'age': TrinaCell(value: 40),
-        'role': TrinaCell(value: 'Owner'),
-        'role2': TrinaCell(value: 'Owner'),
-        'joined': TrinaCell(value: '2021-03-01'),
-        'working_time': TrinaCell(value: '11:00'),
-        'salary': TrinaCell(value: 700),
-      },
-    ),
-  ];
+  late final List<TrinaRow> rows = List.generate(
+    100,
+    (index) {
+      final product = _products[index % _products.length];
+      final mrp = 500.0 + (index * 100);
+      final rate = 450.0 + (index * 90);
+      final qty = (index % 5) + 1.0;
+      final units = _getUnitsForProduct(product);
 
-  /// columnGroups that can group columns can be omitted.
+      return TrinaRow(
+        cells: {
+          'product_name': TrinaCell(value: product),
+          'mrp': TrinaCell(value: mrp),
+          'rate': TrinaCell(value: rate),
+          'qty': TrinaCell(value: qty),
+          'unit': TrinaCell(value: units.first),
+          'amount': TrinaCell(value: rate * qty),
+        },
+      );
+    },
+  );
+
+  /// Column groups for invoice layout.
   final List<TrinaColumnGroup> columnGroups = [
-    TrinaColumnGroup(title: 'Id', fields: ['id'], expandedColumn: true),
-    TrinaColumnGroup(title: 'User information', fields: ['name', 'age']),
     TrinaColumnGroup(
-      title: 'Status',
-      children: [
-        TrinaColumnGroup(title: 'A', fields: ['role'], expandedColumn: true),
-        TrinaColumnGroup(
-          title: 'Etc.',
-          fields: ['joined', 'working_time', 'role2'],
-        ),
-      ],
+      title: 'Product Details',
+      fields: ['product_name', 'unit'],
     ),
+    TrinaColumnGroup(
+      title: 'Pricing & Qty',
+      fields: ['mrp', 'rate', 'qty'],
+    ),
+    TrinaColumnGroup(title: 'Totals', fields: ['amount']),
   ];
 
-  /// [TrinaGridStateManager] has many methods and properties to dynamically manipulate the grid.
-  /// You can manipulate the grid dynamically at runtime by passing this through the [onLoaded] callback.
   late final TrinaGridStateManager stateManager;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(15),
+      appBar: AppBar(
+        title: const Text('TrinaGrid — Invoice Items Entry'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            tooltip: 'Toggle column filters',
+            onPressed: () {
+              stateManager.setShowColumnFilter(!stateManager.showColumnFilter);
+            },
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12),
         child: TrinaGrid(
           columns: columns,
           rows: rows,
@@ -159,22 +287,53 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
             stateManager.setShowColumnFilter(true);
           },
           onChanged: (TrinaGridOnChangedEvent event) {
-            print(event);
+            // When product changes, reset unit if current one is invalid
+            if (event.column.field == 'product_name') {
+              final unitCell = event.row.cells['unit'];
+              if (unitCell != null) {
+                final product = event.value is Product ? event.value as Product : null;
+                final validUnits = _getUnitsForProduct(product);
+                if (!validUnits.contains(unitCell.value)) {
+                  stateManager.changeCellValue(
+                    unitCell,
+                    validUnits.isNotEmpty ? validUnits.first : null,
+                    notify: true,
+                  );
+                }
+              }
+            }
+
+            // When rate or qty changes, update the amount cell
+            if (event.column.field == 'rate' || event.column.field == 'qty') {
+              final rate = event.row.cells['rate']?.value ?? 0.0;
+              final qty = event.row.cells['qty']?.value ?? 0.0;
+              final amountCell = event.row.cells['amount'];
+
+              if (amountCell != null) {
+                stateManager.changeCellValue(
+                  amountCell,
+                  rate * qty,
+                  notify: true,
+                );
+              }
+            }
           },
-          configuration: const TrinaGridConfiguration(),
-          selectDateCallback: (TrinaCell cell, TrinaColumn column) async {
-            return showDatePicker(
-              context: context,
-              initialDate:
-                  TrinaDateTimeHelper.parseOrNullWithFormat(
-                    cell.value,
-                    column.type.date.format,
-                  ) ??
-                  DateTime.now(),
-              firstDate: column.type.date.startDate ?? DateTime(0),
-              lastDate: column.type.date.endDate ?? DateTime(9999),
-            );
-          },
+          configuration: TrinaGridConfiguration(
+            // Move right after selecting from dropdown/autocomplete
+            enableMoveRightAfterSelecting: true,
+            // Desktop-focused: Enter edits then moves right (Excel-like)
+            enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+            // Tab moves to next cell on edge (Excel-like)
+            tabKeyAction: TrinaGridTabKeyAction.moveToNextOnEdge,
+            // Enable cell selection mode
+            selectingMode: TrinaGridSelectingMode.cell,
+            // Desktop scrollbar with drag support
+            scrollbar: const TrinaGridScrollbarConfig(isAlwaysShown: true),
+            style: const TrinaGridStyleConfig(
+              enableRowColorAnimation: true,
+              enableRowHoverColor: true,
+            ),
+          ),
         ),
       ),
     );

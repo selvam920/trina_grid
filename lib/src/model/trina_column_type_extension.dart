@@ -19,6 +19,10 @@ extension TrinaColumnTypeExtension on TrinaColumnType {
 
   bool get isPercentage => this is TrinaColumnTypePercentage;
 
+  bool get isAutoComplete => this is TrinaColumnTypeAutoComplete;
+
+  bool get isDropdown => this is TrinaColumnTypeDropdown;
+
   TrinaColumnTypeText get text {
     if (this is! TrinaColumnTypeText) {
       throw TypeError();
@@ -80,6 +84,20 @@ extension TrinaColumnTypeExtension on TrinaColumnType {
       throw TypeError();
     }
     return this as TrinaColumnTypePercentage;
+  }
+
+  TrinaColumnTypeAutoComplete<T> asAutoComplete<T>() {
+    if (this is! TrinaColumnTypeAutoComplete) {
+      throw TypeError();
+    }
+    return this as TrinaColumnTypeAutoComplete<T>;
+  }
+
+  TrinaColumnTypeDropdown<T> asDropdown<T>() {
+    if (this is! TrinaColumnTypeDropdown) {
+      throw TypeError();
+    }
+    return this as TrinaColumnTypeDropdown<T>;
   }
 
   bool get hasFormat => this is TrinaColumnTypeHasFormat;

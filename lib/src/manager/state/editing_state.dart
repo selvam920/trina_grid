@@ -133,14 +133,8 @@ mixin EditingState implements ITrinaGridState {
     // When Ctrl+Click multi-select is enabled, preserve individual selections
     if (configuration.enableCtrlClickMultiSelect &&
         selectingMode == TrinaGridSelectingMode.cell) {
-      debugPrint(
-        '[Selection] setEditing - Ctrl+Click mode enabled, clearing only range selections',
-      );
       clearRangeSelections(notify: false);
     } else {
-      debugPrint(
-        '[Selection] setEditing - Standard mode, clearing all selections',
-      );
       clearCurrentSelecting(notify: false);
     }
 
@@ -338,6 +332,7 @@ mixin EditingState implements ITrinaGridState {
 
     currentRow.setState(TrinaRowState.updated);
     cell.value = value;
+    currentRow.incrementVersion();
 
     final changedEvent = TrinaGridOnChangedEvent(
       columnIdx: columnIndex(currentColumn)!,
@@ -464,6 +459,7 @@ mixin EditingState implements ITrinaGridState {
         refRows[rowIdx].setState(TrinaRowState.updated);
 
         currentCell.value = newValue;
+        refRows[rowIdx].incrementVersion();
 
         // Create the event object once to reuse for both callbacks
         final changedEvent = TrinaGridOnChangedEvent(

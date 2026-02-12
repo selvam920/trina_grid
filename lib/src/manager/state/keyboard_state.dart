@@ -105,7 +105,9 @@ mixin KeyboardState implements ITrinaGridState {
     // @formatter:off
     if (!force && isEditing && direction.horizontal) {
       // Select type column can be moved left or right even in edit state
-      if (currentColumn?.type.isSelect == true) {
+      if (currentColumn?.type.isSelect == true ||
+          currentColumn?.type.isAutoComplete == true ||
+          currentColumn?.type.isDropdown == true) {
       }
       // Date type column can be moved left or right even in edit state
       else if (currentColumn?.type.isDate == true) {

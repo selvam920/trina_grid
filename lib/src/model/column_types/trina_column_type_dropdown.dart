@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/helper/trina_general_helper.dart';
-import 'package:trina_grid/src/ui/cells/trina_auto_complete.dart';
+import 'package:trina_grid/src/ui/cells/trina_dropdown_cell.dart';
 import 'package:trina_grid/trina_grid.dart';
 
-/// A column type that provides autocomplete/typeahead functionality.
+/// A column type that provides a dropdown selection from a static list of items.
 ///
-/// As the user types, [fetchItems] is called to retrieve matching suggestions.
-/// Results are displayed in a dropdown overlay with keyboard navigation support.
-///
-/// Example:
-/// ```dart
-/// TrinaColumnType.autoComplete<String>(
-///   fetchItems: (query) async {
-///     return cities.where((c) => c.toLowerCase().contains(query.toLowerCase())).toList();
-///   },
-/// )
-/// ```
-class TrinaColumnTypeAutoComplete<T>
+/// Unlike [TrinaColumnTypeSelect], this type uses an overlay-based dropdown
+/// similar to [TrinaColumnTypeAutoComplete] but without an editable text field.
+/// It also supports automatically opening the dropdown when the cell is focused.
+class TrinaColumnTypeDropdown<T>
     with TrinaColumnTypeDefaultMixin
     implements TrinaColumnType {
-  /// Async function to fetch matching items based on user input.
-  final TrinaAutoCompleteFetchItems<T> fetchItems;
+  /// The list of items to display in the dropdown.
+  final List<T> items;
 
-  /// Width of the autocomplete dropdown. If null, uses the column width.
+  /// A callback to provide items dynamically per row.
+  /// If provided, this takes precedence over [items].
+  final List<T> Function(TrinaRow row, TrinaCell cell)? itemsProvider;
+
+  /// Width of the dropdown. If null, uses the column width.
   final double? width;
 
   /// The initially selected value, which will be highlighted in the list.
@@ -38,7 +34,7 @@ class TrinaColumnTypeAutoComplete<T>
   /// The maximum height of the popup menu's scrollable area.
   final double maxHeight;
 
-  /// Whether to automatically open the autocomplete dropdown when the cell is focused.
+  /// Whether to automatically open the dropdown when the cell is focused.
   final bool autoOpen;
 
   /// Function to get display string for an option.
@@ -46,23 +42,24 @@ class TrinaColumnTypeAutoComplete<T>
   /// If null, `toString()` is used.
   final TrinaAutocompleteOptionToString<T>? displayStringForOption;
 
-  /// Function to convert an item to its string representation for display.
-  /// If null, `toString()` is used.
-  final String Function(T item)? itemToString;
+  /// Function to convert an item to its string representation.
+  /// Used for generating comparison values.
+  final String Function(T)? itemToString;
 
   /// Function to extract a comparable value from an item.
-  /// Used for sorting and comparison. If null, the item itself is used.
-  final dynamic Function(T item)? itemToValue;
+  /// Used for sorting.
+  final dynamic Function(T)? itemToValue;
 
-  const TrinaColumnTypeAutoComplete({
+  const TrinaColumnTypeDropdown({
     this.defaultValue,
-    required this.fetchItems,
+    required this.items,
+    this.itemsProvider,
     this.width,
     this.initialValue,
     this.onItemSelected,
     this.itemBuilder,
     this.maxHeight = 300,
-    this.autoOpen = false,
+    this.autoOpen = true,
     this.displayStringForOption,
     this.itemToString,
     this.itemToValue,
@@ -78,15 +75,26 @@ class TrinaColumnTypeAutoComplete<T>
 
   @override
   int compare(dynamic a, dynamic b) {
+    if (itemToValue != null) {
+      return itemToValue!(a).compareTo(itemToValue!(b));
+    }
     return TrinaGeneralHelper.compareWithNull(
       a,
       b,
-      () => a.toString().compareTo(b.toString()),
+      () {
+        if (itemsProvider != null) {
+          return a.toString().compareTo(b.toString());
+        }
+        return items.indexOf(a).compareTo(items.indexOf(b));
+      },
     );
   }
 
   @override
   dynamic makeCompareValue(dynamic v) {
+    if (itemToString != null) {
+      return itemToString!(v);
+    }
     return v.toString();
   }
 
@@ -111,12 +119,13 @@ class TrinaColumnTypeAutoComplete<T>
     TrinaColumn column,
     TrinaRow row,
   ) {
-    return TrinaAutoCompleteCell<T>(
+    return TrinaDropdownCell<T>(
       stateManager: stateManager,
       cell: cell,
       column: column,
       row: row,
-      fetchItems: fetchItems,
+      items: items,
+      itemsProvider: itemsProvider,
       width: width ?? column.width,
       initialValue: initialValue,
       onItemSelected: onItemSelected ?? (_) {},

@@ -41,6 +41,7 @@ import 'feature/column_sorting_screen.dart';
 import 'feature/copy_and_paste_screen.dart';
 import 'feature/currency_type_column_screen.dart';
 import 'feature/custom_pagination_screen.dart';
+import 'feature/dropdown_column_screen.dart';
 import 'feature/dark_mode_screen.dart';
 import 'feature/date_type_column_screen.dart';
 import 'feature/dual_mode_screen.dart';
@@ -374,6 +375,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
             'A column to enter both date and time values in a single field.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, DateTimeColumnScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Dropdown type column',
+        description: 'A non-editable selection column with auto-open feature.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, DropdownColumnScreen.routeName);
         },
         trailing: newIcon,
       ),

@@ -31,6 +31,7 @@ import 'screen/feature/copy_and_paste_screen.dart';
 import 'screen/feature/currency_type_column_screen.dart';
 import 'screen/feature/dark_mode_screen.dart';
 import 'screen/feature/date_type_column_screen.dart';
+import 'screen/feature/dropdown_column_screen.dart';
 import 'screen/feature/dual_mode_screen.dart';
 import 'screen/feature/edit_cell_renderer_screen.dart';
 import 'screen/feature/editing_state_screen.dart';
@@ -125,6 +126,8 @@ class MyApp extends StatelessWidget {
         DarkModeScreen.routeName: (context) => const DarkModeScreen(),
         DateTypeColumnScreen.routeName: (context) =>
             const DateTypeColumnScreen(),
+        DropdownColumnScreen.routeName: (context) =>
+            const DropdownColumnScreen(),
         DualModeScreen.routeName: (context) => const DualModeScreen(),
         EditingStateScreen.routeName: (context) => const EditingStateScreen(),
         FilterIconCustomizationScreen.routeName: (context) =>
