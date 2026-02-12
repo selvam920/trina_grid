@@ -38,6 +38,8 @@ class TrinaGridKeyManager {
   void _handler(TrinaKeyManagerEvent keyEvent) {
     if (keyEvent.isKeyUpEvent) return;
 
+    if (keyEvent.skipShortcutHandling) return;
+
     if (stateManager.configuration.shortcut.handle(
       keyEvent: keyEvent,
       stateManager: stateManager,

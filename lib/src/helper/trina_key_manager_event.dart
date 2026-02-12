@@ -24,6 +24,11 @@ class TrinaKeyManagerEvent {
   /// The row index that was being edited when this key event originated.
   final int? sourceRowIdx;
 
+  /// When true, the key manager's shortcut handler will skip processing this
+  /// event. This is used when cell widgets handle movement themselves (e.g.
+  /// via handleAfterSelectingRow) and only want to notify listeners.
+  final bool skipShortcutHandling;
+
   TrinaKeyManagerEvent({
     required this.focusNode,
     required this.event,
@@ -32,6 +37,7 @@ class TrinaKeyManagerEvent {
     this.sourceRow,
     this.sourceCell,
     this.sourceRowIdx,
+    this.skipShortcutHandling = false,
   });
 
   bool get needsThrottle => isMoving || isTab || isPageUp || isPageDown;

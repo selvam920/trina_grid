@@ -280,7 +280,8 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
       if (event is KeyDownEvent || event is KeyRepeatEvent) {
         if (event.logicalKey == LogicalKeyboardKey.enter) {
           if (_selectedIndex != -1 && items.isNotEmpty) {
-            // Broadcast key event with source info BEFORE selection/movement
+            // Broadcast with skipShortcutHandling so listeners get notified
+            // but the shortcut handler won't double-move
             final keyManager = TrinaKeyManagerEvent(
               focusNode: node,
               event: event,
@@ -288,6 +289,7 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
               sourceRow: widget.row,
               sourceCell: widget.cell,
               sourceRowIdx: widget.stateManager.refRows.indexOf(widget.row),
+              skipShortcutHandling: true,
             );
             widget.stateManager.keyManager!.subject.add(keyManager);
 
@@ -382,8 +384,17 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
         if (!shouldMove) {
           return KeyEventResult.ignored;
         }
-        // Broadcast key event with source info BEFORE movement
-        widget.stateManager.keyManager!.subject.add(keyManager);
+        // Broadcast with skipShortcutHandling — _handleOnComplete handles movement
+        final enterEvent = TrinaKeyManagerEvent(
+          focusNode: node,
+          event: event,
+          sourceColumn: widget.column,
+          sourceRow: widget.row,
+          sourceCell: widget.cell,
+          sourceRowIdx: widget.stateManager.refRows.indexOf(widget.row),
+          skipShortcutHandling: true,
+        );
+        widget.stateManager.keyManager!.subject.add(enterEvent);
         _handleOnComplete();
         return KeyEventResult.handled;
       }
