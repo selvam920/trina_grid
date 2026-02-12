@@ -59,6 +59,8 @@ class TrinaGridExamplePage extends StatefulWidget {
 }
 
 class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
+  bool _restoreOnCancel = true;
+
   // --- Simulated data source for invoice products ---
   static const _products = [
     Product(id: 1, name: 'Apple iPhone 15'),
@@ -266,6 +268,19 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
       appBar: AppBar(
         title: const Text('TrinaGrid — Invoice Items Entry'),
         actions: [
+          Row(
+            children: [
+              const Text('Restore on Cancel'),
+              Switch(
+                value: _restoreOnCancel,
+                onChanged: (val) {
+                  setState(() {
+                    _restoreOnCancel = val;
+                  });
+                },
+              ),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.filter_list),
             tooltip: 'Toggle column filters',
@@ -332,6 +347,8 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
             }
           },
           configuration: TrinaGridConfiguration(
+            // Rollback text if editing is canceled
+            enableRestoreValueOnCancel: _restoreOnCancel,
             // Move right after selecting from dropdown/autocomplete
             enableMoveRightAfterSelecting: true,
             // Desktop-focused: Enter edits then moves right (Excel-like)

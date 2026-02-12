@@ -49,6 +49,7 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
   final List<GlobalKey> _itemKeys = [];
   late final FocusNode cellFocus;
   bool _isSelecting = false;
+  dynamic _initialCellValue;
 
   List<T> get effectiveItems =>
       widget.itemsProvider?.call(widget.row, widget.cell) ?? widget.items;
@@ -68,7 +69,10 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
         }
       } else {
         Future.delayed(const Duration(milliseconds: 300), () {
-          if (mounted) {
+          if (mounted && !cellFocus.hasFocus) {
+            if (_overlayEntry != null && !_isSelecting) {
+              _restoreValue();
+            }
             _hideOverlay();
           }
         });
@@ -77,8 +81,28 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
 
     _textController.text = formattedValue;
 
+    _initialCellValue = widget.cell.value;
+
     // Set selected index based on current value
     _updateSelectedIndex();
+  }
+
+  void _restoreValue() {
+    if (!widget.stateManager.configuration.enableRestoreValueOnCancel) {
+      return;
+    }
+
+    if (_textController.text == formattedValue) {
+      return;
+    }
+
+    widget.stateManager.changeCellValue(
+      widget.cell,
+      _initialCellValue,
+      notify: false,
+    );
+
+    _textController.text = formattedValue;
   }
 
   void _updateSelectedIndex() {
@@ -99,6 +123,12 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
 
   @override
   void dispose() {
+    // If restore on cancel is enabled and overlay was open, restore before disposing
+    if (widget.stateManager.configuration.enableRestoreValueOnCancel &&
+        _overlayEntry != null) {
+      _restoreValue();
+    }
+
     _hideOverlay();
     _scrollController.dispose();
     _textController.dispose();
@@ -211,6 +241,12 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
     _isSelecting = true;
     _hideOverlay();
 
+    final displayString = widget.displayStringForOption != null
+        ? widget.displayStringForOption!(option)
+        : option.toString();
+
+    _textController.text = displayString;
+
     final configuration = widget.stateManager.configuration;
     final shouldMove = configuration.enableMoveDownAfterSelecting ||
         configuration.enableMoveRightAfterSelecting;
@@ -238,7 +274,7 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
       return;
     }
 
-    widget.stateManager.handleAfterSelectingRow(widget.cell, _textController.text);
+    widget.stateManager.handleAfterSelectingRow(widget.cell, widget.cell.value);
   }
 
   KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
@@ -259,8 +295,8 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _scrollToSelectedIndex();
             });
+            return KeyEventResult.handled;
           }
-          return KeyEventResult.handled;
         } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
           if (items.isNotEmpty && _selectedIndex > 0) {
             setState(() {
@@ -270,13 +306,26 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _scrollToSelectedIndex();
             });
+            return KeyEventResult.handled;
           }
-          return KeyEventResult.handled;
+        } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft ||
+            event.logicalKey == LogicalKeyboardKey.arrowRight) {
+          _restoreValue();
+          _hideOverlay();
         } else if (event.logicalKey == LogicalKeyboardKey.escape) {
+          _restoreValue();
           _hideOverlay();
           return KeyEventResult.handled;
         }
       }
+
+      if (_overlayEntry == null) {
+        // Fall through to grid navigation if overlay was closed
+        var keyManager = TrinaKeyManagerEvent(focusNode: node, event: event);
+        widget.stateManager.keyManager!.subject.add(keyManager);
+        return KeyEventResult.handled;
+      }
+
       return KeyEventResult.ignored;
     } else {
       var keyManager = TrinaKeyManagerEvent(focusNode: node, event: event);

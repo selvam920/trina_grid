@@ -87,6 +87,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
   final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
   Timer? _debounceForTextController;
+  bool _isSelecting = false;
 
   final List<GlobalKey> _itemKeys = [];
 
@@ -98,13 +99,15 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
     cellFocus.addListener(() {
       if (cellFocus.hasFocus) {
-        if (widget.autoOpen) {
+        if (widget.autoOpen && !_isSelecting) {
           _filterOptions(forceShowAll: true);
         }
       } else {
         Future.delayed(const Duration(milliseconds: 300), () {
           if (mounted && !cellFocus.hasFocus) {
-            _changeValue();
+            if (_overlayEntry != null && !_isSelecting) {
+              _restoreText();
+            }
             _hideOverlay();
           }
         });
@@ -115,7 +118,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
     _textController.text = formattedValue;
 
-    _initialCellValue = _textController.text;
+    _initialCellValue = widget.cell.value;
 
     _cellEditingStatus = _CellEditingStatus.init;
 
@@ -126,6 +129,12 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
   @override
   void dispose() {
+    // If restore on cancel is enabled and overlay was open, restore before disposing
+    if (widget.stateManager.configuration.enableRestoreValueOnCancel &&
+        _overlayEntry != null) {
+      _restoreText();
+    }
+
     // Remove overlay before disposing to prevent orphaned overlay entries
     _hideOverlay();
 
@@ -154,17 +163,22 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
   }
 
   void _restoreText() {
+    if (!widget.stateManager.configuration.enableRestoreValueOnCancel) {
+      return;
+    }
+
     if (_cellEditingStatus.isNotChanged) {
       return;
     }
 
-    _textController.text = _initialCellValue.toString();
-
     widget.stateManager.changeCellValue(
-      widget.stateManager.currentCell!,
+      widget.cell,
       _initialCellValue,
       notify: false,
     );
+
+    _textController.text = formattedValue;
+    _cellEditingStatus = _CellEditingStatus.init;
   }
 
   bool _moveHorizontal(TrinaKeyManagerEvent keyManager) {
@@ -222,6 +236,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
   }
 
   void _selectOption(T option) {
+    _isSelecting = true;
     _hideOverlay();
     _debounceForTextController?.cancel();
     final displayString = widget.displayStringForOption != null
@@ -243,6 +258,10 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
     widget.stateManager.handleAfterSelectingRow(widget.cell, option);
     widget.onItemSelected(option);
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) _isSelecting = false;
+    });
   }
 
   void _handleOnComplete() {
@@ -257,7 +276,10 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
       return;
     }
 
-    widget.stateManager.handleAfterSelectingRow(widget.cell, _textController.text);
+    final value =
+        _textController.text == formattedValue ? widget.cell.value : _textController.text;
+
+    widget.stateManager.handleAfterSelectingRow(widget.cell, value);
   }
 
   KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
@@ -282,27 +304,37 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
               _scrollToSelectedIndex();
             });
             _overlayEntry?.markNeedsBuild();
+            return KeyEventResult.handled;
           }
-
-          return KeyEventResult.handled;
         } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
           _textController.selection = TextSelection.fromPosition(
             TextPosition(offset: _textController.text.length),
           );
-          if (_filteredOptions.isNotEmpty && _selectedIndex >= 0) {
-            if (_selectedIndex > 0) {
+          if (_filteredOptions.isNotEmpty && _selectedIndex > 0) {
+            setState(() {
               _selectedIndex--;
-              _overlayEntry?.markNeedsBuild();
-            }
+            });
+            _overlayEntry?.markNeedsBuild();
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _scrollToSelectedIndex();
             });
+            return KeyEventResult.handled;
           }
-          return KeyEventResult.handled;
+        } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft ||
+            event.logicalKey == LogicalKeyboardKey.arrowRight) {
+          _restoreText();
+          _hideOverlay();
         } else if (event.logicalKey == LogicalKeyboardKey.escape) {
           _hideOverlay();
           return KeyEventResult.handled;
         }
+      }
+
+      if (_overlayEntry == null) {
+        // Fall through to grid navigation if overlay was closed
+        var keyManager = TrinaKeyManagerEvent(focusNode: node, event: event);
+        widget.stateManager.keyManager!.subject.add(keyManager);
+        return KeyEventResult.handled;
       }
 
       return KeyEventResult.ignored;

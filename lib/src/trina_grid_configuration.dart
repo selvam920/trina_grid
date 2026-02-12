@@ -181,6 +181,15 @@ class TrinaGridConfiguration {
   /// Default is false for backward compatibility.
   final bool rowWrapperIsConstantHeight;
 
+  /// Whether to restore the initial value when canceling cell editing.
+  ///
+  /// For example, when using [TrinaAutoCompleteCell] or [TrinaDropdownCell],
+  /// if the user navigates away using arrow keys or clicks outside without
+  /// making a selection, the cell will revert to its original value if this is true.
+  ///
+  /// Default is true.
+  final bool enableRestoreValueOnCancel;
+
   const TrinaGridConfiguration({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveRightAfterSelecting = false,
@@ -205,6 +214,7 @@ class TrinaGridConfiguration {
     this.copyPasteCellSeparator,
     this.copyPasteLineSeparator,
     this.rowWrapperIsConstantHeight = false,
+    this.enableRestoreValueOnCancel = true,
   });
 
   const TrinaGridConfiguration.dark({
@@ -231,6 +241,7 @@ class TrinaGridConfiguration {
     this.copyPasteCellSeparator,
     this.copyPasteLineSeparator,
     this.rowWrapperIsConstantHeight = false,
+    this.enableRestoreValueOnCancel = true,
   });
 
   void updateLocale() {
@@ -281,6 +292,7 @@ class TrinaGridConfiguration {
     String? copyPasteCellSeparator,
     String? copyPasteLineSeparator,
     bool? rowWrapperIsConstantHeight,
+    bool? enableRestoreValueOnCancel,
   }) {
     return TrinaGridConfiguration(
       enableMoveDownAfterSelecting:
@@ -313,6 +325,8 @@ class TrinaGridConfiguration {
           copyPasteLineSeparator ?? this.copyPasteLineSeparator,
       rowWrapperIsConstantHeight:
           rowWrapperIsConstantHeight ?? this.rowWrapperIsConstantHeight,
+      enableRestoreValueOnCancel:
+          enableRestoreValueOnCancel ?? this.enableRestoreValueOnCancel,
     );
   }
 
@@ -344,7 +358,8 @@ class TrinaGridConfiguration {
             dragSelectionDelayDuration == other.dragSelectionDelayDuration &&
             copyPasteCellSeparator == other.copyPasteCellSeparator &&
             copyPasteLineSeparator == other.copyPasteLineSeparator &&
-            rowWrapperIsConstantHeight == other.rowWrapperIsConstantHeight;
+            rowWrapperIsConstantHeight == other.rowWrapperIsConstantHeight &&
+            enableRestoreValueOnCancel == other.enableRestoreValueOnCancel;
   }
 
   @override
@@ -370,6 +385,7 @@ class TrinaGridConfiguration {
       copyPasteCellSeparator,
       copyPasteLineSeparator,
       rowWrapperIsConstantHeight,
+      enableRestoreValueOnCancel,
     ),
   );
 }

@@ -371,6 +371,27 @@ TrinaGrid(
 )
 ```
 
+### Automatic Restoration of Values
+
+By default, when using popup-based cells like `TrinaAutoCompleteCell` or `TrinaDropdownCell`, the grid automatically restores the original cell value if the user cancels editing or navigates away without making a selection (e.g., by pressing arrow keys or clicking outside).
+
+You can control this behavior using the `enableRestoreValueOnCancel` flag in `TrinaGridConfiguration`:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: TrinaGridConfiguration(
+    enableRestoreValueOnCancel: true, // Default: Restore original value on cancel
+  ),
+)
+```
+
+- When **true** (default): Navigating away via arrow keys or losing focus while the overlay is open will revert the cell to its value before editing started.
+- When **false**: The partially typed text or the last state of the cell is preserved when the cell loses focus or navigation occurs.
+
+This is particularly useful for building Excel-like data entry experiences where arrow keys might be used to both navigate inside an editor or move between cells.
+
 ## Data Validation
 
 TrinaGrid provides built-in validation for cell values based on column types. You can also implement custom validation:
