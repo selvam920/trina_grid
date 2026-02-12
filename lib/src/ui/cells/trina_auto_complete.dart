@@ -430,11 +430,6 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
                           child: CircularProgressIndicator(strokeWidth: 3),
                         ),
                       )
-                    : _filteredOptions.isEmpty
-                    ? const SizedBox(
-                        height: 60,
-                        child: Center(child: Text('No results found')),
-                      )
                     : ListView.builder(
                         controller: _scrollController,
                         padding: EdgeInsets.zero,
@@ -575,12 +570,11 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
                 : (results.isNotEmpty ? 0 : -1);
           });
 
-          _overlayEntry?.markNeedsBuild();
-
           if (_filteredOptions.isEmpty) {
             _hideOverlay();
             _itemKeys.clear();
           } else {
+            _overlayEntry?.markNeedsBuild();
             _itemKeys
               ..clear()
               ..addAll(
@@ -598,6 +592,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
             setState(() {
               _isLoading = false;
             });
+            _hideOverlay();
           }
         }
       },

@@ -125,8 +125,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
       ];
     }
     return [
-      const Unit(id: 100, name: 'Pcs'),
-      const Unit(id: 101, name: 'Unit'),
+     
     ];
   }
 
@@ -239,7 +238,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
           'mrp': TrinaCell(value: mrp),
           'rate': TrinaCell(value: rate),
           'qty': TrinaCell(value: qty),
-          'unit': TrinaCell(value: units.first),
+          'unit': TrinaCell(value: units.isNotEmpty ? units.first : ''),
           'amount': TrinaCell(value: rate * qty),
         },
       );

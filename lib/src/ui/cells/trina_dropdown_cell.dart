@@ -113,6 +113,9 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
 
   void _showOverlay() {
     if (_overlayEntry != null) return;
+
+    if (effectiveItems.isEmpty) return;
+
     final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
     final Size size = renderBox.size;
@@ -145,17 +148,12 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
               height: overlayHeight,
               child: Material(
                 elevation: 4.0,
-                child: items.isEmpty
-                    ? const SizedBox(
-                        height: 60,
-                        child: Center(child: Text('No options available')),
-                      )
-                    : ListView.builder(
-                        controller: _scrollController,
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        itemCount: items.length,
-                        itemBuilder: (BuildContext context, int index) {
+                child: ListView.builder(
+                  controller: _scrollController,
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  itemCount: items.length,
+                  itemBuilder: (BuildContext context, int index) {
                           final T option = items[index];
                           final bool isSelected = _selectedIndex == index;
                           return InkWell(
@@ -335,6 +333,10 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
             contentPadding: EdgeInsets.zero,
             isDense: true,
             suffixIcon: Icon(Icons.arrow_drop_down),
+            suffixIconConstraints: BoxConstraints(
+              minWidth: 24,
+              minHeight: 24,
+            ),
           ),
           maxLines: 1,
           textAlignVertical: TextAlignVertical.center,

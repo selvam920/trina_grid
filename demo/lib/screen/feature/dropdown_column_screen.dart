@@ -68,6 +68,14 @@ class _DropdownColumnScreenState extends State<DropdownColumnScreen> {
         autoOpen: true,
       ),
     ),
+    TrinaColumn(
+      title: 'Empty Dropdown',
+      field: 'empty',
+      type: TrinaColumnType.dropdown(
+        items: [],
+        autoOpen: true,
+      ),
+    ),
   ];
 
   final List<TrinaRow> rows = [
@@ -76,18 +84,21 @@ class _DropdownColumnScreenState extends State<DropdownColumnScreen> {
       'status': TrinaCell(value: 'Active'),
       'priority': TrinaCell(value: 'High'),
       'action': TrinaCell(value: 'Edit'),
+      'empty': TrinaCell(value: ''),
     }),
     TrinaRow(cells: {
       'name': TrinaCell(value: 'Task 2'),
       'status': TrinaCell(value: 'Pending'),
       'priority': TrinaCell(value: 'Medium'),
       'action': TrinaCell(value: 'Approve'),
+      'empty': TrinaCell(value: ''),
     }),
     TrinaRow(cells: {
       'name': TrinaCell(value: 'Task 3'),
       'status': TrinaCell(value: 'Archived'),
       'priority': TrinaCell(value: 'Low'),
       'action': TrinaCell(value: 'Restore'),
+      'empty': TrinaCell(value: ''),
     }),
   ];
 
