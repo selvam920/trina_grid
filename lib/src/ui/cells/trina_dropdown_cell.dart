@@ -247,17 +247,12 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
 
     _textController.text = displayString;
 
-    final configuration = widget.stateManager.configuration;
-    final shouldMove = configuration.enterKeyAction.isEditingAndMoveDown ||
-        configuration.enterKeyAction.isEditingAndMoveRight ||
-        configuration.enterKeyAction.isEditingAndMoveUp ||
-        configuration.enterKeyAction.isEditingAndMoveLeft;
+    widget.stateManager.changeCellValue(widget.cell, option, notify: false);
+    widget.stateManager.setKeepFocus(true, notify: false);
+    widget.stateManager.notifyListeners();
 
-    if (!shouldMove) {
-      cellFocus.requestFocus();
-    }
+    cellFocus.requestFocus();
 
-    widget.stateManager.handleAfterSelectingRow(widget.cell, option);
     widget.onItemSelected(option);
 
     Future.delayed(const Duration(milliseconds: 100), () {

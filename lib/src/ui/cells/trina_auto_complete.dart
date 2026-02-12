@@ -252,17 +252,12 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
       TextPosition(offset: _textController.text.length),
     );
 
-    final configuration = widget.stateManager.configuration;
-    final shouldMove = configuration.enterKeyAction.isEditingAndMoveDown ||
-        configuration.enterKeyAction.isEditingAndMoveRight ||
-        configuration.enterKeyAction.isEditingAndMoveUp ||
-        configuration.enterKeyAction.isEditingAndMoveLeft;
+    widget.stateManager.changeCellValue(widget.cell, option, notify: false);
+    widget.stateManager.setKeepFocus(true, notify: false);
+    widget.stateManager.notifyListeners();
 
-    if (!shouldMove) {
-      cellFocus.requestFocus();
-    }
+    cellFocus.requestFocus();
 
-    widget.stateManager.handleAfterSelectingRow(widget.cell, option);
     widget.onItemSelected(option);
 
     _cellEditingStatus = _CellEditingStatus.updated;
