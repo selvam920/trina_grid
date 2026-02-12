@@ -397,6 +397,8 @@ class TrinaColumn {
   }
 
   String formattedValueForType(dynamic value) {
+    if (value == null) return '';
+
     final formatted = type.formatValue(value);
     if (formatted != null) {
       return formatted;
@@ -422,6 +424,8 @@ class TrinaColumn {
   }
 
   String formattedValueForDisplay(dynamic value) {
+    if (value == null) return '';
+
     if (formatter != null) {
       return formatter!(value).toString();
     }
@@ -430,6 +434,8 @@ class TrinaColumn {
   }
 
   String formattedValueForDisplayInEditing(dynamic value) {
+    if (value == null) return '';
+
     final formatted = type.formatValue(value);
     if (formatted != null) {
       return formatted;
