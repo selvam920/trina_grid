@@ -102,44 +102,7 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
         : initialViewportDimension;
   }
 
-  double get _maxScrollExtent {
-    return _maxSize - _contentSize;
-  }
-
-  double get _maxSize => _widgetChildren.isNotEmpty
-      ? (_widgetChildren.last.layoutChild.startPosition +
-            _widgetChildren.last.layoutChild.width)
-      : 0;
-
-  double _previousMaxScroll = 0;
-
-  double _previousVisibleFirstX1 = 0;
-
-  double _previousVisibleFirstX2 = 0;
-
-  double _previousVisibleLastX1 = 0;
-
-  double _previousVisibleLastX2 = 0;
-
-  bool _firstVisible = true;
-
   void scrollListener() {
-    final bool sameBoundScroll =
-        _previousVisibleFirstX1 < _visibleFirst &&
-        _visibleFirst < _previousVisibleFirstX2 &&
-        _previousVisibleLastX1 < _visibleLast &&
-        _visibleLast < _previousVisibleLastX2;
-
-    final bool sameMaxScrollExtent =
-        _previousMaxScroll == _maxScrollExtent &&
-        scrollController.position.maxScrollExtent == _maxScrollExtent;
-
-    if (sameBoundScroll && sameMaxScrollExtent) {
-      return;
-    }
-
-    _previousMaxScroll = _maxScrollExtent;
-
     markNeedsBuild();
   }
 
@@ -148,23 +111,9 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
     required TrinaVisibilityLayoutChild layoutChild,
   }) {
     // Column is visible if it's within viewport OR kept alive (e.g. current cell)
-    // We use a small epsilon for floating point precision comparison
-    const epsilon = 1e-4;
-
     return layoutChild.keepAlive ||
-        (startOffset < _visibleLast - epsilon &&
-            startOffset + layoutChild.width > _visibleFirst + epsilon);
-  }
-
-  void updateLastVisible({required double startOffset, required double width}) {
-    if (_firstVisible) {
-      _previousVisibleFirstX1 = startOffset;
-      _previousVisibleFirstX2 = startOffset + width;
-      _firstVisible = false;
-    }
-
-    _previousVisibleLastX1 = startOffset;
-    _previousVisibleLastX2 = startOffset + width;
+        (startOffset <= _visibleLast &&
+            startOffset + layoutChild.width >= _visibleFirst);
   }
 
   Element? findChildByLayoutId(Object layoutId) {
@@ -185,7 +134,6 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
 
     Element? previousChild;
     double startOffset = 0;
-    _firstVisible = true;
 
     for (int i = 0; i < _widgetChildren.length; i += 1) {
       final child = _widgetChildren.elementAt(i);
@@ -196,20 +144,20 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
         final foundElement = findChildByLayoutId(child.id);
 
         if (foundElement != null) {
-          visibleWidgets.add(child); // Use new widget
+          visibleWidgets.add(child);
           slots.add(IndexedSlot<Element?>(i, previousChild));
           previousChild = foundElement;
         } else {
-          visibleWidgets.add(child); // updateChildren will handle creation
+          visibleWidgets.add(child);
           slots.add(IndexedSlot<Element?>(i, previousChild));
-          // previousChild will be updated after updateChildren
+          // Don't set previousChild here, it will be mapped correctly during updateChildren
         }
-
-        updateLastVisible(startOffset: startOffset, width: width);
       }
 
       startOffset += width;
     }
+
+    final Set<Element> deactivatable = <Element>{};
 
     for (final child in _children) {
       if (child is _NullElement) {
@@ -222,19 +170,16 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
         startOffset: layoutChild.startPosition,
         layoutChild: layoutChild,
       )) {
-        deactivateChild(child);
-        _forgottenChildren.add(child);
+        deactivatable.add(child);
       }
     }
 
     _children = updateChildren(
       _children,
       visibleWidgets,
-      forgottenChildren: _forgottenChildren,
+      forgottenChildren: deactivatable,
       slots: slots,
     );
-
-    _forgottenChildren.clear();
   }
 
   @override
@@ -250,7 +195,6 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
 
     Element? previousChild;
     double startOffset = 0;
-    _firstVisible = true;
 
     for (int i = 0; i < children.length; i += 1) {
       final layoutChild = _widgetChildren.elementAt(i).layoutChild;
@@ -263,8 +207,6 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
         );
         children[i] = newChild;
         previousChild = newChild;
-
-        updateLastVisible(startOffset: startOffset, width: width);
       } else {
         _forgottenChildren.add(children[i]);
       }
@@ -294,7 +236,6 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
     final slots = <IndexedSlot>[];
     Element? previousChild;
     double startOffset = 0;
-    _firstVisible = true;
 
     for (int i = 0; i < _widgetChildren.length; i += 1) {
       final child = _widgetChildren.elementAt(i);
@@ -309,8 +250,6 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
         if (foundElement != null) {
           previousChild = foundElement;
         }
-
-        updateLastVisible(startOffset: startOffset, width: width);
       }
 
       startOffset += width;
