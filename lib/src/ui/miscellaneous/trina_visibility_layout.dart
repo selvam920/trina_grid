@@ -111,9 +111,14 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
     required TrinaVisibilityLayoutChild layoutChild,
   }) {
     // Column is visible if it's within viewport OR kept alive (e.g. current cell)
+    // Add a small epsilon for floating point precision and a buffer to ensure
+    // columns at the very edge are rendered correctly.
+    const double epsilon = 1.0e-10;
+    const double buffer = 40.0;
+
     return layoutChild.keepAlive ||
-        (startOffset <= _visibleLast &&
-            startOffset + layoutChild.width >= _visibleFirst);
+        (startOffset < _visibleLast + buffer + epsilon &&
+            startOffset + layoutChild.width > _visibleFirst - buffer - epsilon);
   }
 
   Element? findChildByLayoutId(Object layoutId) {

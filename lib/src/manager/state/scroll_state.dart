@@ -226,12 +226,6 @@ mixin ScrollState implements ITrinaGridState {
 
     double bodyWidth = maxWidth! - bodyLeftOffset - bodyRightOffset;
 
-    // Subtract vertical scrollbar width if needed to match body rows viewport
-    if (configuration.scrollbar.showVertical &&
-        configuration.scrollbar.columnShowScrollWidth) {
-      bodyWidth -= (configuration.scrollbar.thickness + 4);
-    }
-
     scroll.horizontal!.applyViewportDimension(bodyWidth);
 
     updateCorrectScrollOffset();
