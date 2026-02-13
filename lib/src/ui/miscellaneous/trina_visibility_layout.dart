@@ -118,7 +118,7 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
 
   Element? findChildByLayoutId(Object layoutId) {
     return _children.firstWhereOrNull((element) {
-      if (element is! _NullElement && element.widget is TrinaVisibilityLayoutId) {
+      if (element.widget is TrinaVisibilityLayoutId) {
         return (element.widget as TrinaVisibilityLayoutId).id == layoutId;
       }
       return false;
@@ -143,43 +143,25 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
       if (visible(startOffset: startOffset, layoutChild: layoutChild)) {
         final foundElement = findChildByLayoutId(child.id);
 
+        visibleWidgets.add(child);
+        slots.add(IndexedSlot<Element?>(i, previousChild));
+
         if (foundElement != null) {
-          visibleWidgets.add(child);
-          slots.add(IndexedSlot<Element?>(i, previousChild));
           previousChild = foundElement;
-        } else {
-          visibleWidgets.add(child);
-          slots.add(IndexedSlot<Element?>(i, previousChild));
-          // Don't set previousChild here, it will be mapped correctly during updateChildren
         }
       }
 
       startOffset += width;
     }
 
-    final Set<Element> deactivatable = <Element>{};
-
-    for (final child in _children) {
-      if (child is _NullElement) {
-        continue;
-      }
-
-      final layoutChild = (child.widget as TrinaVisibilityLayoutId).layoutChild;
-
-      if (!visible(
-        startOffset: layoutChild.startPosition,
-        layoutChild: layoutChild,
-      )) {
-        deactivatable.add(child);
-      }
-    }
-
     _children = updateChildren(
       _children,
       visibleWidgets,
-      forgottenChildren: deactivatable,
+      forgottenChildren: _forgottenChildren.isNotEmpty ? _forgottenChildren : null,
       slots: slots,
     );
+
+    _forgottenChildren.clear();
   }
 
   @override
@@ -188,27 +170,23 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
 
     scrollController.addListener(scrollListener);
 
-    final List<Element> children = List<Element>.filled(
-      _widgetChildren.length,
-      _NullElement.instance,
-    );
+    final List<Element> children = <Element>[];
 
     Element? previousChild;
     double startOffset = 0;
 
-    for (int i = 0; i < children.length; i += 1) {
-      final layoutChild = _widgetChildren.elementAt(i).layoutChild;
+    for (int i = 0; i < _widgetChildren.length; i += 1) {
+      final child = _widgetChildren.elementAt(i);
+      final layoutChild = child.layoutChild;
       final width = layoutChild.width;
 
       if (visible(startOffset: startOffset, layoutChild: layoutChild)) {
         final Element newChild = inflateWidget(
-          _widgetChildren.elementAt(i),
+          child,
           IndexedSlot<Element?>(i, previousChild),
         );
-        children[i] = newChild;
+        children.add(newChild);
         previousChild = newChild;
-      } else {
-        _forgottenChildren.add(children[i]);
       }
 
       startOffset += width;
@@ -258,7 +236,7 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
     _children = updateChildren(
       _children,
       visibleWidgets,
-      forgottenChildren: _forgottenChildren,
+      forgottenChildren: _forgottenChildren.isNotEmpty ? _forgottenChildren : null,
       slots: slots,
     );
 
@@ -373,24 +351,3 @@ abstract class TrinaVisibilityLayoutChild implements Widget {
   bool get keepAlive => false;
 }
 
-class _NullElement extends Element {
-  _NullElement() : super(const _NullWidget());
-
-  static _NullElement instance = _NullElement();
-
-  @override
-  bool get debugDoingBuild => throw UnimplementedError();
-
-  @override
-  void performRebuild() {
-    super.performRebuild();
-    throw UnimplementedError();
-  }
-}
-
-class _NullWidget extends Widget {
-  const _NullWidget();
-
-  @override
-  Element createElement() => throw UnimplementedError();
-}
