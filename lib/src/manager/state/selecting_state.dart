@@ -826,10 +826,8 @@ mixin SelectingState implements ITrinaGridState {
 
     if (action.isEditingAndMoveDown) {
       moveCurrentCell(TrinaMoveDirection.down, force: true, notify: false);
-      setEditing(true, notify: false);
     } else if (action.isEditingAndMoveUp) {
       moveCurrentCell(TrinaMoveDirection.up, force: true, notify: false);
-      setEditing(true, notify: false);
     } else if (action.isEditingAndMoveRight) {
       // Check if we're on the last cell of the row
       final position = currentCellPosition;
@@ -851,11 +849,8 @@ mixin SelectingState implements ITrinaGridState {
       } else {
         moveCurrentCell(TrinaMoveDirection.right, force: true, notify: false);
       }
-
-      setEditing(true, notify: false);
     } else if (action.isEditingAndMoveLeft) {
       moveCurrentCell(TrinaMoveDirection.left, force: true, notify: false);
-      setEditing(true, notify: false);
     }
 
     setKeepFocus(true, notify: false);
