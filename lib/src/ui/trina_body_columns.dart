@@ -72,6 +72,8 @@ class TrinaBodyColumnsState extends TrinaStateWithChange<TrinaBodyColumns> {
 
   @override
   void updateState(TrinaNotifierEvent event) {
+    forceUpdate();
+
     _showColumnGroups = update<bool>(
       _showColumnGroups,
       stateManager.showColumnGroups,

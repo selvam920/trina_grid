@@ -158,6 +158,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
     TrinaColumn(
       title: 'Product Name',
       field: 'product_name',
+      
       type: TrinaColumnType.autoComplete<Product>(
         fetchItems: (query) async {
           await Future.delayed(const Duration(milliseconds: 50));
@@ -318,7 +319,6 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
         child: TrinaGrid(
           columns: columns,
           rows: rows,
-          columnGroups: columnGroups,
           onLoaded: (TrinaGridOnLoadedEvent event) {
             stateManager = event.stateManager;
             stateManager.setShowColumnFilter(true);
@@ -380,6 +380,10 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
             }
           },
           configuration: TrinaGridConfiguration(
+             columnSize: 
+                    const TrinaGridColumnSizeConfig(
+                        autoSizeMode: TrinaAutoSizeMode.scale,
+                      ),
             // Rollback text if editing is canceled
             enableRestoreValueOnCancel: _restoreOnCancel,
             // Desktop-focused: Enter edits then moves right (Excel-like)

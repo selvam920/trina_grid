@@ -69,6 +69,8 @@ class TrinaBodyColumnsFooterState
 
   @override
   void updateState(TrinaNotifierEvent event) {
+    forceUpdate();
+
     _columns = update<List<TrinaColumn>>(
       _columns,
       _getColumns(),
