@@ -158,7 +158,6 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
     TrinaColumn(
       title: 'Product Name',
       field: 'product_name',
-      
       type: TrinaColumnType.autoComplete<Product>(
         fetchItems: (query) async {
           await Future.delayed(const Duration(milliseconds: 50));

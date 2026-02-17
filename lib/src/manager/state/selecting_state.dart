@@ -824,6 +824,12 @@ mixin SelectingState implements ITrinaGridState {
 
     final action = configuration.enterKeyAction;
 
+    if (currentColumn?.enableEnterMoveCell == false) {
+      setKeepFocus(true, notify: false);
+      notifyListeners(true, handleAfterSelectingRow.hashCode);
+      return;
+    }
+
     if (action.isEditingAndMoveDown) {
       moveCurrentCell(TrinaMoveDirection.down, force: true, notify: false);
     } else if (action.isEditingAndMoveUp) {

@@ -247,11 +247,18 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
 
     _textController.text = displayString;
 
-    widget.stateManager.changeCellValue(widget.cell, option, notify: false);
-    widget.stateManager.setKeepFocus(true, notify: false);
-    widget.stateManager.notifyListeners();
+    widget.stateManager.handleAfterSelectingRow(widget.cell, option);
 
-    cellFocus.requestFocus();
+    final config = widget.stateManager.configuration;
+    final shouldMove = (config.enterKeyAction.isEditingAndMoveDown ||
+        config.enterKeyAction.isEditingAndMoveRight ||
+        config.enterKeyAction.isEditingAndMoveUp ||
+        config.enterKeyAction.isEditingAndMoveLeft) &&
+        widget.column.enableEnterMoveCell;
+
+    if (!shouldMove) {
+      cellFocus.requestFocus();
+    }
 
     widget.onItemSelected(option);
 
@@ -295,15 +302,6 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
 
             _selectOption(items[_selectedIndex]);
 
-            final config = widget.stateManager.configuration;
-            final shouldMove = config.enterKeyAction.isEditingAndMoveDown ||
-                config.enterKeyAction.isEditingAndMoveRight ||
-                config.enterKeyAction.isEditingAndMoveUp ||
-                config.enterKeyAction.isEditingAndMoveLeft;
-
-            if (!shouldMove) {
-              return KeyEventResult.ignored;
-            }
             return KeyEventResult.handled;
           } else {
             _hideOverlay();

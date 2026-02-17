@@ -283,6 +283,12 @@ class TrinaColumn {
   /// If null, it falls back to the grid's enterKeyAction configuration.
   final TrinaGridEnterKeyAction? filterEnterKeyAction;
 
+  /// Whether pressing Enter moves focus to another cell.
+  /// If false, pressing Enter will toggle editing but not move to another cell.
+  /// Only effective when [TrinaGridEnterKeyAction] is not [TrinaGridEnterKeyAction.none].
+  /// Defaults to true.
+  final bool enableEnterMoveCell;
+
   TrinaColumn({
     required this.title,
     required this.field,
@@ -326,6 +332,7 @@ class TrinaColumn {
     this.validator,
     this.editCellRenderer,
     this.filterEnterKeyAction,
+    this.enableEnterMoveCell = true,
   }) : _key = UniqueKey(),
        _checkReadOnly = checkReadOnly,
        enableAutoEditing = enableAutoEditing ?? (type.isAutoComplete || type.isDropdown);

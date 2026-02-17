@@ -465,7 +465,9 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
     if (stateManager.configuration.enterKeyAction.isToggleEditing) {
       stateManager.toggleEditing(notify: false);
     } else {
-      if (stateManager.isEditing == true ||
+      if (stateManager.currentColumn?.enableEnterMoveCell == false) {
+        stateManager.toggleEditing(notify: false);
+      } else if (stateManager.isEditing == true ||
           stateManager.currentColumn?.enableEditingMode == false) {
         _moveCell(keyEvent, stateManager);
       } else {
