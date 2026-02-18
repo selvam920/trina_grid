@@ -1,4 +1,6 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -60,8 +62,14 @@ class TrinaGridExamplePage extends StatefulWidget {
 
 class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
   bool _restoreOnCancel = true;
+  final FocusNode _navFocusNode = FocusNode();
+  TrinaGridStateManager? stateManager;
 
-  // --- Simulated data source for invoice products ---
+  @override
+  void dispose() {
+    _navFocusNode.dispose();
+    super.dispose();
+  }
   static const _products = [
     Product(id: 1, name: 'Apple iPhone 15'),
     Product(id: 2, name: 'Samsung Galaxy S23'),
@@ -101,7 +109,9 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
       ];
     }
     final name = product.name;
-    if (name.contains('Paper') || name.contains('Ink') || name.contains('Tea')) {
+    if (name.contains('Paper') ||
+        name.contains('Ink') ||
+        name.contains('Tea')) {
       return [
         const Unit(id: 200, name: 'Bundle'),
         const Unit(id: 201, name: 'Pack'),
@@ -126,12 +136,22 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
         const Unit(id: 403, name: 'Bottle'),
       ];
     }
-    return [
-     
-    ];
+    return [];
   }
 
   late final List<TrinaColumn> columns = <TrinaColumn>[
+    /// Checkbox Column
+    TrinaColumn(
+      title: '',
+      field: 'checked',
+      type: TrinaColumnType.text(),
+      width: 50,
+      enableRowChecked: true,
+      enableSorting: false,
+      enableFilterMenuItem: false,
+      enableColumnDrag: false,
+    ),
+
     /// SNo. — uses renderer with isCurrentRow to change text color
     TrinaColumn(
       title: 'SNo.',
@@ -162,9 +182,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
         fetchItems: (query) async {
           await Future.delayed(const Duration(milliseconds: 50));
           return _products
-              .where(
-                (p) => p.name.toLowerCase().contains(query.toLowerCase()),
-              )
+              .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
               .toList();
         },
         displayStringForOption: (item) => item.name,
@@ -228,10 +246,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
           rendererContext: rendererContext,
           type: TrinaAggregateColumnType.sum,
           alignment: Alignment.centerRight,
-          numberFormat: NumberFormat.currency(
-            symbol: '₹',
-            decimalDigits: 2,
-          ),
+          numberFormat: NumberFormat.currency(symbol: '₹', decimalDigits: 2),
           titleSpanBuilder: (text) {
             return [
               const TextSpan(
@@ -247,43 +262,36 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
     ),
   ];
 
-  late final List<TrinaRow> rows = List.generate(
-    100,
-    (index) {
-      final product = _products[index % _products.length];
-      final mrp = 500.0 + (index * 100);
-      final rate = 450.0 + (index * 90);
-      final qty = (index % 5) + 1.0;
-      final units = _getUnitsForProduct(product);
+  late final List<TrinaRow> rows = List.generate(100, (index) {
+    final product = _products[index % _products.length];
+    final mrp = 500.0 + (index * 100);
+    final rate = 450.0 + (index * 90);
+    final qty = (index % 5) + 1.0;
+    final units = _getUnitsForProduct(product);
 
-      return TrinaRow(
-        cells: {
-          'sno': TrinaCell(value: '${index + 1}'),
-          'product_name': TrinaCell(value: product),
-          'mrp': TrinaCell(value: mrp),
-          'rate': TrinaCell(value: rate),
-          'qty': TrinaCell(value: qty),
-          'unit': TrinaCell(value: units.isNotEmpty ? units.first : ''),
-          'amount': TrinaCell(value: rate * qty),
-        },
-      );
-    },
-  );
+    return TrinaRow(
+      cells: {
+        'checked': TrinaCell(value: ''),
+        'sno': TrinaCell(value: '${index + 1}'),
+        'product_name': TrinaCell(value: product),
+        'mrp': TrinaCell(value: mrp),
+        'rate': TrinaCell(value: rate),
+        'qty': TrinaCell(value: qty),
+        'unit': TrinaCell(value: units.isNotEmpty ? units.first : ''),
+        'amount': TrinaCell(value: rate * qty),
+      },
+    );
+  });
 
   /// Column groups for invoice layout.
   final List<TrinaColumnGroup> columnGroups = [
     TrinaColumnGroup(
       title: 'Product Details',
-      fields: ['sno', 'product_name', 'unit'],
+      fields: ['checked', 'sno', 'product_name', 'unit'],
     ),
-    TrinaColumnGroup(
-      title: 'Pricing & Qty',
-      fields: ['mrp', 'rate', 'qty'],
-    ),
+    TrinaColumnGroup(title: 'Pricing & Qty', fields: ['mrp', 'rate', 'qty']),
     TrinaColumnGroup(title: 'Totals', fields: ['amount']),
   ];
-
-  late final TrinaGridStateManager stateManager;
 
   @override
   Widget build(BuildContext context) {
@@ -305,99 +313,163 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
             ],
           ),
           IconButton(
+            icon: const Icon(Icons.touch_app),
+            tooltip: 'Select random row',
+            onPressed: () {
+              if (stateManager == null) return;
+              final random = math.Random();
+              final nextRow = random.nextInt(stateManager!.refRows.length);
+              stateManager!.selectRow(nextRow);
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.filter_list),
             tooltip: 'Toggle column filters',
             onPressed: () {
-              stateManager.setShowColumnFilter(!stateManager.showColumnFilter);
+              if (stateManager == null) return;
+              stateManager!
+                  .setShowColumnFilter(!stateManager!.showColumnFilter);
             },
           ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),
-        child: TrinaGrid(
-          columns: columns,
-          rows: rows,
-          onLoaded: (TrinaGridOnLoadedEvent event) {
-            stateManager = event.stateManager;
-            stateManager.setShowColumnFilter(true);
-
-            // Listen to key manager events — use sourceColumn for the originating cell
-            stateManager.keyManager?.subject.listen((keyEvent) {
-              if (keyEvent.sourceColumn != null) {
-                debugPrint(
-                  'Key Event: ${keyEvent.event.logicalKey.keyLabel} | '
-                  'Source Column: ${keyEvent.sourceColumn!.title} (${keyEvent.sourceColumn!.field})',
-                );
-              }
-            });
-          },
-          onChanged: (TrinaGridOnChangedEvent event) {
-            debugPrint(
-              'Field: ${event.column.field} | Value: ${event.value} (${event.value.runtimeType}) | Old: ${event.oldValue}',
-            );
-
-            // You can get the typed objects directly:
-            if (event.column.field == 'unit') {
-              final unit = event.value is Unit ? event.value as Unit : null;
-              if (unit != null) {
-                debugPrint('Selected Unit Object: ID=${unit.id}, Name=${unit.name}');
-              }
-            }
-
-            // When product changes, reset unit if current one is invalid
-            if (event.column.field == 'product_name') {
-              final unitCell = event.row.cells['unit'];
-              if (unitCell != null) {
-                final product = event.value is Product ? event.value as Product : null;
-                final validUnits = _getUnitsForProduct(product);
-                if (!validUnits.contains(unitCell.value)) {
-                  debugPrint('Product changed: updating unit cell to default.');
-                  stateManager.changeCellValue(
-                    unitCell,
-                    validUnits.isNotEmpty ? validUnits.first : null,
-                    notify: true,
-                  );
-                }
-              }
-            }
-
-            // When rate or qty changes, update the amount cell
-            if (event.column.field == 'rate' || event.column.field == 'qty') {
-              final rate = event.row.cells['rate']?.value ?? 0.0;
-              final qty = event.row.cells['qty']?.value ?? 0.0;
-              final amountCell = event.row.cells['amount'];
-
-              if (amountCell != null) {
-                debugPrint('Updating amount: $rate * $qty');
-                stateManager.changeCellValue(
-                  amountCell,
-                  rate * qty,
-                  notify: true,
-                );
-              }
-            }
-          },
-          configuration: TrinaGridConfiguration(
-             columnSize: 
-                    const TrinaGridColumnSizeConfig(
-                        autoSizeMode: TrinaAutoSizeMode.scale,
-                      ),
-            // Rollback text if editing is canceled
-            enableRestoreValueOnCancel: _restoreOnCancel,
-            // Desktop-focused: Enter edits then moves right (Excel-like)
-            enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
-            // Tab moves to next cell on edge (Excel-like)
-            tabKeyAction: TrinaGridTabKeyAction.moveToNextOnEdge,
-            // Enable cell selection mode
-            selectingMode: TrinaGridSelectingMode.cell,
-            // Desktop scrollbar with drag support
-            scrollbar: const TrinaGridScrollbarConfig(isAlwaysShown: true),
-            style: const TrinaGridStyleConfig(
-              enableRowColorAnimation: true,
-              enableRowHoverColor: true,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: KeyboardListener(
+                focusNode: _navFocusNode,
+                onKeyEvent: (event) {
+                  if (stateManager == null) return;
+                  if (event is KeyDownEvent || event is KeyRepeatEvent) {
+                    if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                      final currentIdx = stateManager!.currentRowIdx ?? -1;
+                      if (currentIdx < stateManager!.refRows.length - 1) {
+                        stateManager!.selectRow(currentIdx + 1);
+                      }
+                    } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                      final currentIdx = stateManager!.currentRowIdx ?? 0;
+                      if (currentIdx > 0) {
+                        stateManager!.selectRow(currentIdx - 1);
+                      }
+                    }
+                  }
+                },
+                child: TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Navigate Grid (Use Up/Down Arrows)',
+                    prefixIcon: Icon(Icons.keyboard),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
             ),
-          ),
+            Expanded(
+              child: TrinaGrid(
+                columns: columns,
+                rows: rows,
+                onLoaded: (TrinaGridOnLoadedEvent event) {
+                  stateManager = event.stateManager;
+                  stateManager!.setShowColumnFilter(true);
+
+                  if (stateManager!.refRows.isNotEmpty) {
+                    stateManager!.selectRow(0);
+                  }
+
+                  // Listen to key manager events — use sourceColumn for the originating cell
+                  stateManager!.keyManager?.subject.listen((keyEvent) {
+                    if (keyEvent.sourceColumn != null) {
+                      debugPrint(
+                        'Key Event: ${keyEvent.event.logicalKey.keyLabel} | '
+                        'Source Column: ${keyEvent.sourceColumn!.title} (${keyEvent.sourceColumn!.field})',
+                      );
+                    }
+                  });
+                },
+                onRowChecked: (event) {
+                  debugPrint(
+                    'Row Checked: ${event.isChecked} | Is All: ${event.isAll}',
+                  );
+                },
+                onChanged: (TrinaGridOnChangedEvent event) {
+                  debugPrint(
+                    'Field: ${event.column.field} | Value: ${event.value} (${event.value.runtimeType}) | Old: ${event.oldValue}',
+                  );
+
+                  // You can get the typed objects directly:
+                  if (event.column.field == 'unit') {
+                    final unit =
+                        event.value is Unit ? event.value as Unit : null;
+                    if (unit != null) {
+                      debugPrint(
+                        'Selected Unit Object: ID=${unit.id}, Name=${unit.name}',
+                      );
+                    }
+                  }
+
+                  // When product changes, reset unit if current one is invalid
+                  if (event.column.field == 'product_name') {
+                    final unitCell = event.row.cells['unit'];
+                    if (unitCell != null) {
+                      final product =
+                          event.value is Product ? event.value as Product : null;
+                      final validUnits = _getUnitsForProduct(product);
+                      if (!validUnits.contains(unitCell.value)) {
+                        debugPrint(
+                          'Product changed: updating unit cell to default.',
+                        );
+                        stateManager!.changeCellValue(
+                          unitCell,
+                          validUnits.isNotEmpty ? validUnits.first : null,
+                          notify: true,
+                        );
+                      }
+                    }
+                  }
+
+                  // When rate or qty changes, update the amount cell
+                  if (event.column.field == 'rate' ||
+                      event.column.field == 'qty') {
+                    final rate = event.row.cells['rate']?.value ?? 0.0;
+                    final qty = event.row.cells['qty']?.value ?? 0.0;
+                    final amountCell = event.row.cells['amount'];
+
+                    if (amountCell != null) {
+                      debugPrint('Updating amount: $rate * $qty');
+                      stateManager!.changeCellValue(
+                        amountCell,
+                        rate * qty,
+                        notify: true,
+                      );
+                    }
+                  }
+                },
+                configuration: TrinaGridConfiguration(
+                  columnSize: const TrinaGridColumnSizeConfig(
+                    autoSizeMode: TrinaAutoSizeMode.scale,
+                  ),
+                  // Rollback text if editing is canceled
+                  enableRestoreValueOnCancel: _restoreOnCancel,
+                  // Desktop-focused: Enter edits then moves right (Excel-like)
+                  enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+                  // Tab moves to next cell on edge (Excel-like)
+                  tabKeyAction: TrinaGridTabKeyAction.moveToNextOnEdge,
+                  // Enable cell selection mode
+                  selectingMode: TrinaGridSelectingMode.cell,
+                  // Desktop scrollbar with drag support
+                  scrollbar: const TrinaGridScrollbarConfig(
+                    isAlwaysShown: true,
+                  ),
+                  style: const TrinaGridStyleConfig(
+                    enableRowColorAnimation: true,
+                    enableRowHoverColor: true,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

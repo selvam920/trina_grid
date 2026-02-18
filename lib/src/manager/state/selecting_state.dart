@@ -79,6 +79,10 @@ abstract class ISelectingState {
   /// Select or unselect a row.
   void toggleSelectingRow(int rowIdx, {bool notify = true});
 
+  /// Select single row by index.
+  /// This will clear previous selections and set the mode to [TrinaGridSelectingMode.row].
+  void selectRow(int rowIdx, {bool notify = true});
+
   bool isSelectingInteraction();
 
   bool isSelectedRow(Key rowKey);
@@ -511,6 +515,35 @@ mixin SelectingState implements ITrinaGridState {
     }
 
     notifyListeners(notify, toggleSelectingRow.hashCode);
+  }
+
+  @override
+  void selectRow(int? rowIdx, {bool notify = true}) {
+    if (rowIdx == null || rowIdx < 0 || rowIdx >= refRows.length) {
+      return;
+    }
+
+    setSelectingMode(TrinaGridSelectingMode.row, notify: false);
+
+    // Get first visible column's field
+    final columnIndexes = columnIndexesByShowFrozen;
+    if (columnIndexes.isNotEmpty) {
+      final field = refColumns[columnIndexes.first].field;
+      final cell = refRows[rowIdx].cells[field];
+      if (cell != null) {
+        // setCurrentCell triggers clearing existing selections if a different cell is selected
+        setCurrentCell(cell, rowIdx, notify: false);
+      }
+    }
+
+    // Ensure only this specific row is selected, clearing any additional
+    // selected rows or range positions.
+    _state._currentSelectingRows = [];
+    _state._currentSelectingPosition = null;
+
+    scrollToRowIdx(rowIdx);
+
+    notifyListeners(notify, selectRow.hashCode);
   }
 
   /// Toggle individual cell in multi-select mode.

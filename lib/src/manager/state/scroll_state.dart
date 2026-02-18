@@ -26,6 +26,9 @@ abstract class IScrollState {
   /// Scroll to [rowIdx] position.
   void moveScrollByRow(TrinaMoveDirection direction, int? rowIdx);
 
+  /// Scroll to the row at [rowIdx].
+  void scrollToRowIdx(int rowIdx, {bool animate = true});
+
   /// Scroll to [columnIdx] position.
   void moveScrollByColumn(TrinaMoveDirection direction, int? columnIdx);
 
@@ -90,49 +93,69 @@ mixin ScrollState implements ITrinaGridState {
       return;
     }
 
-    // Calculate the actual offset based on row-specific heights
-    double offsetToMove = 0.0;
+    final int newRowIdx = direction.isUp ? rowIdx! - 1 : rowIdx! + 1;
 
-    if (direction.isUp) {
-      // Calculate offset to the row above
-      for (int i = 0; i < rowIdx! - 1; i++) {
-        final rowHeight = getRowHeight(i);
-        offsetToMove +=
-            rowHeight + configuration.style.cellHorizontalBorderWidth;
-      }
-    } else {
-      // Calculate offset to the row below
-      for (int i = 0; i < rowIdx! + 1; i++) {
-        final rowHeight = getRowHeight(i);
-        offsetToMove +=
-            rowHeight + configuration.style.cellHorizontalBorderWidth;
-      }
-    }
-
-    final double screenOffset =
-        scroll.verticalOffset +
-        columnRowContainerHeight -
-        columnGroupHeight -
-        columnHeight -
-        columnFilterHeight -
-        configuration.style.cellHorizontalBorderWidth;
-
-    final bool inScrollStart = scroll.verticalOffset <= offsetToMove;
-
-    final bool inScrollEnd =
-        offsetToMove + getRowHeight(rowIdx) <= screenOffset;
-
-    if (inScrollStart && inScrollEnd) {
+    if (newRowIdx < 0 || newRowIdx >= refRows.length) {
       return;
-    } else if (inScrollEnd == false) {
-      offsetToMove =
-          scroll.verticalOffset +
-          offsetToMove +
-          getRowHeight(rowIdx) -
-          screenOffset;
     }
 
-    scrollByDirection(direction, offsetToMove);
+    // Use scrollToRowIdx which has better alignment and viewport calculation.
+    // For manual navigation (arrow keys), jump immediately for better responsiveness.
+    scrollToRowIdx(newRowIdx, animate: false);
+  }
+
+  @override
+  void scrollToRowIdx(int rowIdx, {bool animate = true}) {
+    if (rowIdx < 0 || rowIdx >= refRows.length) {
+      return;
+    }
+
+    if (maxHeight == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        scrollToRowIdx(rowIdx, animate: animate);
+      });
+      return;
+    }
+
+    double totalOffset = 0.0;
+    for (int i = 0; i < rowIdx; i++) {
+      totalOffset +=
+          getRowHeight(i) + configuration.style.cellHorizontalBorderWidth;
+    }
+
+    final double rowHeight = getRowHeight(rowIdx);
+    final double rowBottomOffset = totalOffset + rowHeight;
+
+    final double viewportHeight =
+        maxHeight! - rowsTopOffset - footerHeight - columnFooterHeight;
+
+    final double viewportTopOffset = scroll.verticalOffset;
+    final double viewportBottomOffset = viewportTopOffset + viewportHeight;
+
+    if (totalOffset < viewportTopOffset) {
+      // Row is above the viewport, scroll up to bring its top to the top of the viewport
+      if (animate) {
+        scroll.vertical!.animateTo(
+          totalOffset,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      } else {
+        scroll.vertical!.jumpTo(totalOffset);
+      }
+    } else if (rowBottomOffset > viewportBottomOffset) {
+      // Row is below the viewport, scroll down to bring its bottom to the bottom of the viewport
+      final double targetOffset = rowBottomOffset - viewportHeight;
+      if (animate) {
+        scroll.vertical!.animateTo(
+          targetOffset,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      } else {
+        scroll.vertical!.jumpTo(targetOffset);
+      }
+    }
   }
 
   @override
