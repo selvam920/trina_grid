@@ -366,6 +366,80 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: OverflowBar(
+                alignment: MainAxisAlignment.start,
+                spacing: 8,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      if (stateManager == null) return;
+
+                      final product = _products[math.Random().nextInt(_products.length)];
+                      final rate = 100.0 + math.Random().nextInt(900);
+                      final qty = (math.Random().nextInt(5) + 1).toDouble();
+                      final units = _getUnitsForProduct(product);
+
+                      final newRow = TrinaRow(
+                        cells: {
+                          'checked': TrinaCell(value: ''),
+                          'sno': TrinaCell(value: ''),
+                          'product_name': TrinaCell(value: product),
+                          'mrp': TrinaCell(value: rate + 50),
+                          'rate': TrinaCell(value: rate),
+                          'qty': TrinaCell(value: qty),
+                          'unit': TrinaCell(value: units.isNotEmpty ? units.first : ''),
+                          'amount': TrinaCell(value: rate * qty),
+                        },
+                      );
+
+                      stateManager!.addRow(0, newRow);
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('Add Row at 0'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      if (stateManager == null || stateManager!.currentRowIdx == null) return;
+
+                      final product = _products[math.Random().nextInt(_products.length)];
+                      final rate = 2000.0 + math.Random().nextInt(1000);
+                      final qty = 1.0;
+                      final units = _getUnitsForProduct(product);
+
+                      final updatedRow = TrinaRow(
+                        cells: {
+                          'checked': TrinaCell(value: ''),
+                          'sno': TrinaCell(value: ''),
+                          'product_name': TrinaCell(value: product),
+                          'mrp': TrinaCell(value: rate + 100),
+                          'rate': TrinaCell(value: rate),
+                          'qty': TrinaCell(value: qty),
+                          'unit': TrinaCell(value: units.isNotEmpty ? units.first : ''),
+                          'amount': TrinaCell(value: rate * qty),
+                        },
+                      );
+
+                      stateManager!.updateRow(stateManager!.currentRowIdx!, updatedRow);
+                    },
+                    icon: const Icon(Icons.edit),
+                    label: const Text('Update Current Row'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      if (stateManager == null || stateManager!.currentRowIdx == null) return;
+                      stateManager!.deleteRow(stateManager!.currentRowIdx!);
+                    },
+                    icon: const Icon(Icons.delete),
+                    label: const Text('Delete Current Row'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Expanded(
               child: TrinaGrid(
                 columns: columns,

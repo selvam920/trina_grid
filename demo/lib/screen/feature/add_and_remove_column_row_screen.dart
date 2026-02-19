@@ -225,6 +225,51 @@ class _HeaderState extends State<_Header> {
     widget.stateManager.setKeepFocus(true);
   }
 
+  void handleAddRowByIndex() {
+    final newRows = widget.stateManager.getNewRows(count: 1);
+
+    for (var e in newRows) {
+      e.cells['status']!.value = 'created';
+      e.cells['id']!.value = 'new-row';
+    }
+
+    widget.stateManager.addRow(0, newRows.first);
+
+    widget.stateManager.setCurrentCell(
+      newRows.first.cells.entries.first.value,
+      0,
+    );
+
+    widget.stateManager.setKeepFocus(true);
+  }
+
+  void handleUpdateRowByIndex() {
+    if (widget.stateManager.currentRowIdx == null) {
+      return;
+    }
+
+    final newRows = widget.stateManager.getNewRows(count: 1);
+
+    for (var e in newRows) {
+      e.cells['status']!.value = 'edited';
+      e.cells['id']!.value = 'updated';
+      e.cells['name']!.value = 'updated name';
+    }
+
+    widget.stateManager.updateRow(
+      widget.stateManager.currentRowIdx!,
+      newRows.first,
+    );
+  }
+
+  void handleDeleteRowByIndex() {
+    if (widget.stateManager.currentRowIdx == null) {
+      return;
+    }
+
+    widget.stateManager.deleteRow(widget.stateManager.currentRowIdx!);
+  }
+
   void handleSaveAll() {
     widget.stateManager.setShowLoading(true);
 
@@ -322,6 +367,18 @@ class _HeaderState extends State<_Header> {
             ElevatedButton(
               onPressed: handleAddRows,
               child: const Text('Add rows'),
+            ),
+            ElevatedButton(
+              onPressed: handleAddRowByIndex,
+              child: const Text('Add row at index 0'),
+            ),
+            ElevatedButton(
+              onPressed: handleUpdateRowByIndex,
+              child: const Text('Update row by index'),
+            ),
+            ElevatedButton(
+              onPressed: handleDeleteRowByIndex,
+              child: const Text('Delete row by index'),
             ),
             ElevatedButton(
               onPressed: handleSaveAll,

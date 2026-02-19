@@ -62,6 +62,8 @@ abstract class IRowState {
 
   void setRowChecked(TrinaRow row, bool flag, {bool notify = true});
 
+  void addRow(int index, TrinaRow row, {bool notify = true});
+
   void insertRows(int rowIdx, List<TrinaRow> rows, {bool notify = true});
 
   void prependNewRows({int count = 1});
@@ -72,9 +74,13 @@ abstract class IRowState {
 
   void appendRows(List<TrinaRow> rows);
 
+  void updateRow(int index, TrinaRow row, {bool notify = true});
+
   void removeCurrentRow();
 
   void removeRows(List<TrinaRow> rows);
+
+  void deleteRow(int index, {bool notify = true});
 
   void removeAllRows({bool notify = true});
 
@@ -238,6 +244,11 @@ mixin RowState implements ITrinaGridState {
   }
 
   @override
+  void addRow(int index, TrinaRow row, {bool notify = true}) {
+    insertRows(index, [row], notify: notify);
+  }
+
+  @override
   void insertRows(int rowIdx, List<TrinaRow> rows, {bool notify = true}) {
     _insertRows(rowIdx, rows);
 
@@ -314,6 +325,25 @@ mixin RowState implements ITrinaGridState {
   }
 
   @override
+  void updateRow(int index, TrinaRow row, {bool notify = true}) {
+    if (index < 0 || index >= refRows.length) {
+      return;
+    }
+
+    row.sortIdx = refRows[index].sortIdx;
+
+    TrinaGridStateManager.initializeRows(
+      refColumns.originalList,
+      [row],
+      forceApplySortIdx: false,
+    );
+
+    refRows[index] = row;
+
+    notifyListeners(notify, updateRow.hashCode);
+  }
+
+  @override
   void removeCurrentRow() {
     if (currentRowIdx == null) {
       return;
@@ -369,6 +399,15 @@ mixin RowState implements ITrinaGridState {
     currentSelectingRows.removeWhere((row) => removeKeys.contains(row.key));
 
     notifyListeners(notify, removeRows.hashCode);
+  }
+
+  @override
+  void deleteRow(int index, {bool notify = true}) {
+    if (index < 0 || index >= refRows.length) {
+      return;
+    }
+
+    removeRows([refRows[index]], notify: notify);
   }
 
   @override

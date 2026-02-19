@@ -1924,4 +1924,98 @@ void main() {
       verifyNever(listener.noParamReturnVoid());
     });
   });
+
+  group('addRow', () {
+    testWidgets('New row must be added at the specified index.', (
+      WidgetTester tester,
+    ) async {
+      // given
+      List<TrinaColumn> columns = [
+        ...ColumnHelper.textColumn('text', count: 3, width: 150),
+      ];
+
+      List<TrinaRow> rows = RowHelper.count(5, columns);
+
+      TrinaGridStateManager stateManager = createStateManager(
+        columns: columns,
+        rows: rows,
+      );
+
+      TrinaRow newRow = stateManager.getNewRow();
+
+      // when
+      stateManager.addRow(2, newRow);
+
+      // then
+      expect(stateManager.rows.length, 6);
+      expect(stateManager.rows[2].key, newRow.key);
+      expect(stateManager.rows[0].sortIdx, 0);
+      expect(stateManager.rows[1].sortIdx, 1);
+      expect(stateManager.rows[2].sortIdx, 2);
+      expect(stateManager.rows[3].sortIdx, 3);
+    });
+  });
+
+  group('updateRow', () {
+    testWidgets('Row must be updated at the specified index.', (
+      WidgetTester tester,
+    ) async {
+      // given
+      List<TrinaColumn> columns = [
+        ...ColumnHelper.textColumn('text', count: 3, width: 150),
+      ];
+
+      List<TrinaRow> rows = RowHelper.count(5, columns);
+
+      TrinaGridStateManager stateManager = createStateManager(
+        columns: columns,
+        rows: rows,
+      );
+
+      final originalKey = stateManager.rows[2].key;
+      final originalSortIdx = stateManager.rows[2].sortIdx;
+
+      TrinaRow newRow = stateManager.getNewRow();
+      newRow.cells['text0']!.value = 'updated value';
+
+      // when
+      stateManager.updateRow(2, newRow);
+
+      // then
+      expect(stateManager.rows.length, 5);
+      expect(stateManager.rows[2].key, newRow.key);
+      expect(stateManager.rows[2].key, isNot(originalKey));
+      expect(stateManager.rows[2].cells['text0']!.value, 'updated value');
+      expect(stateManager.rows[2].sortIdx, originalSortIdx);
+    });
+  });
+
+  group('deleteRow', () {
+    testWidgets('Row must be deleted at the specified index.', (
+      WidgetTester tester,
+    ) async {
+      // given
+      List<TrinaColumn> columns = [
+        ...ColumnHelper.textColumn('text', count: 3, width: 150),
+      ];
+
+      List<TrinaRow> rows = RowHelper.count(5, columns);
+
+      TrinaGridStateManager stateManager = createStateManager(
+        columns: columns,
+        rows: rows,
+      );
+
+      final secondRowKey = rows[1].key;
+      final thirdRowKey = rows[2].key;
+
+      // when
+      stateManager.deleteRow(1);
+
+      // then
+      expect(stateManager.rows.length, 4);
+      expect(stateManager.rows[1].key, thirdRowKey);
+      expect(stateManager.rows.any((row) => row.key == secondRowKey), isFalse);
+    });
+  });
 }
