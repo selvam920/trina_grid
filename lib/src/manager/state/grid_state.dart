@@ -36,6 +36,8 @@ abstract class IGridState {
 
   TrinaOnColumnsMovedEventCallback? get onColumnsMoved;
 
+  TrinaOnReachedEndEventCallback? get onReachedEnd;
+
   TrinaColumnMenuDelegate get columnMenuDelegate;
 
   CreateHeaderCallBack? get createHeader;

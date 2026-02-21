@@ -70,6 +70,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
     _navFocusNode.dispose();
     super.dispose();
   }
+
   static const _products = [
     Product(id: 1, name: 'Apple iPhone 15'),
     Product(id: 2, name: 'Samsung Galaxy S23'),
@@ -327,8 +328,9 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
             tooltip: 'Toggle column filters',
             onPressed: () {
               if (stateManager == null) return;
-              stateManager!
-                  .setShowColumnFilter(!stateManager!.showColumnFilter);
+              stateManager!.setShowColumnFilter(
+                !stateManager!.showColumnFilter,
+              );
             },
           ),
         ],
@@ -376,7 +378,8 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                     onPressed: () {
                       if (stateManager == null) return;
 
-                      final product = _products[math.Random().nextInt(_products.length)];
+                      final product =
+                          _products[math.Random().nextInt(_products.length)];
                       final rate = 100.0 + math.Random().nextInt(900);
                       final qty = (math.Random().nextInt(5) + 1).toDouble();
                       final units = _getUnitsForProduct(product);
@@ -389,7 +392,9 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                           'mrp': TrinaCell(value: rate + 50),
                           'rate': TrinaCell(value: rate),
                           'qty': TrinaCell(value: qty),
-                          'unit': TrinaCell(value: units.isNotEmpty ? units.first : ''),
+                          'unit': TrinaCell(
+                            value: units.isNotEmpty ? units.first : '',
+                          ),
                           'amount': TrinaCell(value: rate * qty),
                         },
                       );
@@ -401,9 +406,12 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
-                      if (stateManager == null || stateManager!.currentRowIdx == null) return;
+                      if (stateManager == null ||
+                          stateManager!.currentRowIdx == null)
+                        return;
 
-                      final product = _products[math.Random().nextInt(_products.length)];
+                      final product =
+                          _products[math.Random().nextInt(_products.length)];
                       final rate = 2000.0 + math.Random().nextInt(1000);
                       final qty = 1.0;
                       final units = _getUnitsForProduct(product);
@@ -416,19 +424,26 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                           'mrp': TrinaCell(value: rate + 100),
                           'rate': TrinaCell(value: rate),
                           'qty': TrinaCell(value: qty),
-                          'unit': TrinaCell(value: units.isNotEmpty ? units.first : ''),
+                          'unit': TrinaCell(
+                            value: units.isNotEmpty ? units.first : '',
+                          ),
                           'amount': TrinaCell(value: rate * qty),
                         },
                       );
 
-                      stateManager!.updateRow(stateManager!.currentRowIdx!, updatedRow);
+                      stateManager!.updateRow(
+                        stateManager!.currentRowIdx!,
+                        updatedRow,
+                      );
                     },
                     icon: const Icon(Icons.edit),
                     label: const Text('Update Current Row'),
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
-                      if (stateManager == null || stateManager!.currentRowIdx == null) return;
+                      if (stateManager == null ||
+                          stateManager!.currentRowIdx == null)
+                        return;
                       stateManager!.deleteRow(stateManager!.currentRowIdx!);
                     },
                     icon: const Icon(Icons.delete),
@@ -452,15 +467,54 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                     stateManager!.selectRow(0);
                   }
 
-                  // Listen to key manager events — use sourceColumn for the originating cell
-                  stateManager!.keyManager?.subject.listen((keyEvent) {
-                    if (keyEvent.sourceColumn != null) {
-                      debugPrint(
-                        'Key Event: ${keyEvent.event.logicalKey.keyLabel} | '
-                        'Source Column: ${keyEvent.sourceColumn!.title} (${keyEvent.sourceColumn!.field})',
-                      );
-                    }
+                  // Use the formal onReachedEnd event listener
+                  // This is a cleaner way to handle end-of-grid detection
+                  // as it's built into the grid's state management.
+                  // (The callback in constructor will also work, but onLoaded is where we have stateManager).
+                },
+                onReachedEnd: (TrinaGridOnReachedEndEvent event) async {
+                  debugPrint(
+                    '--- FORMAL EVENT: Reached end of the grid (Offset: ${event.offset.toStringAsFixed(1)}) ---',
+                  );
+
+                  if (stateManager?.showLoading == true) return;
+
+                  stateManager!.setShowLoading(
+                    true,
+                    level: TrinaGridLoadingLevel.rowsBottomCircular,
+                  );
+
+                  // Simulate a server fetch delay
+                  await Future.delayed(const Duration(seconds: 1));
+
+                  final startIdx = stateManager!.refRows.length;
+                  final List<TrinaRow> nextRows = List.generate(20, (index) {
+                    final currentIdx = startIdx + index;
+                    final product =
+                        _products[currentIdx % _products.length];
+                    final mrp = 500.0 + (currentIdx * 100);
+                    final rate = 450.0 + (currentIdx * 90);
+                    final qty = (currentIdx % 5) + 1.0;
+                    final units = _getUnitsForProduct(product);
+
+                    return TrinaRow(
+                      cells: {
+                        'checked': TrinaCell(value: ''),
+                        'sno': TrinaCell(value: '${currentIdx + 1}'),
+                        'product_name': TrinaCell(value: product),
+                        'mrp': TrinaCell(value: mrp),
+                        'rate': TrinaCell(value: rate),
+                        'qty': TrinaCell(value: qty),
+                        'unit': TrinaCell(
+                          value: units.isNotEmpty ? units.first : '',
+                        ),
+                        'amount': TrinaCell(value: rate * qty),
+                      },
+                    );
                   });
+
+                  stateManager!.appendRows(nextRows);
+                  stateManager!.setShowLoading(false);
                 },
                 onRowChecked: (event) {
                   debugPrint(
@@ -474,8 +528,9 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
 
                   // You can get the typed objects directly:
                   if (event.column.field == 'unit') {
-                    final unit =
-                        event.value is Unit ? event.value as Unit : null;
+                    final unit = event.value is Unit
+                        ? event.value as Unit
+                        : null;
                     if (unit != null) {
                       debugPrint(
                         'Selected Unit Object: ID=${unit.id}, Name=${unit.name}',
@@ -487,8 +542,9 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                   if (event.column.field == 'product_name') {
                     final unitCell = event.row.cells['unit'];
                     if (unitCell != null) {
-                      final product =
-                          event.value is Product ? event.value as Product : null;
+                      final product = event.value is Product
+                          ? event.value as Product
+                          : null;
                       final validUnits = _getUnitsForProduct(product);
                       if (!validUnits.contains(unitCell.value)) {
                         debugPrint(

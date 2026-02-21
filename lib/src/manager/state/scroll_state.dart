@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -123,8 +124,10 @@ mixin ScrollState implements ITrinaGridState {
           getRowHeight(i) + configuration.style.cellHorizontalBorderWidth;
     }
 
-    final double rowHeight = getRowHeight(rowIdx);
-    final double rowBottomOffset = totalOffset + rowHeight;
+    final double rowTotalHeight =
+        getRowHeight(rowIdx) + configuration.style.cellHorizontalBorderWidth;
+
+    final double rowBottomOffset = totalOffset + rowTotalHeight;
 
     final double viewportHeight =
         maxHeight! - rowsTopOffset - footerHeight - columnFooterHeight;
@@ -145,7 +148,18 @@ mixin ScrollState implements ITrinaGridState {
       }
     } else if (rowBottomOffset > viewportBottomOffset) {
       // Row is below the viewport, scroll down to bring its bottom to the bottom of the viewport
-      final double targetOffset = rowBottomOffset - viewportHeight;
+      double targetOffset = rowBottomOffset - viewportHeight;
+
+      // For the last row, ensure we scroll to the extreme end to trigger scroll listeners
+      if (rowIdx == refRows.length - 1 &&
+          scroll.bodyRowsVertical != null &&
+          scroll.bodyRowsVertical!.hasClients) {
+        targetOffset = math.max(
+          targetOffset,
+          scroll.bodyRowsVertical!.position.maxScrollExtent,
+        );
+      }
+
       if (animate) {
         scroll.vertical!.animateTo(
           targetOffset,

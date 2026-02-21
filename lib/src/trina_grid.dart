@@ -72,6 +72,9 @@ typedef TrinaOnValidationFailedCallback =
 typedef TrinaOnLazyFetchCompletedEventCallback =
     void Function(TrinaGridOnLazyFetchCompletedEvent event);
 
+typedef TrinaOnReachedEndEventCallback =
+    void Function(TrinaGridOnReachedEndEvent event);
+
 typedef RowWrapper =
     Widget Function(
       BuildContext context,
@@ -122,6 +125,7 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.mode = TrinaGridMode.normal,
     this.onValidationFailed,
     this.onLazyFetchCompleted,
+    this.onReachedEnd,
     this.scrollPhysics,
   });
 
@@ -448,6 +452,9 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// Callback triggered when a lazy pagination fetch operation completes
   final TrinaOnLazyFetchCompletedEventCallback? onLazyFetchCompleted;
 
+  /// Callback triggered when the vertical scroll reaches the end of the grid.
+  final TrinaOnReachedEndEventCallback? onReachedEnd;
+
   /// Custom scroll physics to control scrolling behavior.
   ///
   /// If null, uses platform-specific default scroll physics from [MaterialScrollBehavior].
@@ -667,6 +674,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       onBeforeActiveCellChange: widget.onBeforeActiveCellChange,
       onActiveCellChanged: widget.onActiveCellChanged,
       onColumnsMoved: widget.onColumnsMoved,
+      onReachedEnd: widget.onReachedEnd,
       rowColorCallback: widget.rowColorCallback,
       cellColorCallback: widget.cellColorCallback,
       selectDateCallback: widget.selectDateCallback,

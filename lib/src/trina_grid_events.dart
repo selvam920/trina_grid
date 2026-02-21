@@ -402,3 +402,16 @@ class TrinaGridOnKeyEvent {
     return out;
   }
 }
+
+/// Event triggered when the vertical scroll reaches the end of the grid.
+class TrinaGridOnReachedEndEvent {
+  /// The absolute scroll offset when the end was reached.
+  final double offset;
+
+  const TrinaGridOnReachedEndEvent({required this.offset});
+
+  @override
+  String toString() {
+    return '[TrinaGridOnReachedEndEvent] offset: $offset';
+  }
+}

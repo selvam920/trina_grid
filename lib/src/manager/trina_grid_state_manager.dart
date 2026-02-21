@@ -88,6 +88,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     this.onBeforeActiveCellChange,
     this.onActiveCellChanged,
     this.onColumnsMoved,
+    this.onReachedEnd,
     this.rowColorCallback,
     this.cellColorCallback,
     this.selectDateCallback,
@@ -183,6 +184,11 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   final TrinaOnColumnsMovedEventCallback? onColumnsMoved;
 
   @override
+  final TrinaOnReachedEndEventCallback? onReachedEnd;
+
+  VoidCallback? _reachedEndListener;
+
+  @override
   final TrinaRowColorCallback? rowColorCallback;
 
   @override
@@ -261,6 +267,14 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     notifyListeners(notify, revertChanges.hashCode);
   }
 
+  @override
+  void dispose() {
+    if (_reachedEndListener != null) {
+      scroll.vertical?.removeOffsetChangedListener(_reachedEndListener!);
+    }
+    super.dispose();
+  }
+
   void _initialize() {
     TrinaGridStateManager.initializeRows(
       refColumns.originalList,
@@ -277,6 +291,21 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     );
 
     setGroupToColumn();
+
+    if (onReachedEnd != null) {
+      _reachedEndListener = () {
+        if (scroll.bodyRowsVertical?.hasClients != true) return;
+
+        final offset = scroll.verticalOffset;
+        final maxScroll = scroll.maxScrollVertical;
+
+        if (offset >= maxScroll - 10) {
+          onReachedEnd!(TrinaGridOnReachedEndEvent(offset: offset));
+        }
+      };
+
+      scroll.vertical?.addOffsetChangedListener(_reachedEndListener!);
+    }
   }
 }
 
@@ -331,6 +360,7 @@ class TrinaGridStateManager extends TrinaGridStateChangeNotifier {
     super.onBeforeActiveCellChange,
     super.onActiveCellChanged,
     super.onColumnsMoved,
+    super.onReachedEnd,
     super.rowColorCallback,
     super.cellColorCallback,
     super.selectDateCallback,
