@@ -472,14 +472,14 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                   // as it's built into the grid's state management.
                   // (The callback in constructor will also work, but onLoaded is where we have stateManager).
                 },
-                onReachedEnd: (TrinaGridOnReachedEndEvent event) async {
-                  debugPrint(
-                    '--- FORMAL EVENT: Reached end of the grid (Offset: ${event.offset.toStringAsFixed(1)}) ---',
-                  );
+                  onReachedEnd: (TrinaGridOnReachedEndEvent event) async {
+                    debugPrint(
+                      '--- FORMAL EVENT: Reached end of the grid (Offset: ${event.offset.toStringAsFixed(1)}) ---',
+                    );
 
-                  if (stateManager?.showLoading == true) return;
+                    if (stateManager?.showLoading == true) return;
 
-                  stateManager!.setShowLoading(
+                    stateManager!.setShowLoading(
                     true,
                     level: TrinaGridLoadingLevel.rowsBottomCircular,
                   );
