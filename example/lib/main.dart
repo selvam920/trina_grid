@@ -407,8 +407,9 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       if (stateManager == null ||
-                          stateManager!.currentRowIdx == null)
+                          stateManager!.currentRowIdx == null) {
                         return;
+                      }
 
                       final product =
                           _products[math.Random().nextInt(_products.length)];
@@ -442,8 +443,9 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       if (stateManager == null ||
-                          stateManager!.currentRowIdx == null)
+                          stateManager!.currentRowIdx == null) {
                         return;
+                      }
                       stateManager!.deleteRow(stateManager!.currentRowIdx!);
                     },
                     icon: const Icon(Icons.delete),

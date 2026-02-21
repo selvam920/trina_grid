@@ -146,6 +146,17 @@ class TrinaCell {
     }
   }
 
+  /// Clears the cell value by resetting it to the column type's default value.
+  void clearValue() {
+    _assertUnInitializedCell(_column != null);
+    _value = _column!.type.defaultValue;
+  }
+
+  /// Sets the cell value to the given [value].
+  void setValue(dynamic value) {
+    _value = value;
+  }
+
   set value(dynamic changed) {
     if (_value == changed) {
       return;
