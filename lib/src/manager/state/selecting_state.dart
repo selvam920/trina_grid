@@ -845,7 +845,7 @@ mixin SelectingState implements ITrinaGridState {
 
       return false;
     } else if (selectingMode.isRow) {
-      return false;
+      return isSelectedRow(cell.row.key);
     } else {
       throw Exception('selectingMode is not handled');
     }

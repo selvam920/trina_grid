@@ -468,7 +468,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     required TrinaGridSelectingMode selectingMode,
   }) {
     if (!hasFocus) {
-      return gridBackgroundColor;
+      return selectingMode.isRow ? activatedColor : gridBackgroundColor;
     }
 
     if (!isEditing) {

@@ -123,6 +123,7 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
     _isCurrentRow = update<bool>(
       _isCurrentRow,
       ((stateManager.hasFocus && stateManager.currentRowIdx == widget.rowIdx) ||
+          stateManager.isSelectedRow(widget.row.key) ||
           (stateManager.hasCheckedRow &&
               stateManager.checkedRows.any(
                 (element) => element.sortIdx == widget.rowIdx,
