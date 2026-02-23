@@ -186,10 +186,9 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   List<TrinaRow> get currentSelectingRows {
-    List<TrinaRow> rows = [];
-    rows = _state._currentSelectingRows;
+    List<TrinaRow> rows = [..._state._currentSelectingRows];
     if (currentRowIdx != null && selectingMode.isRow) {
-      if (!rows.contains(refRows[currentRowIdx!])) {
+      if (!rows.any((e) => e.key == refRows[currentRowIdx!].key)) {
         rows.add(refRows[currentRowIdx!]);
       }
       rows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
@@ -714,23 +713,21 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   bool isSelectedRow(Key? rowKey) {
-    if (rowKey == null ||
-        !selectingMode.isRow ||
-        currentSelectingRows.isEmpty) {
+    if (rowKey == null || currentSelectingRows.isEmpty) {
       return false;
     }
 
-    return currentSelectingRows.firstWhereOrNull(
-          (element) => element.key == rowKey,
-        ) !=
-        null;
+    return currentSelectingRows.any((element) => element.key == rowKey);
   }
 
   // todo : code cleanup
   @override
   bool isSelectedCell(TrinaCell cell, TrinaColumn column, int rowIdx) {
     if (selectingMode.isNone) {
-      return false;
+      if (rowIdx < 0 || rowIdx >= refRows.length) {
+        return false;
+      }
+      return isSelectedRow(refRows[rowIdx].key);
     }
 
     if (selectingMode.isRow) {
