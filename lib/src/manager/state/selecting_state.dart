@@ -538,7 +538,7 @@ mixin SelectingState implements ITrinaGridState {
 
     // Ensure only this specific row is selected, clearing any additional
     // selected rows or range positions.
-    _state._currentSelectingRows = [];
+    _state._currentSelectingRows = [refRows[rowIdx]];
     _state._currentSelectingPosition = null;
 
     scrollToRowIdx(rowIdx);
