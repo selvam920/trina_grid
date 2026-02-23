@@ -63,11 +63,13 @@ class TrinaGridExamplePage extends StatefulWidget {
 class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
   bool _restoreOnCancel = true;
   final FocusNode _navFocusNode = FocusNode();
+  final TextEditingController _rowIdxController = TextEditingController(text: '0');
   TrinaGridStateManager? stateManager;
 
   @override
   void dispose() {
     _navFocusNode.dispose();
+    _rowIdxController.dispose();
     super.dispose();
   }
 
@@ -341,31 +343,89 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 12.0),
-              child: KeyboardListener(
-                focusNode: _navFocusNode,
-                onKeyEvent: (event) {
-                  if (stateManager == null) return;
-                  if (event is KeyDownEvent || event is KeyRepeatEvent) {
-                    if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                      final currentIdx = stateManager!.currentRowIdx ?? -1;
-                      if (currentIdx < stateManager!.refRows.length - 1) {
-                        stateManager!.selectRow(currentIdx + 1);
-                      }
-                    } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-                      final currentIdx = stateManager!.currentRowIdx ?? 0;
-                      if (currentIdx > 0) {
-                        stateManager!.selectRow(currentIdx - 1);
-                      }
-                    }
-                  }
-                },
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Navigate Grid (Use Up/Down Arrows)',
-                    prefixIcon: Icon(Icons.keyboard),
-                    border: OutlineInputBorder(),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: KeyboardListener(
+                      focusNode: _navFocusNode,
+                      onKeyEvent: (event) {
+                        if (stateManager == null) return;
+                        if (event is KeyDownEvent || event is KeyRepeatEvent) {
+                          if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                            final currentIdx = stateManager!.currentRowIdx ?? -1;
+                            if (currentIdx < stateManager!.refRows.length - 1) {
+                              final nextRow = currentIdx + 1;
+                              stateManager!.selectRow(nextRow);
+                              _rowIdxController.text = nextRow.toString();
+                            }
+                          } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                            final currentIdx = stateManager!.currentRowIdx ?? 0;
+                            if (currentIdx > 0) {
+                              final prevRow = currentIdx - 1;
+                              stateManager!.selectRow(prevRow);
+                              _rowIdxController.text = prevRow.toString();
+                            }
+                          }
+                        }
+                      },
+                      child: TextField(
+                        controller: _rowIdxController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        onSubmitted: (value) {
+                          if (stateManager == null) return;
+                          final idx = int.tryParse(value);
+                          if (idx != null &&
+                              idx >= 0 &&
+                              idx < stateManager!.refRows.length) {
+                            stateManager!.selectRow(idx);
+                          } else {
+                            _rowIdxController.text = (stateManager!.currentRowIdx ?? 0).toString();
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          labelText: 'Row Index Navigation',
+                          hintText: 'Enter row index and press Enter',
+                          prefixIcon: Icon(Icons.numbers),
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (stateManager == null) return;
+                          final currentIdx = stateManager!.currentRowIdx ?? -1;
+                          if (currentIdx < stateManager!.refRows.length - 1) {
+                            final nextRow = currentIdx + 1;
+                            stateManager!.selectRow(nextRow);
+                            _rowIdxController.text = nextRow.toString();
+                          }
+                        },
+                        icon: const Icon(Icons.arrow_drop_up),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          if (stateManager == null) return;
+                          final currentIdx = stateManager!.currentRowIdx ?? 0;
+                          if (currentIdx > 0) {
+                            final prevRow = currentIdx - 1;
+                            stateManager!.selectRow(prevRow);
+                            _rowIdxController.text = prevRow.toString();
+                          }
+                        },
+                        icon: const Icon(Icons.arrow_drop_down),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -469,10 +529,15 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                     stateManager!.selectRow(0);
                   }
 
-                  // Use the formal onReachedEnd event listener
-                  // This is a cleaner way to handle end-of-grid detection
-                  // as it's built into the grid's state management.
-                  // (The callback in constructor will also work, but onLoaded is where we have stateManager).
+                  // Update row navigation field when selection changes
+                  stateManager!.addListener(() {
+                    if (stateManager == null) return;
+                    final rowIdx = stateManager!.currentRowIdx;
+                    if (rowIdx != null &&
+                        _rowIdxController.text != rowIdx.toString()) {
+                      _rowIdxController.text = rowIdx.toString();
+                    }
+                  });
                 },
                   onReachedEnd: (TrinaGridOnReachedEndEvent event) async {
                     debugPrint(

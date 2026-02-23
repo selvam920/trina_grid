@@ -538,6 +538,7 @@ mixin SelectingState implements ITrinaGridState {
 
     // Ensure only this specific row is selected, clearing any additional
     // selected rows or range positions.
+    _state._isSelecting = true;
     _state._currentSelectingRows = [refRows[rowIdx]];
     _state._currentSelectingPosition = null;
 
@@ -732,6 +733,13 @@ mixin SelectingState implements ITrinaGridState {
       return false;
     }
 
+    if (selectingMode.isRow) {
+      if (rowIdx < 0 || rowIdx >= refRows.length) {
+        return false;
+      }
+      return isSelectedRow(refRows[rowIdx].key);
+    }
+
     // Check individual selections first (for Ctrl+Click multi-select)
     if (configuration.enableCtrlClickMultiSelect && selectingMode.isCell) {
       final int? columnIdx = columnIndex(column);
@@ -746,11 +754,7 @@ mixin SelectingState implements ITrinaGridState {
       }
     }
 
-    if (currentCellPosition == null) {
-      return false;
-    }
-
-    if (currentSelectingPosition == null) {
+    if (currentCellPosition == null || currentSelectingPosition == null) {
       return false;
     }
 
@@ -844,8 +848,6 @@ mixin SelectingState implements ITrinaGridState {
       }
 
       return false;
-    } else if (selectingMode.isRow) {
-      return isSelectedRow(cell.row.key);
     } else {
       throw Exception('selectingMode is not handled');
     }

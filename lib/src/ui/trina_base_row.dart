@@ -286,9 +286,7 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
     final isCurrentRow = stateManager.currentRowIdx == widget.rowIdx;
     final isCheckedRow = widget.row.checked == true;
     final isHoveredRow = stateManager.isRowIdxHovered(widget.rowIdx);
-    final isSelectedRow = stateManager.currentSelectingRows.contains(
-      widget.row,
-    );
+    final isSelectedRow = stateManager.isSelectedRow(widget.row.key);
     final isTopDragTarget = stateManager.isRowIdxTopDragTarget(widget.rowIdx);
     final isBottomDragTarget = stateManager.isRowIdxBottomDragTarget(
       widget.rowIdx,
