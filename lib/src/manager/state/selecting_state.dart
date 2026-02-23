@@ -713,28 +713,33 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   bool isSelectedRow(Key? rowKey) {
-    if (rowKey == null || currentSelectingRows.isEmpty) {
+    if (rowKey == null) {
       return false;
     }
 
-    return currentSelectingRows.any((element) => element.key == rowKey);
+    if (currentSelectingRows.any((element) => element.key == rowKey)) {
+      return true;
+    }
+
+    // In row selection mode, the current focused row is also considered selected
+    // if the grid has focus (e.g. during keyboard navigation)
+    if (selectingMode.isRow &&
+        currentRowIdx != null &&
+        currentRowIdx! >= 0 &&
+        currentRowIdx! < refRows.length &&
+        refRows[currentRowIdx!].key == rowKey &&
+        hasFocus) {
+      return true;
+    }
+
+    return false;
   }
 
   // todo : code cleanup
   @override
   bool isSelectedCell(TrinaCell cell, TrinaColumn column, int rowIdx) {
-    if (selectingMode.isNone) {
-      if (rowIdx < 0 || rowIdx >= refRows.length) {
-        return false;
-      }
-      return isSelectedRow(refRows[rowIdx].key);
-    }
-
-    if (selectingMode.isRow) {
-      if (rowIdx < 0 || rowIdx >= refRows.length) {
-        return false;
-      }
-      return isSelectedRow(refRows[rowIdx].key);
+    if (selectingMode.isNone || selectingMode.isRow) {
+      return isSelectedRow(cell.row.key);
     }
 
     // Check individual selections first (for Ctrl+Click multi-select)
@@ -870,8 +875,9 @@ mixin SelectingState implements ITrinaGridState {
       // Check if we're on the last cell of the row
       final position = currentCellPosition;
       final columnIndexes = columnIndexesByShowFrozen;
-      final currentVisualIndex =
-          position != null ? columnIndexes.indexOf(position.columnIdx!) : -1;
+      final currentVisualIndex = position != null
+          ? columnIndexes.indexOf(position.columnIdx!)
+          : -1;
       final isAtLastColumn = currentVisualIndex == columnIndexes.length - 1;
 
       if (isAtLastColumn &&

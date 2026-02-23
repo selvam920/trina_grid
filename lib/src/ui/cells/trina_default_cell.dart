@@ -123,6 +123,8 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
     _isCurrentRow = update<bool>(
       _isCurrentRow,
       (stateManager.isSelectedCell(widget.cell, widget.column, widget.rowIdx) ||
+          (stateManager.currentRowIdx == widget.rowIdx &&
+              stateManager.hasFocus) ||
           (stateManager.hasCheckedRow &&
               stateManager.checkedRows.any(
                 (element) => element.sortIdx == widget.rowIdx,
@@ -512,7 +514,9 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
       return true;
     }
 
-    return widget.stateManager.rowGroupDelegate!.isExpandableCell(widget.cell) ||
+    return widget.stateManager.rowGroupDelegate!.isExpandableCell(
+          widget.cell,
+        ) ||
         widget.stateManager.rowGroupDelegate!.isEditableCell(widget.cell) ||
         widget.cell.hasRenderer ||
         widget.column.hasRenderer;
@@ -530,7 +534,8 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
           widget.stateManager.rowGroupDelegate as TrinaRowGroupByColumnDelegate;
 
       if (widget.row.depth < delegate.columns.length) {
-        cellValue = widget.row.cells[delegate.columns[widget.row.depth].field]!.value;
+        cellValue =
+            widget.row.cells[delegate.columns[widget.row.depth].field]!.value;
       }
     }
 
@@ -568,6 +573,9 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
             row: widget.row,
             cell: widget.cell,
             stateManager: widget.stateManager,
+            isCurrentCell: isCurrentCell,
+            isSelectedCell: isSelectedCell,
+            isCurrentRow: widget.isCurrentRow,
           ),
         );
       }

@@ -167,48 +167,59 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
 
     _overlayEntry = OverlayEntry(
       builder: (BuildContext context) {
-        return UnconstrainedBox(
-          alignment: Alignment.topLeft,
-          child: CompositedTransformFollower(
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: showAbove ? Offset(0, -overlayHeight) : Offset(0, size.height),
-            child: SizedBox(
-              width: widget.width,
-              height: overlayHeight,
-              child: Material(
-                elevation: 4.0,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  itemCount: items.length,
-                  itemBuilder: (BuildContext context, int index) {
-                          final T option = items[index];
-                          final bool isSelected = _selectedIndex == index;
-                          return InkWell(
-                            key: _itemKeys[index],
-                            onTap: () => _selectOption(option),
-                            child: Container(
-                              alignment: widget.column.textAlign.alignmentValue,
-                              color: isSelected
-                                  ? Theme.of(context).colorScheme.primary.withAlpha(38)
-                                  : null,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: widget.itemBuilder(
-                                  context,
-                                  option,
-                                  isSelected,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+        return Stack(
+          children: [
+            GestureDetector(
+              onTap: _hideOverlay,
+              behavior: HitTestBehavior.translucent,
+              child: Container(
+                color: Colors.transparent,
               ),
             ),
-          ),
+            UnconstrainedBox(
+              alignment: Alignment.topLeft,
+              child: CompositedTransformFollower(
+                link: _layerLink,
+                showWhenUnlinked: false,
+                offset: showAbove ? Offset(0, -overlayHeight) : Offset(0, size.height),
+                child: SizedBox(
+                  width: widget.width,
+                  height: overlayHeight,
+                  child: Material(
+                    elevation: 4.0,
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      itemCount: items.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final T option = items[index];
+                        final bool isSelected = _selectedIndex == index;
+                        return InkWell(
+                          key: _itemKeys[index],
+                          onTap: () => _selectOption(option),
+                          child: Container(
+                            alignment: widget.column.textAlign.alignmentValue,
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.primary.withAlpha(38)
+                                : null,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: widget.itemBuilder(
+                                context,
+                                option,
+                                isSelected,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );

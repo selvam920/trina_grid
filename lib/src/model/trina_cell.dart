@@ -15,12 +15,21 @@ class TrinaCellRendererContext {
 
   final TrinaGridStateManager stateManager;
 
+  final bool isCurrentCell;
+
+  final bool isSelectedCell;
+
+  final bool isCurrentRow;
+
   TrinaCellRendererContext({
     required this.column,
     required this.rowIdx,
     required this.row,
     required this.cell,
     required this.stateManager,
+    this.isCurrentCell = false,
+    this.isSelectedCell = false,
+    this.isCurrentRow = false,
   });
 }
 

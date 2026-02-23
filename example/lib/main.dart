@@ -263,6 +263,30 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
         );
       },
     ),
+
+    /// Actions Column (to test multiple icons color change)
+    TrinaColumn(
+      title: 'Actions',
+      field: 'actions',
+      type: TrinaColumnType.text(),
+      width: 140,
+      enableSorting: false,
+      enableFilterMenuItem: false,
+      enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final color =
+            rendererContext.isCurrentRow ? Colors.white : Colors.black;
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Icon(Icons.share, size: 18, color: color),
+            Icon(Icons.edit, size: 18, color: color),
+            Icon(Icons.delete, size: 18, color: color),
+            Icon(Icons.more_vert, size: 18, color: color),
+          ],
+        );
+      },
+    ),
   ];
 
   late final List<TrinaRow> rows = List.generate(100, (index) {
@@ -282,6 +306,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
         'qty': TrinaCell(value: qty),
         'unit': TrinaCell(value: units.isNotEmpty ? units.first : ''),
         'amount': TrinaCell(value: rate * qty),
+        'actions': TrinaCell(value: ''),
       },
     );
   });
@@ -293,7 +318,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
       fields: ['checked', 'sno', 'product_name', 'unit'],
     ),
     TrinaColumnGroup(title: 'Pricing & Qty', fields: ['mrp', 'rate', 'qty']),
-    TrinaColumnGroup(title: 'Totals', fields: ['amount']),
+    TrinaColumnGroup(title: 'Totals', fields: ['amount', 'actions']),
   ];
 
   @override
@@ -456,6 +481,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                             value: units.isNotEmpty ? units.first : '',
                           ),
                           'amount': TrinaCell(value: rate * qty),
+                          'actions': TrinaCell(value: ''),
                         },
                       );
 
@@ -489,6 +515,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                             value: units.isNotEmpty ? units.first : '',
                           ),
                           'amount': TrinaCell(value: rate * qty),
+                          'actions': TrinaCell(value: ''),
                         },
                       );
 
@@ -576,6 +603,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                           value: units.isNotEmpty ? units.first : '',
                         ),
                         'amount': TrinaCell(value: rate * qty),
+                        'actions': TrinaCell(value: ''),
                       },
                     );
                   });

@@ -466,13 +466,16 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     required Color cellColorInEditState,
     required Color cellColorInReadOnlyState,
     required TrinaGridSelectingMode selectingMode,
+    bool isSelectedCell = false,
   }) {
     if (!hasFocus) {
-      return selectingMode.isRow ? activatedColor : gridBackgroundColor;
+      return (selectingMode.isRow || isSelectedCell)
+          ? activatedColor
+          : gridBackgroundColor;
     }
 
     if (!isEditing) {
-      return selectingMode.isRow ? activatedColor : null;
+      return (selectingMode.isRow || isSelectedCell) ? activatedColor : null;
     }
 
     return readOnly == true ? cellColorInReadOnlyState : cellColorInEditState;
@@ -531,6 +534,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
                 cellColorInReadOnlyState: cellColorInReadOnlyState,
                 cellColorInEditState: cellColorInEditState,
                 selectingMode: selectingMode,
+                isSelectedCell: isSelectedCell,
               ),
         border: Border.all(
           color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
