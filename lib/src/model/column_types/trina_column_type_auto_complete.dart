@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/helper/trina_general_helper.dart';
-import 'package:trina_grid/src/ui/cells/trina_auto_complete.dart';
+import 'package:trina_grid/src/ui/cells/trina_auto_complete_cell.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 /// A column type that provides autocomplete/typeahead functionality.

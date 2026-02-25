@@ -68,7 +68,7 @@ export 'src/model/column_types/trina_column_type_percentage.dart';
 export 'src/model/column_types/trina_column_type_text.dart';
 export 'src/model/column_types/trina_column_type_auto_complete.dart';
 export 'src/model/column_types/trina_column_type_dropdown.dart';
-export 'src/ui/cells/trina_auto_complete.dart'
+export 'src/ui/cells/trina_auto_complete_cell.dart'
     show
         TrinaAutoCompleteFetchItems,
         TrinaAutoCompleteItemBuilder,

@@ -506,8 +506,11 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
         return Stack(
           children: [
             GestureDetector(
-              onTap: _hideOverlay,
-              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                _restoreText();
+                _hideOverlay();
+              },
+              behavior: HitTestBehavior.opaque,
               child: Container(
                 color: Colors.transparent,
               ),

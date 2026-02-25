@@ -170,8 +170,11 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
         return Stack(
           children: [
             GestureDetector(
-              onTap: _hideOverlay,
-              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                _restoreValue();
+                _hideOverlay();
+              },
+              behavior: HitTestBehavior.opaque,
               child: Container(
                 color: Colors.transparent,
               ),
