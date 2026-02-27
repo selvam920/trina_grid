@@ -111,7 +111,9 @@ mixin ScrollState implements ITrinaGridState {
       return;
     }
 
-    if (maxHeight == null) {
+    if (maxHeight == null ||
+        scroll.vertical == null ||
+        !scroll.vertical!.hasAttachedControllers) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         scrollToRowIdx(rowIdx, animate: animate);
       });

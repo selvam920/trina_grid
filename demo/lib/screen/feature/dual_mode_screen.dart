@@ -110,9 +110,7 @@ class _DualModeScreenState extends State<DualModeScreen> {
             columns: gridBColumns,
           );
 
-          gridBStateManager.removeRows(gridBStateManager.rows);
-          gridBStateManager.resetCurrentState();
-          gridBStateManager.appendRows(rows);
+          gridBStateManager.setRows(rows);
         });
 
         gridBStateManager.setShowLoading(false);

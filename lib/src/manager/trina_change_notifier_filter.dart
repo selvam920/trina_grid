@@ -135,6 +135,7 @@ abstract class TrinaChangeNotifierFilterResolver {
       stateManager.removeRows.hashCode: 'removeRows',
       stateManager.deleteRow.hashCode: 'deleteRow',
       stateManager.removeAllRows.hashCode: 'removeAllRows',
+      stateManager.setRows.hashCode: 'setRows',
       stateManager.moveRowsByIndex.hashCode: 'moveRowsByIndex',
       stateManager.toggleAllRowChecked.hashCode: 'toggleAllRowChecked',
 
@@ -244,6 +245,7 @@ class TrinaNotifierFilterResolverDefault
       stateManager.removeRows.hashCode,
       stateManager.deleteRow.hashCode,
       stateManager.removeAllRows.hashCode,
+      stateManager.setRows.hashCode,
       stateManager.moveRowsByIndex.hashCode,
       stateManager.setRowGroup.hashCode,
       stateManager.toggleExpandedRowGroup.hashCode,
@@ -275,6 +277,7 @@ class TrinaNotifierFilterResolverDefault
       stateManager.removeRows.hashCode,
       stateManager.deleteRow.hashCode,
       stateManager.removeAllRows.hashCode,
+      stateManager.setRows.hashCode,
       stateManager.setRowGroup.hashCode,
       stateManager.toggleExpandedRowGroup.hashCode,
       stateManager.changeCellValue.hashCode,

@@ -28,6 +28,9 @@ class LinkedScrollControllerGroup {
 
   late _LinkedScrollControllerGroupOffsetNotifier _offsetNotifier;
 
+  /// Whether any scroll controllers are currently attached.
+  bool get hasAttachedControllers => _attachedControllers.isNotEmpty;
+
   /// The current scroll offset of the group.
   double get offset {
     assert(

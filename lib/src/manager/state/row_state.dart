@@ -84,6 +84,12 @@ abstract class IRowState {
 
   void removeAllRows({bool notify = true});
 
+  /// Replace all existing rows with a new list of rows.
+  ///
+  /// This is a convenience method equivalent to removing all rows,
+  /// resetting current state, and appending the new rows.
+  void setRows(List<TrinaRow> rows, {bool notify = true});
+
   void moveRowsByOffset(
     List<TrinaRow> rows,
     double offset, {
@@ -421,6 +427,19 @@ mixin RowState implements ITrinaGridState {
     resetCurrentState(notify: false);
 
     notifyListeners(notify, removeAllRows.hashCode);
+  }
+
+  @override
+  void setRows(List<TrinaRow> rows, {bool notify = true}) {
+    refRows.clearFromOriginal();
+
+    resetCurrentState(notify: false);
+
+    if (rows.isNotEmpty) {
+      _insertRows(refRows.length, rows);
+    }
+
+    notifyListeners(notify, setRows.hashCode);
   }
 
   @override
