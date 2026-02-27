@@ -236,12 +236,24 @@ mixin CellState implements ITrinaGridState {
       }
     }
 
+    final previousRowIdx = _state._currentCellPosition?.rowIdx;
+
     _state._currentCell = cell;
 
     _state._currentCellPosition = TrinaGridCellPosition(
       rowIdx: rowIdx,
       columnIdx: columnIdxByCellKeyAndRowIdx(cell.key, rowIdx),
     );
+
+    // Fire onRowSelected when the row changes
+    if (previousRowIdx != rowIdx && onRowSelected != null) {
+      final row = refRows[rowIdx];
+      onRowSelected!(TrinaGridOnRowSelectedEvent(
+        row: row,
+        rowIdx: rowIdx,
+        cell: cell,
+      ));
+    }
 
     // When Ctrl+Click multi-select is enabled, preserve individual selections
     // when setting current cell. Only clear range selections.

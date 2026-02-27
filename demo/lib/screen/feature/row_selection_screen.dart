@@ -25,6 +25,10 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
   String _selectedInfo = 'No selection event fired yet';
   int _selectionEventCount = 0;
 
+  // Debug info for onRowSelected callback
+  String _rowSelectInfo = 'No row selected event fired yet';
+  int _rowSelectEventCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -101,6 +105,21 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
     );
   }
 
+  void _onRowSelected(TrinaGridOnRowSelectedEvent event) {
+    setState(() {
+      _rowSelectEventCount++;
+      String info = 'onRowSelected Event #$_rowSelectEventCount\n';
+      info += 'Row Key: ${event.row.key}\n';
+      info += 'Row Index: ${event.rowIdx}\n';
+      info += 'Cell: ${event.cell?.key}\n';
+      _rowSelectInfo = info;
+    });
+
+    print(
+      'onRowSelected callback fired: rowIdx=${event.rowIdx}, row=${event.row.key}',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return TrinaExampleScreen(
@@ -117,6 +136,11 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
         Text(
           'onSelected Event Status: $_selectedInfo',
           style: const TextStyle(fontSize: 12, color: Colors.blue),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'onRowSelected Event Status: $_rowSelectInfo',
+          style: const TextStyle(fontSize: 12, color: Colors.green),
         ),
       ],
       topButtons: [
@@ -147,6 +171,7 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
                 print(event);
               },
               onSelected: _onRowSelected, // Add the onSelected callback
+              onRowSelected: _onRowSelected, // Fires when current row changes
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 event.stateManager.setSelectingMode(TrinaGridSelectingMode.row);
 

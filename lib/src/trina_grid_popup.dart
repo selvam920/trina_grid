@@ -35,6 +35,9 @@ class TrinaGridPopup {
   /// {@macro trina_grid_property_onRowSecondaryTap}
   final TrinaOnRowSecondaryTapEventCallback? onRowSecondaryTap;
 
+  /// {@macro trina_grid_property_onRowSelected}
+  final TrinaOnRowSelectedEventCallback? onRowSelected;
+
   /// {@macro trina_grid_property_onRowsMoved}
   final TrinaOnRowsMovedEventCallback? onRowsMoved;
 
@@ -95,6 +98,7 @@ class TrinaGridPopup {
     this.onRowChecked,
     this.onRowDoubleTap,
     this.onRowSecondaryTap,
+    this.onRowSelected,
     this.onRowsMoved,
     this.onActiveCellChanged,
     this.onColumnsMoved,
@@ -160,6 +164,7 @@ class TrinaGridPopup {
                         onRowChecked: onRowChecked,
                         onRowDoubleTap: onRowDoubleTap,
                         onRowSecondaryTap: onRowSecondaryTap,
+                        onRowSelected: onRowSelected,
                         onRowsMoved: onRowsMoved,
                         onActiveCellChanged: onActiveCellChanged,
                         onColumnsMoved: onColumnsMoved,

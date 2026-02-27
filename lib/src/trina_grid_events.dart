@@ -403,6 +403,25 @@ class TrinaGridOnKeyEvent {
   }
 }
 
+/// The argument of the [TrinaGrid.onRowSelected] callback
+/// to receive the event when a row is selected (current row changes).
+class TrinaGridOnRowSelectedEvent {
+  final TrinaRow row;
+  final int rowIdx;
+  final TrinaCell? cell;
+
+  const TrinaGridOnRowSelectedEvent({
+    required this.row,
+    required this.rowIdx,
+    this.cell,
+  });
+
+  @override
+  String toString() {
+    return '[TrinaGridOnRowSelectedEvent] rowIdx: $rowIdx';
+  }
+}
+
 /// Event triggered when the vertical scroll reaches the end of the grid.
 class TrinaGridOnReachedEndEvent {
   /// The absolute scroll offset when the end was reached.

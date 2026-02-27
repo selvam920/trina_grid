@@ -24,6 +24,8 @@ abstract class IGridState {
 
   TrinaOnRowSecondaryTapEventCallback? get onRowSecondaryTap;
 
+  TrinaOnRowSelectedEventCallback? get onRowSelected;
+
   TrinaOnRowEnterEventCallback? get onRowEnter;
 
   TrinaOnRowExitEventCallback? get onRowExit;

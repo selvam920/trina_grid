@@ -30,6 +30,9 @@ typedef TrinaOnRowCheckedEventCallback =
 typedef TrinaOnRowDoubleTapEventCallback =
     void Function(TrinaGridOnRowDoubleTapEvent event);
 
+typedef TrinaOnRowSelectedEventCallback =
+    void Function(TrinaGridOnRowSelectedEvent event);
+
 typedef TrinaOnRowSecondaryTapEventCallback =
     void Function(TrinaGridOnRowSecondaryTapEvent event);
 
@@ -107,6 +110,7 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.onRowChecked,
     this.onRowDoubleTap,
     this.onRowSecondaryTap,
+    this.onRowSelected,
     this.onRowEnter,
     this.onRowExit,
     this.onRowsMoved,
@@ -253,6 +257,13 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// [onRowSecondaryTap] is called when a mouse right-click event occurs.
   /// {@endtemplate}
   final TrinaOnRowSecondaryTapEventCallback? onRowSecondaryTap;
+
+  /// {@template trina_grid_property_onRowSelected}
+  /// [onRowSelected] is called when the current row changes (a different row is selected).
+  ///
+  /// The callback receives a [TrinaGridOnRowSelectedEvent] containing the selected row and row index.
+  /// {@endtemplate}
+  final TrinaOnRowSelectedEventCallback? onRowSelected;
 
   /// {@template trina_grid_property_onRowEnter}
   /// [onRowEnter] is called when the mouse enters the row.
@@ -668,6 +679,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       onRowChecked: widget.onRowChecked,
       onRowDoubleTap: widget.onRowDoubleTap,
       onRowSecondaryTap: widget.onRowSecondaryTap,
+      onRowSelected: widget.onRowSelected,
       onRowEnter: widget.onRowEnter,
       onRowExit: widget.onRowExit,
       onRowsMoved: widget.onRowsMoved,

@@ -611,6 +611,16 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
                   stateManager!.appendRows(nextRows);
                   stateManager!.setShowLoading(false);
                 },
+                onRowSelected: (TrinaGridOnRowSelectedEvent event) {
+                  debugPrint(
+                    'onRowSelected: rowIdx=${event.rowIdx}, rowKey=${event.row.key}, cellKey=${event.cell?.key}',
+                  );
+                },
+                onSelected: (TrinaGridOnSelectedEvent event) {
+                  debugPrint(
+                    'onSelected: rowIdx=${event.rowIdx}, rowKey=${event.row?.key}, cellKey=${event.cell?.key}, selectedRows=${event.selectedRows?.length ?? 0}',
+                  );
+                },
                 onRowChecked: (event) {
                   debugPrint(
                     'Row Checked: ${event.isChecked} | Is All: ${event.isAll}',
