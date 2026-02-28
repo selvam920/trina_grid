@@ -118,6 +118,10 @@ abstract class ILayoutState {
     Widget? customLoadingWidget,
   });
 
+  /// Set a custom loading widget that replaces the default loading indicator.
+  /// Pass `null` to revert to the default loading widget.
+  void setCustomLoadingWidget(Widget? widget);
+
   void resetShowFrozenColumn();
 
   bool shouldShowFrozenColumns(double width);
@@ -504,6 +508,15 @@ mixin LayoutState implements ITrinaGridState {
     _state._customLoadingWidget = customLoadingWidget;
 
     notifyListeners(true, setShowLoading.hashCode);
+  }
+
+  @override
+  void setCustomLoadingWidget(Widget? widget) {
+    if (widget == _state._customLoadingWidget) return;
+
+    _state._customLoadingWidget = widget;
+
+    notifyListeners(true, setCustomLoadingWidget.hashCode);
   }
 
   @override

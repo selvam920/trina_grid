@@ -120,6 +120,7 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.createHeader,
     this.createFooter,
     this.noRowsWidget,
+    this.customLoadingWidget,
     this.rowColorCallback,
     this.cellColorCallback,
     this.selectDateCallback,
@@ -352,6 +353,32 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// ```
   /// {@endtemplate}
   final CreateFooterCallBack? createFooter;
+
+  /// {@template trina_grid_property_customLoadingWidget}
+  /// Custom widget to display as the loading indicator.
+  ///
+  /// When [TrinaGridStateManager.setShowLoading] is called with `true`,
+  /// this widget will be displayed instead of the default [TrinaLoading] widget.
+  ///
+  /// If [setShowLoading] is called with its own `customLoadingWidget` parameter,
+  /// that takes precedence over this widget-level property.
+  ///
+  /// ```dart
+  /// TrinaGrid(
+  ///   customLoadingWidget: const Center(
+  ///     child: Column(
+  ///       mainAxisSize: MainAxisSize.min,
+  ///       children: [
+  ///         CircularProgressIndicator(),
+  ///         SizedBox(height: 10),
+  ///         Text('Please wait...'),
+  ///       ],
+  ///     ),
+  ///   ),
+  /// )
+  /// ```
+  /// {@endtemplate}
+  final Widget? customLoadingWidget;
 
   /// {@template trina_grid_property_noRowsWidget}
   /// Widget to be shown if there are no rows.
@@ -591,6 +618,9 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
     final bool configChanged = widget.configuration != oldWidget.configuration;
     final bool modeChanged = widget.mode != oldWidget.mode;
 
+    final bool loadingWidgetChanged =
+        widget.customLoadingWidget != oldWidget.customLoadingWidget;
+
     if (configChanged || modeChanged) {
       stateManager
         ..setConfiguration(widget.configuration)
@@ -602,6 +632,10 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
           _footer = stateManager.createFooter!(stateManager);
         });
       }
+    }
+
+    if (loadingWidgetChanged) {
+      stateManager.setCustomLoadingWidget(widget.customLoadingWidget);
     }
   }
 
@@ -692,6 +726,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       selectDateCallback: widget.selectDateCallback,
       createHeader: widget.createHeader,
       createFooter: widget.createFooter,
+      customLoadingWidget: widget.customLoadingWidget,
       onValidationFailed: widget.onValidationFailed,
       onLazyFetchCompleted: widget.onLazyFetchCompleted,
       columnMenuDelegate: widget.columnMenuDelegate,
@@ -972,6 +1007,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
                     id: _StackName.loading,
                     child:
                         _stateManager.customLoadingWidget ??
+                        widget.customLoadingWidget ??
                         TrinaLoading(
                           level: _stateManager.loadingLevel,
                           backgroundColor: style.gridBackgroundColor,

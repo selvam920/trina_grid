@@ -181,6 +181,7 @@ class TrinaNotifierFilterResolverDefault
         return {
           ...defaultRowsFilter(stateManager),
           stateManager.setShowLoading.hashCode,
+          stateManager.setCustomLoadingWidget.hashCode,
         };
       case const (TrinaAggregateColumnFooter):
         return defaultAggregateColumnFooterFilter(stateManager);
@@ -200,6 +201,7 @@ class TrinaNotifierFilterResolverDefault
       stateManager.setShowColumnFooter.hashCode,
       stateManager.setShowColumnGroups.hashCode,
       stateManager.setShowLoading.hashCode,
+      stateManager.setCustomLoadingWidget.hashCode,
       stateManager.toggleFrozenColumn.hashCode,
       stateManager.insertColumns.hashCode,
       stateManager.removeColumns.hashCode,

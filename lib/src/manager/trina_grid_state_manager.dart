@@ -97,6 +97,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     this.createFooter,
     this.onValidationFailed,
     this.onLazyFetchCompleted,
+    Widget? customLoadingWidget,
     TrinaColumnMenuDelegate? columnMenuDelegate,
     TrinaChangeNotifierFilterResolver? notifierFilterResolver,
     TrinaGridConfiguration configuration = const TrinaGridConfiguration(),
@@ -114,6 +115,9 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
        _enableChangeTracking = false {
     setConfiguration(configuration);
     setGridMode(mode ?? TrinaGridMode.normal);
+    if (customLoadingWidget != null) {
+      setCustomLoadingWidget(customLoadingWidget);
+    }
     _initialize();
   }
 
@@ -371,6 +375,7 @@ class TrinaGridStateManager extends TrinaGridStateChangeNotifier {
     super.selectDateCallback,
     super.createHeader,
     super.createFooter,
+    super.customLoadingWidget,
     super.onValidationFailed,
     super.onLazyFetchCompleted,
     super.columnMenuDelegate,
