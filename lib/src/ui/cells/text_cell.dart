@@ -205,7 +205,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     PlatformHelper.onMobile(() {
       widget.stateManager.setKeepFocus(false);
-      FocusScope.of(context).requestFocus(FocusNode());
     });
   }
 
@@ -286,7 +285,8 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.stateManager.keepFocus) {
+    if (widget.stateManager.keepFocus &&
+        FocusScope.of(context).hasFocus) {
       cellFocus.requestFocus();
     }
 

@@ -714,7 +714,8 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.stateManager.keepFocus) {
+    if (widget.stateManager.keepFocus &&
+        FocusScope.of(context).hasFocus) {
       cellFocus.requestFocus();
     }
 
