@@ -48,112 +48,103 @@ class TrinaGridShortcut {
   static final Map<ShortcutActivator, TrinaGridShortcutAction>
   defaultActions = {
     // Move cell focus
-    LogicalKeySet(LogicalKeyboardKey.arrowLeft):
+    // Using SingleActivator instead of LogicalKeySet for reliable
+    // key matching on Android external keyboards.
+    const SingleActivator(LogicalKeyboardKey.arrowLeft):
         const TrinaGridActionMoveCellFocus(TrinaMoveDirection.left),
-    LogicalKeySet(LogicalKeyboardKey.arrowRight):
+    const SingleActivator(LogicalKeyboardKey.arrowRight):
         const TrinaGridActionMoveCellFocus(TrinaMoveDirection.right),
-    LogicalKeySet(LogicalKeyboardKey.arrowUp):
+    const SingleActivator(LogicalKeyboardKey.arrowUp):
         const TrinaGridActionMoveCellFocus(TrinaMoveDirection.up),
-    LogicalKeySet(LogicalKeyboardKey.arrowDown):
+    const SingleActivator(LogicalKeyboardKey.arrowDown):
         const TrinaGridActionMoveCellFocus(TrinaMoveDirection.down),
     // Move selected cell focus
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowLeft):
+    const SingleActivator(LogicalKeyboardKey.arrowLeft, shift: true):
         const TrinaGridActionMoveSelectedCellFocus(TrinaMoveDirection.left),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowRight):
+    const SingleActivator(LogicalKeyboardKey.arrowRight, shift: true):
         const TrinaGridActionMoveSelectedCellFocus(TrinaMoveDirection.right),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowUp):
+    const SingleActivator(LogicalKeyboardKey.arrowUp, shift: true):
         const TrinaGridActionMoveSelectedCellFocus(TrinaMoveDirection.up),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowDown):
+    const SingleActivator(LogicalKeyboardKey.arrowDown, shift: true):
         const TrinaGridActionMoveSelectedCellFocus(TrinaMoveDirection.down),
     // Move cell focus by page vertically
-    LogicalKeySet(LogicalKeyboardKey.pageUp):
+    const SingleActivator(LogicalKeyboardKey.pageUp):
         const TrinaGridActionMoveCellFocusByPage(TrinaMoveDirection.up),
-    LogicalKeySet(LogicalKeyboardKey.pageDown):
+    const SingleActivator(LogicalKeyboardKey.pageDown):
         const TrinaGridActionMoveCellFocusByPage(TrinaMoveDirection.down),
-    // Move cell focus by page vertically
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.pageUp):
+    // Move selected cell focus by page vertically
+    const SingleActivator(LogicalKeyboardKey.pageUp, shift: true):
         const TrinaGridActionMoveSelectedCellFocusByPage(TrinaMoveDirection.up),
-    LogicalKeySet(
-      LogicalKeyboardKey.shift,
-      LogicalKeyboardKey.pageDown,
-    ): const TrinaGridActionMoveSelectedCellFocusByPage(
+    const SingleActivator(LogicalKeyboardKey.pageDown, shift: true):
+        const TrinaGridActionMoveSelectedCellFocusByPage(
       TrinaMoveDirection.down,
     ),
     // Move page when pagination is enabled
-    LogicalKeySet(LogicalKeyboardKey.alt, LogicalKeyboardKey.pageUp):
+    const SingleActivator(LogicalKeyboardKey.pageUp, alt: true):
         const TrinaGridActionMoveCellFocusByPage(TrinaMoveDirection.left),
-    LogicalKeySet(LogicalKeyboardKey.alt, LogicalKeyboardKey.pageDown):
+    const SingleActivator(LogicalKeyboardKey.pageDown, alt: true):
         const TrinaGridActionMoveCellFocusByPage(TrinaMoveDirection.right),
     // Default tab key action
-    LogicalKeySet(LogicalKeyboardKey.tab): const TrinaGridActionDefaultTab(),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.tab):
+    const SingleActivator(LogicalKeyboardKey.tab):
+        const TrinaGridActionDefaultTab(),
+    const SingleActivator(LogicalKeyboardKey.tab, shift: true):
         const TrinaGridActionDefaultTab(),
     // Default enter key action
-    LogicalKeySet(LogicalKeyboardKey.enter):
+    const SingleActivator(LogicalKeyboardKey.enter):
         const TrinaGridActionDefaultEnterKey(),
-    LogicalKeySet(LogicalKeyboardKey.select):
+    const SingleActivator(LogicalKeyboardKey.select):
         const TrinaGridActionDefaultEnterKey(),
-    LogicalKeySet(LogicalKeyboardKey.numpadEnter):
+    const SingleActivator(LogicalKeyboardKey.numpadEnter):
         const TrinaGridActionDefaultEnterKey(),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.enter):
+    const SingleActivator(LogicalKeyboardKey.enter, shift: true):
         const TrinaGridActionDefaultEnterKey(),
     // Default escape key action
-    LogicalKeySet(LogicalKeyboardKey.escape):
+    const SingleActivator(LogicalKeyboardKey.escape):
         const TrinaGridActionDefaultEscapeKey(),
     // Move cell focus to edge
-    LogicalKeySet(LogicalKeyboardKey.home):
+    const SingleActivator(LogicalKeyboardKey.home):
         const TrinaGridActionMoveCellFocusToEdge(TrinaMoveDirection.left),
-    LogicalKeySet(LogicalKeyboardKey.end):
+    const SingleActivator(LogicalKeyboardKey.end):
         const TrinaGridActionMoveCellFocusToEdge(TrinaMoveDirection.right),
-    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.home):
+    const SingleActivator(LogicalKeyboardKey.home, control: true):
         const TrinaGridActionMoveCellFocusToEdge(TrinaMoveDirection.up),
-    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.end):
+    const SingleActivator(LogicalKeyboardKey.end, control: true):
         const TrinaGridActionMoveCellFocusToEdge(TrinaMoveDirection.down),
     // Move selected cell focus to edge
-    LogicalKeySet(
-      LogicalKeyboardKey.shift,
-      LogicalKeyboardKey.home,
-    ): const TrinaGridActionMoveSelectedCellFocusToEdge(
+    const SingleActivator(LogicalKeyboardKey.home, shift: true):
+        const TrinaGridActionMoveSelectedCellFocusToEdge(
       TrinaMoveDirection.left,
     ),
-    LogicalKeySet(
-      LogicalKeyboardKey.shift,
-      LogicalKeyboardKey.end,
-    ): const TrinaGridActionMoveSelectedCellFocusToEdge(
+    const SingleActivator(LogicalKeyboardKey.end, shift: true):
+        const TrinaGridActionMoveSelectedCellFocusToEdge(
       TrinaMoveDirection.right,
     ),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
-      LogicalKeyboardKey.shift,
-      LogicalKeyboardKey.home,
-    ): const TrinaGridActionMoveSelectedCellFocusToEdge(
+    const SingleActivator(LogicalKeyboardKey.home, control: true, shift: true):
+        const TrinaGridActionMoveSelectedCellFocusToEdge(
       TrinaMoveDirection.up,
     ),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
-      LogicalKeyboardKey.shift,
-      LogicalKeyboardKey.end,
-    ): const TrinaGridActionMoveSelectedCellFocusToEdge(
+    const SingleActivator(LogicalKeyboardKey.end, control: true, shift: true):
+        const TrinaGridActionMoveSelectedCellFocusToEdge(
       TrinaMoveDirection.down,
     ),
     
     // Copy the values of cells
-    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
+    const SingleActivator(LogicalKeyboardKey.keyC, control: true):
         const TrinaGridActionCopyValues(),
     // Copy the values of cells (Mac)
-    LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.keyC):
+    const SingleActivator(LogicalKeyboardKey.keyC, meta: true):
         const TrinaGridActionCopyValues(),
     // Paste values from clipboard
-    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyV):
+    const SingleActivator(LogicalKeyboardKey.keyV, control: true):
         const TrinaGridActionPasteValues(),
     // Paste values from clipboard (Mac)
-    LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.keyV):
+    const SingleActivator(LogicalKeyboardKey.keyV, meta: true):
         const TrinaGridActionPasteValues(),
     // Select all cells or rows
-    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyA):
+    const SingleActivator(LogicalKeyboardKey.keyA, control: true):
         const TrinaGridActionSelectAll(),
     // Select all cells or rows (Mac)
-    LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.keyA):
+    const SingleActivator(LogicalKeyboardKey.keyA, meta: true):
         const TrinaGridActionSelectAll(),
   };
 }

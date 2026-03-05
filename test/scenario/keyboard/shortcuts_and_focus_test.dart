@@ -126,7 +126,7 @@ void main() {
 
       final shortcut = TrinaGridShortcut(
         actions: {
-          LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyF):
+          const SingleActivator(LogicalKeyboardKey.keyF, control: true):
               testAction,
         },
       );
@@ -192,7 +192,7 @@ void main() {
         final testAction = TestShortcutAction();
 
         final shortcut = TrinaGridShortcut(
-          actions: {LogicalKeySet(LogicalKeyboardKey.enter): testAction},
+          actions: {const SingleActivator(LogicalKeyboardKey.enter): testAction},
         );
 
         final columns = ColumnHelper.textColumn('column', count: 5);
@@ -272,7 +272,7 @@ void main() {
 
         final shortcut = TrinaGridShortcut(
           actions: {
-            LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
+            const SingleActivator(LogicalKeyboardKey.keyC, control: true):
                 testAction,
           },
         );

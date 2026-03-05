@@ -1173,7 +1173,7 @@ class _EnterKeyListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return CallbackShortcuts(
       bindings: {
-        LogicalKeySet(LogicalKeyboardKey.enter): () {
+        const SingleActivator(LogicalKeyboardKey.enter): () {
           onEnter();
         },
       },

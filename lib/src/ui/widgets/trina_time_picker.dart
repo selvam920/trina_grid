@@ -359,14 +359,14 @@ class _TimeDigitInputState extends State<_TimeDigitInput> {
               flex: 0,
               child: CallbackShortcuts(
                 bindings: {
-                  LogicalKeySet(LogicalKeyboardKey.enter): () {
+                  const SingleActivator(LogicalKeyboardKey.enter): () {
                     FocusScope.of(context).nextFocus();
                     widget.onEnterKeyEvent?.call(
                       controller.text.padLeft(2, '0'),
                     );
                   },
-                  LogicalKeySet(LogicalKeyboardKey.arrowUp): _increment,
-                  LogicalKeySet(LogicalKeyboardKey.arrowDown): _decrement,
+                  const SingleActivator(LogicalKeyboardKey.arrowUp): _increment,
+                  const SingleActivator(LogicalKeyboardKey.arrowDown): _decrement,
                 },
                 child: TextFormField(
                   focusNode: widget.focusNode,
