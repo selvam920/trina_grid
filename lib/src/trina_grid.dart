@@ -820,6 +820,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       sourceRow: _stateManager.currentRow,
       sourceCell: _stateManager.currentCell,
       sourceRowIdx: _stateManager.currentRowIdx,
+      sourceCellPosition: _stateManager.currentCellPosition,
     );
 
     if (_isRegisteredShortcut(event)) {

@@ -77,6 +77,24 @@ void main() {
     await tester.sendKeyUpEvent(key);
   });
 
+  test('sourceCellPosition stores row and column indexes.', () {
+    const sourceCellPosition = TrinaGridCellPosition(columnIdx: 3, rowIdx: 7);
+
+    final keyManagerEvent = TrinaKeyManagerEvent(
+      focusNode: FocusNode(),
+      event: const KeyDownEvent(
+        timeStamp: Duration.zero,
+        physicalKey: PhysicalKeyboardKey.keyA,
+        logicalKey: LogicalKeyboardKey.keyA,
+      ),
+      sourceCellPosition: sourceCellPosition,
+    );
+
+    expect(keyManagerEvent.sourceCellPosition, sourceCellPosition);
+    expect(keyManagerEvent.sourceCellPosition?.columnIdx, 3);
+    expect(keyManagerEvent.sourceCellPosition?.rowIdx, 7);
+  });
+
   testWidgets('When the End key is pressed, isEnd must be `true`.', (
     tester,
   ) async {

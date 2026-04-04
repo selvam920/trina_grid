@@ -310,6 +310,10 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
               sourceRow: widget.row,
               sourceCell: widget.cell,
               sourceRowIdx: widget.stateManager.refRows.indexOf(widget.row),
+              sourceCellPosition: TrinaGridCellPosition(
+                columnIdx: widget.stateManager.columnIndex(widget.column),
+                rowIdx: widget.stateManager.refRows.indexOf(widget.row),
+              ),
               skipShortcutHandling: true,
             );
             widget.stateManager.keyManager!.subject.add(keyManager);
@@ -371,6 +375,10 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
           sourceRow: widget.row,
           sourceCell: widget.cell,
           sourceRowIdx: widget.stateManager.refRows.indexOf(widget.row),
+          sourceCellPosition: TrinaGridCellPosition(
+            columnIdx: widget.stateManager.columnIndex(widget.column),
+            rowIdx: widget.stateManager.refRows.indexOf(widget.row),
+          ),
         );
         widget.stateManager.keyManager!.subject.add(keyManager);
         return KeyEventResult.handled;
@@ -385,6 +393,10 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
         sourceRow: widget.row,
         sourceCell: widget.cell,
         sourceRowIdx: widget.stateManager.refRows.indexOf(widget.row),
+        sourceCellPosition: TrinaGridCellPosition(
+          columnIdx: widget.stateManager.columnIndex(widget.column),
+          rowIdx: widget.stateManager.refRows.indexOf(widget.row),
+        ),
       );
 
       if (keyManager.isKeyUpEvent) {
@@ -457,6 +469,10 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
           sourceRow: widget.row,
           sourceCell: widget.cell,
           sourceRowIdx: widget.stateManager.refRows.indexOf(widget.row),
+          sourceCellPosition: TrinaGridCellPosition(
+            columnIdx: widget.stateManager.columnIndex(widget.column),
+            rowIdx: widget.stateManager.refRows.indexOf(widget.row),
+          ),
           skipShortcutHandling: true,
         );
         widget.stateManager.keyManager!.subject.add(enterEvent);

@@ -216,6 +216,10 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       sourceRow: widget.row,
       sourceCell: widget.cell,
       sourceRowIdx: widget.stateManager.refRows.indexOf(widget.row),
+      sourceCellPosition: TrinaGridCellPosition(
+        columnIdx: widget.stateManager.columnIndex(widget.column),
+        rowIdx: widget.stateManager.refRows.indexOf(widget.row),
+      ),
     );
 
     if (keyManager.isKeyUpEvent) {

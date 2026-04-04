@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../manager/trina_grid_state_manager.dart';
 import '../model/trina_cell.dart';
 import '../model/trina_column.dart';
 import '../model/trina_row.dart';
@@ -24,6 +25,9 @@ class TrinaKeyManagerEvent {
   /// The row index that was being edited when this key event originated.
   final int? sourceRowIdx;
 
+  /// The cell position that was being edited when this key event originated.
+  final TrinaGridCellPosition? sourceCellPosition;
+
   /// When true, the key manager's shortcut handler will skip processing this
   /// event. This is used when cell widgets handle movement themselves (e.g.
   /// via handleAfterSelectingRow) and only want to notify listeners.
@@ -37,6 +41,7 @@ class TrinaKeyManagerEvent {
     this.sourceRow,
     this.sourceCell,
     this.sourceRowIdx,
+    this.sourceCellPosition,
     this.skipShortcutHandling = false,
   });
 
