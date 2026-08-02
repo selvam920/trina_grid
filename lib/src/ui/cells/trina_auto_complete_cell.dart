@@ -1,9 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trina_grid/trina_grid.dart';
+
+class _PopupListScrollBehavior extends MaterialScrollBehavior {
+  const _PopupListScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => const {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+    PointerDeviceKind.stylus,
+  };
+}
 
 typedef TrinaAutoCompleteFetchItems<T> = Future<List<T>> Function(String input);
 typedef TrinaAutoCompleteItemBuilder<T> =
@@ -239,7 +252,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
         : _CellEditingStatus.updated;
   }
 
-  void _selectOption(T option) {
+  void _selectOption(T option, {bool isKeyboardSelection = false}) {
     _isSelecting = true;
     _hideOverlay();
     _debounceForTextController?.cancel();
@@ -255,10 +268,17 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     widget.stateManager.handleAfterSelectingRow(widget.cell, option);
 
     final config = widget.stateManager.configuration;
-    final shouldMove = (config.enterKeyAction.isEditingAndMoveDown ||
-        config.enterKeyAction.isEditingAndMoveRight ||
-        config.enterKeyAction.isEditingAndMoveUp ||
-        config.enterKeyAction.isEditingAndMoveLeft) &&
+    // Only skip re-requesting focus when Enter itself is expected to move
+    // the current cell afterwards. A mouse click has no such follow-up
+    // navigation event, so it must always reclaim focus here — otherwise
+    // the cell ends up unfocused and the delayed restore-on-cancel logic
+    // reverts the just-selected value back to the old one.
+    final shouldMove =
+        isKeyboardSelection &&
+        (config.enterKeyAction.isEditingAndMoveDown ||
+            config.enterKeyAction.isEditingAndMoveRight ||
+            config.enterKeyAction.isEditingAndMoveUp ||
+            config.enterKeyAction.isEditingAndMoveLeft) &&
         widget.column.enableEnterMoveCell;
 
     if (!shouldMove) {
@@ -279,17 +299,19 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     // If overlay is closed, let the grid handle it.
     if (_overlayEntry != null) {
       if (_selectedIndex != -1) {
-        _selectOption(_filteredOptions[_selectedIndex]);
+        _selectOption(
+          _filteredOptions[_selectedIndex],
+          isKeyboardSelection: true,
+        );
       } else {
         _hideOverlay();
       }
       return;
     }
 
-    final value =
-        _textController.text == formattedValue
-            ? widget.cell.value
-            : _textController.text;
+    final value = _textController.text == formattedValue
+        ? widget.cell.value
+        : _textController.text;
 
     widget.stateManager.handleAfterSelectingRow(widget.cell, value);
 
@@ -318,7 +340,10 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
             );
             widget.stateManager.keyManager!.subject.add(keyManager);
 
-            _selectOption(_filteredOptions[_selectedIndex]);
+            _selectOption(
+              _filteredOptions[_selectedIndex],
+              isKeyboardSelection: true,
+            );
 
             return KeyEventResult.handled;
           } else {
@@ -453,7 +478,8 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
       // Enter key is propagated to grid focus handler.
       if (keyManager.isEnter) {
         final config = widget.stateManager.configuration;
-        final shouldMove = config.enterKeyAction.isEditingAndMoveDown ||
+        final shouldMove =
+            config.enterKeyAction.isEditingAndMoveDown ||
             config.enterKeyAction.isEditingAndMoveRight ||
             config.enterKeyAction.isEditingAndMoveUp ||
             config.enterKeyAction.isEditingAndMoveLeft;
@@ -527,66 +553,96 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
                 _hideOverlay();
               },
               behavior: HitTestBehavior.opaque,
-              child: Container(
-                color: Colors.transparent,
-              ),
+              child: Container(color: Colors.transparent),
             ),
-            UnconstrainedBox(
-              alignment: Alignment.topLeft,
+            // Positioned.fill (not UnconstrainedBox): CompositedTransformFollower
+            // shifts its child at paint time only, so the ancestor's hit-test box
+            // stays at the Stack origin. Sizing that ancestor to the popup would
+            // leave everything painted outside that phantom rect unclickable.
+            Positioned.fill(
               child: CompositedTransformFollower(
                 link: _layerLink,
                 showWhenUnlinked: false,
-                offset:
-                    showAbove ? Offset(0, -overlayHeight) : Offset(0, size.height),
-                child: SizedBox(
-                  width: widget.width,
-                  height: overlayHeight,
-                  child: Material(
-                    elevation: 4.0,
-                    child: _isLoading
-                        ? Container(
-                            height: 60,
-                            alignment: Alignment.center,
-                            child: const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(strokeWidth: 3),
-                            ),
-                          )
-                        : ListView.builder(
-                            controller: _scrollController,
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            itemCount: _filteredOptions.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final T option = _filteredOptions[index];
-                              final bool isSelected = _selectedIndex == index;
-                              return InkWell(
-                                key:
-                                    _itemKeys.length > index
-                                        ? _itemKeys[index]
-                                        : null,
-                                onTap: () => _selectOption(option),
-                                child: Container(
-                                  alignment:
-                                      widget.column.textAlign.alignmentValue,
-                                  color: isSelected
-                                      ? Theme.of(
-                                          context,
-                                        ).colorScheme.primary.withAlpha(38)
-                                      : null,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: widget.itemBuilder(
-                                      context,
-                                      option,
-                                      isSelected,
-                                    ),
-                                  ),
+                offset: showAbove
+                    ? Offset(0, -overlayHeight)
+                    : Offset(0, size.height),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    width: widget.width,
+                    height: overlayHeight,
+                    child: Material(
+                      elevation: 4.0,
+                      child: _isLoading
+                          ? Container(
+                              height: 60,
+                              alignment: Alignment.center,
+                              child: const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3,
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            )
+                          : Scrollbar(
+                              controller: _scrollController,
+                              thumbVisibility: true,
+                              child: ScrollConfiguration(
+                                behavior: const _PopupListScrollBehavior(),
+                                child: ListView.builder(
+                                  controller: _scrollController,
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  itemCount: _filteredOptions.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                        final T option =
+                                            _filteredOptions[index];
+                                        final bool isSelected =
+                                            _selectedIndex == index;
+                                        return InkWell(
+                                          key: _itemKeys.length > index
+                                              ? _itemKeys[index]
+                                              : null,
+                                          onTap: () => _selectOption(option),
+                                          onHover: (isHovering) {
+                                            if (isHovering &&
+                                                _selectedIndex != index) {
+                                              setState(() {
+                                                _selectedIndex = index;
+                                              });
+                                              _overlayEntry?.markNeedsBuild();
+                                            }
+                                          },
+                                          child: Container(
+                                            alignment: widget
+                                                .column
+                                                .textAlign
+                                                .alignmentValue,
+                                            color: isSelected
+                                                ? Theme.of(context)
+                                                      .colorScheme
+                                                      .primary
+                                                      .withAlpha(38)
+                                                : null,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(
+                                                8.0,
+                                              ),
+                                              child: widget.itemBuilder(
+                                                context,
+                                                option,
+                                                isSelected,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                ),
+                              ),
+                            ),
+                    ),
                   ),
                 ),
               ),
@@ -644,6 +700,14 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
   }
 
   void _filterOptions({bool forceShowAll = false}) {
+    // Setting _textController.text below in _selectOption() fires this
+    // via TextField.onChanged (Flutter invokes onChanged for any
+    // controller text change, not just user input). Skip re-opening the
+    // overlay right after a click/enter selection.
+    if (_isSelecting) {
+      return;
+    }
+
     _debounceForTextController?.cancel();
 
     final String query = forceShowAll ? '' : _textController.text;
@@ -730,8 +794,7 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.stateManager.keepFocus &&
-        FocusScope.of(context).hasFocus) {
+    if (widget.stateManager.keepFocus && FocusScope.of(context).hasFocus) {
       cellFocus.requestFocus();
     }
 

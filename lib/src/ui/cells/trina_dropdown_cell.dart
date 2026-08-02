@@ -1,8 +1,21 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trina_grid/trina_grid.dart';
+
+class _PopupListScrollBehavior extends MaterialScrollBehavior {
+  const _PopupListScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => const {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+    PointerDeviceKind.stylus,
+  };
+}
 
 class TrinaDropdownCell<T> extends StatefulWidget {
   final TrinaGridStateManager stateManager;
@@ -118,7 +131,9 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
         break;
       }
     }
-    _selectedIndex = matchIndex != -1 ? matchIndex : (items.isNotEmpty ? 0 : -1);
+    _selectedIndex = matchIndex != -1
+        ? matchIndex
+        : (items.isNotEmpty ? 0 : -1);
   }
 
   @override
@@ -150,7 +165,8 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
     if (renderBox == null) return;
     final Size size = renderBox.size;
     final Offset offset = renderBox.localToGlobal(Offset.zero);
-    final double screenHeight = MediaQuery.of(context).size.height -
+    final double screenHeight =
+        MediaQuery.of(context).size.height -
         MediaQuery.of(context).viewInsets.bottom -
         MediaQuery.of(context).padding.bottom;
     final double spaceBelow = screenHeight - offset.dy - size.height;
@@ -158,8 +174,9 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
 
     bool showAbove = spaceBelow < widget.maxHeight && spaceAbove > spaceBelow;
     double availableSpace = showAbove ? spaceAbove : spaceBelow;
-    double overlayHeight =
-        widget.maxHeight <= availableSpace ? widget.maxHeight : availableSpace;
+    double overlayHeight = widget.maxHeight <= availableSpace
+        ? widget.maxHeight
+        : availableSpace;
 
     final items = effectiveItems;
     _itemKeys.clear();
@@ -175,48 +192,72 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
                 _hideOverlay();
               },
               behavior: HitTestBehavior.opaque,
-              child: Container(
-                color: Colors.transparent,
-              ),
+              child: Container(color: Colors.transparent),
             ),
-            UnconstrainedBox(
-              alignment: Alignment.topLeft,
+            // Positioned.fill (not UnconstrainedBox): CompositedTransformFollower
+            // shifts its child at paint time only, so the ancestor's hit-test box
+            // stays at the Stack origin. Sizing that ancestor to the popup would
+            // leave everything painted outside that phantom rect unclickable.
+            Positioned.fill(
               child: CompositedTransformFollower(
                 link: _layerLink,
                 showWhenUnlinked: false,
-                offset: showAbove ? Offset(0, -overlayHeight) : Offset(0, size.height),
-                child: SizedBox(
-                  width: widget.width,
-                  height: overlayHeight,
-                  child: Material(
-                    elevation: 4.0,
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      itemCount: items.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final T option = items[index];
-                        final bool isSelected = _selectedIndex == index;
-                        return InkWell(
-                          key: _itemKeys[index],
-                          onTap: () => _selectOption(option),
-                          child: Container(
-                            alignment: widget.column.textAlign.alignmentValue,
-                            color: isSelected
-                                ? Theme.of(context).colorScheme.primary.withAlpha(38)
-                                : null,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: widget.itemBuilder(
-                                context,
-                                option,
-                                isSelected,
-                              ),
-                            ),
+                offset: showAbove
+                    ? Offset(0, -overlayHeight)
+                    : Offset(0, size.height),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: SizedBox(
+                    width: widget.width,
+                    height: overlayHeight,
+                    child: Material(
+                      elevation: 4.0,
+                      child: Scrollbar(
+                        controller: _scrollController,
+                        thumbVisibility: true,
+                        child: ScrollConfiguration(
+                          behavior: const _PopupListScrollBehavior(),
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemCount: items.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final T option = items[index];
+                              final bool isSelected = _selectedIndex == index;
+                              return InkWell(
+                                key: _itemKeys[index],
+                                onTap: () => _selectOption(option),
+                                onHover: (isHovering) {
+                                  if (isHovering && _selectedIndex != index) {
+                                    setState(() {
+                                      _selectedIndex = index;
+                                    });
+                                    _overlayEntry?.markNeedsBuild();
+                                  }
+                                },
+                                child: Container(
+                                  alignment:
+                                      widget.column.textAlign.alignmentValue,
+                                  color: isSelected
+                                      ? Theme.of(
+                                          context,
+                                        ).colorScheme.primary.withAlpha(38)
+                                      : null,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: widget.itemBuilder(
+                                      context,
+                                      option,
+                                      isSelected,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -251,7 +292,7 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
     }
   }
 
-  void _selectOption(T option) {
+  void _selectOption(T option, {bool isKeyboardSelection = false}) {
     _isSelecting = true;
     _hideOverlay();
 
@@ -264,10 +305,17 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
     widget.stateManager.handleAfterSelectingRow(widget.cell, option);
 
     final config = widget.stateManager.configuration;
-    final shouldMove = (config.enterKeyAction.isEditingAndMoveDown ||
-        config.enterKeyAction.isEditingAndMoveRight ||
-        config.enterKeyAction.isEditingAndMoveUp ||
-        config.enterKeyAction.isEditingAndMoveLeft) &&
+    // Only skip re-requesting focus when Enter itself is expected to move
+    // the current cell afterwards. A mouse click has no such follow-up
+    // navigation event, so it must always reclaim focus here — otherwise
+    // the cell ends up unfocused and the delayed restore-on-cancel logic
+    // reverts the just-selected value back to the old one.
+    final shouldMove =
+        isKeyboardSelection &&
+        (config.enterKeyAction.isEditingAndMoveDown ||
+            config.enterKeyAction.isEditingAndMoveRight ||
+            config.enterKeyAction.isEditingAndMoveUp ||
+            config.enterKeyAction.isEditingAndMoveLeft) &&
         widget.column.enableEnterMoveCell;
 
     if (!shouldMove) {
@@ -285,7 +333,7 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
     if (_overlayEntry != null) {
       final items = effectiveItems;
       if (_selectedIndex != -1 && items.isNotEmpty) {
-        _selectOption(items[_selectedIndex]);
+        _selectOption(items[_selectedIndex], isKeyboardSelection: true);
       } else {
         _hideOverlay();
       }
@@ -318,7 +366,7 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
             );
             widget.stateManager.keyManager!.subject.add(keyManager);
 
-            _selectOption(items[_selectedIndex]);
+            _selectOption(items[_selectedIndex], isKeyboardSelection: true);
 
             return KeyEventResult.handled;
           } else {
@@ -400,7 +448,8 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
       // Enter key is handled by _handleOnComplete.
       if (keyManager.isEnter) {
         final config = widget.stateManager.configuration;
-        final shouldMove = config.enterKeyAction.isEditingAndMoveDown ||
+        final shouldMove =
+            config.enterKeyAction.isEditingAndMoveDown ||
             config.enterKeyAction.isEditingAndMoveRight ||
             config.enterKeyAction.isEditingAndMoveUp ||
             config.enterKeyAction.isEditingAndMoveLeft;
@@ -440,8 +489,7 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.stateManager.keepFocus &&
-        FocusScope.of(context).hasFocus) {
+    if (widget.stateManager.keepFocus && FocusScope.of(context).hasFocus) {
       cellFocus.requestFocus();
     }
 
@@ -463,10 +511,7 @@ class _TrinaDropdownCellState<T> extends State<TrinaDropdownCell<T>> {
             contentPadding: EdgeInsets.zero,
             isDense: true,
             suffixIcon: Icon(Icons.arrow_drop_down),
-            suffixIconConstraints: BoxConstraints(
-              minWidth: 24,
-              minHeight: 24,
-            ),
+            suffixIconConstraints: BoxConstraints(minWidth: 24, minHeight: 24),
           ),
           maxLines: 1,
           textAlignVertical: TextAlignVertical.center,

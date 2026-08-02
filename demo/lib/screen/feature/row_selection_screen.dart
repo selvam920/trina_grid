@@ -78,7 +78,7 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
     );
   }
 
-  void _onRowSelected(TrinaGridOnSelectedEvent event) {
+  void _onSelected(TrinaGridOnSelectedEvent event) {
     setState(() {
       _selectionEventCount++;
       String info = 'onSelected Event #$_selectionEventCount fired!\n';
@@ -170,7 +170,7 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
               onChanged: (TrinaGridOnChangedEvent event) {
                 print(event);
               },
-              onSelected: _onRowSelected, // Add the onSelected callback
+              onSelected: _onSelected, // Add the onSelected callback
               onRowSelected: _onRowSelected, // Fires when current row changes
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 event.stateManager.setSelectingMode(TrinaGridSelectingMode.row);
