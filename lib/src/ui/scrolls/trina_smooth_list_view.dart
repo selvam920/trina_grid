@@ -14,7 +14,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/gestures.dart'
     show DiagnosticPropertiesBuilder, DragStartBehavior;
-import 'package:flutter/material.dart'
+import 'package:material_ui/material_ui.dart'
     show
         AlwaysScrollableScrollPhysics,
         AppBar,
