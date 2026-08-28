@@ -36,10 +36,7 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = '17'  // Update from 1.8
-    }
-
+    
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -65,4 +62,10 @@ flutter {
 
 dependencies {
   
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
 }
