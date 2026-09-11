@@ -1951,6 +1951,11 @@ class TrinaGridLocaleText {
   final String timePickerMaxTimeMessage;
   final String timePickerInvalidValueMessage;
 
+  // Sidebar
+  final String sidebarSearchHint;
+  final String sidebarSelectRowPrompt;
+  final String sidebarNoMatchingFields;
+
   const TrinaGridLocaleText({
     // Column menu
     this.unfreezeColumn = 'Unfreeze',
@@ -2009,6 +2014,10 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'Min time is',
     this.timePickerMaxTimeMessage = 'Max time is',
     this.timePickerInvalidValueMessage = 'Invalid value',
+    // Sidebar
+    this.sidebarSearchHint = 'Search for field...',
+    this.sidebarSelectRowPrompt = 'Select a row to view its fields.',
+    this.sidebarNoMatchingFields = 'No fields match',
   });
 
   const TrinaGridLocaleText.french({
@@ -2070,6 +2079,11 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'L\'heure minimale est',
     this.timePickerMaxTimeMessage = 'L\'heure maximale est',
     this.timePickerInvalidValueMessage = 'Valeur invalide',
+    // Sidebar
+    this.sidebarSearchHint = 'Rechercher un champ...',
+    this.sidebarSelectRowPrompt =
+        'Sélectionnez une ligne pour afficher ses champs.',
+    this.sidebarNoMatchingFields = 'Aucun champ ne correspond à',
   });
 
   const TrinaGridLocaleText.china({
@@ -2129,6 +2143,10 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = '最小时间为',
     this.timePickerMaxTimeMessage = '最大时间为',
     this.timePickerInvalidValueMessage = '无效值',
+    // Sidebar
+    this.sidebarSearchHint = '搜索字段...',
+    this.sidebarSelectRowPrompt = '选择一行以查看其字段。',
+    this.sidebarNoMatchingFields = '没有匹配的字段',
   });
 
   const TrinaGridLocaleText.korean({
@@ -2188,6 +2206,10 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = '최소 시간은',
     this.timePickerMaxTimeMessage = '최대 시간은',
     this.timePickerInvalidValueMessage = '잘못된 값',
+    // Sidebar
+    this.sidebarSearchHint = '필드 검색...',
+    this.sidebarSelectRowPrompt = '필드를 보려면 행을 선택하세요.',
+    this.sidebarNoMatchingFields = '일치하는 필드가 없습니다',
   });
 
   const TrinaGridLocaleText.russian({
@@ -2248,6 +2270,10 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'Минимальное время',
     this.timePickerMaxTimeMessage = 'Максимальное время',
     this.timePickerInvalidValueMessage = 'Неверное значение',
+    // Sidebar
+    this.sidebarSearchHint = 'Поиск по полям...',
+    this.sidebarSelectRowPrompt = 'Выберите строку для просмотра полей.',
+    this.sidebarNoMatchingFields = 'Нет полей, соответствующих',
   });
 
   const TrinaGridLocaleText.czech({
@@ -2308,6 +2334,10 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'Minimální čas je',
     this.timePickerMaxTimeMessage = 'Maximální čas je',
     this.timePickerInvalidValueMessage = 'Neplatná hodnota',
+    // Sidebar
+    this.sidebarSearchHint = 'Hledat pole...',
+    this.sidebarSelectRowPrompt = 'Vyberte řádek pro zobrazení jeho polí.',
+    this.sidebarNoMatchingFields = 'Žádná pole neodpovídají',
   });
 
   const TrinaGridLocaleText.brazilianPortuguese({
@@ -2368,6 +2398,10 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'O horário mínimo é',
     this.timePickerMaxTimeMessage = 'O horário máximo é',
     this.timePickerInvalidValueMessage = 'Valor inválido',
+    // Sidebar
+    this.sidebarSearchHint = 'Buscar por campo...',
+    this.sidebarSelectRowPrompt = 'Selecione uma linha para ver seus campos.',
+    this.sidebarNoMatchingFields = 'Nenhum campo corresponde a',
   });
 
   const TrinaGridLocaleText.spanish({
@@ -2428,6 +2462,10 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'El horario mínimo es',
     this.timePickerMaxTimeMessage = 'El horario máximo es',
     this.timePickerInvalidValueMessage = 'Valor inválido',
+    // Sidebar
+    this.sidebarSearchHint = 'Buscar por campo...',
+    this.sidebarSelectRowPrompt = 'Seleccione una fila para ver sus campos.',
+    this.sidebarNoMatchingFields = 'Ningún campo coincide con',
   });
 
   const TrinaGridLocaleText.persian({
@@ -2488,6 +2526,11 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'حداقل زمان',
     this.timePickerMaxTimeMessage = 'حداکثر زمان',
     this.timePickerInvalidValueMessage = 'مقدار نامعتبر',
+    // Sidebar
+    this.sidebarSearchHint = 'جستجوی فیلد...',
+    this.sidebarSelectRowPrompt =
+        'یک سطر را برای مشاهده فیلدهای آن انتخاب کنید.',
+    this.sidebarNoMatchingFields = 'هیچ فیلدی مطابقت ندارد با',
   });
 
   const TrinaGridLocaleText.arabic({
@@ -2547,6 +2590,10 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'الحد الأدنى للوقت هو',
     this.timePickerMaxTimeMessage = 'الحد الأقصى للوقت هو',
     this.timePickerInvalidValueMessage = 'قيمة غير صالحة',
+    // Sidebar
+    this.sidebarSearchHint = 'البحث عن حقل...',
+    this.sidebarSelectRowPrompt = 'حدد صفًا لعرض حقوله.',
+    this.sidebarNoMatchingFields = 'لا توجد حقول مطابقة لـ',
   });
 
   const TrinaGridLocaleText.norway({
@@ -2607,6 +2654,10 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'Min tid er',
     this.timePickerMaxTimeMessage = 'Maks tid er',
     this.timePickerInvalidValueMessage = 'Ugyldig verdi',
+    // Sidebar
+    this.sidebarSearchHint = 'Søk etter felt...',
+    this.sidebarSelectRowPrompt = 'Velg en rad for å se feltene.',
+    this.sidebarNoMatchingFields = 'Ingen felt samsvarer med',
   });
 
   const TrinaGridLocaleText.german({
@@ -2669,6 +2720,11 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'Die Mindestzeit ist',
     this.timePickerMaxTimeMessage = 'Die Höchstzeit ist',
     this.timePickerInvalidValueMessage = 'Ungültiger Wert',
+    // Sidebar
+    this.sidebarSearchHint = 'Nach Feld suchen...',
+    this.sidebarSelectRowPrompt =
+        'Wählen Sie eine Zeile aus, um ihre Felder anzuzeigen.',
+    this.sidebarNoMatchingFields = 'Keine Felder entsprechen',
   });
 
   const TrinaGridLocaleText.turkish({
@@ -2729,6 +2785,10 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'Minimum zaman',
     this.timePickerMaxTimeMessage = 'Maksimum zaman',
     this.timePickerInvalidValueMessage = 'Geçersiz değer',
+    // Sidebar
+    this.sidebarSearchHint = 'Alan ara...',
+    this.sidebarSelectRowPrompt = 'Alanlarını görmek için bir satır seçin.',
+    this.sidebarNoMatchingFields = 'Eşleşen alan yok',
   });
 
   const TrinaGridLocaleText.japanese({
@@ -2788,6 +2848,10 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = '最小時刻は',
     this.timePickerMaxTimeMessage = '最大時刻は',
     this.timePickerInvalidValueMessage = '無効な値',
+    // Sidebar
+    this.sidebarSearchHint = 'フィールドを検索...',
+    this.sidebarSelectRowPrompt = 'フィールドを表示する行を選択してください。',
+    this.sidebarNoMatchingFields = '一致するフィールドがありません',
   });
 
   const TrinaGridLocaleText.hungarian({
@@ -2848,6 +2912,11 @@ class TrinaGridLocaleText {
     this.timePickerMinTimeMessage = 'A minimum idő',
     this.timePickerMaxTimeMessage = 'A maximum idő',
     this.timePickerInvalidValueMessage = 'Érvénytelen érték',
+    // Sidebar
+    this.sidebarSearchHint = 'Mező keresése...',
+    this.sidebarSelectRowPrompt =
+        'Válasszon ki egy sort a mezők megtekintéséhez.',
+    this.sidebarNoMatchingFields = 'Nincs egyező mező',
   });
 
   @override
@@ -2906,7 +2975,10 @@ class TrinaGridLocaleText {
             timePickerMinTimeMessage == other.timePickerMinTimeMessage &&
             timePickerMaxTimeMessage == other.timePickerMaxTimeMessage &&
             timePickerInvalidValueMessage ==
-                other.timePickerInvalidValueMessage;
+                other.timePickerInvalidValueMessage &&
+            sidebarSearchHint == other.sidebarSearchHint &&
+            sidebarSelectRowPrompt == other.sidebarSelectRowPrompt &&
+            sidebarNoMatchingFields == other.sidebarNoMatchingFields;
   }
 
   @override
@@ -2959,6 +3031,9 @@ class TrinaGridLocaleText {
     timePickerMinTimeMessage,
     timePickerMaxTimeMessage,
     timePickerInvalidValueMessage,
+    sidebarSearchHint,
+    sidebarSelectRowPrompt,
+    sidebarNoMatchingFields,
   ]);
 }
 
