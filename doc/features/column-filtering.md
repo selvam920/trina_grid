@@ -60,6 +60,23 @@ The Regex filter allows more advanced pattern matching:
 - **Less Than** (`TrinaFilterTypeLessThan`): Matches rows where the cell value is less than the search value
 - **Less Than or Equal To** (`TrinaFilterTypeLessThanOrEqualTo`): Matches rows where the cell value is less than or equal to the search value
 
+### Boolean Filters
+
+A boolean column stores a raw `bool` but displays `trueText` / `falseText` (`Yes` / `No` by default). Filtering matches **either** representation, so both of these work on the same column:
+
+```dart
+TrinaColumn(
+  title: 'Is Active',
+  field: 'is_active',
+  type: TrinaColumnType.boolean(trueText: 'Enabled', falseText: 'Disabled'),
+),
+```
+
+- Typing `Enabled` matches the `true` rows (the text the user actually sees in the grid).
+- Typing `true` still matches the `true` rows.
+
+Matching on the displayed text is case insensitive. Note that with the default **Contains** filter type, overlapping labels match each other: with `trueText: 'Active'` and `falseText: 'Inactive'`, searching `Active` also matches `Inactive` rows. Choose distinct labels, or switch the column to the **Equals** filter type.
+
 ## Filter UI
 
 The filter UI consists of:
@@ -69,6 +86,60 @@ The filter UI consists of:
 3. **Filter Input Field**: A text field where users can enter the filter value
 
 Users can click on the filter icon in a column to open the filter type selector and choose the appropriate filter type for that column.
+
+## Dropdown Filter Widgets
+
+Every column renders a text field in the filter row by default. Two opt-in delegates replace it with a dropdown:
+
+| Delegate | Filter widget |
+| --- | --- |
+| `TrinaFilterColumnWidgetDelegate.booleanSelect()` | Dropdown with **ALL** / true / false. On a boolean column the two options are labeled with the column's `trueText` / `falseText` (**Yes** / **No** by default) |
+| `TrinaFilterColumnWidgetDelegate.multiSelect(...)` | Checkbox multi-select dropdown with a **Select all** toggle |
+
+- **Boolean dropdown**: selecting the true / false option keeps only the rows whose cell value is `true` / `false` (`TrinaFilterTypeEquals`). Selecting **ALL** clears the filter.
+- **Multi-select dropdown**: shows one checkbox per item. Every check/uncheck re-filters the grid immediately and the menu stays open; unchecking everything clears the filter. Rows match when their cell value equals any of the checked items (`TrinaFilterTypeMultiItems`). The items come from `multiSelectItems`, or from the column items (or the values produced by `itemToValue`) when the column is a select column and `multiSelectItems` is omitted.
+
+```dart
+final columns = [
+  // Text column: the default text filter.
+  TrinaColumn(title: 'Name', field: 'name', type: TrinaColumnType.text()),
+
+  // Boolean column: ALL / Yes / No dropdown filter.
+  TrinaColumn(
+    title: 'Is Active',
+    field: 'is_active',
+    type: TrinaColumnType.boolean(),
+    filterWidgetDelegate: const TrinaFilterColumnWidgetDelegate.booleanSelect(),
+  ),
+
+  // Select column: checkbox multi-select filter with the column items.
+  TrinaColumn(
+    title: 'Hobby',
+    field: 'hobby',
+    type: TrinaColumnType.select(['swimming', 'gym', 'reading']),
+    filterWidgetDelegate: const TrinaFilterColumnWidgetDelegate.multiSelect(),
+  ),
+
+  // Any other column: provide the items explicitly.
+  TrinaColumn(
+    title: 'Status',
+    field: 'status',
+    type: TrinaColumnType.text(),
+    filterWidgetDelegate: const TrinaFilterColumnWidgetDelegate.multiSelect(
+      multiSelectItems: ['open', 'closed'],
+      caseSensitive: false,
+    ),
+  ),
+];
+```
+
+Both dropdowns apply the filter immediately on selection, without the debounce used by the text filter. Multi-select item labels must not contain commas or newlines, since the filter value is split on those (the same constraint as `TrinaFilterTypeMultiItems`).
+
+A dropdown also sets the filter type of its column (Equals or MultiItems), replacing a type previously chosen in the filter popup or through `setColumnFilter`, because the value it sends is only meaningful with that type. The text filter field does not: it only changes the value and leaves the chosen type alone.
+
+With the focus on a dropdown filter, **Down**, **Enter** and **Space** open and close the menu; **Tab** and **F3** navigation are unchanged.
+
+The **ALL** and **Select all** labels are localizable through `TrinaGridLocaleText.filterAll` and `filterSelectAll`.
 
 ## Filtering Behavior
 

@@ -22,6 +22,7 @@ import 'state/row_group_state.dart';
 import 'state/row_state.dart';
 import 'state/scroll_state.dart';
 import 'state/selecting_state.dart';
+import 'state/sidebar_state.dart';
 import 'state/visibility_layout_state.dart';
 import 'state/hovering_state.dart';
 
@@ -44,6 +45,7 @@ abstract class ITrinaGridState
         IRowState,
         IScrollState,
         ISelectingState,
+        ISidebarState,
         IVisibilityLayoutState,
         IHoveringState {}
 
@@ -65,6 +67,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
         RowState,
         ScrollState,
         SelectingState,
+        SidebarState,
         VisibilityLayoutState,
         HoveringState {
   TrinaGridStateChangeNotifier({
@@ -92,6 +95,8 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     this.onReachedEnd,
     this.rowColorCallback,
     this.cellColorCallback,
+    this.rowTextStyleCallback,
+    this.cellTextStyleCallback,
     this.selectDateCallback,
     this.createHeader,
     this.createFooter,
@@ -102,6 +107,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     TrinaChangeNotifierFilterResolver? notifierFilterResolver,
     TrinaGridConfiguration configuration = const TrinaGridConfiguration(),
     TrinaGridMode? mode,
+    this.metadata,
   }) : refColumns = FilteredList(initialList: columns),
        refRows = FilteredList(initialList: rows),
        refColumnGroups = FilteredList<TrinaColumnGroup>(
@@ -203,6 +209,12 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   final TrinaCellColorCallback? cellColorCallback;
 
   @override
+  final TrinaRowTextStyleCallback? rowTextStyleCallback;
+
+  @override
+  final TrinaCellTextStyleCallback? cellTextStyleCallback;
+
+  @override
   final CreateHeaderCallBack? createHeader;
 
   @override
@@ -231,6 +243,9 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
 
   /// Get the current state of change tracking
   bool get enableChangeTracking => _enableChangeTracking;
+
+  /// Optional metadata to attach additional data to the state manager
+  Map<String, dynamic>? metadata = {};
 
   /// Enable or disable change tracking
   void setChangeTracking(bool enable, {bool notify = true}) {
@@ -372,6 +387,8 @@ class TrinaGridStateManager extends TrinaGridStateChangeNotifier {
     super.onReachedEnd,
     super.rowColorCallback,
     super.cellColorCallback,
+    super.rowTextStyleCallback,
+    super.cellTextStyleCallback,
     super.selectDateCallback,
     super.createHeader,
     super.createFooter,
@@ -745,7 +762,12 @@ class _ApplyCellForSetColumnRow implements _Apply {
     }
 
     for (var element in refColumns) {
-      row.cells[element.field]!
+      var cell = row.cells[element.field];
+      if (cell == null) {
+        cell = TrinaCell(value: element.type.defaultValue);
+        row.cells[element.field] = cell;
+      }
+      cell
         ..setColumn(element)
         ..setRow(row);
     }

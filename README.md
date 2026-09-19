@@ -83,6 +83,7 @@
     - [Custom Styling](#custom-styling)
     - [Loading Options](#loading-options)
     - [Enhanced Scrollbars](#enhanced-scrollbars)
+    - [Record Sidebar](#record-sidebar)
     - [RTL Support](#rtl-support)
     - [Dark Mode](#dark-mode)
     - [Value Formatter](#value-formatter)
@@ -449,6 +450,9 @@ Customize loading states and indicators
 #### Enhanced Scrollbars
 Draggable scrollbars with hover effects, custom colors, and improved desktop experience
 
+#### Record Sidebar
+Show all fields of the selected row in a searchable, editable panel, docked (pushes the grid) or floating (slides over it)
+
 #### RTL Support
 Right-to-left language support
 
@@ -551,6 +555,8 @@ TrinaGrid comes with comprehensive documentation covering all features and use c
 - **📚 [API Reference](https://github.com/doonfrs/trina_grid/blob/main/doc/api/)** - Complete API documentation
 
 Visit our [Documentation Index](https://github.com/doonfrs/trina_grid/blob/main/doc/index.md) for a complete overview.
+
+- **[LLM Documentation](llm.txt)** - Machine-readable project summary for AI agents ([full version](llms-full.txt))
 
 ---
 

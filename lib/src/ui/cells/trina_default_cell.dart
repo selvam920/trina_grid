@@ -485,30 +485,6 @@ class _DefaultCellWidget extends StatefulWidget {
 }
 
 class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
-  // Cache for cell renderer callback result
-  dynamic _cachedCellValue;
-  bool? _cachedIsCurrentCell;
-  bool? _cachedIsSelectedCell;
-  bool? _cachedIsCurrentRow;
-  Widget? _cachedRendererWidget;
-  int? _cachedRowVersion;
-
-  @override
-  void didUpdateWidget(_DefaultCellWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    // Clear cache if the widget properties changed
-    if (oldWidget.cell != widget.cell ||
-        oldWidget.row != widget.row ||
-        oldWidget.isCurrentRow != widget.isCurrentRow) {
-      _cachedCellValue = null;
-      _cachedIsCurrentCell = null;
-      _cachedIsSelectedCell = null;
-      _cachedIsCurrentRow = null;
-      _cachedRowVersion = null;
-    }
-  }
-
   bool get _showText {
     if (!widget.stateManager.enabledRowGroups) {
       return true;
@@ -535,7 +511,8 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
 
       if (widget.row.depth < delegate.columns.length) {
         cellValue =
-            widget.row.cells[delegate.columns[widget.row.depth].field]!.value;
+            widget.row.cells[delegate.columns[widget.row.depth].field]?.value ??
+            cellValue;
       }
     }
 
@@ -553,75 +530,52 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
 
     // Check for cell renderer first
     if (widget.cell.hasRenderer) {
-      // Cache the renderer result to avoid excessive callback executions
-      // Invalidate cache if cell value, row version, or selection state changes
-      if (_cachedCellValue != widget.cell.value ||
-          _cachedRowVersion != widget.row.version ||
-          _cachedIsCurrentCell != isCurrentCell ||
-          _cachedIsSelectedCell != isSelectedCell ||
-          _cachedIsCurrentRow != widget.isCurrentRow ||
-          _cachedRendererWidget == null) {
-        _cachedCellValue = widget.cell.value;
-        _cachedRowVersion = widget.row.version;
-        _cachedIsCurrentCell = isCurrentCell;
-        _cachedIsSelectedCell = isSelectedCell;
-        _cachedIsCurrentRow = widget.isCurrentRow;
-        _cachedRendererWidget = widget.cell.renderer!(
-          TrinaCellRendererContext(
-            column: widget.column,
-            rowIdx: widget.rowIdx,
-            row: widget.row,
-            cell: widget.cell,
-            stateManager: widget.stateManager,
-            isCurrentCell: isCurrentCell,
-            isSelectedCell: isSelectedCell,
-            isCurrentRow: widget.isCurrentRow,
-          ),
-        );
-      }
-      return _cachedRendererWidget!;
+      return widget.cell.renderer!(
+        TrinaCellRendererContext(
+          column: widget.column,
+          rowIdx: widget.rowIdx,
+          row: widget.row,
+          cell: widget.cell,
+          stateManager: widget.stateManager,
+          isCurrentCell: isCurrentCell,
+          isSelectedCell: isSelectedCell,
+          isCurrentRow: widget.isCurrentRow,
+        ),
+      );
     }
 
     // Fall back to column renderer
     if (widget.column.hasRenderer) {
-      // Cache the renderer result to avoid excessive callback executions
-      // Invalidate cache if cell value, row version, or selection state changes
-      if (_cachedCellValue != widget.cell.value ||
-          _cachedRowVersion != widget.row.version ||
-          _cachedIsCurrentCell != isCurrentCell ||
-          _cachedIsSelectedCell != isSelectedCell ||
-          _cachedIsCurrentRow != widget.isCurrentRow ||
-          _cachedRendererWidget == null) {
-        _cachedCellValue = widget.cell.value;
-        _cachedRowVersion = widget.row.version;
-        _cachedIsCurrentCell = isCurrentCell;
-        _cachedIsSelectedCell = isSelectedCell;
-        _cachedIsCurrentRow = widget.isCurrentRow;
-        _cachedRendererWidget = widget.column.renderer!(
-          TrinaColumnRendererContext(
-            column: widget.column,
-            rowIdx: widget.rowIdx,
-            row: widget.row,
-            cell: widget.cell,
-            stateManager: widget.stateManager,
-            isCurrentCell: isCurrentCell,
-            isSelectedCell: isSelectedCell,
-            isCurrentRow: widget.isCurrentRow,
-          ),
-        );
-      }
-      return _cachedRendererWidget!;
+      return widget.column.renderer!(
+        TrinaColumnRendererContext(
+          column: widget.column,
+          rowIdx: widget.rowIdx,
+          row: widget.row,
+          cell: widget.cell,
+          stateManager: widget.stateManager,
+          isCurrentCell: isCurrentCell,
+          isSelectedCell: isSelectedCell,
+          isCurrentRow: widget.isCurrentRow,
+        ),
+      );
     }
 
     return Text(
       _text,
-      style: widget.stateManager.configuration.style.cellTextStyle.copyWith(
-        decoration: TextDecoration.none,
-        fontWeight: FontWeight.normal,
-        color: widget.isCurrentRow
-            ? widget.stateManager.configuration.style.activatedTextColor
-            : null,
-      ),
+      style:
+          resolveCellTextStyle(
+            stateManager: widget.stateManager,
+            row: widget.row,
+            cell: widget.cell,
+            column: widget.column,
+            rowIdx: widget.rowIdx,
+          ).copyWith(
+            decoration: TextDecoration.none,
+            fontWeight: FontWeight.normal,
+            color: widget.isCurrentRow
+                ? widget.stateManager.configuration.style.activatedTextColor
+                : null,
+          ),
       overflow: TextOverflow.ellipsis,
       textAlign: widget.column.textAlign.value,
     );

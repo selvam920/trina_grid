@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:trina_grid/src/model/trina_dropdown_menu_filter.dart';
+import 'package:trina_grid/src/ui/widgets/ensure_shad_theme.dart';
 
 typedef ItemBuilder<T> = Widget Function(T item);
 
@@ -170,6 +172,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     WidgetBuilder? emptyFilterResultBuilder,
     ItemBuilder<T>? itemBuilder,
     dynamic Function(T item)? itemToValue,
+    String searchHint = 'Search...',
     Key? key,
   }) {
     switch (variant) {
@@ -202,6 +205,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
           itemToValue: itemToValue,
           emptySearchResultBuilder: emptySearchResultBuilder,
           itemBuilder: itemBuilder,
+          searchHint: searchHint,
         );
       case TrinaDropdownMenuVariant.selectWithFilters:
         return TrinaDropdownMenu<T>.withFilters(
@@ -237,6 +241,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     WidgetBuilder? emptySearchResultBuilder,
     ItemBuilder<T>? itemBuilder,
     dynamic Function(T item)? itemToValue,
+    String searchHint,
   }) = _TrinaSelectMenuWithSearch<T>;
 
   /// Creates a select menu with an advanced filtering UI.
@@ -328,15 +333,17 @@ base class TrinaDropdownMenuState<T> extends State<TrinaDropdownMenu<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return _InheritedTrinaDropdownMenu<T>(
-      state: this,
-      child: Builder(
-        builder: (context) {
-          return ConstrainedBox(
-            constraints: BoxConstraints(minWidth: widget.width),
-            child: widget.builder(context),
-          );
-        },
+    return EnsureShadTheme(
+      child: _InheritedTrinaDropdownMenu<T>(
+        state: this,
+        child: Builder(
+          builder: (context) {
+            return ConstrainedBox(
+              constraints: BoxConstraints(minWidth: widget.width),
+              child: widget.builder(context),
+            );
+          },
+        ),
       ),
     );
   }
@@ -346,6 +353,7 @@ base class TrinaDropdownMenuState<T> extends State<TrinaDropdownMenu<T>> {
 final class _TrinaSelectMenuWithSearch<T> extends TrinaDropdownMenu<T> {
   _TrinaSelectMenuWithSearch({
     this.emptySearchResultBuilder,
+    this.searchHint = 'Search...',
     super.key,
     super.itemBuilder,
     super.itemToValue,
@@ -365,12 +373,32 @@ final class _TrinaSelectMenuWithSearch<T> extends TrinaDropdownMenu<T> {
                    as _TrinaSelectMenuWithSearchState<T>);
            return FocusScope(
              onKeyEvent: (node, event) {
-               if (event.character != null) {
-                 if (state.focusNode.hasFocus == false) {
-                   // Focus the search text field in order
-                   // to receive input from the keyboard.
-                   state.focusNode.requestFocus();
-                 }
+               if (event is KeyUpEvent) return KeyEventResult.ignored;
+
+               final searchHasFocus = state.focusNode.hasFocus;
+
+               // While the search field has focus, hand ArrowDown/ArrowUp off
+               // to the list so its MenuItemButton focus traversal (and the
+               // per-item Enter handler) take over. Intercepting here preempts
+               // the text field consuming the arrow key for caret movement.
+               if (searchHasFocus &&
+                   (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+                       event.logicalKey == LogicalKeyboardKey.arrowUp)) {
+                 final moved = state.focusNode.focusInDirection(
+                   event.logicalKey == LogicalKeyboardKey.arrowDown
+                       ? TraversalDirection.down
+                       : TraversalDirection.up,
+                 );
+                 return moved ? KeyEventResult.handled : KeyEventResult.ignored;
+               }
+
+               // A printable character while the list has focus returns focus
+               // to the search field for type-ahead. Arrow keys have a null
+               // character, so they are excluded here.
+               if (!searchHasFocus && event.character != null) {
+                 // Focus the search text field in order
+                 // to receive input from the keyboard.
+                 state.focusNode.requestFocus();
                }
                return KeyEventResult.ignored;
              },
@@ -381,12 +409,7 @@ final class _TrinaSelectMenuWithSearch<T> extends TrinaDropdownMenu<T> {
                  mainAxisSize: MainAxisSize.min,
                  children: [
                    _SearchField<T>(),
-                   Divider(
-                     height: 5,
-                     color: Theme.of(
-                       context,
-                     ).colorScheme.onSurface.withAlpha(50),
-                   ),
+                   const ShadSeparator.horizontal(margin: EdgeInsets.zero),
                    Flexible(child: _ItemListView<T>()),
                  ],
                ),
@@ -399,6 +422,9 @@ final class _TrinaSelectMenuWithSearch<T> extends TrinaDropdownMenu<T> {
   /// Used to provide a custom widget to display when the search yields no results.
   /// {@endtemplate}
   final WidgetBuilder? emptySearchResultBuilder;
+
+  /// Placeholder shown inside the search field. Defaults to `'Search...'`.
+  final String searchHint;
 
   @override
   TrinaDropdownMenuState<T> createState() {
@@ -469,29 +495,48 @@ class _SearchField<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final shadColors = ShadTheme.of(context).colorScheme;
     final state =
         (TrinaDropdownMenu.of<T>(context)
             as _TrinaSelectMenuWithSearchState<T>);
+    final menu = state.widget as _TrinaSelectMenuWithSearch<T>;
     return _EnterKeyListener(
       onEnter: () {
         if (state._debounce?.isActive ?? false) state._debounce!.cancel();
         state._searchItems();
       },
+      // A plain Material [TextField] is used here (rather than shadcn's
+      // ShadInput) because ShadInput does not receive keyboard text input on
+      // Flutter web when accessibility semantics are enabled: the field focuses
+      // and shows a cursor, but typing is dropped. The filter section already
+      // uses a Material TextField and works in that mode, so the search field
+      // mirrors it. See issue #394.
       child: TextField(
         controller: state.controller,
         focusNode: state.focusNode,
-        canRequestFocus: true,
-        maxLines: 1,
-        style: TextStyle(color: colorScheme.onSurface),
+        // Focus the search field as soon as the popup opens so keyboard input
+        // (and, on web with semantics, DOM focus) lands on it immediately.
+        autofocus: true,
+        style: TextStyle(fontSize: 14, color: shadColors.popoverForeground),
         decoration: InputDecoration(
-          hintText: 'Search...',
-          prefixIcon: const Icon(Icons.search, size: 20),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide.none,
+          isDense: true,
+          hintText: menu.searchHint,
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(vertical: 12),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(left: 12, right: 8),
+            child: Icon(
+              LucideIcons.search,
+              size: 16,
+              color: shadColors.popoverForeground,
+            ),
           ),
-          contentPadding: const EdgeInsets.all(10),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 0,
+            minHeight: 0,
+          ),
         ),
       ),
     );
@@ -1115,6 +1160,8 @@ class _ItemListView<T> extends StatelessWidget {
 
         return Scrollbar(
           controller: menuState.scrollController,
+          thickness: 4,
+          radius: const Radius.circular(4),
           child: ListView.builder(
             padding: EdgeInsets.zero,
             controller: menuState.scrollController,
@@ -1128,6 +1175,14 @@ class _ItemListView<T> extends StatelessWidget {
                   initialValue != null &&
                   menuState.getComparableValue(item) ==
                       menuState.getComparableValue(initialValue);
+              // For the search variant the search field is the autofocus
+              // target on open, so the selected item must not also claim
+              // autofocus (two autofocus nodes in one scope is order
+              // dependent). Other variants keep autofocusing the selection.
+              final autofocusItem =
+                  isSelected &&
+                  menuWidget.variant !=
+                      TrinaDropdownMenuVariant.selectWithSearch;
               return _EnterKeyListener(
                 onEnter: () {
                   menuWidget.onItemSelected(item);
@@ -1139,7 +1194,7 @@ class _ItemListView<T> extends StatelessWidget {
                       menuWidget.onItemSelected(item);
                     },
                     closeOnActivate: false,
-                    autofocus: isSelected,
+                    autofocus: autofocusItem,
                     trailingIcon: isSelected
                         ? const Icon(Icons.check, size: 20)
                         : null,

@@ -41,6 +41,7 @@ export './src/plugin/trina_aggregate_column_footer.dart';
 export './src/plugin/trina_infinity_scroll_rows.dart';
 export './src/plugin/trina_lazy_pagination.dart';
 export './src/plugin/trina_pagination.dart';
+export './src/trina_axis_scroll_physics.dart';
 export './src/trina_dual_grid.dart';
 export './src/trina_dual_grid_popup.dart';
 export './src/trina_grid.dart';
@@ -67,6 +68,7 @@ export 'src/model/column_types/trina_column_type_number.dart';
 export 'src/model/column_types/trina_column_type_percentage.dart';
 export 'src/model/column_types/trina_column_type_text.dart';
 export 'src/model/column_types/trina_column_type_auto_complete.dart';
+export 'src/model/column_types/trina_column_type_custom.dart';
 export 'src/model/column_types/trina_column_type_dropdown.dart';
 export 'src/ui/cells/trina_auto_complete_cell.dart'
     show

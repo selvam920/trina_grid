@@ -33,11 +33,6 @@ mixin PopupCellState<T extends PopupCell> on State<T>
   late final TextEditingController textController;
   late final FocusNode textFocus;
 
-  // Cache for editCellRenderer callback result
-  Widget? _cachedEditCellWidget;
-  dynamic _cachedCellValueForEditRenderer;
-  int? _cachedRowVersionForEditRenderer;
-
   KeyEventResult handleOpeningPopupWithKeyboard(
     FocusNode node,
     KeyEvent event,
@@ -66,8 +61,8 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       widget.cell.onKeyPressed!(keyEvent);
     }
 
-    // If the column is readOnly, do not open the popup.
-    if (widget.column.readOnly) {
+    // If the cell is readOnly, do not open the popup.
+    if (widget.cell.resolveReadOnly(row: widget.row, column: widget.column)) {
       node.unfocus();
       return KeyEventResult.ignored;
     }
@@ -130,22 +125,13 @@ mixin PopupCellState<T extends PopupCell> on State<T>
     final customRenderer =
         widget.column.editCellRenderer ?? widget.stateManager.editCellRenderer;
     if (customRenderer != null) {
-      // Cache the editCellRenderer result to avoid excessive callback executions
-      // Also invalidate when row version changes (cross-cell dependency)
-      if (_cachedCellValueForEditRenderer != widget.cell.value ||
-          _cachedRowVersionForEditRenderer != widget.row.version ||
-          _cachedEditCellWidget == null) {
-        _cachedCellValueForEditRenderer = widget.cell.value;
-        _cachedRowVersionForEditRenderer = widget.row.version;
-        _cachedEditCellWidget = customRenderer(
-          defaultEditWidget,
-          widget.cell,
-          textController,
-          textFocus,
-          handleSelected,
-        );
-      }
-      return _cachedEditCellWidget!;
+      return customRenderer(
+        defaultEditWidget,
+        widget.cell,
+        textController,
+        textFocus,
+        handleSelected,
+      );
     }
     return defaultEditWidget;
   }

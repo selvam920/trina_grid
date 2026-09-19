@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:demo/screen/empty_screen.dart';
 import 'package:demo/screen/feature/boolean_type_column_screen.dart';
+import 'package:demo/screen/feature/custom_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart';
 import 'package:demo/screen/feature/column_title_renderer_screen.dart';
@@ -25,6 +26,7 @@ import 'feature/add_and_remove_column_row_screen.dart';
 import 'feature/add_rows_asynchronously.dart';
 import 'feature/column_renderer_screen.dart';
 import 'feature/cell_color_screen.dart';
+import 'feature/cell_text_style_screen.dart';
 import 'feature/cell_renderer_screen.dart';
 import 'feature/cell_selection_screen.dart';
 import 'feature/excel_like_selection_screen.dart';
@@ -43,6 +45,7 @@ import 'feature/currency_type_column_screen.dart';
 import 'feature/custom_pagination_screen.dart';
 import 'feature/dropdown_column_screen.dart';
 import 'feature/dark_mode_screen.dart';
+import 'feature/theme_integration_screen.dart';
 import 'feature/date_type_column_screen.dart';
 import 'feature/dual_mode_screen.dart';
 import 'feature/editing_state_screen.dart';
@@ -50,6 +53,7 @@ import 'feature/grid_as_popup_screen.dart';
 import 'feature/listing_mode_screen.dart';
 import 'feature/moving_screen.dart';
 import 'feature/number_type_column_screen.dart';
+import 'feature/record_sidebar_screen.dart';
 import 'feature/row_color_screen.dart';
 import 'feature/row_group_screen.dart';
 import 'feature/row_infinity_scroll_screen.dart';
@@ -65,11 +69,13 @@ import 'feature/theme_switching_screen.dart';
 import 'feature/time_type_column_screen.dart';
 import 'feature/value_formatter_screen.dart';
 import 'feature/pages_list_screen.dart';
+import 'feature/scroll_physics_screen.dart';
 import 'feature/scrollbars.dart';
 import 'feature/date_time_column_screen.dart';
 import 'feature/row_wrapper_screen.dart';
 import 'feature/row_wrapper_frozen_screen.dart';
 import 'feature/multiitems_delegate_demo_screen.dart';
+import 'feature/column_filter_modes_screen.dart';
 import 'feature/custom_footer_screen.dart';
 import 'feature/dynamic_row_height_demo.dart';
 
@@ -234,6 +240,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
             'A column to enter a boolean value. You can select from a list of options.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, BooleanTypeColumnScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Custom type column',
+        description:
+            'A column for storing complex objects (maps, custom classes, etc.) with custom validation, sorting, and display.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CustomTypeColumnScreen.routeName);
         },
         trailing: newIcon,
       ),
@@ -423,12 +438,30 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         },
       ),
       TrinaListTile(
+        title: 'Cell text style',
+        description:
+            'Dynamically change cell text style (color, weight, decoration) per row or per cell.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CellTextStyleScreen.routeName);
+        },
+      ),
+      TrinaListTile(
         title: 'Row selection',
         description:
             'In Row selection mode, Shift + tap or long tap and then move or Control + tap to select a row.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, RowSelectionScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'Record Sidebar',
+        description:
+            'Sidebar showing all fields of the selected row, with search and '
+            'inline editing. Docked or floating.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RecordSidebarScreen.routeName);
+        },
+        trailing: newIcon,
       ),
       TrinaListTile(
         title: 'Row moving',
@@ -496,6 +529,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         description: 'Customize scrollbar appearance, behavior, and visibility',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, ScrollbarsScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Scroll Physics',
+        description:
+            'Set scroll physics per axis to embed a grid in a scrolling page',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ScrollPhysicsScreen.routeName);
         },
         trailing: newIcon,
       ),
@@ -639,6 +681,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         },
       ),
       TrinaListTile(
+        title: 'Material theme integration',
+        description:
+            'Derive the grid colors from the app ColorScheme with fromTheme.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ThemeIntegrationScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
         title: 'Dark mode Switching',
         description: 'Test live theme switching with pagination controls.',
         onTapLiveDemo: () {
@@ -687,6 +738,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
             'Demonstrates the use of TrinaFilterColumnWidgetDelegate.multiItems for multi-line or multi-item column filtering.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, MultiItemsDelegateDemoScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column Filter Modes',
+        description:
+            'Opt-in dropdown filters: an ALL / Yes / No dropdown for a boolean column and a checkbox multi-select dropdown for a select column.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnFilterModesScreen.routeName);
         },
       ),
       TrinaListTile(

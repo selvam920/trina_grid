@@ -200,6 +200,9 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
           icon: TrinaGridColumnIcon(
             sort: _sort,
             color: style.iconColor,
+            customResizeWidget: widget.column.enableContextMenu
+                ? null
+                : style.columnResizeWidget,
             icon: widget.column.enableContextMenu
                 ? style.columnContextIcon
                 : style.columnResizeIcon,
@@ -208,7 +211,21 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
           ),
           iconSize: style.iconSize,
           mouseCursor: contextMenuCursor,
-          onPressed: null,
+          hoverColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          // Only act as a sort toggle when the icon is the sort/resize icon
+          // (no context menu). When the context menu is enabled the tap is
+          // handled by the Listener in `_buildContextMenuWidget`, so keep the
+          // button disabled here instead of leaving an enabled no-op.
+          onPressed:
+              widget.column.enableSorting && !widget.column.enableContextMenu
+              ? () {
+                  if (mounted) {
+                    stateManager.toggleSortColumn(widget.column);
+                  }
+                }
+              : null,
         ),
       ),
     );
@@ -235,9 +252,12 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
   /// Builds the context menu widget, wrapping it with gesture detectors.
   ///
   /// If [hasTitleRenderer] is true, the widget is also wrapped in a
-  /// [GestureDetector] to absorb tap events. This prevents the tap from
-  /// propagating to the parent `_SortableWidget`, which would otherwise
-  /// trigger a column sort when the context menu icon is clicked.
+  /// [GestureDetector] that absorbs tap and horizontal-drag gestures. The tap
+  /// absorption prevents the parent `_SortableWidget` from triggering a sort
+  /// when the icon is clicked. The horizontal-drag absorption claims the pan
+  /// gesture in the arena so the parent `_DraggableWidget` cannot start a
+  /// column-reorder drag from the icon — matching the default header layout,
+  /// where the icon sits outside the draggable subtree (see #318).
   Widget _buildContextMenuWidget(
     Widget contextMenuIcon, {
     bool hasTitleRenderer = false,
@@ -257,6 +277,9 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {}, // Absorb the tap to prevent sorting.
+        onHorizontalDragStart: (_) {},
+        onHorizontalDragUpdate: (_) {},
+        onHorizontalDragEnd: (_) {},
         child: listener,
       );
     }
@@ -272,6 +295,8 @@ class TrinaGridColumnIcon extends StatelessWidget {
 
   final IconData icon;
 
+  final Widget? customResizeWidget;
+
   final Widget? ascendingIcon;
 
   final Widget? descendingIcon;
@@ -280,6 +305,7 @@ class TrinaGridColumnIcon extends StatelessWidget {
     this.sort,
     this.color = Colors.black26,
     this.icon = Icons.dehaze,
+    this.customResizeWidget,
     this.ascendingIcon,
     this.descendingIcon,
     super.key,
@@ -300,7 +326,7 @@ class TrinaGridColumnIcon extends StatelessWidget {
             ? const Icon(Icons.sort, color: Colors.red)
             : descendingIcon!;
       default:
-        return Icon(icon, color: color);
+        return customResizeWidget ?? Icon(icon, color: color);
     }
   }
 }
@@ -571,24 +597,31 @@ class _ColumnTextWidgetState extends TrinaStateWithChange<_ColumnTextWidget> {
 
   List<InlineSpan> get _children => [
     if (widget.column.titleSpan != null) widget.column.titleSpan!,
-    if (_isFilteredList && stateManager.configuration.style.filterIcon != null)
+    if (_isFilteredList &&
+        (stateManager.configuration.style.filterIconWidget != null ||
+            stateManager.configuration.style.filterIcon != null))
       WidgetSpan(
         alignment: PlaceholderAlignment.middle,
-        child: IconButton(
-          icon: Icon(
-            stateManager.configuration.style.filterIcon!.icon,
-            color:
-                stateManager.configuration.style.filterHeaderIconColor ??
-                stateManager.configuration.style.iconColor,
-            size: stateManager.configuration.style.iconSize,
-          ),
-          onPressed: _handleOnPressedFilter,
-          constraints: BoxConstraints(
-            maxHeight:
-                widget.height +
-                (widget.stateManager.style.cellHorizontalBorderWidth * 2),
-          ),
-        ),
+        child: stateManager.configuration.style.filterIconWidget != null
+            ? GestureDetector(
+                onTap: _handleOnPressedFilter,
+                child: stateManager.configuration.style.filterIconWidget,
+              )
+            : IconButton(
+                icon: Icon(
+                  stateManager.configuration.style.filterIcon!.icon,
+                  color:
+                      stateManager.configuration.style.filterHeaderIconColor ??
+                      stateManager.configuration.style.iconColor,
+                  size: stateManager.configuration.style.iconSize,
+                ),
+                onPressed: _handleOnPressedFilter,
+                constraints: BoxConstraints(
+                  maxHeight:
+                      widget.height +
+                      (widget.stateManager.style.cellHorizontalBorderWidth * 2),
+                ),
+              ),
       ),
   ];
 

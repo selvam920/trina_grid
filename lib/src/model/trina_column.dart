@@ -13,13 +13,20 @@ typedef TrinaColumnFooterRenderer =
 typedef TrinaColumnTitleRenderer =
     Widget Function(TrinaColumnTitleRendererContext rendererContext);
 
-/// It dynamically determines whether the cells of the column are in the edit state.
+/// It dynamically determines whether a cell is in the edit state.
 ///
-/// Once the [readOnly] value is set,
+/// Once a static `readOnly` value is set,
 /// whether the cell is editable cannot be changed during runtime,
 /// but if this callback is implemented,
 /// it can be determined whether the cell can be edited or not according to the state of the cell.
-typedef TrinaColumnCheckReadOnly = bool Function(TrinaRow row, TrinaCell cell);
+///
+/// The callback can be set on [TrinaCell.checkReadOnly], [TrinaRow.checkReadOnly]
+/// or [TrinaColumn.checkReadOnly]. See [TrinaCell.isReadOnly] for the
+/// resolution order.
+typedef TrinaCheckReadOnly = bool Function(TrinaRow row, TrinaCell cell);
+
+/// Alias of [TrinaCheckReadOnly], kept for backward compatibility.
+typedef TrinaColumnCheckReadOnly = TrinaCheckReadOnly;
 
 class TrinaColumn {
   /// A title to be displayed on the screen.
@@ -200,7 +207,11 @@ class TrinaColumn {
   /// Hide the column.
   bool hide;
 
-  /// The widget of the filter column, this can be customized with the multiple constructors, defaults to a [TrinaFilterColumnWidgetDelegate.initial()]
+  /// The widget of the filter column, this can be customized with the multiple constructors, defaults to a [TrinaFilterColumnWidgetDelegate.textField()]
+  ///
+  /// Use [TrinaFilterColumnWidgetDelegate.booleanSelect] or
+  /// [TrinaFilterColumnWidgetDelegate.multiSelect] to render a dropdown
+  /// filter instead of the text field.
   TrinaFilterColumnWidgetDelegate? filterWidgetDelegate;
 
   /// Optional validator function that returns an error message string if validation fails,
@@ -220,8 +231,9 @@ class TrinaColumn {
   )?
   editCellRenderer;
 
-  /// Custom renderer for the column title.
-  /// This allows complete customization of the column title UI.
+  /// Custom renderer for the column title (also known as the column header).
+  /// This allows complete customization of the column title UI, and is the
+  /// header counterpart of [footerRenderer].
   /// If provided, this takes precedence over the title, titleSpan, and other title-related properties.
   ///
   /// ```dart
@@ -289,6 +301,9 @@ class TrinaColumn {
   /// Defaults to true.
   final bool enableEnterMoveCell;
 
+  /// Optional metadata to attach additional data to columns
+  Map<String, dynamic>? metadata = {};
+
   TrinaColumn({
     required this.title,
     required this.field,
@@ -333,6 +348,7 @@ class TrinaColumn {
     this.editCellRenderer,
     this.filterEnterKeyAction,
     this.enableEnterMoveCell = true,
+    this.metadata,
   }) : _key = UniqueKey(),
        _checkReadOnly = checkReadOnly,
        enableAutoEditing = enableAutoEditing ?? (type.isAutoComplete || type.isDropdown);
@@ -391,6 +407,11 @@ class TrinaColumn {
   /// or whether the columns in the center area are displayed in the screen area.
   double startPosition = 0;
 
+  /// Resolves the column level read-only state.
+  ///
+  /// This only considers the column, so cell and row level callbacks are
+  /// ignored. Use [TrinaCell.isReadOnly] to resolve the full
+  /// cell > row > column chain.
   bool checkReadOnly(TrinaRow row, TrinaCell cell) {
     return hasCheckReadOnly ? _checkReadOnly!(row, cell) : readOnly;
   }
@@ -427,6 +448,11 @@ class TrinaColumn {
           return '';
       }
     }
+
+    if (type is TrinaColumnTypeCustom) {
+      return (type as TrinaColumnTypeCustom).toDisplayString(value);
+    }
+
     return value.toString();
   }
 
@@ -465,6 +491,8 @@ class TrinaColumn {
         default:
           return '';
       }
+    } else if (type is TrinaColumnTypeCustom) {
+      return (type as TrinaColumnTypeCustom).toDisplayString(value);
     }
 
     if (formatter != null) {
@@ -488,9 +516,13 @@ class TrinaFilterColumnWidgetDelegate {
     this.onFilterSuffixTap,
     this.clearIcon = const Icon(Icons.clear),
     this.onClear,
+    this.keyboardType,
   }) : filterWidgetBuilder = null,
        caseSensitive = null,
-       isMultiItems = false;
+       multiSelectItems = null,
+       isMultiItems = false,
+       isBooleanSelect = false,
+       isMultiSelect = false;
 
   const TrinaFilterColumnWidgetDelegate.builder({this.filterWidgetBuilder})
     : filterSuffixIcon = null,
@@ -499,8 +531,12 @@ class TrinaFilterColumnWidgetDelegate {
       filterHintTextColor = null,
       clearIcon = const Icon(Icons.clear),
       onClear = null,
+      keyboardType = null,
       caseSensitive = null,
-      isMultiItems = false;
+      multiSelectItems = null,
+      isMultiItems = false,
+      isBooleanSelect = false,
+      isMultiSelect = false;
 
   const TrinaFilterColumnWidgetDelegate.multiItems({this.caseSensitive = true})
     : filterSuffixIcon = null,
@@ -510,7 +546,58 @@ class TrinaFilterColumnWidgetDelegate {
       filterWidgetBuilder = null,
       clearIcon = const Icon(Icons.clear),
       onClear = null,
-      isMultiItems = true;
+      keyboardType = null,
+      multiSelectItems = null,
+      isMultiItems = true,
+      isBooleanSelect = false,
+      isMultiSelect = false;
+
+  /// Renders a dropdown with ALL / true / false options instead of the text
+  /// field.
+  ///
+  /// Selecting ALL clears the filter. The other two options keep the rows
+  /// whose cell value is `true` or `false`. On a boolean column they are
+  /// labeled with the column's [TrinaColumnTypeBoolean.trueText] /
+  /// [TrinaColumnTypeBoolean.falseText]; any other column shows True / False.
+  const TrinaFilterColumnWidgetDelegate.booleanSelect()
+    : filterSuffixIcon = null,
+      onFilterSuffixTap = null,
+      filterHintText = null,
+      filterHintTextColor = null,
+      filterWidgetBuilder = null,
+      clearIcon = const Icon(Icons.clear),
+      onClear = null,
+      keyboardType = null,
+      caseSensitive = null,
+      multiSelectItems = null,
+      isMultiItems = false,
+      isBooleanSelect = true,
+      isMultiSelect = false;
+
+  /// Renders the multi-select checkbox dropdown instead of the text field.
+  ///
+  /// The filter matches rows whose cell value equals any of the checked
+  /// items. Checking nothing (or unchecking everything) clears the filter.
+  ///
+  /// [multiSelectItems] is the list of selectable items. When null, the items
+  /// are derived from a [TrinaColumnTypeSelect] column type.
+  ///
+  /// [caseSensitive] controls whether item comparison with cell values is
+  /// case sensitive. Defaults to false.
+  const TrinaFilterColumnWidgetDelegate.multiSelect({
+    this.multiSelectItems,
+    this.caseSensitive = false,
+  }) : filterSuffixIcon = null,
+       onFilterSuffixTap = null,
+       filterHintText = null,
+       filterHintTextColor = null,
+       filterWidgetBuilder = null,
+       clearIcon = const Icon(Icons.clear),
+       onClear = null,
+       keyboardType = null,
+       isMultiItems = false,
+       isBooleanSelect = false,
+       isMultiSelect = true;
 
   ///Set hint text for filter field
   final String? filterHintText;
@@ -548,7 +635,25 @@ class TrinaFilterColumnWidgetDelegate {
 
   final bool? isMultiItems;
 
+  /// Whether this delegate renders the boolean (ALL / true / false)
+  /// dropdown filter.
+  final bool isBooleanSelect;
+
+  /// Whether this delegate renders the multi-select checkbox dropdown filter.
+  final bool isMultiSelect;
+
+  /// The items offered by the multi-select checkbox dropdown filter.
+  ///
+  /// When null, the items are derived from the column's
+  /// [TrinaColumnTypeSelect] items.
+  final List<String>? multiSelectItems;
+
   final bool? caseSensitive;
+
+  /// Set keyboard type for filter text field.
+  /// When null, automatically uses [TextInputType.number] for number,
+  /// currency, and percentage column types.
+  final TextInputType? keyboardType;
 }
 
 class TrinaColumnRendererContext {

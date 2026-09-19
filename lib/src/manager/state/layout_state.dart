@@ -232,7 +232,8 @@ mixin LayoutState implements ITrinaGridState {
       maxHeight! - headerHeight - footerHeight;
 
   @override
-  double get rowContainerHeight => maxHeight! - rowsTopOffset - footerHeight;
+  double get rowContainerHeight =>
+      maxHeight! - rowsTopOffset - footerHeight - columnFooterHeight;
 
   @override
   Offset? get gridGlobalOffset {
@@ -479,6 +480,16 @@ mixin LayoutState implements ITrinaGridState {
     }
 
     _state._showColumnFilter = flag;
+
+    // The filter fields are part of what fitContent sizes a column to, so
+    // showing or hiding them changes the answer. Callers commonly turn the
+    // filter row on from onLoaded, which is after the first sizing pass.
+    if (columnsAutoSizeMode.isFitContent &&
+        maxWidth != null &&
+        refColumns.isNotEmpty) {
+      activateColumnsAutoSize();
+      updateVisibilityLayout();
+    }
 
     notifyListeners(notify, setShowColumnFilter.hashCode);
   }

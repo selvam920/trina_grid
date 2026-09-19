@@ -1,5 +1,104 @@
 # Changelog
 
+## [Unreleased]
+
+* Fix: Boolean columns can now be filtered by the text they display. A boolean column stores a raw `bool` but renders `trueText` / `falseText` (`Yes` / `No` by default), while the filter only ever compared against `true` / `false`, so typing the visible text matched nothing. Both representations now match, and the raw `true` / `false` keeps working. Reported through #414. @doonfrs @Baghdady92
+* Feature: Added opt-in dropdown modes for the column filter row. `TrinaFilterColumnWidgetDelegate.booleanSelect()` renders an ALL / true / false dropdown that labels its options with the column's `trueText` / `falseText`, and `.multiSelect(...)` renders a checkbox dropdown with a Select all toggle that re-filters live on every change. Defaults are untouched: a column keeps its text filter unless one of the new delegates is set. The ALL and Select all labels are localizable via `TrinaGridLocaleText.filterAll` / `filterSelectAll`. @Baghdady92
+* Fix: `TrinaGridChangeColumnFilterEvent` can now replace the filter type of an existing filter row for the column, not just its value, through the new `updateFilterType` flag. The dropdown filter widgets set it, so a row previously created with another type (e.g. Contains through the filter popup or `setColumnFilter`) stops comparing with the old semantics. It defaults to false, so typing in the filter text field still keeps the type the user picked in the filter popup. @Baghdady92 @doonfrs
+
+* Feature: Added `TrinaGridConfiguration.fromTheme(context)` and `TrinaGridStyleConfig.fromTheme`/`fromColorScheme`, deriving the grid colors from the app's Material `ColorScheme` so the grid follows the host theme and its brightness. Opt-in: the existing light and dark palettes are unchanged (#336). @doonfrs @stan-at-work
+* Fix: `TrinaGridStyleConfig.copyWith` no longer drops `rowCheckedColor`, `rowHoveredColor`, `enableRowHoverColor` and `cellDefaultColor`. It rebuilt the style through the public light/dark constructors, which do not accept those fields, so any customized value silently reverted to the default. These are now also settable through `copyWith`, along with `cellDirtyColor`, `frozenRowColor` and `frozenRowBorderColor`. @doonfrs
+* Fix: The hidden-columns popup now inherits the grid's own configuration instead of rebuilding from a fresh default light or dark one, so custom and theme-derived styles reach it. @doonfrs
+* Feature: Added `checkReadOnly` to `TrinaRow` and `TrinaCell`, so read-only conditions can be declared per row or per cell instead of only per column. The first callback that is set wins: cell, then row, then column, then the static `TrinaColumn.readOnly` (#404). @doonfrs
+* Feature: Added `stateManager.refreshReadOnly()` to re-evaluate the read-only styling of the cells on screen. Read-only enforcement was already live, but the styling is memoized per cell and could go stale when a `checkReadOnly` callback depended on state outside its row (#404). @doonfrs
+* Fix: The record sidebar now honors `checkReadOnly`. It only read the static `TrinaColumn.readOnly`, so it let users edit fields the grid itself blocked (#404). @doonfrs
+* Fix: `setRowHeight` and `resetRowHeight` no longer drop the row `metadata` when rebuilding the row. @doonfrs
+* Feature: Added `horizontalScrollPhysics` and `verticalScrollPhysics` to `TrinaGrid`, so each scroll axis can have its own `ScrollPhysics`. Pair `verticalScrollPhysics: NeverScrollableScrollPhysics()` with `fitContent: true` to place a grid inside a scrolling page while keeping its horizontal scrolling (#270). @doonfrs
+* Fix: `scrollPhysics` now takes effect when it changes after the grid is built. `TrinaScrollBehavior` did not override `ScrollBehavior.shouldNotify`, so scrollables kept the physics they resolved on their first build. @doonfrs
+* Fix: `fitContent` now accounts for the horizontal scrollbar strip, which is a sibling of the rows viewport rather than an overlay. The grid used to come up short by that strip, leaving the rows scrollable by a few pixels. @doonfrs
+* Fix: Guard the body rows scroll listeners against positions that have clients but have not been laid out yet, which threw a null check error. @doonfrs
+* Fix: Keyboard navigation now scrolls all the way to the end of the grid, so the last row and last column are no longer left partially hidden under the scrollbars (#389). @doonfrs
+* Fix: Frozen column rows now share the same scroll extent as the body, so Ctrl+End and vertical keyboard navigation reach the last row when frozen columns are visible. @doonfrs
+
+## [2.3.0] - 2026. 07. 23
+
+* Feature: Added built-in record sidebar with docked and floating modes (#396). @doonfrs
+* Feature: Sidebar fields are editable using grid cell editors with shadcn styling (#399). @doonfrs
+* Feature: Added `unfocusedSelectionColor` to `TrinaGridStyleConfig` for visually distinguishing focused vs. unfocused grids in multi-grid layouts (#372). @vasco-feltrin
+* Enhancement: `unfocusedSelectionColor` now also applies to multi-cell selections (not just the current cell), and falls back to `gridBackgroundColor` when unset so existing apps see no behavior change. Dark theme ships with a sensible default. @doonfrs
+* Feature: Made columnAscendingIcon and columnDescendingIcon clickable to trigger sorting (#379) (#380). @itsnotmeman
+* Feature: Made scrollbar track-click animation configurable (#277) (#388). @doonfrs
+* Feature: Added Hungarian locale (#382). @nagylzs
+* Feature: Added column filtering demo screen with lazy pagination and dynamic configuration controls (#387). @doonfrs
+* Fix: Arrow keys not working on Linux with NumLock on; all keyboard shortcuts are now NumLock-safe (#381) (#380) (#385). @itsnotmeman @doonfrs
+* Fix: Prevent crash when toggling docked sidebar visibility (#398). @doonfrs
+* Fix: Make selectWithSearch popup usable with a11y semantics on web (#394) (#395). @doonfrs
+* Fix: Decoupled checkbox colors from cell selection colors (#390) (#392). @doonfrs
+* Fix: Guard select cell initialValue against type mismatch (#391). @doonfrs
+* Fix: Scope column filter rebuilds to filter events (#367) (#386). @doonfrs
+* Fix: Include pagination and time picker fields in TrinaGridLocaleText equality (#384). @doonfrs
+* Fix: Column header alignment (#301) and scrollbar thumb overflow (#375). @doonfrs
+* Fix: Provide default ShadTheme so select popups work without ShadApp (#374). @doonfrs
+* Fix: Updated demo for font_awesome_flutter v11 (#397). @doonfrs
+* Chore: Updated shadcn_ui dependency to ^0.55.0. @doonfrs
+* Test: Cover filter popup ShadTheme path (#376) (#378). @doonfrs
+* Test: Updated select cell search tests for the Material TextField search field introduced in #395. @doonfrs
+
+## [2.2.2] - 2026. 05. 15
+
+* Feature: Added TrinaGrid.fitContent to auto-size grid to its rows (#218). @doonfrs
+* Feature: Implemented TrinaDropdownMenu component and cell state with MenuAnchor support (#364). @doonfrs
+* Feature: Added per-row & per-cell text style callbacks (#344). @doonfrs
+* Feature: Added filterIconWidget property to TrinaGridStyleConfig (#348). @jan-siroky
+* Fix: Restore dynamic row height by switching ListView itemExtent to itemExtentBuilder (#365). @doonfrs
+* Fix: Prevent contextMenuIcon from initiating column drag in custom titleRenderer (#318). @doonfrs
+* Fix: Place vertical scrollbar on trailing edge and unmirror horizontal drag in RTL (#359). @doonfrs
+* Fix: Auto-create missing cells when initializing rows so newly appended rows survive hidden-column toggling (#354). @doonfrs
+* Fix: Extend horizontal scroll past vertical scrollbar overlay (#355). @doonfrs
+* Fix: Filter popup column dropdown shows localized titles (#356). @doonfrs
+* Fix: checkReadOnly callback not preventing keyboard-initiated editing (#306). @doonfrs
+* Fix: Currency column sorting broken with non-dot-decimal locales (#337). @doonfrs
+* Fix: Remove renderer caching to fix stale renders with external state (#338). @doonfrs
+* Fix: Use decimal keyboard for numeric column filters (#345). @jan-siroky
+* Fix: Use TrinaOptional for filterIconWidget in copyWith to allow null reset (#349). @doonfrs
+* Docs: Added CLAUDE.md with project guidance for Claude Code agents (#340). @doonfrs
+* Docs: Added llm.txt and llms-full.txt for AI agent discoverability (#339). @doonfrs
+
+## [2.2.1] - 2026. 03. 05
+
+* Fix: Remove unused import in trina_smooth_list_view.dart. @doonfrs
+
+## [2.2.0] - 2026. 03. 05
+
+* Feature: Added metadata support for rows, cells, and columns (#300). @JoshTechLee
+* Feature: Added TrinaColumnType.custom() for complex object storage (#313). @doonfrs
+* Feature: Added updateRowCells helper for batch cell updates (#328). @doonfrs
+* Feature: Added customizable column resize widget support (#317). @doonfrs
+* Feature: Added Is Empty and Is Not Empty filter types (#297). @doonfrs
+* Feature: Added lazy pagination functionality (#285). @doonfrs
+* Feature: Accept any Widget as sort icons, not just Icon (#282). @doonfrs
+* Feature: Added moveDirection to onBeforeActiveCellChange event (#281). @doonfrs
+* Feature: Added TrinaGridColumnHiddenEvent for column visibility changes (#273). @doonfrs
+* Feature: Added rowWrapperIsConstantHeight configuration option (#276). @davidlrichmond
+* Feature: Added keyboardType support to filter TextFields (#325). @jan-siroky
+* Fix: Allow scrollPhysics parameter to take effect in body rows (#329). @doonfrs
+* Fix: Row border misalignment with column border (#327). @doonfrs
+* Fix: Null-safe cell access in row grouping with hidden columns (#326). @doonfrs
+* Fix: Use number format to calculate decimal points (#321). @sschmaljohann
+* Fix: Cache fallback cell in row.cells to avoid rebuild churn (#323). @doonfrs
+* Fix: Null check crash in WASM when row cell missing for column (#322). @jan-siroky
+* Fix: Account for column footer height in scroll calculations (#316). @doonfrs
+* Fix: Remove [Selection] debug prints flooding console (#311). @doonfrs
+* Fix: Resolve null check error in visibility layout and clamp scroll on layout change (#307). @doonfrs
+* Fix: Row moving now works with multiple selected rows (#296). @doonfrs
+* Fix: Renderer cache not invalidating when other cells in row change (#295). @doonfrs
+* Fix: Prevent crash when TrinaDualGrid onSelected is null (#294). @doonfrs
+* Fix: Frozen columns vertical misalignment while scrolling (#293). @doonfrs
+* Fix: visibilityLayout breaks left+right frozen columns (#287). @Hakimbhb
+* Fix: Migrate Android demo build to AGP 8.9.1, Kotlin 2.1.10, and declarative plugins (#286). @Hakimbhb
+* Fix: Resolve all dart analyze warnings. @doonfrs
+* Docs: Add row custom data documentation (#292). @doonfrs
+
 ## [2.1.1] - 2025. 11. 17
 
 * Feature: Added scroll physics configuration to TrinaGrid (#262). @doonfrs

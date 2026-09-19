@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -59,6 +60,12 @@ typedef TrinaRowColorCallback =
 
 typedef TrinaCellColorCallback =
     Color? Function(TrinaCellColorContext cellColorContext);
+
+typedef TrinaRowTextStyleCallback =
+    TextStyle? Function(TrinaRowColorContext rowColorContext);
+
+typedef TrinaCellTextStyleCallback =
+    TextStyle? Function(TrinaCellColorContext cellColorContext);
 
 typedef TrinaSelectDateCallBack =
     Future<DateTime?> Function(TrinaCell dateCell, TrinaColumn column);
@@ -123,6 +130,8 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.customLoadingWidget,
     this.rowColorCallback,
     this.cellColorCallback,
+    this.rowTextStyleCallback,
+    this.cellTextStyleCallback,
     this.selectDateCallback,
     this.columnMenuDelegate,
     this.configuration = const TrinaGridConfiguration(),
@@ -132,6 +141,9 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.onLazyFetchCompleted,
     this.onReachedEnd,
     this.scrollPhysics,
+    this.horizontalScrollPhysics,
+    this.verticalScrollPhysics,
+    this.fitContent = false,
   });
 
   final double? rowsCacheExtent;
@@ -449,6 +461,57 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// {@endtemplate}
   final TrinaCellColorCallback? cellColorCallback;
 
+  /// {@template trina_grid_property_rowTextStyleCallback}
+  /// [rowTextStyleCallback] can change the cell text style for every cell in a
+  /// row dynamically according to the state.
+  ///
+  /// Return a [TextStyle] (typically with only the fields you want to override,
+  /// such as `color`) and it will be merged on top of
+  /// [TrinaGridStyleConfig.cellTextStyle]. Return `null` to leave the text style
+  /// unchanged for that row.
+  ///
+  /// If both [rowTextStyleCallback] and [cellTextStyleCallback] are set,
+  /// [cellTextStyleCallback] is merged on top and wins per-field.
+  ///
+  /// The style is applied to the default cell display and to the in-place
+  /// editor for text-based typed cells (text, number, currency, percentage,
+  /// date, time). Cells that use [TrinaColumn.renderer] or [TrinaCell.renderer]
+  /// are not affected — those renderers fully own their look.
+  ///
+  /// ```dart
+  /// rowTextStyleCallback = (TrinaRowColorContext context) {
+  ///   return context.row.cells['status']?.value == 'urgent'
+  ///       ? const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
+  ///       : null;
+  /// };
+  /// ```
+  /// {@endtemplate}
+  final TrinaRowTextStyleCallback? rowTextStyleCallback;
+
+  /// {@template trina_grid_property_cellTextStyleCallback}
+  /// [cellTextStyleCallback] can change the cell text style for an individual
+  /// cell dynamically according to the state.
+  ///
+  /// Return a [TextStyle] (typically with only the fields you want to override)
+  /// and it will be merged on top of [TrinaGridStyleConfig.cellTextStyle] and
+  /// any value returned by [rowTextStyleCallback]. Return `null` to leave the
+  /// text style unchanged for that cell.
+  ///
+  /// The style is applied to the default cell display and to the in-place
+  /// editor for text-based typed cells. Cells using a custom renderer
+  /// (`TrinaColumn.renderer` / `TrinaCell.renderer`) are not affected.
+  ///
+  /// ```dart
+  /// cellTextStyleCallback = (TrinaCellColorContext context) {
+  ///   final value = context.cell.value;
+  ///   return value is num && value < 0
+  ///       ? const TextStyle(color: Colors.red)
+  ///       : null;
+  /// };
+  /// ```
+  /// {@endtemplate}
+  final TrinaCellTextStyleCallback? cellTextStyleCallback;
+
   final TrinaSelectDateCallBack? selectDateCallback;
 
   /// {@template trina_grid_property_columnMenuDelegate}
@@ -495,6 +558,10 @@ class TrinaGrid extends TrinaStatefulWidget {
 
   /// Custom scroll physics to control scrolling behavior.
   ///
+  /// Applies to both axes. To control the axes separately, use
+  /// [horizontalScrollPhysics] and [verticalScrollPhysics], which take
+  /// precedence over this value on the axis they cover.
+  ///
   /// If null, uses platform-specific default scroll physics from [MaterialScrollBehavior].
   ///
   /// Example:
@@ -505,6 +572,60 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// )
   /// ```
   final ScrollPhysics? scrollPhysics;
+
+  /// Scroll physics applied only to horizontal scrolling.
+  ///
+  /// Takes precedence over [scrollPhysics] on this axis. When null, the axis
+  /// falls back to [scrollPhysics], then to the platform default.
+  ///
+  /// See [verticalScrollPhysics] for the typical use case.
+  final ScrollPhysics? horizontalScrollPhysics;
+
+  /// Scroll physics applied only to vertical scrolling.
+  ///
+  /// Takes precedence over [scrollPhysics] on this axis. When null, the axis
+  /// falls back to [scrollPhysics], then to the platform default.
+  ///
+  /// Use this to place the grid inside a scrolling page: the page owns vertical
+  /// scrolling while the grid keeps scrolling horizontally. Pair it with
+  /// [fitContent] so the grid sizes itself to its content instead of needing a
+  /// bounded height.
+  ///
+  /// ```dart
+  /// SingleChildScrollView(
+  ///   child: TrinaGrid(
+  ///     columns: columns,
+  ///     rows: rows,
+  ///     fitContent: true,
+  ///     verticalScrollPhysics: const NeverScrollableScrollPhysics(),
+  ///   ),
+  /// )
+  /// ```
+  ///
+  /// Note that fling and spring tuning still comes from [scrollPhysics] or the
+  /// platform default, since those values are not axis-specific. See
+  /// [TrinaAxisScrollPhysics].
+  final ScrollPhysics? verticalScrollPhysics;
+
+  /// When `true`, the grid sizes its overall height to fit its content
+  /// (header + columns + rows + footer + borders) instead of expanding to
+  /// fill the parent. Use this when placing the grid inside a `Column`,
+  /// `Card`, dialog, or any unbounded-height parent without wrapping it
+  /// in `Expanded`.
+  ///
+  /// Defaults to `false` (the grid fills the parent's bounded height).
+  ///
+  /// Notes:
+  /// - For exact sizing with a custom [createHeader] or [createFooter], set
+  ///   `stateManager.headerHeight` / `stateManager.footerHeight` from inside
+  ///   your callback. If unset, a default of `TrinaGridSettings.rowTotalHeight`
+  ///   is assumed.
+  /// - The height is recomputed when row heights change
+  ///   (`TrinaGridStateManager.setRowHeight`) and when filtering or pagination
+  ///   alters the visible row set.
+  /// - When the parent constrains the grid below the computed height (e.g. a
+  ///   small dialog), vertical scrolling is preserved.
+  final bool fitContent;
 
   /// [setDefaultLocale] sets locale when [Intl] package is used in [TrinaGrid].
   ///
@@ -547,6 +668,12 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
   bool _showFrozenColumn = false;
 
   bool _showLoading = false;
+
+  bool _isSidebarVisible = false;
+
+  TrinaGridSidebarMode _sidebarMode = TrinaGridSidebarMode.docked;
+
+  double _sidebarWidth = 320;
 
   bool _hasLeftFrozenColumns = false;
 
@@ -668,6 +795,18 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
 
     _showLoading = update<bool>(_showLoading, stateManager.showLoading);
 
+    _isSidebarVisible = update<bool>(
+      _isSidebarVisible,
+      stateManager.isSidebarVisible,
+    );
+
+    _sidebarMode = update<TrinaGridSidebarMode>(
+      _sidebarMode,
+      stateManager.sidebarMode,
+    );
+
+    _sidebarWidth = update<double>(_sidebarWidth, stateManager.sidebarWidth);
+
     _hasLeftFrozenColumns = update<bool>(
       _hasLeftFrozenColumns,
       stateManager.hasLeftFrozenColumns,
@@ -723,6 +862,8 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       onReachedEnd: widget.onReachedEnd,
       rowColorCallback: widget.rowColorCallback,
       cellColorCallback: widget.cellColorCallback,
+      rowTextStyleCallback: widget.rowTextStyleCallback,
+      cellTextStyleCallback: widget.cellTextStyleCallback,
       selectDateCallback: widget.selectDateCallback,
       createHeader: widget.createHeader,
       createFooter: widget.createFooter,
@@ -850,188 +991,335 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
     return trinaEvent.isCharacter && hasAllowedModifier;
   }
 
+  /// Computes the inner height the [CustomMultiChildLayout] needs to lay out
+  /// its children when [TrinaGrid.fitContent] is enabled. This is the size
+  /// the inner [LayoutBuilder] receives, not the outer widget's height —
+  /// the surrounding [_GridContainer] adds `2 * style.gridPadding` of padding
+  /// to produce the final rendered size.
+  ///
+  /// Returns a non-finite or non-positive value when the inputs are nonsense;
+  /// callers fall back to the default constraint-based layout.
+  double _computeContentHeight() {
+    final style = widget.configuration.style;
+    final double border = style.gridBorderWidth;
+    final double cellHorizontalBorder = style.cellHorizontalBorderWidth;
+    final double defaultRowHeight = style.rowHeight;
+
+    double height = 0;
+
+    if (widget.createHeader != null) {
+      final double headerHeight = _stateManager.headerHeight > 0
+          ? _stateManager.headerHeight
+          : TrinaGridSettings.rowTotalHeight;
+      height += headerHeight + border; // header + header divider
+    }
+
+    if (_stateManager.showColumnGroups) {
+      height +=
+          _stateManager.columnGroupDepth(_stateManager.refColumnGroups) *
+          style.columnHeight;
+    }
+    if (_stateManager.showColumnTitle) {
+      height += style.columnHeight;
+    }
+    if (_stateManager.showColumnFilter) {
+      height += style.columnFilterHeight;
+    }
+
+    height += border; // column-row divider (always added in performLayout)
+
+    for (final row in _stateManager.refRows) {
+      height += (row.height ?? defaultRowHeight) + cellHorizontalBorder;
+    }
+
+    // The horizontal scrollbar is a sibling of the rows viewport rather than an
+    // overlay, so it takes height away from the rows. Without this the grid is
+    // left short by exactly that strip and the rows scroll by it.
+    final scrollbar = widget.configuration.scrollbar;
+    if (scrollbar.showHorizontal) {
+      height += scrollbar.effectiveThickness;
+    }
+
+    if (_stateManager.showColumnFooter) {
+      final double columnFooterHeight = _stateManager.columnFooterHeight > 0
+          ? _stateManager.columnFooterHeight
+          : TrinaGridSettings.rowTotalHeight;
+      height += columnFooterHeight + border;
+    }
+
+    if (widget.createFooter != null) {
+      final double footerHeight = _stateManager.footerHeight > 0
+          ? _stateManager.footerHeight
+          : TrinaGridSettings.rowTotalHeight;
+      height += footerHeight + border;
+    }
+
+    return height;
+  }
+
   @override
   Widget build(BuildContext context) {
+    Widget body = LayoutBuilder(
+      builder: (c, size) {
+        _stateManager.setLayout(size);
+
+        final style = _stateManager.style;
+
+        final bool showLeftFrozen =
+            _stateManager.showFrozenColumn &&
+            _stateManager.hasLeftFrozenColumns;
+
+        final bool showRightFrozen =
+            _stateManager.showFrozenColumn &&
+            _stateManager.hasRightFrozenColumns;
+
+        final bool showColumnRowDivider =
+            _stateManager.showColumnTitle || _stateManager.showColumnFilter;
+
+        final bool showColumnFooter = _stateManager.showColumnFooter;
+
+        return CustomMultiChildLayout(
+          key: _stateManager.gridKey,
+          delegate: TrinaGridLayoutDelegate(
+            _stateManager,
+            Directionality.of(context),
+          ),
+          children: [
+            /// Body columns and rows.
+            LayoutId(
+              id: _StackName.bodyRows,
+              child: TrinaBodyRows(_stateManager),
+            ),
+            LayoutId(
+              id: _StackName.bodyColumns,
+              child: TrinaBodyColumns(_stateManager),
+            ),
+
+            /// Body columns footer.
+            if (showColumnFooter)
+              LayoutId(
+                id: _StackName.bodyColumnFooters,
+                child: TrinaBodyColumnsFooter(stateManager),
+              ),
+
+            /// Left columns and rows.
+            if (showLeftFrozen) ...[
+              LayoutId(
+                id: _StackName.leftFrozenColumns,
+                child: TrinaLeftFrozenColumns(_stateManager),
+              ),
+              LayoutId(
+                id: _StackName.leftFrozenRows,
+                child: TrinaLeftFrozenRows(_stateManager),
+              ),
+              LayoutId(
+                id: _StackName.leftFrozenDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.vertical,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                  reverse: _stateManager.isRTL,
+                ),
+              ),
+              if (showColumnFooter)
+                LayoutId(
+                  id: _StackName.leftFrozenColumnFooters,
+                  child: TrinaLeftFrozenColumnsFooter(stateManager),
+                ),
+            ],
+
+            /// Right columns and rows.
+            if (showRightFrozen) ...[
+              LayoutId(
+                id: _StackName.rightFrozenColumns,
+                child: TrinaRightFrozenColumns(_stateManager),
+              ),
+              LayoutId(
+                id: _StackName.rightFrozenRows,
+                child: TrinaRightFrozenRows(_stateManager),
+              ),
+              LayoutId(
+                id: _StackName.rightFrozenDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.vertical,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                  reverse: !_stateManager.isRTL,
+                ),
+              ),
+              if (showColumnFooter)
+                LayoutId(
+                  id: _StackName.rightFrozenColumnFooters,
+                  child: TrinaRightFrozenColumnsFooter(stateManager),
+                ),
+            ],
+
+            /// Column and row divider.
+            if (showColumnRowDivider)
+              LayoutId(
+                id: _StackName.columnRowDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.horizontal,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                ),
+              ),
+
+            /// Header and divider.
+            if (_stateManager.showHeader) ...[
+              LayoutId(
+                id: _StackName.headerDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.horizontal,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                ),
+              ),
+              LayoutId(id: _StackName.header, child: _header!),
+            ],
+
+            /// Column footer divider.
+            if (showColumnFooter)
+              LayoutId(
+                id: _StackName.columnFooterDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.horizontal,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                ),
+              ),
+
+            /// Footer and divider.
+            if (_stateManager.showFooter) ...[
+              LayoutId(
+                id: _StackName.footerDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.horizontal,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                  reverse: true,
+                ),
+              ),
+              LayoutId(id: _StackName.footer, child: _footer!),
+            ],
+
+            /// Loading screen.
+            if (_stateManager.showLoading)
+              LayoutId(
+                id: _StackName.loading,
+                child:
+                    _stateManager.customLoadingWidget ??
+                    TrinaLoading(
+                      level: _stateManager.loadingLevel,
+                      backgroundColor: style.gridBackgroundColor,
+                      indicatorColor: style.activatedBorderColor,
+                      text: _stateManager.localeText.loadingText,
+                      textStyle: style.cellTextStyle,
+                    ),
+              ),
+
+            /// NoRows
+            if (widget.noRowsWidget != null)
+              LayoutId(
+                id: _StackName.noRows,
+                child: TrinaNoRowsWidget(
+                  stateManager: _stateManager,
+                  child: widget.noRowsWidget!,
+                ),
+              ),
+          ],
+        );
+      },
+    );
+
+    if (widget.fitContent) {
+      final double computed = _computeContentHeight();
+      if (computed.isFinite && computed > 0) {
+        body = SizedBox(height: computed, child: body);
+      }
+    }
+
+    final Widget grid = _GridContainer(
+      stateManager: _stateManager,
+      scrollPhysics: widget.scrollPhysics,
+      horizontalScrollPhysics: widget.horizontalScrollPhysics,
+      verticalScrollPhysics: widget.verticalScrollPhysics,
+      child: body,
+    );
+
+    // The record sidebar stays inside the grid's FocusScope: its reused cell
+    // editors rely on the grid's keepFocus mechanics.
     return FocusScope(
       onFocusChange: _stateManager.setKeepFocus,
       onKeyEvent: _handleGridFocusOnKey,
-      child: _GridContainer(
-        stateManager: _stateManager,
-        scrollPhysics: widget.scrollPhysics,
-        child: LayoutBuilder(
-          builder: (c, size) {
-            _stateManager.setLayout(size);
+      child: _wrapWithSidebar(grid),
+    );
+  }
 
-            final style = _stateManager.style;
+  /// Wraps the grid with the record sidebar according to the current sidebar
+  /// state. Docked mode pushes the grid; floating mode slides a panel over it.
+  Widget _wrapWithSidebar(Widget grid) {
+    final sidebar = _stateManager.configuration.sidebar;
+    if (!sidebar.enabled) {
+      return grid;
+    }
 
-            final bool showLeftFrozen =
-                _stateManager.showFrozenColumn &&
-                _stateManager.hasLeftFrozenColumns;
+    Widget panel(bool floating) {
+      final content =
+          sidebar.contentBuilder?.call(context, _stateManager) ??
+          TrinaSidebar(stateManager: _stateManager, showCloseButton: floating);
 
-            final bool showRightFrozen =
-                _stateManager.showFrozenColumn &&
-                _stateManager.hasRightFrozenColumns;
-
-            final bool showColumnRowDivider =
-                _stateManager.showColumnTitle || _stateManager.showColumnFilter;
-
-            final bool showColumnFooter = _stateManager.showColumnFooter;
-
-            return CustomMultiChildLayout(
-              key: _stateManager.gridKey,
-              delegate: TrinaGridLayoutDelegate(
-                _stateManager,
-                Directionality.of(context),
-              ),
-              children: [
-                /// Body columns and rows.
-                LayoutId(
-                  id: _StackName.bodyRows,
-                  child: TrinaBodyRows(_stateManager),
-                ),
-                LayoutId(
-                  id: _StackName.bodyColumns,
-                  child: TrinaBodyColumns(_stateManager),
-                ),
-
-                /// Body columns footer.
-                if (showColumnFooter)
-                  LayoutId(
-                    id: _StackName.bodyColumnFooters,
-                    child: TrinaBodyColumnsFooter(stateManager),
-                  ),
-
-                /// Left columns and rows.
-                if (showLeftFrozen) ...[
-                  LayoutId(
-                    id: _StackName.leftFrozenColumns,
-                    child: TrinaLeftFrozenColumns(_stateManager),
-                  ),
-                  LayoutId(
-                    id: _StackName.leftFrozenRows,
-                    child: TrinaLeftFrozenRows(_stateManager),
-                  ),
-                  LayoutId(
-                    id: _StackName.leftFrozenDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.vertical,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                      reverse: _stateManager.isRTL,
-                    ),
-                  ),
-                  if (showColumnFooter)
-                    LayoutId(
-                      id: _StackName.leftFrozenColumnFooters,
-                      child: TrinaLeftFrozenColumnsFooter(stateManager),
-                    ),
-                ],
-
-                /// Right columns and rows.
-                if (showRightFrozen) ...[
-                  LayoutId(
-                    id: _StackName.rightFrozenColumns,
-                    child: TrinaRightFrozenColumns(_stateManager),
-                  ),
-                  LayoutId(
-                    id: _StackName.rightFrozenRows,
-                    child: TrinaRightFrozenRows(_stateManager),
-                  ),
-                  LayoutId(
-                    id: _StackName.rightFrozenDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.vertical,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                      reverse: !_stateManager.isRTL,
-                    ),
-                  ),
-                  if (showColumnFooter)
-                    LayoutId(
-                      id: _StackName.rightFrozenColumnFooters,
-                      child: TrinaRightFrozenColumnsFooter(stateManager),
-                    ),
-                ],
-
-                /// Column and row divider.
-                if (showColumnRowDivider)
-                  LayoutId(
-                    id: _StackName.columnRowDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.horizontal,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                    ),
-                  ),
-
-                /// Header and divider.
-                if (_stateManager.showHeader) ...[
-                  LayoutId(
-                    id: _StackName.headerDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.horizontal,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                    ),
-                  ),
-                  LayoutId(id: _StackName.header, child: _header!),
-                ],
-
-                /// Column footer divider.
-                if (showColumnFooter)
-                  LayoutId(
-                    id: _StackName.columnFooterDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.horizontal,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                    ),
-                  ),
-
-                /// Footer and divider.
-                if (_stateManager.showFooter) ...[
-                  LayoutId(
-                    id: _StackName.footerDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.horizontal,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                      reverse: true,
-                    ),
-                  ),
-                  LayoutId(id: _StackName.footer, child: _footer!),
-                ],
-
-                /// Loading screen.
-                if (_stateManager.showLoading)
-                  LayoutId(
-                    id: _StackName.loading,
-                    child:
-                        _stateManager.customLoadingWidget ??
-                        widget.customLoadingWidget ??
-                        TrinaLoading(
-                          level: _stateManager.loadingLevel,
-                          backgroundColor: style.gridBackgroundColor,
-                          indicatorColor: style.activatedBorderColor,
-                          text: _stateManager.localeText.loadingText,
-                          textStyle: style.cellTextStyle,
-                        ),
-                  ),
-
-                /// NoRows
-                if (widget.noRowsWidget != null)
-                  LayoutId(
-                    id: _StackName.noRows,
-                    child: TrinaNoRowsWidget(
-                      stateManager: _stateManager,
-                      child: widget.noRowsWidget!,
-                    ),
-                  ),
-              ],
-            );
-          },
+      // Reparent the sidebar's focus subtree under the grid's focus node
+      // (attached inside _GridContainer, of which the sidebar is a sibling).
+      // The reused cell editors check `gridFocusNode.hasFocus` (via
+      // stateManager.hasFocus) - e.g. tapping a text editor calls
+      // setKeepFocus(true), which requests focus on the grid node unless it
+      // already has focus. Without reparenting, a click inside a focused
+      // sidebar editor would move focus back to the grid.
+      return Focus(
+        parentNode: _stateManager.gridFocusNode,
+        skipTraversal: true,
+        canRequestFocus: false,
+        child: TrinaSidebarContainer(
+          stateManager: _stateManager,
+          child: content,
         ),
-      ),
+      );
+    }
+
+    if (_stateManager.sidebarMode.isFloating) {
+      final visible = _stateManager.isSidebarVisible;
+      final width = _stateManager.sidebarWidth;
+
+      // Animate the panel position so the Stack fully clips it when hidden
+      // (a paint-time transform would spill outside the Stack bounds).
+      return Stack(
+        clipBehavior: Clip.hardEdge,
+        children: [
+          Positioned.fill(child: grid),
+          AnimatedPositioned(
+            duration: sidebar.animationDuration,
+            curve: Curves.easeInOut,
+            top: 0,
+            bottom: 0,
+            width: width,
+            right: visible ? 0 : -width,
+            child: IgnorePointer(ignoring: !visible, child: panel(true)),
+          ),
+        ],
+      );
+    }
+
+    // Docked mode: keep the grid pinned in the same Expanded slot so toggling
+    // only adds or removes the trailing panel. Swapping the grid between a bare
+    // widget and a Row would reparent its gridKey subtree during the body
+    // LayoutBuilder's layout pass and crash (overlay re-attach mid-layout).
+    return Row(
+      children: [
+        Expanded(child: grid),
+        if (_stateManager.isSidebarVisible)
+          SizedBox(width: _stateManager.sidebarWidth, child: panel(false)),
+      ],
     );
   }
 }
@@ -1423,11 +1711,15 @@ class _GridContainer extends StatelessWidget {
 
   final Widget child;
   final ScrollPhysics? scrollPhysics;
+  final ScrollPhysics? horizontalScrollPhysics;
+  final ScrollPhysics? verticalScrollPhysics;
 
   const _GridContainer({
     required this.stateManager,
     required this.child,
     required this.scrollPhysics,
+    required this.horizontalScrollPhysics,
+    required this.verticalScrollPhysics,
   });
 
   @override
@@ -1443,6 +1735,8 @@ class _GridContainer extends StatelessWidget {
           isTouchScroll: stateManager.configuration.scrollbar.isTouchScroll,
           userDragDevices: stateManager.configuration.scrollbar.dragDevices,
           scrollPhysics: scrollPhysics,
+          horizontalScrollPhysics: horizontalScrollPhysics,
+          verticalScrollPhysics: verticalScrollPhysics,
         ),
         child: DecoratedBox(
           decoration: BoxDecoration(
@@ -1509,13 +1803,23 @@ class TrinaScrollBehavior extends MaterialScrollBehavior {
     this.isTouchScroll = false,
     Set<PointerDeviceKind>? userDragDevices,
     this.scrollPhysics,
+    this.horizontalScrollPhysics,
+    this.verticalScrollPhysics,
   }) : _dragDevices =
            userDragDevices ??
            (isTouchScroll ? _mobileDragDevices : _desktopDragDevices),
        super();
 
   final bool isTouchScroll;
+
+  /// Physics applied to both axes, unless overridden per axis.
   final ScrollPhysics? scrollPhysics;
+
+  /// Physics applied to horizontal scrolling only.
+  final ScrollPhysics? horizontalScrollPhysics;
+
+  /// Physics applied to vertical scrolling only.
+  final ScrollPhysics? verticalScrollPhysics;
 
   @override
   Set<PointerDeviceKind> get dragDevices => _dragDevices;
@@ -1544,9 +1848,41 @@ class TrinaScrollBehavior extends MaterialScrollBehavior {
     return child;
   }
 
+  /// [ScrollBehavior.shouldNotify] returns false by default, which would leave
+  /// every [Scrollable] below the [ScrollConfiguration] holding the physics it
+  /// resolved on its first build. Without this, changing any of the physics
+  /// after the grid is built has no effect.
+  @override
+  bool shouldNotify(TrinaScrollBehavior oldDelegate) {
+    return oldDelegate.isTouchScroll != isTouchScroll ||
+        oldDelegate.scrollPhysics != scrollPhysics ||
+        oldDelegate.horizontalScrollPhysics != horizontalScrollPhysics ||
+        oldDelegate.verticalScrollPhysics != verticalScrollPhysics ||
+        !setEquals(oldDelegate._dragDevices, _dragDevices);
+  }
+
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
-    return scrollPhysics ?? super.getScrollPhysics(context);
+    final base = scrollPhysics ?? super.getScrollPhysics(context);
+
+    if (horizontalScrollPhysics == null && verticalScrollPhysics == null) {
+      return base;
+    }
+
+    // A ScrollBehavior resolves one physics for every Scrollable below it and
+    // is never told which axis it is resolving for. TrinaAxisScrollPhysics
+    // defers that decision to call time, where ScrollMetrics.axis is known.
+    //
+    // Each axis replaces [base] rather than layering onto it, the same way
+    // [scrollPhysics] replaces the platform default. Layering would let a
+    // blocking [scrollPhysics] override a per axis physics meant to re-enable
+    // that axis, since the behaviors a physics does not define defer to its
+    // parent.
+    return TrinaAxisScrollPhysics(
+      horizontal: horizontalScrollPhysics ?? base,
+      vertical: verticalScrollPhysics ?? base,
+      parent: base,
+    );
   }
 }
 

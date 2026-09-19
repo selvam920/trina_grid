@@ -26,7 +26,20 @@ mixin VisibilityLayoutState implements ITrinaGridState {
 
     updateScrollViewport();
 
+    // Reset horizontal scroll if current position is beyond valid range
+    _clampHorizontalScrollIfNeeded();
+
     if (notify) scroll.horizontal?.notifyListeners();
+  }
+
+  void _clampHorizontalScrollIfNeeded() {
+    final horizontalScroll = scroll.bodyRowsHorizontal;
+    if (horizontalScroll == null || !horizontalScroll.hasClients) return;
+
+    final maxScroll = scroll.maxScrollHorizontal;
+    if (horizontalScroll.offset > maxScroll) {
+      horizontalScroll.jumpTo(maxScroll > 0 ? maxScroll : 0);
+    }
   }
 
   void _updateColumnSize() {
@@ -48,12 +61,11 @@ mixin VisibilityLayoutState implements ITrinaGridState {
     //
     // The scrollbar overlays content but still occupies visual space on the
     // right edge, so columns must be sized to (viewport width - scrollbar width).
-    // Scrollbar uses thickness + 4px padding (see trina_vertical_scroll_bar.dart:273)
     // Only subtract when columnShowScrollWidth is enabled (matching behavior in
     // trina_body_columns.dart and trina_body_columns_footer.dart)
     if (configuration.scrollbar.showVertical &&
         configuration.scrollbar.columnShowScrollWidth) {
-      offset += configuration.scrollbar.thickness + 4;
+      offset += configuration.scrollbar.effectiveThickness;
     }
 
     getColumnsAutoSizeHelper(

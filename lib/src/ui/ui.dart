@@ -1,3 +1,4 @@
+export 'cells/cell_text_style_resolver.dart';
 export 'cells/decimal_input_formatter.dart';
 export 'cells/trina_currency_cell.dart';
 export 'cells/trina_date_cell.dart';
@@ -26,3 +27,4 @@ export 'trina_left_frozen_rows.dart';
 export 'trina_right_frozen_columns.dart';
 export 'trina_right_frozen_columns_footer.dart';
 export 'trina_right_frozen_rows.dart';
+export 'trina_sidebar.dart';

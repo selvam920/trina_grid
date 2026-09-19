@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trina_grid/src/model/trina_dropdown_menu_filter.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
@@ -120,9 +121,9 @@ void main() {
           variant: TrinaDropdownMenuVariant.selectWithSearch,
         );
 
-        // Enter search text
+        // Enter search text — wait long enough for the 250ms search debounce.
         await tester.enterText(find.byType(TextField), 'berry');
-        await tester.pumpAndSettle();
+        await tester.pumpAndSettle(const Duration(milliseconds: 300));
 
         // Verify filtered list
         expect(find.text('Apple'), findsNothing);
@@ -151,6 +152,50 @@ void main() {
           expect(find.text('No search results!'), findsOneWidget);
         },
       );
+
+      testWidgets('autofocuses the search field when the menu opens', (
+        WidgetTester tester,
+      ) async {
+        // Regression guard for issue #394: the search field must hold focus on
+        // open so it receives DOM focus on Flutter web with a11y semantics on.
+        await buildStringMenu(
+          tester,
+          items: strTestItems,
+          variant: TrinaDropdownMenuVariant.selectWithSearch,
+        );
+
+        final editable = tester.widget<EditableText>(find.byType(EditableText));
+        expect(editable.focusNode.hasFocus, isTrue);
+
+        // The pre-selected item must NOT steal autofocus for this variant.
+        expect(FocusManager.instance.primaryFocus, editable.focusNode);
+      });
+
+      testWidgets('ArrowDown from the search field moves focus into the list', (
+        WidgetTester tester,
+      ) async {
+        await buildStringMenu(
+          tester,
+          items: strTestItems,
+          variant: TrinaDropdownMenuVariant.selectWithSearch,
+        );
+
+        // Sanity: focus starts in the search field.
+        final editable = tester.widget<EditableText>(find.byType(EditableText));
+        expect(editable.focusNode.hasFocus, isTrue);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pump();
+
+        // Focus should now sit inside one of the list's MenuItemButtons.
+        final focusedContext = FocusManager.instance.primaryFocus?.context;
+        expect(focusedContext, isNotNull);
+        expect(
+          focusedContext!.findAncestorWidgetOfExactType<MenuItemButton>(),
+          isNotNull,
+        );
+        expect(editable.focusNode.hasFocus, isFalse);
+      });
     });
 
     group('Selection Logic', () {

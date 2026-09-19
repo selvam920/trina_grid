@@ -23,6 +23,8 @@ extension TrinaColumnTypeExtension on TrinaColumnType {
 
   bool get isDropdown => this is TrinaColumnTypeDropdown;
 
+  bool get isCustom => this is TrinaColumnTypeCustom;
+
   TrinaColumnTypeText get text {
     if (this is! TrinaColumnTypeText) {
       throw TypeError();
@@ -98,6 +100,13 @@ extension TrinaColumnTypeExtension on TrinaColumnType {
       throw TypeError();
     }
     return this as TrinaColumnTypeDropdown<T>;
+  }
+
+  TrinaColumnTypeCustom get custom {
+    if (this is! TrinaColumnTypeCustom) {
+      throw TypeError();
+    }
+    return this as TrinaColumnTypeCustom;
   }
 
   bool get hasFormat => this is TrinaColumnTypeHasFormat;

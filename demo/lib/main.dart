@@ -7,6 +7,7 @@ import 'package:demo/screen/feature/date_time_column_screen.dart';
 import 'package:demo/screen/feature/percentage_type_column_screen.dart';
 import 'package:demo/screen/feature/rtl_scrollbar_screen.dart';
 import 'package:demo/screen/feature/custom_pagination_screen.dart';
+import 'package:demo/screen/feature/custom_type_column_screen.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'constants/trina_grid_example_colors.dart';
@@ -15,6 +16,7 @@ import 'screen/feature/add_and_remove_column_row_screen.dart';
 import 'screen/feature/add_rows_asynchronously.dart';
 import 'screen/feature/column_renderer_screen.dart';
 import 'screen/feature/cell_color_screen.dart';
+import 'screen/feature/cell_text_style_screen.dart';
 import 'screen/feature/cell_renderer_screen.dart';
 import 'screen/feature/cell_selection_screen.dart';
 import 'screen/feature/excel_like_selection_screen.dart';
@@ -30,6 +32,7 @@ import 'screen/feature/column_sorting_screen.dart';
 import 'screen/feature/copy_and_paste_screen.dart';
 import 'screen/feature/currency_type_column_screen.dart';
 import 'screen/feature/dark_mode_screen.dart';
+import 'screen/feature/theme_integration_screen.dart';
 import 'screen/feature/date_type_column_screen.dart';
 import 'screen/feature/dropdown_column_screen.dart';
 import 'screen/feature/dual_mode_screen.dart';
@@ -48,6 +51,7 @@ import 'screen/feature/row_infinity_scroll_screen.dart';
 import 'screen/feature/row_lazy_pagination_screen.dart';
 import 'screen/feature/row_moving_screen.dart';
 import 'screen/feature/row_pagination_screen.dart';
+import 'screen/feature/record_sidebar_screen.dart';
 import 'screen/feature/row_selection_screen.dart';
 import 'screen/feature/row_with_checkbox_screen.dart';
 import 'screen/feature/rtl_screen.dart';
@@ -59,10 +63,12 @@ import 'screen/feature/value_formatter_screen.dart';
 import 'screen/home_screen.dart';
 import 'screen/feature/pages_list_screen.dart';
 import 'screen/feature/frozen_rows_screen.dart';
+import 'screen/feature/scroll_physics_screen.dart';
 import 'screen/feature/scrollbars.dart';
 import 'screen/feature/row_wrapper_screen.dart';
 import 'screen/feature/row_wrapper_frozen_screen.dart';
 import 'screen/feature/multiitems_delegate_demo_screen.dart';
+import 'screen/feature/column_filter_modes_screen.dart';
 import 'screen/feature/custom_footer_screen.dart';
 import 'screen/feature/dynamic_row_height_demo.dart';
 
@@ -89,6 +95,7 @@ class MyApp extends StatelessWidget {
         ColumnTitleRendererScreen.routeName: (context) =>
             const ColumnTitleRendererScreen(),
         CellColorScreen.routeName: (context) => const CellColorScreen(),
+        CellTextStyleScreen.routeName: (context) => const CellTextStyleScreen(),
         CellRendererScreen.routeName: (context) => const CellRendererScreen(),
         CellSelectionScreen.routeName: (context) => const CellSelectionScreen(),
         ExcelLikeSelectionScreen.routeName: (context) =>
@@ -123,7 +130,11 @@ class MyApp extends StatelessWidget {
             const CurrencyTypeColumnScreen(),
         CustomPaginationScreen.routeName: (context) =>
             const CustomPaginationScreen(),
+        CustomTypeColumnScreen.routeName: (context) =>
+            const CustomTypeColumnScreen(),
         DarkModeScreen.routeName: (context) => const DarkModeScreen(),
+        ThemeIntegrationScreen.routeName: (context) =>
+            const ThemeIntegrationScreen(),
         DateTypeColumnScreen.routeName: (context) =>
             const DateTypeColumnScreen(),
         DropdownColumnScreen.routeName: (context) =>
@@ -148,6 +159,7 @@ class MyApp extends StatelessWidget {
             const RowLazyPaginationScreen(),
         RowMovingScreen.routeName: (context) => const RowMovingScreen(),
         RowPaginationScreen.routeName: (context) => const RowPaginationScreen(),
+        RecordSidebarScreen.routeName: (context) => const RecordSidebarScreen(),
         RowSelectionScreen.routeName: (context) => const RowSelectionScreen(),
         RowWithCheckboxScreen.routeName: (context) =>
             const RowWithCheckboxScreen(),
@@ -165,6 +177,7 @@ class MyApp extends StatelessWidget {
         EmptyScreen.routeName: (context) => const EmptyScreen(),
         PagesListScreen.routeName: (context) => const PagesListScreen(),
         FrozenRowsScreen.routeName: (context) => const FrozenRowsScreen(),
+        ScrollPhysicsScreen.routeName: (context) => const ScrollPhysicsScreen(),
         ScrollbarsScreen.routeName: (context) => const ScrollbarsScreen(),
         LoadingOptionsScreen.routeName: (context) =>
             const LoadingOptionsScreen(),
@@ -173,6 +186,8 @@ class MyApp extends StatelessWidget {
             const RowWrapperFrozenScreen(),
         MultiItemsDelegateDemoScreen.routeName: (context) =>
             const MultiItemsDelegateDemoScreen(),
+        ColumnFilterModesScreen.routeName: (context) =>
+            const ColumnFilterModesScreen(),
         DynamicRowHeightDemo.routeName: (context) =>
             const DynamicRowHeightDemo(),
         RTLScrollbarScreen.routeName: (context) => const RTLScrollbarScreen(),

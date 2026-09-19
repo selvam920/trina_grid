@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_menu.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
@@ -48,6 +50,20 @@ class TrinaSelectCellState<T>
 
   @override
   TrinaDropdownMenu<T> buildMenu() {
+    // Size the popup to its content so empty/short lists don't leave a tall
+    // blank area below items. The MenuAnchor container itself reserves
+    // [_menuVerticalChrome] (padding + border) on top of the content height,
+    // handled in [TrinaPopupCellStateWithMenu.defaultEditWidget].
+    final hasSearch =
+        _column.menuVariant == TrinaDropdownMenuVariant.selectWithSearch;
+    // Search field (~52) + horizontal separator (1).
+    final chrome = hasSearch ? 53.0 : 0.0;
+    final contentHeight = chrome + menuItems.length * _column.menuItemHeight;
+    final effectiveMaxHeight = math
+        .min(_column.menuMaxHeight, contentHeight)
+        // Always leave room for the search field even when there are no items.
+        .clamp(chrome, _column.menuMaxHeight);
+
     return TrinaDropdownMenu.variant(
       _column.menuVariant,
       items: menuItems,
@@ -62,11 +78,17 @@ class TrinaSelectCellState<T>
         menuController.close();
       },
       width: _column.menuWidth ?? widget.column.width,
-      initialValue: widget.cell.value,
+      // Guard against a cell value whose runtime type does not match the
+      // column's item type [T] (e.g. a select<int?> column fed a String).
+      // Without this, the implicit `value as T?` downcast throws and brings
+      // down the entire grid build. A mismatched value simply means "no item
+      // is pre-selected".
+      initialValue: widget.cell.value is T ? widget.cell.value as T : null,
       itemHeight: _column.menuItemHeight,
-      maxHeight: _column.menuMaxHeight,
+      maxHeight: effectiveMaxHeight,
       itemBuilder: _column.menuItemBuilder,
       itemToValue: _column.itemToValue,
+      searchHint: widget.stateManager.configuration.localeText.selectSearchHint,
     );
   }
 }

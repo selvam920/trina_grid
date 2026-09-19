@@ -159,6 +159,29 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
       startOffset += width;
     }
 
+    // If no widgets are visible (e.g., scroll position is beyond new content),
+    // show widgets from position 0 as fallback
+    if (visibleWidgets.isEmpty && _widgetChildren.isNotEmpty) {
+      startOffset = 0;
+      previousChild = null;
+      for (int i = 0; i < _widgetChildren.length; i += 1) {
+        final child = _widgetChildren.elementAt(i);
+        final layoutChild = child.layoutChild;
+        final width = layoutChild.width;
+
+        if (startOffset <= _contentSize) {
+          visibleWidgets.add(child);
+          slots.add(IndexedSlot<Element?>(i, previousChild));
+
+          final foundElement = findChildByLayoutId(child.id);
+          if (foundElement != null) {
+            previousChild = foundElement;
+          }
+        }
+        startOffset += width;
+      }
+    }
+
     _children = updateChildren(
       _children,
       visibleWidgets,
@@ -236,6 +259,29 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
       }
 
       startOffset += width;
+    }
+
+    // If no widgets are visible (e.g., scroll position is beyond new content),
+    // show widgets from position 0 as fallback
+    if (visibleWidgets.isEmpty && _widgetChildren.isNotEmpty) {
+      startOffset = 0;
+      previousChild = null;
+      for (int i = 0; i < _widgetChildren.length; i += 1) {
+        final child = _widgetChildren.elementAt(i);
+        final layoutChild = child.layoutChild;
+        final width = layoutChild.width;
+
+        if (startOffset <= _contentSize) {
+          visibleWidgets.add(child);
+          slots.add(IndexedSlot<Element?>(i, previousChild));
+
+          final foundElement = findChildByLayoutId(child.id);
+          if (foundElement != null) {
+            previousChild = foundElement;
+          }
+        }
+        startOffset += width;
+      }
     }
 
     _children = updateChildren(

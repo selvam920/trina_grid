@@ -8,6 +8,14 @@ import 'package:trina_grid/trina_grid.dart';
 bool get _isTestEnvironment =>
     WidgetsBinding.instance.toString().contains('TestWidgetsFlutterBinding');
 
+// Mirror the clamp used by the rendered thumb so position, hit-testing and
+// drag math all share the same effective size as the visible rectangle.
+double _effectiveThumbExtent(double proportional, double track, double minLen) {
+  if (proportional.isNaN) return track;
+  final double effectiveMin = minLen > track ? track : minLen;
+  return proportional.clamp(effectiveMin, track);
+}
+
 class TrinaHorizontalScrollBar extends StatefulWidget {
   const TrinaHorizontalScrollBar({
     super.key,
@@ -197,8 +205,11 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
 
           if (scrollExtent <= 0) return;
 
-          final double thumbWidth =
-              (viewportExtent / (viewportExtent + scrollExtent)) * widget.width;
+          final double thumbWidth = _effectiveThumbExtent(
+            (viewportExtent / (viewportExtent + scrollExtent)) * widget.width,
+            widget.width,
+            scrollConfig.minThumbLength,
+          );
 
           // Get the local X position of the tap
           final tapX = details.localPosition.dx;
@@ -225,8 +236,8 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
           // Use animateTo for smooth scrolling instead of jumpTo
           scrollController.animateTo(
             clampedOffset,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeOutCubic,
+            duration: scrollConfig.trackClickDuration,
+            curve: scrollConfig.trackClickCurve,
           );
         },
         onPanDown: (_) {
@@ -256,15 +267,26 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
             valueListenable: widget.horizontalScrollExtentNotifier,
             builder: (context, scrollExtent, _) {
               if (scrollExtent <= 0) {
-                return SizedBox(height: scrollConfig.thickness);
+                // Keep the same footprint as the overflowing branch below.
+                //
+                // This strip is a sibling of the rows viewport, so its height is
+                // subtracted from the vertical scroll extent. Changing it with
+                // the overflow state would shift the body by 4px whenever a
+                // column resize crosses the overflow threshold, and would make
+                // the body's maxScrollExtent differ from the frozen rows lists
+                // that share its vertical scroll controller group.
+                return SizedBox(height: scrollConfig.effectiveThickness);
               }
 
               return ValueListenableBuilder<double>(
                 valueListenable: widget.horizontalViewportExtentNotifier,
                 builder: (context, viewportExtent, _) {
-                  final double thumbWidth =
-                      (viewportExtent / (viewportExtent + scrollExtent)) *
-                      widget.width;
+                  final double thumbWidth = _effectiveThumbExtent(
+                    (viewportExtent / (viewportExtent + scrollExtent)) *
+                        widget.width,
+                    widget.width,
+                    scrollConfig.minThumbLength,
+                  );
 
                   return ValueListenableBuilder<double>(
                     valueListenable: widget.horizontalScrollOffsetNotifier,
@@ -281,7 +303,7 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
 
                       return SizedBox(
                         width: widget.width,
-                        height: scrollConfig.thickness + 4, // Add padding
+                        height: scrollConfig.effectiveThickness,
                         child: Stack(
                           children: [
                             // Track
@@ -304,15 +326,7 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                 left: adjustedThumbPosition.isNaN
                                     ? 0
                                     : adjustedThumbPosition,
-                                width: thumbWidth.isNaN
-                                    ? widget.width
-                                    : thumbWidth.clamp(
-                                        scrollConfig.minThumbLength >
-                                                widget.width
-                                            ? widget.width
-                                            : scrollConfig.minThumbLength,
-                                        widget.width,
-                                      ),
+                                width: thumbWidth,
                                 height: scrollConfig.thickness,
                                 top: 2,
                                 child: MouseRegion(
@@ -343,9 +357,17 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                     onHorizontalDragUpdate:
                                         scrollConfig.isDraggable
                                         ? (details) {
-                                            // Direct thumb manipulation approach
+                                            // Direct thumb manipulation approach.
+                                            // In RTL, the visual thumb position is
+                                            // mirrored (width - thumb - position),
+                                            // so a physical drag-right must
+                                            // *decrease* the underlying scroll
+                                            // offset to keep the thumb tracking
+                                            // the finger.
                                             final double dragDelta =
-                                                details.delta.dx;
+                                                widget.stateManager.isRTL
+                                                ? -details.delta.dx
+                                                : details.delta.dx;
 
                                             // Calculate how much to scroll based on thumb movement
                                             // The available space for the thumb to move is (widget.width - thumbWidth)

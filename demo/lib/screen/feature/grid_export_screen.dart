@@ -775,7 +775,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
 
   Widget _buildExportButton(
     String label,
-    IconData icon,
+    FaIconData icon,
     Color color,
     VoidCallback onPressed,
   ) {
