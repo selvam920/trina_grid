@@ -28,7 +28,7 @@ class TrinaExpansionTile extends StatelessWidget {
         expandedAlignment: Alignment.topLeft,
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (children != null) ...children!,
+          ...?children,
           if (buttons != null)
             Container(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),

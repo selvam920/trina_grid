@@ -163,6 +163,7 @@ Add the following dependency to your `pubspec.yaml` file:
 ```yaml
 dependencies:
   trina_grid: <latest version>
+  material_ui: any
 ```
 
 Then run:
@@ -176,7 +177,7 @@ flutter pub get
 ## 🏁 Basic Usage
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 void main() {

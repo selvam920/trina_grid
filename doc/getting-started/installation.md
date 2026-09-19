@@ -9,6 +9,7 @@ Add the following dependency to your `pubspec.yaml` file:
 ```yaml
 dependencies:
   trina_grid: <latest_version>
+  material_ui: any
 ```
 
 ## 2. Install Package

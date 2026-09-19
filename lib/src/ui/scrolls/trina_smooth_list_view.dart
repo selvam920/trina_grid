@@ -4,8 +4,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/// @docImport 'package:flutter/cupertino.dart';
-/// @docImport 'package:flutter/material.dart';
+/// @docImport 'package:cupertino_ui/cupertino_ui.dart';
+/// @docImport 'package:material_ui/material_ui.dart';
 /// @docImport 'package:flutter/widgets.dart';
 library;
 
@@ -102,6 +102,7 @@ import 'package:flutter/rendering.dart'
         HitTestBehavior,
         ItemExtentBuilder,
         Key,
+        ScrollCacheExtent,
         ScrollDirection,
         SemanticsConfiguration,
         TextDirection,
@@ -536,7 +537,9 @@ abstract class _ScrollView extends StatelessWidget {
       axisDirection: axisDirection,
       offset: offset,
       slivers: slivers,
-      cacheExtent: cacheExtent,
+      scrollCacheExtent: cacheExtent == null
+          ? null
+          : ScrollCacheExtent.pixels(cacheExtent!),
       center: center,
       anchor: anchor,
       clipBehavior: clipBehavior,
