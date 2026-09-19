@@ -29,19 +29,13 @@ class TrinaGridShortcut {
     required TrinaGridStateManager stateManager,
     required HardwareKeyboard state,
   }) {
-    debugPrint('[Shortcut] Checking shortcut for key event: ${keyEvent.event}');
-
     for (final action in actions.entries) {
       if (action.key.accepts(keyEvent.event, state)) {
-        debugPrint(
-          '[Shortcut] Matched shortcut: ${action.key}, executing action: ${action.value.runtimeType}',
-        );
         action.value.execute(keyEvent: keyEvent, stateManager: stateManager);
         return true;
       }
     }
 
-    debugPrint('[Shortcut] No matching shortcut found');
     return false;
   }
 

@@ -219,11 +219,6 @@ class _DragSelectableCellState extends State<_DragSelectableCell> {
     _panEndGlobalPosition = null;
     _isDragIntent = false;
 
-    if (widget.stateManager.configuration.enableDragSelection) {
-      debugPrint(
-        '[DragSelect] Pan Down - pos: ${details.globalPosition}, ctrl: ${widget.stateManager.keyPressed.ctrl}, shift: ${widget.stateManager.keyPressed.shift}',
-      );
-    }
   }
 
   void _handlePanStart(DragStartDetails details) {
@@ -232,18 +227,10 @@ class _DragSelectableCellState extends State<_DragSelectableCell> {
         !widget.stateManager.keyPressed.shift) {
       _isDragIntent = true;
 
-      debugPrint(
-        '[DragSelect] Pan Start - Initiating drag selection at ${details.globalPosition}',
-      );
-
       // Fire pointer down event to start drag selection
       widget.addGestureEvent(
         TrinaGridGestureType.onPointerDown,
         details.globalPosition,
-      );
-    } else {
-      debugPrint(
-        '[DragSelect] Pan Start - Skipping drag (modifier keys pressed)',
       );
     }
   }
@@ -252,8 +239,6 @@ class _DragSelectableCellState extends State<_DragSelectableCell> {
     _panEndGlobalPosition = details.globalPosition;
 
     if (!_isDragIntent) return;
-
-    debugPrint('[DragSelect] Pan Update - pos: ${details.globalPosition}');
 
     // Fire pointer move event to update drag selection
     widget.addGestureEvent(
@@ -264,15 +249,11 @@ class _DragSelectableCellState extends State<_DragSelectableCell> {
 
   void _handlePanEnd(DragEndDetails details) {
     if (_isDragIntent && widget.stateManager.isDragSelecting) {
-      debugPrint('[DragSelect] Pan End - Ending drag selection');
-
       // Fire pointer up event to end drag selection
       widget.addGestureEvent(
         TrinaGridGestureType.onPointerUp,
         _panEndGlobalPosition ?? _panStartGlobalPosition ?? Offset.zero,
       );
-    } else {
-      debugPrint('[DragSelect] Pan End - No drag in progress');
     }
 
     _panStartGlobalPosition = null;
@@ -281,8 +262,6 @@ class _DragSelectableCellState extends State<_DragSelectableCell> {
   }
 
   void _handlePanCancel() {
-    debugPrint('[DragSelect] Pan Cancel');
-
     if (_isDragIntent && widget.stateManager.isDragSelecting) {
       widget.stateManager.endDragSelection();
     }

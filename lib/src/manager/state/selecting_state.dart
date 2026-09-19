@@ -79,6 +79,13 @@ abstract class ISelectingState {
   /// Select or unselect a row.
   void toggleSelectingRow(int rowIdx, {bool notify = true});
 
+  /// Removes every row whose key is in [keys] from the row selection.
+  ///
+  /// [currentSelectingRows] hands out a copy, so removing from it does not
+  /// change the selection. Callers that need rows gone from the selection -
+  /// for instance because those rows were deleted - have to go through here.
+  void removeCurrentSelectingRowsByKeys(Set<Key> keys, {bool notify = true});
+
   /// Select single row by index.
   /// This will clear previous selections and set the mode to [TrinaGridSelectingMode.row].
   void selectRow(int rowIdx, {bool notify = true});
@@ -485,15 +492,27 @@ mixin SelectingState implements ITrinaGridState {
 
     final TrinaRow row = refRows[rowIdx];
 
-    final keys = Set.from(currentSelectingRows.map((e) => e.key));
+    // Mutate the backing list, not the copy [currentSelectingRows] returns.
+    final selected = _state._currentSelectingRows;
 
-    if (keys.contains(row.key)) {
-      currentSelectingRows.removeWhere((element) => element.key == row.key);
+    if (selected.any((element) => element.key == row.key)) {
+      selected.removeWhere((element) => element.key == row.key);
     } else {
-      currentSelectingRows.add(row);
+      selected.add(row);
     }
 
     notifyListeners(notify, toggleSelectingRow.hashCode);
+  }
+
+  @override
+  void removeCurrentSelectingRowsByKeys(Set<Key> keys, {bool notify = true}) {
+    if (keys.isEmpty) {
+      return;
+    }
+
+    _state._currentSelectingRows.removeWhere((row) => keys.contains(row.key));
+
+    notifyListeners(notify, removeCurrentSelectingRowsByKeys.hashCode);
   }
 
   @override
