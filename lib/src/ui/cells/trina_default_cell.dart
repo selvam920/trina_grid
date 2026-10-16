@@ -571,7 +571,9 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
             rowIdx: widget.rowIdx,
           ).copyWith(
             decoration: TextDecoration.none,
-            fontWeight: FontWeight.normal,
+            // No fontWeight here: forcing normal threw away
+            // TrinaGridStyleConfig.cellTextStyle's weight and both text-style
+            // callbacks', so a grid could never set its cell text heavier.
             color: widget.isCurrentRow
                 ? widget.stateManager.configuration.style.activatedTextColor
                 : null,
