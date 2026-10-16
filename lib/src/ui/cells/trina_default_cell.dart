@@ -120,15 +120,15 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
       stateManager.isCurrentCell(widget.cell),
     );
 
+    // The cell text switches to activatedTextColor only where the row is
+    // actually painted in activatedColor (see TrinaBaseRow._getBoxDecoration).
+    // A checked row is painted in rowCheckedColor -- a light tint by default
+    // -- so counting it here drew white text on a pale fill.
     _isCurrentRow = update<bool>(
       _isCurrentRow,
       (stateManager.isSelectedCell(widget.cell, widget.column, widget.rowIdx) ||
           (stateManager.currentRowIdx == widget.rowIdx &&
-              stateManager.hasFocus) ||
-          (stateManager.hasCheckedRow &&
-              stateManager.checkedRows.any(
-                (element) => element.sortIdx == widget.rowIdx,
-              ))),
+              stateManager.hasFocus)),
     );
 
     _text = update<String>(
