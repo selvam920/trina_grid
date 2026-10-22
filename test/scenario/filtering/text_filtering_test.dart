@@ -131,9 +131,11 @@ void main() {
 
       expect(find.text('column0 value 0'), findsOneWidget);
 
-      stateManager.moveScrollByRow(TrinaMoveDirection.down, 19);
+      // The last row: moveScrollByRow(down, 19) asked for the row AFTER 19,
+      // which does not exist, so it scrolled nowhere.
+      stateManager.scrollToRowIdx(19, animate: false);
 
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(find.text('column0 value 19'), findsOneWidget);
     },

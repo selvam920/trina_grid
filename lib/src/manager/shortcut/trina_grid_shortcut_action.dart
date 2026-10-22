@@ -34,15 +34,6 @@ import 'package:trina_grid/trina_grid.dart';
 /// [TrinaGridActionMoveSelectedCellFocusToEdge]
 /// {@macro trina_grid_action_move_selected_cell_focus_to_edge}
 ///
-/// [TrinaGridActionSetEditing]
-/// {@macro trina_grid_action_set_editing}
-///
-/// [TrinaGridActionFocusToColumnFilter]
-/// {@macro trina_grid_action_focus_to_column_filter}
-///
-/// [TrinaGridActionToggleColumnSort]
-/// {@macro trina_grid_action_toggle_column_sort}
-///
 /// [TrinaGridActionCopyValues]
 /// {@macro trina_grid_action_copy_values}
 ///
@@ -672,101 +663,6 @@ class TrinaGridActionMoveSelectedCellFocusToEdge
   }
 }
 
-/// {@template trina_grid_action_set_editing}
-/// Set the current cell to edit state.
-/// {@endtemplate}
-class TrinaGridActionSetEditing extends TrinaGridShortcutAction {
-  const TrinaGridActionSetEditing();
-
-  @override
-  void execute({
-    required TrinaKeyManagerEvent keyEvent,
-    required TrinaGridStateManager stateManager,
-  }) {
-    if (stateManager.isEditing) return;
-
-    stateManager.setEditing(true);
-  }
-}
-
-/// {@template trina_grid_action_focus_to_column_filter}
-/// Move the focus from the current cell position
-/// to the filtering TextField of the corresponding column.
-/// {@endtemplate}
-class TrinaGridActionFocusToColumnFilter extends TrinaGridShortcutAction {
-  const TrinaGridActionFocusToColumnFilter();
-
-  @override
-  void execute({
-    required TrinaKeyManagerEvent keyEvent,
-    required TrinaGridStateManager stateManager,
-  }) {
-    final currentColumn = stateManager.currentColumn;
-
-    if (currentColumn == null) return;
-
-    if (!stateManager.showColumnFilter) return;
-
-    if (currentColumn.filterFocusNode?.canRequestFocus == true) {
-      currentColumn.filterFocusNode?.requestFocus();
-
-      stateManager.setKeepFocus(false);
-    }
-  }
-}
-
-/// {@template trina_grid_action_toggle_column_sort}
-/// Toggles the sort state of the column.
-/// {@endtemplate}
-class TrinaGridActionToggleColumnSort extends TrinaGridShortcutAction {
-  const TrinaGridActionToggleColumnSort();
-
-  @override
-  void execute({
-    required TrinaKeyManagerEvent keyEvent,
-    required TrinaGridStateManager stateManager,
-  }) {
-    final currentColumn = stateManager.currentColumn;
-
-    if (currentColumn == null || !currentColumn.enableSorting) return;
-
-    final previousPosition = stateManager.currentCellPosition;
-
-    stateManager.toggleSortColumn(currentColumn);
-
-    _restoreCurrentCellPosition(
-      stateManager: stateManager,
-      currentColumn: currentColumn,
-      previousPosition: previousPosition,
-      ignore: stateManager.sortOnlyEvent,
-    );
-  }
-
-  void _restoreCurrentCellPosition({
-    required TrinaGridStateManager stateManager,
-    TrinaColumn? currentColumn,
-    TrinaGridCellPosition? previousPosition,
-    bool ignore = false,
-  }) {
-    if (ignore ||
-        currentColumn == null ||
-        previousPosition?.hasPosition != true) {
-      return;
-    }
-
-    int rowIdx = previousPosition!.rowIdx!;
-
-    if (rowIdx > stateManager.refRows.length - 1) {
-      rowIdx = stateManager.refRows.length - 1;
-    }
-
-    stateManager.setCurrentCell(
-      stateManager.refRows.elementAt(rowIdx).cells[currentColumn.field],
-      rowIdx,
-    );
-  }
-}
-
 /// {@template trina_grid_action_copy_values}
 /// Copies the value of the current cell or the selected cell or row to the clipboard.
 /// {@endtemplate}
@@ -782,9 +678,7 @@ class TrinaGridActionCopyValues extends TrinaGridShortcutAction {
       return;
     }
 
-    Clipboard.setData(
-      ClipboardData(text: stateManager.currentSelectingText),
-    );
+    Clipboard.setData(ClipboardData(text: stateManager.currentSelectingText));
   }
 }
 

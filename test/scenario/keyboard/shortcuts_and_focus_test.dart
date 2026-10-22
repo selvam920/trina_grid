@@ -209,7 +209,9 @@ void main() {
         final testAction = TestShortcutAction();
 
         final shortcut = TrinaGridShortcut(
-          actions: {const SingleActivator(LogicalKeyboardKey.enter): testAction},
+          actions: {
+            const SingleActivator(LogicalKeyboardKey.enter): testAction,
+          },
         );
 
         final columns = ColumnHelper.textColumn('column', count: 5);

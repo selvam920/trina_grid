@@ -98,7 +98,9 @@ void main() {
 
         await tester.sendKeyEvent(LogicalKeyboardKey.enter);
 
-        expect(stateManager!.isEditing, isTrue);
+        // This fork commits the edit and leaves edit mode as Enter moves on
+        // (a bill line: type, Enter, next cell) -- upstream kept editing.
+        expect(stateManager!.isEditing, isFalse);
         expect(stateManager!.currentCellPosition!.rowIdx, 3);
         expect(stateManager!.currentCellPosition!.columnIdx, 2);
       },
@@ -115,7 +117,9 @@ void main() {
         await tester.sendKeyEvent(LogicalKeyboardKey.enter);
         await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
 
-        expect(stateManager!.isEditing, isTrue);
+        // This fork commits the edit and leaves edit mode as Enter moves on
+        // (a bill line: type, Enter, next cell) -- upstream kept editing.
+        expect(stateManager!.isEditing, isFalse);
         expect(stateManager!.currentCellPosition!.rowIdx, 1);
         expect(stateManager!.currentCellPosition!.columnIdx, 2);
       },
@@ -130,7 +134,9 @@ void main() {
 
         await tester.sendKeyEvent(LogicalKeyboardKey.enter);
 
-        expect(stateManager!.isEditing, isTrue);
+        // This fork commits the edit and leaves edit mode as Enter moves on
+        // (a bill line: type, Enter, next cell) -- upstream kept editing.
+        expect(stateManager!.isEditing, isFalse);
         expect(stateManager!.currentCellPosition!.rowIdx, 2);
         expect(stateManager!.currentCellPosition!.columnIdx, 3);
       },
@@ -147,7 +153,9 @@ void main() {
         await tester.sendKeyEvent(LogicalKeyboardKey.enter);
         await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
 
-        expect(stateManager!.isEditing, isTrue);
+        // This fork commits the edit and leaves edit mode as Enter moves on
+        // (a bill line: type, Enter, next cell) -- upstream kept editing.
+        expect(stateManager!.isEditing, isFalse);
         expect(stateManager!.currentCellPosition!.rowIdx, 2);
         expect(stateManager!.currentCellPosition!.columnIdx, 1);
       },

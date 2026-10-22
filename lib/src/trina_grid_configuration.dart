@@ -435,6 +435,7 @@ class TrinaGridStyleConfig {
     this.filterIconWidget,
     this.gridBackgroundColor = Colors.white,
     this.unfocusedSelectionColor,
+    this.columnBackgroundColor,
     this.rowColor = Colors.white,
     this.oddRowColor,
     this.evenRowColor,
@@ -525,6 +526,7 @@ class TrinaGridStyleConfig {
     this.filterIconWidget,
     this.gridBackgroundColor = const Color(0xFF111111),
     this.unfocusedSelectionColor = const Color(0xFF4A4A4A),
+    this.columnBackgroundColor,
     this.rowColor = const Color(0xFF111111),
     this.oddRowColor,
     this.evenRowColor,
@@ -622,6 +624,7 @@ class TrinaGridStyleConfig {
     this.filterIconWidget,
     this.gridBackgroundColor = Colors.white,
     this.unfocusedSelectionColor,
+    this.columnBackgroundColor,
     this.rowColor = Colors.white,
     this.oddRowColor,
     this.evenRowColor,
@@ -828,6 +831,15 @@ class TrinaGridStyleConfig {
   /// [gridBackgroundColor] on focus loss (matching pre-2.3.0 behavior) and
   /// multi-cell selections keep their [activatedColor].
   final Color? unfocusedSelectionColor;
+
+  /// Background of the column header band -- titles, column groups and the
+  /// filter row, on the body and both frozen sides, and the stretch of
+  /// header past the last column.
+  ///
+  /// When `null` the header is transparent and shows [gridBackgroundColor],
+  /// which also fills the space under the last row (the behaviour before this
+  /// option). Set it to colour the header without colouring that space.
+  final Color? columnBackgroundColor;
 
   /// Default row background color
   ///
@@ -1039,6 +1051,7 @@ class TrinaGridStyleConfig {
     TrinaOptional<Widget?>? filterIconWidget,
     Color? gridBackgroundColor,
     Color? unfocusedSelectionColor,
+    TrinaOptional<Color?>? columnBackgroundColor,
     Color? rowColor,
     TrinaOptional<Color?>? oddRowColor,
     TrinaOptional<Color?>? evenRowColor,
@@ -1129,6 +1142,9 @@ class TrinaGridStyleConfig {
       gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
       unfocusedSelectionColor:
           unfocusedSelectionColor ?? this.unfocusedSelectionColor,
+      columnBackgroundColor: columnBackgroundColor == null
+          ? this.columnBackgroundColor
+          : columnBackgroundColor.value,
       rowColor: rowColor ?? this.rowColor,
       oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
       evenRowColor: evenRowColor == null
@@ -1219,6 +1235,18 @@ class TrinaGridStyleConfig {
             filterIcon == other.filterIcon &&
             filterIconWidget == other.filterIconWidget &&
             gridBackgroundColor == other.gridBackgroundColor &&
+            unfocusedSelectionColor == other.unfocusedSelectionColor &&
+            columnBackgroundColor == other.columnBackgroundColor &&
+            activatedTextColor == other.activatedTextColor &&
+            cellDefaultColor == other.cellDefaultColor &&
+            cellDirtyColor == other.cellDirtyColor &&
+            enableColumnBorderHorizontal ==
+                other.enableColumnBorderHorizontal &&
+            enableRowHoverColor == other.enableRowHoverColor &&
+            frozenRowBorderColor == other.frozenRowBorderColor &&
+            frozenRowColor == other.frozenRowColor &&
+            rowCheckedColor == other.rowCheckedColor &&
+            rowHoveredColor == other.rowHoveredColor &&
             rowColor == other.rowColor &&
             oddRowColor == other.oddRowColor &&
             evenRowColor == other.evenRowColor &&
@@ -1284,6 +1312,7 @@ class TrinaGridStyleConfig {
     filterIconWidget,
     gridBackgroundColor,
     unfocusedSelectionColor,
+    columnBackgroundColor,
     rowColor,
     oddRowColor,
     evenRowColor,

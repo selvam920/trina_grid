@@ -547,7 +547,7 @@ void main() {
 
           // given
           when(stateManager.isEditing).thenReturn(false);
-          when(stateManager.currentCell).thenReturn(TrinaCell(value: 'test'));
+          when(stateManager.currentCell).thenReturn(_textCell('test'));
 
           // when
           await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
@@ -618,7 +618,7 @@ void main() {
           await buildAndFocus(tester); // setup
 
           when(stateManager.isEditing).thenReturn(false);
-          when(stateManager.currentCell).thenReturn(TrinaCell(value: 'test'));
+          when(stateManager.currentCell).thenReturn(_textCell('test'));
           // when
           await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
           await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
@@ -630,4 +630,15 @@ void main() {
       });
     });
   });
+}
+
+/// A cell bound to a text column, as the grid hands one over: the key manager
+/// reads the current cell's column type before it starts editing.
+TrinaCell _textCell(String value) {
+  final column = TrinaColumn(
+    title: 'column',
+    field: 'column',
+    type: TrinaColumnType.text(),
+  );
+  return TrinaCell(value: value)..setColumn(column);
 }

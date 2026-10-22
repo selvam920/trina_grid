@@ -67,7 +67,7 @@ class FilterDropdownField extends StatelessWidget {
         focusNode: focusNode,
         child: Builder(
           builder: (context) {
-            // Reached with Tab or F3 the field holds the focus without opening
+            // Reached with Tab the field holds the focus without opening
             // the menu, so the border has to follow the focus as well,
             // otherwise there is nothing telling which filter is active.
             final isFocused = isMenuOpen || Focus.of(context).hasFocus;

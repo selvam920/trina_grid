@@ -27,6 +27,8 @@ TrinaGridConfiguration(
   style: TrinaGridStyleConfig(
     // Colors
     gridBackgroundColor: Colors.white,
+    // Header band (titles, groups, filter row). Null shows gridBackgroundColor.
+    columnBackgroundColor: Colors.grey[100],
     borderColor: Colors.grey[300]!,
     activatedBorderColor: Colors.blue,
     activatedColor: Colors.blue.withValues(alpha: 0.2),

@@ -162,8 +162,8 @@ void main() {
       );
 
       // When the width is 550, the columns and cells should be displayed in the correct width.
-      expect(columnWidgets.evaluate().length, 7);
-      expect(firstRowCells.evaluate().length, 7);
+      expect(columnWidgets.evaluate().length, 8);
+      expect(firstRowCells.evaluate().length, 8);
 
       // resize
       await TestHelperUtil.changeWidth(tester: tester, width: 700, height: 600);
@@ -176,8 +176,8 @@ void main() {
       );
 
       // When the width is 700, the columns and cells should be displayed in the correct width.
-      expect(columnWidgetsAfterResize.evaluate().length, 9);
-      expect(firstRowCellsAfterResize.evaluate().length, 9);
+      expect(columnWidgetsAfterResize.evaluate().length, 10);
+      expect(firstRowCellsAfterResize.evaluate().length, 10);
     },
   );
 
@@ -212,8 +212,8 @@ void main() {
       );
 
       // When the width is 550, the columns and cells should be displayed in the correct width.
-      expect(columnWidgets.evaluate().length, 7);
-      expect(firstRowCells.evaluate().length, 7);
+      expect(columnWidgets.evaluate().length, 8);
+      expect(firstRowCells.evaluate().length, 8);
 
       // resize
       await TestHelperUtil.changeWidth(
@@ -320,8 +320,8 @@ void main() {
       );
 
       // When the width is 550, the columns and cells should be displayed in the correct width.
-      expect(columnWidgets.evaluate().length, 7);
-      expect(firstRowCells.evaluate().length, 7);
+      expect(columnWidgets.evaluate().length, 8);
+      expect(firstRowCells.evaluate().length, 8);
 
       // resize
       await TestHelperUtil.changeWidth(tester: tester, width: 700, height: 600);
@@ -334,8 +334,8 @@ void main() {
       );
 
       // When the width is 700, the columns and cells should be displayed in the correct width.
-      expect(columnWidgetsAfterResize.evaluate().length, 9);
-      expect(firstRowCellsAfterResize.evaluate().length, 9);
+      expect(columnWidgetsAfterResize.evaluate().length, 10);
+      expect(firstRowCellsAfterResize.evaluate().length, 10);
     },
   );
 
@@ -370,8 +370,8 @@ void main() {
       );
 
       // When the width is 550, the columns and cells should be displayed in the correct width.
-      expect(columnWidgets.evaluate().length, 7);
-      expect(firstRowCells.evaluate().length, 7);
+      expect(columnWidgets.evaluate().length, 8);
+      expect(firstRowCells.evaluate().length, 8);
 
       // resize
       await TestHelperUtil.changeWidth(

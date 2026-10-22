@@ -1057,6 +1057,15 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
     return height;
   }
 
+  /// Paints [TrinaGridStyleConfig.columnBackgroundColor] behind a header
+  /// section -- the whole box the layout gives it, so the band also runs past
+  /// the last column. Nothing when the colour is unset.
+  Widget _headerBand(TrinaGridStyleConfig style, Widget child) {
+    final color = style.columnBackgroundColor;
+    if (color == null) return child;
+    return ColoredBox(color: color, child: child);
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget body = LayoutBuilder(
@@ -1092,7 +1101,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
             ),
             LayoutId(
               id: _StackName.bodyColumns,
-              child: TrinaBodyColumns(_stateManager),
+              child: _headerBand(style, TrinaBodyColumns(_stateManager)),
             ),
 
             /// Body columns footer.
@@ -1106,7 +1115,10 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
             if (showLeftFrozen) ...[
               LayoutId(
                 id: _StackName.leftFrozenColumns,
-                child: TrinaLeftFrozenColumns(_stateManager),
+                child: _headerBand(
+                  style,
+                  TrinaLeftFrozenColumns(_stateManager),
+                ),
               ),
               LayoutId(
                 id: _StackName.leftFrozenRows,
@@ -1132,7 +1144,10 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
             if (showRightFrozen) ...[
               LayoutId(
                 id: _StackName.rightFrozenColumns,
-                child: TrinaRightFrozenColumns(_stateManager),
+                child: _headerBand(
+                  style,
+                  TrinaRightFrozenColumns(_stateManager),
+                ),
               ),
               LayoutId(
                 id: _StackName.rightFrozenRows,

@@ -146,7 +146,7 @@ Cell selection integrates with other TrinaGrid features for enhanced functionali
 When a cell is selected, you can start editing by:
 
 - Double-clicking the cell
-- Pressing F2 or Enter
+- Pressing Enter
 - Starting to type (if configured)
 
 ```dart
