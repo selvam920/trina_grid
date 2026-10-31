@@ -333,15 +333,16 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     // If overlay is open, select the current item.
     // If overlay is closed, let the grid handle it.
     if (_overlayEntry != null) {
-      // Still loading: there is no item to select yet.
       if (_selectedIndex != -1 && _selectedIndex < _filteredOptions.length) {
         _selectOption(
           _filteredOptions[_selectedIndex],
           isKeyboardSelection: true,
         );
-      } else {
+      } else if (!_isLoading) {
         _hideOverlay();
       }
+      // Still loading, there is no item to select yet: the list stays, and
+      // the next Enter picks from it.
       return;
     }
 
@@ -368,7 +369,9 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     if (_overlayEntry != null) {
       if (event is KeyDownEvent || event is KeyRepeatEvent) {
         if (event.logicalKey == LogicalKeyboardKey.enter) {
-          // Still loading: there is no item to select yet.
+          // Still loading there is no item to select yet: the list stays,
+          // and the next Enter picks from it.
+          if (_isLoading) return KeyEventResult.handled;
           if (_selectedIndex != -1 &&
               _selectedIndex < _filteredOptions.length) {
             // Broadcast with skipShortcutHandling so listeners get notified

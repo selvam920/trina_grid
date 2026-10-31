@@ -147,7 +147,7 @@ void main() {
     expect(scanned, isEmpty);
   });
 
-  testWidgets('Enter while the list is still loading does not throw', (
+  testWidgets('Enter while the list is still loading waits for it', (
     tester,
   ) async {
     await pumpCell(tester, withScan: false);
@@ -156,7 +156,11 @@ void main() {
     // The list is open with its spinner; no item to select yet.
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pump(const Duration(milliseconds: 200));
+    await tester.pump();
 
     expect(tester.takeException(), isNull);
+    // The list stays and fills in, for the next Enter to pick from.
+    expect(fetched, ['abc']);
+    expect(find.text('Soap'), findsOneWidget);
   });
 }
