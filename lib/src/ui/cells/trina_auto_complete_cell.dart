@@ -68,6 +68,10 @@ class TrinaAutoCompleteCell<T> extends StatefulWidget {
   /// of one scan. Null = 50.
   final int Function()? scanGapMs;
 
+  /// With [onScan]: the scanner sends no Enter or Tab, so a run at scanner
+  /// speed is a scan once its keys stop. Null = false.
+  final bool Function()? scanEndsOnPause;
+
   const TrinaAutoCompleteCell({
     required this.stateManager,
     required this.cell,
@@ -84,6 +88,7 @@ class TrinaAutoCompleteCell<T> extends StatefulWidget {
     this.displayStringForOption,
     this.onScan,
     this.scanGapMs,
+    this.scanEndsOnPause,
   });
 
   @override
@@ -803,21 +808,28 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     }
     _holdTimer = Timer(Duration(milliseconds: _runGapMs), () {
       // Left the cell before the pause: no list behind it.
-      if (mounted && cellFocus.hasFocus) _filterOptions(delay: Duration.zero);
+      if (!mounted || !cellFocus.hasFocus) return;
+      // A scanner with no end key: its scan ends with this pause.
+      if ((widget.scanEndsOnPause?.call() ?? false) && _takeScan(ended: true)) {
+        return;
+      }
+      _filterOptions(delay: Duration.zero);
     });
   }
 
-  /// Enter / Tab close behind a run of keys at scanner speed hands the typed
+  /// Enter / Tab close behind a run of keys at scanner speed -- or, [ended],
+  /// the pause after one when the scanner sends no end key -- hands the typed
   /// code to [TrinaAutoCompleteCell.onScan], and the cell goes back to what
   /// it held. False for typing by hand: the key then does its usual job.
-  bool _takeScan() {
+  bool _takeScan({bool ended = false}) {
     final onScan = widget.onScan;
     final last = _lastChange;
     final code = _textController.text.trim();
     if (onScan == null ||
         last == null ||
         code.isEmpty ||
-        DateTime.now().difference(last).inMilliseconds >= _runGapMs ||
+        (!ended &&
+            DateTime.now().difference(last).inMilliseconds >= _runGapMs) ||
         !_runIsScan) {
       return false;
     }

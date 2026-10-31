@@ -27,7 +27,11 @@ void main() {
     scanned = [];
   });
 
-  Future<void> pumpCell(WidgetTester tester, {bool withScan = true}) async {
+  Future<void> pumpCell(
+    WidgetTester tester, {
+    bool withScan = true,
+    bool endsOnPause = false,
+  }) async {
     final column = TrinaColumn(
       title: 'Product',
       field: 'product',
@@ -61,6 +65,7 @@ void main() {
                 itemBuilder: (context, item, selected) => Text(item),
                 maxHeight: 200,
                 onScan: withScan ? scanned.add : null,
+                scanEndsOnPause: () => endsOnPause,
               ),
             ),
           ),
@@ -120,6 +125,32 @@ void main() {
 
     expect(scanned, ['8901234567890']);
     expect(fetched, isEmpty);
+  });
+
+  testWidgets('A scanner with no end key: the scan ends with the pause', (
+    tester,
+  ) async {
+    await pumpCell(tester, endsOnPause: true);
+
+    await type(tester, '8901234567890');
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump();
+
+    expect(scanned, ['8901234567890']);
+    expect(fetched, isEmpty);
+  });
+
+  testWidgets('Without that setting, a scan with no end key is searched', (
+    tester,
+  ) async {
+    await pumpCell(tester);
+
+    await type(tester, '8901234567890');
+    await tester.pump(const Duration(milliseconds: 150));
+    await tester.pump();
+
+    expect(scanned, isEmpty);
+    expect(fetched, ['8901234567890']);
   });
 
   testWidgets('Typing by hand searches once it pauses', (tester) async {

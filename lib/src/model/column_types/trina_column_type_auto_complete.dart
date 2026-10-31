@@ -65,6 +65,10 @@ class TrinaColumnTypeAutoComplete<T>
   /// Null = 50.
   final int Function()? scanGapMs;
 
+  /// With [onScan]: the scanner sends no Enter or Tab, so a run at scanner
+  /// speed is a scan once its keys stop. Read each time. Null = false.
+  final bool Function()? scanEndsOnPause;
+
   const TrinaColumnTypeAutoComplete({
     this.defaultValue,
     required this.fetchItems,
@@ -79,6 +83,7 @@ class TrinaColumnTypeAutoComplete<T>
     this.itemToValue,
     this.onScan,
     this.scanGapMs,
+    this.scanEndsOnPause,
   });
 
   @override
@@ -148,6 +153,7 @@ class TrinaColumnTypeAutoComplete<T>
       displayStringForOption: displayStringForOption,
       onScan: onScan,
       scanGapMs: scanGapMs,
+      scanEndsOnPause: scanEndsOnPause,
     );
   }
 }

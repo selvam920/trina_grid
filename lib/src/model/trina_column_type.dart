@@ -199,6 +199,8 @@ abstract interface class TrinaColumnType {
   ///   speed ended by its Enter or Tab) instead of searching for it.
   /// - [scanGapMs]: With [onScan], the most milliseconds on average between
   ///   the characters of one scan. Defaults to 50.
+  /// - [scanEndsOnPause]: With [onScan], the scanner sends no Enter or Tab:
+  ///   a run at scanner speed is a scan once its keys stop.
   static TrinaColumnType autoComplete<T>({
     required TrinaAutoCompleteFetchItems<T> fetchItems,
     void Function(T item)? onItemSelected,
@@ -213,6 +215,7 @@ abstract interface class TrinaColumnType {
     dynamic Function(T item)? itemToValue,
     void Function(String code)? onScan,
     int Function()? scanGapMs,
+    bool Function()? scanEndsOnPause,
   }) {
     return TrinaColumnTypeAutoComplete<T>(
       defaultValue: defaultValue,
@@ -228,6 +231,7 @@ abstract interface class TrinaColumnType {
       itemToValue: itemToValue,
       onScan: onScan,
       scanGapMs: scanGapMs,
+      scanEndsOnPause: scanEndsOnPause,
     );
   }
 

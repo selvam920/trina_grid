@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+* Feature: `TrinaColumnType.autoComplete` takes `scanEndsOnPause` for scanners that send no Enter or Tab. With `onScan` set and it returning true, a run of keys at scanner speed is handed to `onScan` once the keys stop, instead of being searched. @selvam920
 * Feature: `TrinaColumnType.autoComplete` takes `onScan` and `scanGapMs` for hardware barcode scanners. Keys that arrive at scanner speed (at least three characters, on average no more than `scanGapMs` apart, 50 by default) and end with the scanner's Enter or Tab hand the typed code to `onScan` instead of searching: `fetchItems` is not called, no list opens for it, and the cell goes back to its value. With `onScan` set, typing by hand searches once it pauses (`max(100, 2 x scanGapMs)` ms) instead of on every key. Without `onScan` nothing changes. @selvam920
 * Fix: Enter in an autocomplete cell while its list is still loading no longer throws a `RangeError`. The list marked its first row selected before any results arrived, and Enter tried to pick that row from the empty list. Now the list stays and fills in, and the next Enter picks from it. @selvam920
 * Breaking: Removed `TrinaGridActionSetEditing`, `TrinaGridActionFocusToColumnFilter` and `TrinaGridActionToggleColumnSort`. Their F2 / F3 / F4 default bindings were already gone in this fork (the host app keeps the function keys for its own page actions), so nothing triggered them. A guard test now fails if F2-F4 return to `TrinaGridShortcut.defaultActions`. @selvam920
