@@ -54,6 +54,17 @@ class TrinaColumnTypeAutoComplete<T>
   /// Used for sorting and comparison. If null, the item itself is used.
   final dynamic Function(T item)? itemToValue;
 
+  /// Hardware barcode scanner input: keys at scanner speed ended by the
+  /// scanner's own Enter or Tab hand the typed code here instead of
+  /// searching -- [fetchItems] is not called and no list opens for it.
+  /// Typing by hand still searches, once it pauses. Null = no scan handling.
+  final void Function(String code)? onScan;
+
+  /// With [onScan]: the most milliseconds, on average, between the characters
+  /// of one scan. Read each time, so a setting change applies at once.
+  /// Null = 50.
+  final int Function()? scanGapMs;
+
   const TrinaColumnTypeAutoComplete({
     this.defaultValue,
     required this.fetchItems,
@@ -66,6 +77,8 @@ class TrinaColumnTypeAutoComplete<T>
     this.displayStringForOption,
     this.itemToString,
     this.itemToValue,
+    this.onScan,
+    this.scanGapMs,
   });
 
   @override
@@ -133,6 +146,8 @@ class TrinaColumnTypeAutoComplete<T>
       maxHeight: maxHeight,
       autoOpen: autoOpen,
       displayStringForOption: displayStringForOption,
+      onScan: onScan,
+      scanGapMs: scanGapMs,
     );
   }
 }

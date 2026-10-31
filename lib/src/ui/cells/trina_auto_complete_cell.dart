@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -58,6 +59,15 @@ class TrinaAutoCompleteCell<T> extends StatefulWidget {
   /// Whether to automatically open the dropdown when the cell is focused.
   final bool autoOpen;
 
+  /// Hardware barcode scanner input: keys at scanner speed ended by the
+  /// scanner's own Enter or Tab hand the typed code here instead of
+  /// searching. Null = no scan handling.
+  final void Function(String code)? onScan;
+
+  /// With [onScan]: the most milliseconds, on average, between the characters
+  /// of one scan. Null = 50.
+  final int Function()? scanGapMs;
+
   const TrinaAutoCompleteCell({
     required this.stateManager,
     required this.cell,
@@ -72,6 +82,8 @@ class TrinaAutoCompleteCell<T> extends StatefulWidget {
     required this.maxHeight,
     this.autoOpen = false,
     this.displayStringForOption,
+    this.onScan,
+    this.scanGapMs,
   });
 
   @override
@@ -104,6 +116,21 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
 
   final List<GlobalKey> _itemKeys = [];
 
+  // With [TrinaAutoCompleteCell.onScan]: the current run of typing -- changes
+  // closer than [_runGapMs] -- and the characters it added, to tell a scanner
+  // from a hand. Characters, not key presses: some scanners put the whole
+  // code in at once. The search waits out that gap, so a scan never reaches
+  // it.
+  DateTime? _runStart;
+  DateTime? _lastChange;
+  int _runChars = 0;
+  Timer? _holdTimer;
+
+  // The text's length before and after its latest change, programmatic ones
+  // included: what each change added.
+  int _lengthBefore = 0;
+  int _length = 0;
+
   @override
   void initState() {
     super.initState();
@@ -130,12 +157,15 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     widget.stateManager.setTextEditingController(_textController);
 
     _textController.text = formattedValue;
+    _length = _textController.text.length;
 
     _initialCellValue = widget.cell.value;
 
     _cellEditingStatus = _CellEditingStatus.init;
 
     _textController.addListener(() {
+      _lengthBefore = _length;
+      _length = _textController.text.length;
       _handleOnChanged(_textController.text.toString());
     });
   }
@@ -166,6 +196,8 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     }
 
     _debounceForTextController?.cancel();
+
+    _holdTimer?.cancel();
 
     _debounce.dispose();
 
@@ -295,10 +327,14 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
   }
 
   void _handleOnComplete() {
+    // A scanner that ends with the IME's action rather than an Enter key.
+    if (_takeScan()) return;
+
     // If overlay is open, select the current item.
     // If overlay is closed, let the grid handle it.
     if (_overlayEntry != null) {
-      if (_selectedIndex != -1) {
+      // Still loading: there is no item to select yet.
+      if (_selectedIndex != -1 && _selectedIndex < _filteredOptions.length) {
         _selectOption(
           _filteredOptions[_selectedIndex],
           isKeyboardSelection: true,
@@ -319,10 +355,22 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
   }
 
   KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
+    // A scanner's own Enter / Tab ends its scan here, before the list or the
+    // grid sees the key.
+    if (event is KeyDownEvent &&
+        (event.logicalKey == LogicalKeyboardKey.enter ||
+            event.logicalKey == LogicalKeyboardKey.numpadEnter ||
+            event.logicalKey == LogicalKeyboardKey.tab) &&
+        _takeScan()) {
+      return KeyEventResult.handled;
+    }
+
     if (_overlayEntry != null) {
       if (event is KeyDownEvent || event is KeyRepeatEvent) {
         if (event.logicalKey == LogicalKeyboardKey.enter) {
-          if (_selectedIndex != -1) {
+          // Still loading: there is no item to select yet.
+          if (_selectedIndex != -1 &&
+              _selectedIndex < _filteredOptions.length) {
             // Broadcast with skipShortcutHandling so listeners get notified
             // but the shortcut handler won't double-move
             final keyManager = TrinaKeyManagerEvent(
@@ -699,7 +747,99 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     _overlayEntry = null;
   }
 
-  void _filterOptions({bool forceShowAll = false}) {
+  int get _scanGapMs => widget.scanGapMs?.call() ?? 50;
+
+  /// A pause this long ends a run of typing: the search waits it out, and a
+  /// scanner's Enter / Tab comes within it.
+  int get _runGapMs => math.max(100, 2 * _scanGapMs);
+
+  /// The current run came at scanner speed: at least three characters, on
+  /// average no more than [TrinaAutoCompleteCell.scanGapMs] apart. A code put
+  /// in whole takes no time at all.
+  bool get _runIsScan {
+    final start = _runStart;
+    final last = _lastChange;
+    if (start == null || last == null || _runChars < 3) return false;
+    return last.difference(start).inMilliseconds <=
+        _scanGapMs * (_runChars - 1);
+  }
+
+  /// Typing with [TrinaAutoCompleteCell.onScan]: the search waits until the
+  /// keys stop for [_runGapMs]. A scanner never leaves that gap before its
+  /// own Enter / Tab ends the scan ([_takeScan]), so a scan calls no
+  /// [TrinaAutoCompleteCell.fetchItems] and opens no list, while typing by
+  /// hand searches once it pauses.
+  void _holdForScan() {
+    if (_isSelecting) return;
+    final now = DateTime.now();
+    final last = _lastChange;
+    if (last == null || now.difference(last).inMilliseconds >= _runGapMs) {
+      _runStart = now;
+      _runChars = 0;
+    }
+    if (_length > _lengthBefore) _runChars += _length - _lengthBefore;
+    _lastChange = now;
+    _holdTimer?.cancel();
+    _debounceForTextController?.cancel();
+
+    if (_textController.text.isEmpty) {
+      _filterOptions();
+      return;
+    }
+    if (_runIsScan) {
+      _hideOverlay();
+    } else if (_overlayEntry != null) {
+      // The open list is for the text before this key: wait, don't pick
+      // from it.
+      setState(() {
+        _isLoading = true;
+        _filteredOptions = [];
+        _selectedIndex = -1;
+      });
+      _overlayEntry?.markNeedsBuild();
+    }
+    _holdTimer = Timer(Duration(milliseconds: _runGapMs), () {
+      // Left the cell before the pause: no list behind it.
+      if (mounted && cellFocus.hasFocus) _filterOptions(delay: Duration.zero);
+    });
+  }
+
+  /// Enter / Tab close behind a run of keys at scanner speed hands the typed
+  /// code to [TrinaAutoCompleteCell.onScan], and the cell goes back to what
+  /// it held. False for typing by hand: the key then does its usual job.
+  bool _takeScan() {
+    final onScan = widget.onScan;
+    final last = _lastChange;
+    final code = _textController.text.trim();
+    if (onScan == null ||
+        last == null ||
+        code.isEmpty ||
+        DateTime.now().difference(last).inMilliseconds >= _runGapMs ||
+        !_runIsScan) {
+      return false;
+    }
+    _holdTimer?.cancel();
+    _debounceForTextController?.cancel();
+    _hideOverlay();
+    _isLoading = false;
+    _lastChange = null;
+    _isSelecting = true;
+    _textController.text = formattedValue;
+    _textController.selection = TextSelection.fromPosition(
+      TextPosition(offset: _textController.text.length),
+    );
+    _cellEditingStatus = _CellEditingStatus.init;
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) _isSelecting = false;
+    });
+    onScan(code);
+    return true;
+  }
+
+  void _filterOptions({
+    bool forceShowAll = false,
+    Duration delay = const Duration(milliseconds: 150),
+  }) {
     // Setting _textController.text below in _selectOption() fires this
     // via TextField.onChanged (Flutter invokes onChanged for any
     // controller text change, not just user input). Skip re-opening the
@@ -730,66 +870,63 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
     _overlayEntry?.markNeedsBuild();
     _showOverlay();
 
-    _debounceForTextController = Timer(
-      const Duration(milliseconds: 150),
-      () async {
-        try {
-          final results = await widget.fetchItems(query);
+    _debounceForTextController = Timer(delay, () async {
+      try {
+        final results = await widget.fetchItems(query);
 
-          if (!mounted ||
-              (forceShowAll ? false : _textController.text != query)) {
-            return;
-          }
+        if (!mounted ||
+            (forceShowAll ? false : _textController.text != query)) {
+          return;
+        }
 
-          setState(() {
-            _filteredOptions = results;
-            _isLoading = false;
+        setState(() {
+          _filteredOptions = results;
+          _isLoading = false;
 
-            // Select the item if it matches the current text
-            final currentText = _textController.text;
-            int matchIndex = -1;
-            for (int i = 0; i < results.length; i++) {
-              final itemText = widget.displayStringForOption != null
-                  ? widget.displayStringForOption!(results[i])
-                  : results[i].toString();
-              if (itemText == currentText) {
-                matchIndex = i;
-                break;
-              }
-            }
-
-            _selectedIndex = matchIndex != -1
-                ? matchIndex
-                : (results.isNotEmpty ? 0 : -1);
-          });
-
-          if (_filteredOptions.isEmpty) {
-            _hideOverlay();
-            _itemKeys.clear();
-          } else {
-            _overlayEntry?.markNeedsBuild();
-            _itemKeys
-              ..clear()
-              ..addAll(
-                List.generate(_filteredOptions.length, (_) => GlobalKey()),
-              );
-
-            if (_selectedIndex != -1) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _scrollToSelectedIndex();
-              });
+          // Select the item if it matches the current text
+          final currentText = _textController.text;
+          int matchIndex = -1;
+          for (int i = 0; i < results.length; i++) {
+            final itemText = widget.displayStringForOption != null
+                ? widget.displayStringForOption!(results[i])
+                : results[i].toString();
+            if (itemText == currentText) {
+              matchIndex = i;
+              break;
             }
           }
-        } catch (e) {
-          if (mounted && (forceShowAll || _textController.text == query)) {
-            setState(() {
-              _isLoading = false;
+
+          _selectedIndex = matchIndex != -1
+              ? matchIndex
+              : (results.isNotEmpty ? 0 : -1);
+        });
+
+        if (_filteredOptions.isEmpty) {
+          _hideOverlay();
+          _itemKeys.clear();
+        } else {
+          _overlayEntry?.markNeedsBuild();
+          _itemKeys
+            ..clear()
+            ..addAll(
+              List.generate(_filteredOptions.length, (_) => GlobalKey()),
+            );
+
+          if (_selectedIndex != -1) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _scrollToSelectedIndex();
             });
-            _hideOverlay();
           }
         }
-      },
-    );
+      } catch (e) {
+        if (mounted && (forceShowAll || _textController.text == query)) {
+          setState(() {
+            _isLoading = false;
+          });
+          _hideOverlay();
+        }
+      }
+    });
   }
 
   @override
@@ -818,7 +955,11 @@ class _TrinaAutoCompleteCellState<T> extends State<TrinaAutoCompleteCell<T>> {
         textAlignVertical: TextAlignVertical.center,
         textAlign: widget.column.textAlign.value,
         onChanged: (value) {
-          _filterOptions();
+          if (widget.onScan != null) {
+            _holdForScan();
+          } else {
+            _filterOptions();
+          }
         },
       ),
     );

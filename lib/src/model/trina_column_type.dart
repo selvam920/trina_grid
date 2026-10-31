@@ -195,6 +195,10 @@ abstract interface class TrinaColumnType {
   /// - [displayStringForOption]: Extracts display text from an item for the text field.
   /// - [itemToString]: Converts an item to its string representation.
   /// - [itemToValue]: Extracts a comparable value from an item.
+  /// - [onScan]: Takes a hardware barcode scanner's code (keys at scanner
+  ///   speed ended by its Enter or Tab) instead of searching for it.
+  /// - [scanGapMs]: With [onScan], the most milliseconds on average between
+  ///   the characters of one scan. Defaults to 50.
   static TrinaColumnType autoComplete<T>({
     required TrinaAutoCompleteFetchItems<T> fetchItems,
     void Function(T item)? onItemSelected,
@@ -207,6 +211,8 @@ abstract interface class TrinaColumnType {
     TrinaAutocompleteOptionToString<T>? displayStringForOption,
     String Function(T item)? itemToString,
     dynamic Function(T item)? itemToValue,
+    void Function(String code)? onScan,
+    int Function()? scanGapMs,
   }) {
     return TrinaColumnTypeAutoComplete<T>(
       defaultValue: defaultValue,
@@ -220,6 +226,8 @@ abstract interface class TrinaColumnType {
       displayStringForOption: displayStringForOption,
       itemToString: itemToString,
       itemToValue: itemToValue,
+      onScan: onScan,
+      scanGapMs: scanGapMs,
     );
   }
 
